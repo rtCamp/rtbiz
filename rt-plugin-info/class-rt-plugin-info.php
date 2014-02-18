@@ -13,53 +13,52 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 	class RT_Plugin_Info
 	{
 
-		//put your code here
 		/**
-		 * @var
+		 * @var string plugin loader file path
 		 */
 		public $plugin_path;
 		/**
-		 * @var
+		 * @var string Name of the plugin, must be unique.
 		 */
-		public $name; //'Name' - Name of the plugin, must be unique.
+		public $name;
 		/**
-		 * @var
+		 * @var string Title of the plugin and the link to the plugin's web site.
 		 */
-		public $title; //'Title' - Title of the plugin and the link to the plugin's web site.
+		public $title;
 		/**
-		 * @var
+		 * @var string Description of what the plugin does and/or notes from the author.
 		 */
-		public $desctipriton; //'Description' - Description of what the plugin does and/or notes from the author.
+		public $desctipriton;
 		/**
-		 * @var
+		 * @var string The author's name
 		 */
-		public $authro; //'Author' - The author's name
+		public $authro;
 		/**
-		 * @var
+		 * @var string The authors web site address.
 		 */
-		public $authoruri; //'AuthorURI' - The authors web site address.
+		public $authoruri;
 		/**
-		 * @var
+		 * @var string|float The plugin version number.
 		 */
-		public $version; //'Version' - The plugin version number.
+		public $version;
 		/**
-		 * @var
+		 * @var string Plugin web site address.
 		 */
-		public $pluginuri; //'PluginURI' - Plugin web site address.
+		public $pluginuri;
 		/**
-		 * @var
+		 * @var string  Plugin's text domain for localization.
 		 */
-		public $textdomain; //'TextDomain' - Plugin's text domain for localization.
+		public $textdomain;
 		/**
-		 * @var
+		 * @var string Plugin's relative directory path to .mo files.
 		 */
-		public $domain_path; //'DomainPath' - Plugin's relative directory path to .mo files.
+		public $domain_path;
 		/**
-		 * @var
+		 * @var boolean Whether the plugin can only be activated network wide.
 		 */
-		public $network; //'Network' - Boolean. Whether the plugin can only be activated network wide.
+		public $network;
 		/**
-		 * @var
+		 * @var array plugin info metadata in raw format
 		 */
 		public $plugin_data;
 
@@ -73,7 +72,7 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		}
 
 		/**
-		 * @return array
+		 * @return array plugin info in array
 		 */
 		function get_plugin_data()
 		{
@@ -83,7 +82,8 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		}
 
 		/**
-		 *
+		 * Set plugin data
+		 * @return null
 		 */
 		function set_plugin_data()
 		{
@@ -101,7 +101,8 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		}
 
 		/**
-		 * @param $path
+		 * Set current plugin loader path
+		 * @param $path string plugin loader file path
 		 */
 		function set_current_plugin_path( $path )
 		{
