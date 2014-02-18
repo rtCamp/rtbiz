@@ -80,7 +80,6 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 				$this->plugin_path = realpath( dirname( __FILE__ ) . $this->plugin_path );
 			}
 
-
 			if ( ! file_exists( $this->plugin_path ) ) {
 				if ( $this->debugMode ){
 					$message = sprintf( __( 'The Path %s does not point to a valid plugin.' ) , $this->plugin_path );

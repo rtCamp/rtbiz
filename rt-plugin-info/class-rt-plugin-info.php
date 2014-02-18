@@ -65,7 +65,7 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		/**
 		 * @param null $path
 		 */
-		public function __construct( $path = NULL )
+		public function __construct( $path = null )
 		{
 			$this->set_current_plugin_path( $path );
 			$this->set_plugin_data();
@@ -78,7 +78,7 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		{
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-			return @get_plugin_data( $this->plugin_path );
+			return get_plugin_data( $this->plugin_path );
 		}
 
 		/**
@@ -106,7 +106,7 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		 */
 		function set_current_plugin_path( $path )
 		{
-			if ( $path != NULL ){
+			if ( $path != null ){
 				$this->plugin_path = $path;
 			} else {
 				$this->plugin_path = realpath( plugin_dir_path( __FILE__ ) . '../../index.php' );

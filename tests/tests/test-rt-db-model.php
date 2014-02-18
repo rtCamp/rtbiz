@@ -99,7 +99,6 @@ class test_RTDBModel extends RT_WP_TestCase
 		$result = $this->rtdbmodel->get( array( 'meta_key' => 'test_key' ), 1 );
 		$this->assertGreaterThan( 0, count( $result ) );
 
-
 		$result = $this->rtdbmodel->get( array( 'meta_key' => 'test_key' ), 1, 1 );
 		$this->assertLessThanOrEqual( 1, count( $result ) );
 
@@ -114,8 +113,6 @@ class test_RTDBModel extends RT_WP_TestCase
 
 		$result = $this->rtdbmodel->get( array( 'meta_key' => 'test_key' ) );
 		$this->assertGreaterThan( 0, count( $result ) );
-
-
 	}
 
 	function test_delete()

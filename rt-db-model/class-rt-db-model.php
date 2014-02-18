@@ -114,7 +114,9 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 						if ( ! is_integer( $offset ) ){
 							$offset = 0;
 						}
-						if ( intval( $offset ) < 0 ) $offset = 0;
+						if ( intval( $offset ) < 0 ){
+							$offset = 0;
+						}
 
 						if ( $offset <= $return_array[ 'total' ] ){
 							$other = ' LIMIT ' . $offset . ',' . $this->per_page;
@@ -144,7 +146,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$insertdata = array();
 			foreach ( $data as $key => $val ) {
 				// Remove NULL value
-				if ( $val != NULL ){
+				if ( $val != null ){
 					$insertdata[ $key ] = $val;
 				}
 			}
@@ -187,7 +189,9 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
 				if ( is_array( $colvalue ) ){
-					if ( ! isset ( $colvalue[ 'compare' ] ) ) $compare = 'IN'; else {
+					if ( ! isset ( $colvalue[ 'compare' ] ) ){
+						$compare = 'IN';
+					} else {
 						$compare = $colvalue[ 'compare' ];
 					}
 					if ( ! isset ( $colvalue[ 'value' ] ) ){
