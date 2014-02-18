@@ -9,7 +9,6 @@
  * Description of test_RTDBModel
  *
  * @author faishal
- *
  */
 class test_RTDBModel extends RT_WP_TestCase
 {
@@ -26,7 +25,7 @@ class test_RTDBModel extends RT_WP_TestCase
 		parent::setUp();
 		$this->rtdbupdate = new RT_DB_Update( false, realpath( dirname( __FILE__ ) . '/../schema/' ) );
 		$this->rtdbupdate->do_upgrade();
-		$this->rtdbmodel = new RT_DB_Model( 'rtm_media_meta' );
+		$this->rtdbmodel = new RT_DB_Model( 'test_table' );
 	}
 
 	/**
