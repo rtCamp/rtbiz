@@ -1,55 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: faishal
- * Date: 17/02/14
- * Time: 3:40 PM
+/*
+  Plugin Name: wp-helpers
+  Plugin URI: http://rtcamp.com/
+  Description: This plugin contains common libs that are used in many rtcamp plugins
+  Version: 0.1
+  Author: rtcamp
+  Author URI: http://rtcamp.com/
  */
-if ( ! class_exists( 'RT_WP_Autoload' ) ){
-	/**
-	 * Generic autoloader for classes named in WordPress coding style.
-	 */
-	class RT_WP_Autoload
-	{
 
-		/**
-		 * @var string Current directory absolute path
-		 */
-		public $dir;
-
-		/**
-		 * @param string $dir optional, default value is current
-		 */
-		function __construct( $dir = '' )
-		{
-			if ( ! empty( $dir ) ){
-				$this->dir = trailingslashit( $dir );
-			} else {
-				//__DIR__ is actually equivalent to realpath(dirname(__FILE__)) and Added in PHP 5.3.0
-				//Bellow line will also work for php  5.2.4 (WordPress required php  5.2.4 or greater )
-				$this->dir = trailingslashit( ( @__DIR__ == '__DIR__' ) && define( '__DIR__', realpath( dirname( __FILE__ ) ) ) );
-			}
-
-			spl_autoload_register( array( $this, 'spl_autoload_register' ) );
-		}
-
-		/**
-		 * @param string $class_name
-		 */
-		function spl_autoload_register( $class_name )
-		{
-
-			$class_path = $this->dir . strtolower( str_replace( '_', '-', $class_name ) ) . '/class-' . strtolower( str_replace( '_', '-', $class_name ) ) . '.php';
-
-			if ( file_exists( $class_path ) ){
-				include $class_path;
-			}
-		}
-	}
+if ( file_exists( './rt-wp-autoloader/class-rt-wp-autoload.php' ) ){
+	include_once './rt-wp-autoloader/class-rt-wp-autoload.php';
 }
-
 /**
  * Initiate Loader class
  */
-
-$obj_rt_wp_loader = new RT_WP_Autoload();
+if ( class_exists( 'RT_WP_Autoload' ) ){
+	$GLOBALS[ 'wp_helper_loader' ] = new RT_WP_Autoload();
+}
