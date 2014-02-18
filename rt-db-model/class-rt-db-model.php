@@ -35,13 +35,13 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		/**
 		 *
 		 * @param string  $table_name Table name for model
-		 * @param boolean $withprefix Set true if $tablename is with prefix otherwise it will prepend wordpress prefix with "rt_"
-		 * @param int     $per_page
-		 * @param bool    $mu_single_table
+		 * @param boolean $is_tablename_with_prefix Set true if $table_name is with prefix otherwise it will prepend WordPress prefix with "rt_"
+		 * @param int     $per_page Set number of record per page
+		 * @param bool    $mu_single_table set true if common table shared with all the sites in WordPress MultiSite
 		 */
-		function __construct( $table_name, $withprefix = false, $per_page = 10, $mu_single_table = false ) {
+		function __construct( $table_name, $is_tablename_with_prefix = false, $per_page = 10, $mu_single_table = false ) {
 			$this->mu_single_table = $mu_single_table;
-			$this->set_table_name( $table_name, $withprefix );
+			$this->set_table_name( $table_name, $is_tablename_with_prefix );
 			$this->set_per_page( $per_page );
 		}
 
@@ -49,12 +49,12 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @global WPDB  $wpdb
 		 *
-		 * @param string $table_name
-		 * @param boolean   $withprefix
+		 * @param string $table_name Table name for model
+		 * @param boolean $is_tablename_with_prefix Set true if $table_name is with prefix otherwise it will prepend WordPress prefix with "rt_"
 		 */
-		public function set_table_name( $table_name, $withprefix = false ) {
+		public function set_table_name( $table_name, $is_tablename_with_prefix = false ) {
 			global $wpdb;
-			if ( ! $withprefix ) {
+			if ( ! $is_tablename_with_prefix ) {
 				$table_name = ( ( $this->mu_single_table ) ? $wpdb->base_prefix : $wpdb->prefix ) . 'rt_' . $table_name;
 			}
 			$this->table_name = $table_name;
@@ -63,7 +63,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		/**
 		 * set number of rows per page for pagination
 		 *
-		 * @param int $per_page
+		 * @param int $per_page Set number of record per page
 		 */
 		public function set_per_page( $per_page ) {
 			$this->per_page = $per_page;
@@ -84,8 +84,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		{
 			if ( $arguments && ! empty( $arguments ) ){
 				$column_name = str_replace( 'get_by_', '', strtolower( $name ) );
-				$paging      = false;
-				$page        = 1;
+
 				if ( ! isset( $arguments[ 1 ] ) ){
 					$paging = true;
 				} else {
@@ -102,7 +101,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 				$return_array             = array();
 				$return_array[ 'result' ] = false;
 				global $wpdb;
-				$return_array[ 'total' ] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE {$column_name} = %s', $arguments[ 0 ] ) ) );
+				$return_array[ 'total' ] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE `' . $column_name . '`= %s', $arguments[ 0 ] ) ) );
 				if ( $return_array[ 'total' ] > 0 ){
 					$other = '';
 					if ( $paging ){
@@ -124,7 +123,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 						}
 					}
 					//echo $wpdb->prepare("SELECT * FROM " . $this->table_name . " WHERE {$column_name} = %s {$other}", $arguments[0]);
-					$return_array[ 'result' ] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . $this->table_name . ' WHERE {$column_name} = %s {$other}', $arguments[ 0 ] ), ARRAY_A );
+					$return_array[ 'result' ] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM  `' . $this->table_name . '` WHERE `' . $column_name . '` = %s ' . $other , $arguments[ 0 ] ), ARRAY_A );
 				}
 
 				return $return_array;
@@ -135,23 +134,22 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 		/**
 		 *
-		 * @global wpdb $wpdb
-		 *
-		 * @param array  $row
-		 *
-		 * @return int
+		 * @param $data array Data to insert (in column => value pairs)
+		 * @param $format array  An array of formats to be mapped to each of the value in $data
+		 * @return int last inserted id
 		 */
-		function insert( $row )
+		function insert( $data, $format = null )
 		{
 			global $wpdb;
 			$insertdata = array();
-			foreach ( $row as $key => $val ) {
+			foreach ( $data as $key => $val ) {
+				// Remove NULL value
 				if ( $val != NULL ){
 					$insertdata[ $key ] = $val;
 				}
 			}
 
-			$wpdb->insert( $this->table_name, $insertdata );
+			$wpdb->insert( $this->table_name, $insertdata, $format );
 
 			return $wpdb->insert_id;
 		}
@@ -163,11 +161,10 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 * @param array  $data
 		 * @param array  $where
 		 */
-		function update( $data, $where )
+		function update( $data, $where, $format = null, $where_format = null )
 		{
 			global $wpdb;
-
-			return $wpdb->update( $this->table_name, $data, $where );
+			return $wpdb->update( $this->table_name, $data, $where, $format, $where_format );
 		}
 
 		/**
@@ -186,7 +183,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 */
 		function get( $columns, $offset = false, $per_page = false, $order_by = 'id desc' )
 		{
-			$select = 'SELECT * FROM {$this->table_name}';
+			$select = 'SELECT * FROM ' . $this->table_name ;
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
 				if ( is_array( $colvalue ) ){
@@ -214,7 +211,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 				}
 
 				if ( ! is_integer( $per_page ) ) {
-					$per_page = 0;
+					$per_page = 1;
 				}
 				if ( intval( $per_page ) < 0 ) {
 					$per_page = 1;
@@ -223,23 +220,22 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 			}
 			global $wpdb;
-
 			return $wpdb->get_results( $sql );
 		}
 
 		/**
 		 *
-		 * @global wpdb $wpdb
+		 * @param array $where
 		 *
-		 * @param array  $where
+		 * @param null  $where_format
 		 *
 		 * @return int
 		 */
-		function delete( $where )
+		function delete( $where, $where_format = null )
 		{
 			global $wpdb;
 
-			return $wpdb->delete( $this->table_name, $where );
+			return $wpdb->delete( $this->table_name, $where, $where_format );
 		}
 
 
