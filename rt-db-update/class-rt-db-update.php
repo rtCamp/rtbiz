@@ -26,11 +26,11 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		/**
 		 * @var string
 		 */
-		public $schema_path;
+		public $schema_path = '/../schema/';
 		/**
 		 * @var string
 		 */
-		public $plugin_path;
+		public $plugin_path = '/../wp-helpers.php';
 		/**
 		 * @var string
 		 */
@@ -45,28 +45,47 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		public $mu_single_table;
 
 		/**
-		 * Set db current and installed version and also plugin info in rt_plugin_info variable.
+		 * @var boolean
+		 */
+		public $debugMode;
+		/**
+		 * Set db current and installed version and also plugin info .
 		 *
-		 * @param bool $current_version
-		 * @param bool $plugin_path
-		 * @param bool $schema_path
-		 * @param bool $mu_single_table
+		 * @param bool $current_version plugin latest version
+		 * @param bool $plugin_path absolute plugin loader file path
+		 * @param bool $schema_path absolute schema directory path which contains .schema files
+		 * @param bool $mu_single_table true if you want to create single table in multisite
 		 *
 		 * @internal param string $type $current_version Optional if not defined then will use plugin version
 		 */
-		public function __construct( $current_version = false, $plugin_path = false, $schema_path = false, $mu_single_table = false )
+		public function __construct( $plugin_path = false, $schema_path = false, $mu_single_table = false, $current_version = false )
 		{
-
+			$this->debugMode = defined( 'WP_DEBUG' ) && WP_DEBUG;
 			if ( $schema_path != false ){
 				$this->schema_path = $schema_path;
 			} else {
 				$this->schema_path = realpath( dirname( __FILE__ ) . $this->schema_path );
 			}
 
+			if ( ! file_exists( $this->schema_path ) ) {
+				if ( $this->debugMode ){
+					$message = sprintf( __( 'The Path %s does not point to a valid schema directory.' ) , $this->schema_path );
+					trigger_error( $message, E_USER_WARNING );
+				}
+			}
+
 			if ( $plugin_path != false ){
 				$this->plugin_path = $plugin_path;
 			} else {
 				$this->plugin_path = realpath( dirname( __FILE__ ) . $this->plugin_path );
+			}
+
+
+			if ( ! file_exists( $this->plugin_path ) ) {
+				if ( $this->debugMode ){
+					$message = sprintf( __( 'The Path %s does not point to a valid plugin.' ) , $this->plugin_path );
+					trigger_error( $message, E_USER_WARNING );
+				}
 			}
 
 			$this->mu_single_table = $mu_single_table;
@@ -118,51 +137,47 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		 */
 		public function do_upgrade()
 		{
-			global $wpdb;
 			if ( version_compare( $this->db_version, $this->install_db_version, '>' ) ){
 				$path = $this->schema_path;
 				if ( $handle = opendir( $path ) ){
-					while ( false !== ( $entry = readdir( $handle ) ) ) {
-						if ( $entry != '.' && $entry != '..' ){
-							if ( strpos( $entry, '.schema' ) !== false && file_exists( $path . '/' . $entry ) ){
-								if ( is_multisite() ){
-									$table_name  = str_replace( '.schema', '', strtolower( $entry ) );
-									$check_table = 'SHOW TABLES LIKE \'%rt_' . $table_name . '\'';
-									$check_res   = $wpdb->get_results( $check_table, ARRAY_N );
-									if ( $check_res && sizeof( $check_res ) > 0 && is_array( $check_res ) && isset( $check_res[ 0 ][ 0 ] ) ){
-										$tb_name    = $check_res[ 0 ][ 0 ];
-										$table_name = ( ( $this->mu_single_table ) ? $wpdb->base_prefix : $wpdb->prefix ) . 'rt_' . $table_name;
-										if ( $tb_name != $table_name ){
-											$alter_sql = 'ALTER TABLE ' . $tb_name . ' RENAME TO ' . $table_name;
-											$wpdb->query( $alter_sql );
-										}
-									}
-								}
-								$this->create_table( $this->genrate_sql( $entry, file_get_contents( $path . '/' . $entry ) ) );
+					while ( false !== ( $file_name = readdir( $handle ) ) ) {
+						if ( $file_name != '.' && $file_name != '..' ){
+							if ( strpos( $file_name, '.schema' ) !== false && file_exists( $path . '/' . $file_name ) ){
+								do_action( 'rt_db_update_before_create_table', $file_name );
+								$this->create_table( $this->genrate_sql( $file_name, file_get_contents( $path . '/' . $file_name ) ) );
+								do_action( 'rt_db_update_after_create_table', $file_name );
 							}
 						}
 					}
 					closedir( $handle );
 				}
-				if ( $this->mu_single_table ){
-					update_site_option( $this->db_version_option_name, $this->db_version );
-				} else {
-					update_option( $this->db_version_option_name, $this->db_version );
-				}
-				do_action( 'rt_db_upgrade' );
+				$this->update_version();
+				do_action( 'rt_db_update_finished' );
+				//Hook for individual plugin
+				do_action( 'rt_db_update_finished_' . $this->rt_plugin_info->name );
+			}
+		}
+
+		function update_version(){
+			if ( $this->mu_single_table ){
+				update_site_option( $this->db_version_option_name, $this->db_version );
+			} else {
+				update_option( $this->db_version_option_name, $this->db_version );
 			}
 		}
 
 		/**
-		 * @param $table
+		 * @param $table_name
+		 *
+		 * @internal param $table
 		 *
 		 * @return bool
 		 */
-		static function table_exists( $table )
+		static function table_exists( $table_name )
 		{
 			global $wpdb;
 
-			if ( $wpdb->query( "SHOW TABLES LIKE '" . $table . "'" ) == 1 ){
+			if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $table_name . '%' ) ) == 1 ){
 				return true;
 			}
 
