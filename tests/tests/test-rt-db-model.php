@@ -9,6 +9,7 @@
  * Description of test_RTDBModel
  *
  * @author faishal
+ *
  */
 class test_RTDBModel extends RT_WP_TestCase
 {
@@ -17,10 +18,14 @@ class test_RTDBModel extends RT_WP_TestCase
 
 	/**
 	 * Setup Class Object and Parent Test Suite
+	 *
+	 * @depends test_RTDBUpdate::test_do_upgrade
 	 */
 	function setUp()
 	{
 		parent::setUp();
+		$this->rtdbupdate = new RT_DB_Update( false, realpath( dirname( __FILE__ ) . '/../schema/' ) );
+		$this->rtdbupdate->do_upgrade();
 		$this->rtdbmodel = new RT_DB_Model( 'rtm_media_meta' );
 	}
 
@@ -72,7 +77,7 @@ class test_RTDBModel extends RT_WP_TestCase
 
 	function test_get()
 	{
-		$this->rtdbmodel->set_table_name( 'rtm_media_meta' );
+		$this->rtdbmodel->set_table_name( 'test_table' );
 		$this->rtdbmodel->insert( array( 'media_id' => 1, 'meta_key' => 'test_key', 'meta_value' => 'test_value' ) );
 
 		$result = $this->rtdbmodel->get( array( 'meta_key' => 'test_key' ) );
@@ -116,7 +121,7 @@ class test_RTDBModel extends RT_WP_TestCase
 
 	function test_delete()
 	{
-		$this->rtdbmodel->set_table_name( 'rtm_media_meta' );
+		$this->rtdbmodel->set_table_name( 'test_table' );
 		$this->inset_media( 20 );
 		$result = $this->rtdbmodel->delete( array( 'meta_key' => 'test_key' ) );
 		$this->assertEquals( 1, count( $result ) );
@@ -149,7 +154,7 @@ class test_RTDBModel extends RT_WP_TestCase
 
 	function test_insert_with_right_input()
 	{
-		$this->rtdbmodel->set_table_name( 'rtm_media_meta' );
+		$this->rtdbmodel->set_table_name( 'test_table' );
 		$this->assertGreaterThan( 0, $this->rtdbmodel->insert( array( 'media_id' => 1, 'meta_key' => 'test_key', 'meta_value' => 'test_value' ) ) );
 	}
 
