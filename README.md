@@ -10,6 +10,7 @@ Following are some classes
 * RT_Plugin_Info
 * RT_Plugin_Update_Checker
 * RT_WP_Autoloader
+* RT_Theme_Update_Checker
 
 **NOTE**: Development in progress
 
