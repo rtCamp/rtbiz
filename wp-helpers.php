@@ -7,9 +7,9 @@
   Author: rtcamp
   Author URI: http://rtcamp.com/
  */
-
-if ( file_exists( './rt-wp-autoloader/class-rt-wp-autoload.php' ) ){
-	include_once './rt-wp-autoloader/class-rt-wp-autoload.php';
+$rt_autoloader_file = realpath( dirname( __FILE__ ) ) . '/rt-wp-autoloader/class-rt-wp-autoload.php';
+if ( file_exists( $rt_autoloader_file ) ){
+	include_once $rt_autoloader_file ;
 }
 /**
  * Initiate Loader class
