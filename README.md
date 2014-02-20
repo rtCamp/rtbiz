@@ -12,3 +12,11 @@ Following are some classes
 * RT_WP_Autoloader
 
 **NOTE**: Development in progress
+
+Inspired from https://github.com/zendframework/zf2/tree/master/library/Zend/
+
+
+License
+========
+
+Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
