@@ -128,11 +128,11 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 			}
 
 			/** @noinspection PhpDeprecationInspection get_themes() used for compatibility with WP 3.3 and below. */
-			foreach ( get_themes() as $theme ) {
-				if ( $theme[ 'Stylesheet' ] === $this->theme ){
-					return $theme[ 'Version' ];
-				}
-			}
+			//foreach ( get_themes() as $theme ) {
+			//	if ( $theme[ 'Stylesheet' ] === $this->theme ){
+			//		return $theme[ 'Version' ];
+			//	}
+			//}
 
 			return '';
 		}
