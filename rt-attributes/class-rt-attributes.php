@@ -23,7 +23,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
 		 */
-		var $module_id;
+		var $module_name;
 
 		/**
 		 * @var $page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
@@ -46,19 +46,39 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $attributes_relationship_model;
 
 		/**
-		 * @param $module_id - A Unique module ID to identify for which module / post_types the attributes i.e., taxonomies are to be registered
+		 * @var RT_WP_Autoload
 		 */
-		public function __construct( $module_id ) {
-			$this->module_id = $module_id;
+		var $auto_loader;
+
+		/**
+		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
+		 */
+		public function __construct( $module_name ) {
+			//Register AutoLoader for attributes
+			$this->auto_loader();
+			// Database upgrade if required
+			$this->db_upgrade();
+
+			$this->module_name = $module_name;
 			$this->init_db_model();
+		}
+
+		/**
+		 *
+		 */
+		function db_upgrade(){
+			$updateDB = new  RT_DB_Update( WP_HELPER_FILE , trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
+			$updateDB->db_version_option_name .= '_ATTRIBUTES';
+			$updateDB->install_db_version = $updateDB->get_install_db_version();
+			$updateDB->do_upgrade();
 		}
 
 		/**
 		 * Initialize the Database model object which will be used for DB transactions
 		 */
 		function init_db_model() {
-			$this->attributes_db_model = new RT_WP_Attributes_Model();
-			$this->attributes_relationship_model = new RT_WP_Attributes_Relationship_Model();
+			$this->attributes_db_model = new RT_Attributes_Model();
+			$this->attributes_relationship_model = new RT_Attributes_Relationship_Model();
 		}
 
 		/**
@@ -82,7 +102,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->post_type = $post_type;
 
 			if ( ! empty( $page_slug ) ) {
-				add_submenu_page( $page_slug, __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_submenu_page( $page_slug, __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt_attributes', array( $this, 'render_attributes_page' ) );
 			} else {
 				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			}
@@ -92,7 +112,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * Renders the Attributes Listing Page
 		 */
 		function render_attributes_page() {
-
 			// Perform Any action according to query variable passed in the REQUEST
 			$action_completed = $this->perform_action();
 
@@ -112,11 +131,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * Edit Attribute Screen
 		 */
 		function edit_attribute_ui() {
-			global $rt_wp_attributes_model;
-
 			$edit = absint( $_GET['edit'] );
 
-			$attribute_to_edit = $rt_wp_attributes_model->get_attribute( $edit );
+			$attribute_to_edit = $this->attributes_db_model->get_attribute( $edit );
 
 			$att_store_as    = $attribute_to_edit->attribute_store_as;
 			$att_render_type = $attribute_to_edit->attribute_render_type;
@@ -131,7 +148,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * Add Attribute Screen
 		 */
 		function add_attribute_ui() {
-			global $rt_wp_attributes_model;
+			$rt_wp_attributes_model = $this->attributes_db_model;
 
 			include 'templates/template-rt-add-attribute.php';
 		}
@@ -163,7 +180,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = '' ) {
 
-			global $rt_wp_attributes_model;
 
 			// Forbidden attribute names
 			// http://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms
@@ -187,13 +203,13 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			} elseif ( in_array( $attribute_name, $reserved_terms ) ) {
 				$error = sprintf( __( 'Slug “%s” is not allowed because it is a reserved term. Change it, please.' ), sanitize_title( $attribute_name ) );
 			} else {
-				$taxonomy_exists = $rt_wp_attributes_model->attribute_exists( $this->sanitize_taxonomy( $attribute_name ) );
+				$taxonomy_exists = $this->attributes_db_model->attribute_exists( $this->sanitize_taxonomy( $attribute_name ) );
 
 				if ( 'add' === $action && $taxonomy_exists ) {
 					$error = sprintf( __( 'Slug “%s” is already in use. Change it, please.' ), sanitize_title( $attribute_name ) );
 				}
 				if ( 'edit' === $action ) {
-					$old_attribute_name = $rt_wp_attributes_model->get_attribute_name( $attribute_id );
+					$old_attribute_name = $this->attributes_db_model->get_attribute_name( $attribute_id );
 					if ( $old_attribute_name != $attribute_name && $this->sanitize_taxonomy( $old_attribute_name ) != $attribute_name && $taxonomy_exists ) {
 						$error = sprintf( __( 'Slug “%s” is already in use. Change it, please.' ), sanitize_title( $attribute_name ) );
 					}
@@ -212,8 +228,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_render_type
 		 * @param $attribute_orderby
 		 */
-		function add_attriute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
-			global $rt_wp_attributes_model;
+		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
 
 			$attribute = array(
 				'attribute_label'   => $attribute_label,
@@ -223,7 +238,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				'attribute_orderby' => $attribute_orderby,
 			);
 
-			$rt_wp_attributes_model->add_attribute( $attribute );
+			$this->attributes_db_model->add_attribute( $attribute );
 		}
 
 		/**
@@ -237,7 +252,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_orderby
 		 */
 		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
-			global $rt_wp_attributes_model;
 
 			$attribute = array(
 				'attribute_label'   => $attribute_label,
@@ -247,14 +261,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				'attribute_orderby' => $attribute_orderby,
 			);
 
-			$rt_wp_attributes_model->update_attribute( $attribute, array( 'id' => $attribute_id ) );
+			$this->attributes_db_model->update_attribute( $attribute, array( 'id' => $attribute_id ) );
 		}
 
 		/**
 		 * Performs Add, Save, Delete Attributes
 		 */
 		function perform_action() {
-			global $wpdb, $rt_wp_attributes_model;
+			global $wpdb;
 
 			$action_completed = false;
 
@@ -309,7 +323,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 					if ( 'edit' === $action ) {
 						$this->edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby );
 
-						$old_attribute_name = $rt_wp_attributes_model->get_attribute_name( $attribute_id );
+						$old_attribute_name = $this->attributes_db_model->get_attribute_name( $attribute_id );
 
 						do_action( 'rt_wp_attribute_updated', $attribute_id, $old_attribute_name );
 
@@ -331,9 +345,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			if ( 'delete' === $action ) {
 				$attribute_id = absint( $_GET['delete'] );
 
-				$attribute_name = $rt_wp_attributes_model->get_attribute_name( $attribute_id );
+				$attribute_name = $this->attributes_db_model->get_attribute_name( $attribute_id );
 
-				if ( $attribute_name && $rt_wp_attributes_model->delete( array( 'id' => $attribute_id ) ) ) {
+				if ( $attribute_name && $this->attributes_db_model->delete( array( 'id' => $attribute_id ) ) ) {
 
 					$taxonomy = $this->sanitize_taxonomy( $attribute_name );
 
@@ -351,6 +365,13 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			}
 
 			return $action_completed;
+		}
+
+		/**
+		 * Register AutoLoader for rt-attributes
+		 */
+		function auto_loader(){
+			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
 	} //end class
 }
