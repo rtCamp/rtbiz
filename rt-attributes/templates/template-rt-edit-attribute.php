@@ -8,9 +8,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ){
 	exit;
-
+}
 /**
  * Template : Edit Attribute
  *

@@ -18,7 +18,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 	/**
 	 * Class RT_WP_Attributes
 	 */
-	class RT_Attributes {
+	class RT_Attributes
+	{
 
 		/**
 		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
@@ -53,7 +54,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
 		 */
-		public function __construct( $module_name ) {
+		public function __construct( $module_name )
+		{
 			//Register AutoLoader for attributes
 			$this->auto_loader();
 			// Database upgrade if required
@@ -66,8 +68,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 *
 		 */
-		function db_upgrade(){
-			$updateDB = new  RT_DB_Update( WP_HELPER_FILE , trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
+		function db_upgrade()
+		{
+			$updateDB = new  RT_DB_Update( WP_HELPER_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
 			$updateDB->db_version_option_name .= '_ATTRIBUTES';
 			$updateDB->install_db_version = $updateDB->get_install_db_version();
 			$updateDB->do_upgrade();
@@ -76,8 +79,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Initialize the Database model object which will be used for DB transactions
 		 */
-		function init_db_model() {
-			$this->attributes_db_model = new RT_Attributes_Model();
+		function init_db_model()
+		{
+			$this->attributes_db_model           = new RT_Attributes_Model();
 			$this->attributes_relationship_model = new RT_Attributes_Relationship_Model();
 		}
 
@@ -86,7 +90,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 * @internal param $module_id
 		 */
-		function register_taxonomies() {
+		function register_taxonomies()
+		{
 
 		}
 
@@ -96,7 +101,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param string $page_slug - slug of page on under which the attributes page is to be shown
 		 * @param string $post_type - post type for which the attributes are to be listed
 		 */
-		function add_attributes_page( $page_slug = '', $post_type = '' ) {
+		function add_attributes_page( $page_slug = '', $post_type = '' )
+		{
 
 			$this->page_slug = $page_slug;
 			$this->post_type = $post_type;
@@ -111,7 +117,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Renders the Attributes Listing Page
 		 */
-		function render_attributes_page() {
+		function render_attributes_page()
+		{
 			// Perform Any action according to query variable passed in the REQUEST
 			$action_completed = $this->perform_action();
 
@@ -121,24 +128,26 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			}
 
 			// Show admin interface
-			if ( ! empty( $_GET['edit'] ) )
+			if ( ! empty( $_GET[ 'edit' ] ) ){
 				$this->edit_attribute_ui();
-			else
+			} else {
 				$this->add_attribute_ui();
+			}
 		}
 
 		/**
 		 * Edit Attribute Screen
 		 */
-		function edit_attribute_ui() {
-			$edit = absint( $_GET['edit'] );
+		function edit_attribute_ui()
+		{
+			$edit = absint( $_GET[ 'edit' ] );
 
 			$attribute_to_edit = $this->attributes_db_model->get_attribute( $edit );
 
 			$att_store_as    = $attribute_to_edit->attribute_store_as;
 			$att_render_type = $attribute_to_edit->attribute_render_type;
-			$att_label 	     = $attribute_to_edit->attribute_label;
-			$att_name 	     = $attribute_to_edit->attribute_name;
+			$att_label       = $attribute_to_edit->attribute_label;
+			$att_name        = $attribute_to_edit->attribute_name;
 			$att_orderby     = $attribute_to_edit->attribute_orderby;
 
 			include 'templates/template-rt-edit-attribute.php';
@@ -147,7 +156,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Add Attribute Screen
 		 */
-		function add_attribute_ui() {
+		function add_attribute_ui()
+		{
 			$rt_wp_attributes_model = $this->attributes_db_model;
 
 			include 'templates/template-rt-add-attribute.php';
@@ -157,9 +167,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * Sanitizes taxonomy name
 		 *
 		 * @param $taxonomy
+		 *
 		 * @return mixed|string
 		 */
-		function sanitize_taxonomy( $taxonomy ) {
+		function sanitize_taxonomy( $taxonomy )
+		{
 			$taxonomy = strtolower( stripslashes( strip_tags( $taxonomy ) ) );
 			$taxonomy = preg_replace( '/&.+?;/', '', $taxonomy ); // Kill entities
 			$taxonomy = str_replace( array( '.', '\'', '"' ), '', $taxonomy ); // Kill quotes and full stops.
@@ -176,23 +188,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param string $attribute_name
 		 * @param string $attribute_render_type
 		 * @param string $attribute_store_as
+		 *
 		 * @return string|void
 		 */
-		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = '' ) {
-
-
+		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = '' )
+		{
 			// Forbidden attribute names
 			// http://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms
-			$reserved_terms = array(
-				'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and',
-				'category__in', 'category__not_in', 'category_name', 'comments_per_page', 'comments_popup', 'cpage', 'day',
-				'debug', 'error', 'exact', 'feed', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more', 'name',
-				'nav_menu', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm',
-				'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type', 'post_status', 'post_tag', 'post_type',
-				'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 's', 'search', 'second', 'sentence',
-				'showposts', 'static', 'subpost', 'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id',
-				'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'type', 'w', 'withcomments', 'withoutcomments', 'year',
-			);
+			$reserved_terms = array( 'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and', 'category__in', 'category__not_in', 'category_name', 'comments_per_page', 'comments_popup', 'cpage', 'day', 'debug', 'error', 'exact', 'feed', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more', 'name', 'nav_menu', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm', 'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type', 'post_status', 'post_tag', 'post_type', 'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 's', 'search', 'second', 'sentence', 'showposts', 'static', 'subpost', 'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id', 'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'type', 'w', 'withcomments', 'withoutcomments', 'year', );
 
 			$error = '';
 
@@ -228,15 +231,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_render_type
 		 * @param $attribute_orderby
 		 */
-		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
+		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby )
+		{
 
-			$attribute = array(
-				'attribute_label'   => $attribute_label,
-				'attribute_name'    => $attribute_name,
-				'attribute_store_as'    => $attribute_store_as,
-				'attribute_render_type'    => $attribute_render_type,
-				'attribute_orderby' => $attribute_orderby,
-			);
+			$attribute = array( 'attribute_label' => $attribute_label, 'attribute_name' => $attribute_name, 'attribute_store_as' => $attribute_store_as, 'attribute_render_type' => $attribute_render_type, 'attribute_orderby' => $attribute_orderby, );
 
 			$this->attributes_db_model->add_attribute( $attribute );
 		}
@@ -251,15 +249,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_render_type
 		 * @param $attribute_orderby
 		 */
-		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
+		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby )
+		{
 
-			$attribute = array(
-				'attribute_label'   => $attribute_label,
-				'attribute_name'    => $attribute_name,
-				'attribute_store_as'    => $attribute_store_as,
-				'attribute_render_type'    => $attribute_render_type,
-				'attribute_orderby' => $attribute_orderby,
-			);
+			$attribute = array( 'attribute_label' => $attribute_label, 'attribute_name' => $attribute_name, 'attribute_store_as' => $attribute_store_as, 'attribute_render_type' => $attribute_render_type, 'attribute_orderby' => $attribute_orderby, );
 
 			$this->attributes_db_model->update_attribute( $attribute, array( 'id' => $attribute_id ) );
 		}
@@ -267,18 +260,19 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Performs Add, Save, Delete Attributes
 		 */
-		function perform_action() {
+		function perform_action()
+		{
 			global $wpdb;
 
 			$action_completed = false;
 
 			// Action to perform: add, edit, delete or none
 			$action = '';
-			if ( ! empty( $_POST['add_new_attribute'] ) ) {
+			if ( ! empty( $_POST[ 'add_new_attribute' ] ) ) {
 				$action = 'add';
-			} elseif ( ! empty( $_POST['save_attribute'] ) && ! empty( $_GET['edit'] ) ) {
+			} elseif ( ! empty( $_POST[ 'save_attribute' ] ) && ! empty( $_GET[ 'edit' ] ) ) {
 				$action = 'edit';
-			} elseif ( ! empty( $_GET['delete'] ) ) {
+			} elseif ( ! empty( $_GET[ 'delete' ] ) ) {
 				$action = 'delete';
 			}
 
@@ -287,15 +281,15 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 				$attribute_id = '';
 				if ( 'edit' === $action ) {
-					$attribute_id = absint( $_GET['edit'] );
+					$attribute_id = absint( $_GET[ 'edit' ] );
 				}
 
 				// Grab the submitted data
-				$attribute_label       = ( isset( $_POST['attribute_label'] ) ) ? (string) stripslashes( $_POST['attribute_label'] ) : '';
-				$attribute_name        = ( isset( $_POST['attribute_name'] ) ) ? $this->sanitize_taxonomy( stripslashes( (string) $_POST['attribute_name'] ) ) : '';
-				$attribute_store_as    = ( isset( $_POST['attribute_store_as'] ) ) ? (string) stripslashes( $_POST['attribute_store_as'] ) : '';
-				$attribute_render_type = ( isset( $_POST['attribute_render_type'] ) ) ? (string) stripslashes( $_POST['attribute_render_type'] ) : '';
-				$attribute_orderby     = ( isset( $_POST['attribute_orderby'] ) ) ? (string) stripslashes( $_POST['attribute_orderby'] ) : '';
+				$attribute_label       = ( isset( $_POST[ 'attribute_label' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_label' ] ) : '';
+				$attribute_name        = ( isset( $_POST[ 'attribute_name' ] ) ) ? $this->sanitize_taxonomy( stripslashes( (string)$_POST[ 'attribute_name' ] ) ) : '';
+				$attribute_store_as    = ( isset( $_POST[ 'attribute_store_as' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_store_as' ] ) : '';
+				$attribute_render_type = ( isset( $_POST[ 'attribute_render_type' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_render_type' ] ) : '';
+				$attribute_orderby     = ( isset( $_POST[ 'attribute_orderby' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_orderby' ] ) : '';
 
 				// Auto-generate the label or slug if only one of both was provided
 				if ( ! $attribute_label ) {
@@ -329,11 +323,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 						if ( $old_attribute_name != $attribute_name && ! empty( $old_attribute_name ) ) {
 							// Update taxonomies in the wp term taxonomy table
-							$wpdb->update(
-								$wpdb->term_taxonomy,
-								array( 'taxonomy' => $this->sanitize_taxonomy( $attribute_name ) ),
-								array( 'taxonomy' => 'rt_' . $old_attribute_name )
-							);
+							$wpdb->update( $wpdb->term_taxonomy, array( 'taxonomy' => $this->sanitize_taxonomy( $attribute_name ) ), array( 'taxonomy' => 'rt_' . $old_attribute_name ) );
 						}
 						$action_completed = true;
 					}
@@ -343,7 +333,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// Delete an attribute
 			if ( 'delete' === $action ) {
-				$attribute_id = absint( $_GET['delete'] );
+				$attribute_id = absint( $_GET[ 'delete' ] );
 
 				$attribute_name = $this->attributes_db_model->get_attribute_name( $attribute_id );
 
@@ -370,7 +360,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Register AutoLoader for rt-attributes
 		 */
-		function auto_loader(){
+		function auto_loader()
+		{
 			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
 	} //end class

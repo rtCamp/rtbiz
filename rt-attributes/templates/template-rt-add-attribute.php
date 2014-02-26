@@ -8,8 +8,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 /**
  * Template : Add Attribute
@@ -22,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) )
 ?>
 <div class="wrap">
 	<h2><i class="icon-tags"></i> <?php _e( 'Attributes' ); ?></h2>
-	<br class="clear" />
+	<br class="clear"/>
+
 	<div id="col-container">
 		<div id="col-right">
 			<div class="col-wrap">
@@ -51,7 +53,8 @@ if ( ! defined( 'ABSPATH' ) )
 										<a href="<?php echo esc_url( add_query_arg( 'edit', $tax->id ) ); ?>"><?php _e( 'Edit' ); ?></a> |
 									</span>
 									<span class="delete">
-										<a class="delete" href="<?php echo esc_url( add_query_arg( 'delete', $tax->id ) ); ?>"><?php _e( 'Delete' ); ?></a>
+										<a class="delete"
+										   href="<?php echo esc_url( add_query_arg( 'delete', $tax->id ) ); ?>"><?php _e( 'Delete' ); ?></a>
 									</span>
 								</div>
 							</td>
@@ -77,10 +80,10 @@ if ( ! defined( 'ABSPATH' ) )
 								<?php
 								if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) :
 									$terms_array = array();
-									$terms = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
+									$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
 									if ( $terms ) :
 										foreach ( $terms as $term ) :
-											$terms_array[] = $term->name;
+											$terms_array[ ] = $term->name;
 										endforeach;
 										echo esc_html( implode( ' , ', $terms_array ) );
 									else :
@@ -107,17 +110,21 @@ if ( ! defined( 'ABSPATH' ) )
 			<div class="col-wrap">
 				<div class="form-wrap">
 					<h3><?php _e( 'Add New Attribute' ) ?></h3>
+
 					<p><?php _e( '' ); ?></p>
+
 					<form action="" method="post">
 						<div class="form-field">
 							<label for="attribute_label"><?php _e( 'Name' ); ?></label>
-							<input name="attribute_label" id="attribute_label" type="text" value="" />
+							<input name="attribute_label" id="attribute_label" type="text" value=""/>
+
 							<p class="description"><?php _e( 'Name for the attribute (shown on the front-end).' ); ?></p>
 						</div>
 
 						<div class="form-field">
 							<label for="attribute_name"><?php _e( 'Slug' ); ?></label>
-							<input name="attribute_name" id="attribute_name" type="text" value="" maxlength="28" />
+							<input name="attribute_name" id="attribute_name" type="text" value="" maxlength="28"/>
+
 							<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 						</div>
 
@@ -128,6 +135,7 @@ if ( ! defined( 'ABSPATH' ) )
 								<option value="meta"><?php _e( 'Meta Value' ); ?></option>
 								<?php do_action( 'rt_wp_attributes_admin_attribute_store_as' ); ?>
 							</select>
+
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 
@@ -150,6 +158,7 @@ if ( ! defined( 'ABSPATH' ) )
 								</optgroup>
 								<?php do_action( 'rt_wp_attributes_admin_attribute_render_types' ); ?>
 							</select>
+
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 
@@ -160,10 +169,12 @@ if ( ! defined( 'ABSPATH' ) )
 								<option value="name"><?php _e( 'Name' ); ?></option>
 								<option value="id"><?php _e( 'Term ID' ); ?></option>
 							</select>
+
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 
-						<p class="submit"><input type="submit" name="add_new_attribute" id="submit" class="button" value="<?php _e( 'Add Attribute' ); ?>"></p>
+						<p class="submit"><input type="submit" name="add_new_attribute" id="submit" class="button"
+												 value="<?php _e( 'Add Attribute' ); ?>"></p>
 						<?php //nonce ?>
 					</form>
 				</div>
@@ -173,9 +184,9 @@ if ( ! defined( 'ABSPATH' ) )
 	<script type="text/javascript">
 		/* <![CDATA[ */
 
-		jQuery('a.delete').click(function(){
+		jQuery('a.delete').click(function () {
 			//noinspection UnnecessaryLocalVariableJS
-			var answer = confirm ("<?php _e( 'Are you sure you want to delete this attribute?' ); ?>");
+			var answer = confirm("<?php _e( 'Are you sure you want to delete this attribute?' ); ?>");
 			return answer;
 		});
 
