@@ -146,7 +146,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$insertdata = array();
 			foreach ( $data as $key => $val ) {
 				// Remove NULL value
-				if ( $val != null ){
+				if ( $val !== null ){
 					$insertdata[ $key ] = $val;
 				}
 			}
