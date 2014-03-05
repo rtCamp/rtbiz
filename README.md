@@ -26,6 +26,13 @@ To update the library
 git subtree pull --prefix app/lib https://github.com/rtCamp/wp-helpers.git master  --squash
 ```
 
+Add following line in plugin loader file
+
+```
+include_once 'app/lib/wp-helpers.php';
+```
+
+Alternatively you can add as a plugin also
 
 License
 ========
