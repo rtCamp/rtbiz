@@ -11,14 +11,14 @@
   Text Domain: rt-contacts
  */
 
-if ( ! defined( 'RT_CONTACT_VERSION' ) ) {
-	define( 'RT_CONTACT_VERSION', '0.0.1' );
+if ( ! defined( 'RT_CONTACTS_VERSION' ) ) {
+	define( 'RT_CONTACTS_VERSION', '0.0.1' );
 }
-if ( ! defined( 'RT_CONTACT_PATH' ) ) {
-	define( 'RT_CONTACT_PATH', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'RT_CONTACTS_PATH' ) ) {
+	define( 'RT_CONTACTS_PATH', plugin_dir_path( __FILE__ ) );
 }
-if ( ! defined( 'RT_CONTACT_URL' ) ) {
-	define( 'RT_CONTACT_URL', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'RT_CONTACTS_URL' ) ) {
+	define( 'RT_CONTACTS_URL', plugin_dir_url( __FILE__ ) );
 }
 
 /**
@@ -39,7 +39,7 @@ function rt_contacts_autoloader( $class_name ) {
 		'app/modules/person/' . $file_name . '.php',
 	);
 	foreach ( $rt_contacts_paths as $path ) {
-		$path = RT_CONTACT_PATH . $path;
+		$path = RT_CONTACTS_PATH . $path;
 		if ( file_exists( $path ) ) {
 			include $path;
 			break;
@@ -54,10 +54,10 @@ spl_autoload_register( 'rt_contacts_autoloader' );
 
 function rt_contacts_init() {
 
-	rt_crm_include();
-
 	global $rt_contacts;
 	$rt_contacts = new Rt_Contacts();
+
+	include_once RT_CONTACTS_PATH . 'app/helper/rt-contacts-functions.php';
 }
 
 add_action( 'init', 'rt_contacts_init', 1 );
