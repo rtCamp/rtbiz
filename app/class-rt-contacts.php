@@ -68,6 +68,26 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 				) );
 			}
 		}
-	}
 
+		function connect_organization_to_person( $from = '', $to = '' ) {
+			global $rt_organization, $rt_person;
+			if ( function_exists( 'p2p_create_connection' ) && function_exists( 'p2p_connection_exists' ) ) {
+				if ( ! p2p_connection_exists( $rt_organization->post_type.'_to_'.$rt_person->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+					p2p_create_connection( rtcrm_post_type_name( 'account' ).'_to_'.rtcrm_post_type_name( 'contact' ), array( 'from' => $from, 'to' => $to ) );
+				}
+			}
+		}
+
+		function get_organization_to_person_connection( $connected_items ) {
+			global $rt_organization, $rt_person;
+			return get_posts(
+				array(
+					'connected_type' => $rt_organization->post_type.'_to_'.$rt_person->post_type,
+					'connected_items' => $connected_items,
+					'nopaging' => true,
+					'suppress_filters' => false,
+				)
+			);
+		}
+	}
 }

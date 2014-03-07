@@ -177,6 +177,34 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 		}
 
+		function connect_post_to_entity( $post_type, $from = '', $to = '' ) {
+			if ( function_exists( 'p2p_create_connection' ) && function_exists( 'p2p_connection_exists' ) && function_exists( 'p2p_delete_connections' ) ) {
+				p2p_delete_connections( $post_type.'_to_'.$this->post_type, array( 'from' => $from ) );
+				if ( ! p2p_connection_exists( $post_type.'_to_'.$this->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+					p2p_create_connection( $post_type.'_to_'.$this->post_type, array( 'from' => $from, 'to' => $to ) );
+				}
+			}
+		}
+
+		static function connection_to_string( $post_id, $connection, $term_seperator = ' , ' ) {
+			$post = get_post( $post_id );
+			$termsArr = get_posts(array(
+				'connected_type' => $post->post_type.'_to_'.$connection,
+				'connected_items' => $post,
+				'nopaging' => true,
+				'suppress_filters' => false,
+			));
+			$tmpStr = '';
+			if( $termsArr ) {
+				$sep = '';
+				foreach ( $termsArr as $tObj ) {
+					$tmpStr .= $sep . $tObj->post_title;
+					$sep = $term_seperator;
+				}
+			}
+			return $tmpStr;
+		}
+
 		function register_post_type( $name, $labels = array(), $menu_icon = '' ) {
 			$args = array(
 				'labels' => $labels,
@@ -193,17 +221,21 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			register_post_type( $name, $args );
 		}
 
-		function get_posts_for_entity( $post_type, $post_id, $key ) {
-			return get_posts(
-				array(
-					'post_type' => $key,
-					'post_status' => 'any',
-					'connected_type' => $key.'_to_'.$post_type,
-					'connected_items' => $post_id,
-					'nopaging' => true,
-					'suppress_filters' => false,
-				)
+		function get_posts_for_entity( $post_id, $post_type, $fetch_entity = false ) {
+			$args = array(
+				'post_type' => $post_type,
+				'post_status' => 'any',
+				'connected_type' => $post_type.'_to_'.$this->post_type,
+				'connected_items' => $post_id,
+				'nopaging' => true,
+				'suppress_filters' => false,
 			);
+
+			if ( $fetch_entity ) {
+				$args['post_type'] = $this->post_type;
+			}
+
+			return get_posts( $args );
 		}
 
 		function get_post_type_capabilities() {
@@ -250,6 +282,17 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function delete() {
 
+		}
+
+		function search( $query ) {
+			$entity = new WP_Query(array(
+				'post_type' => rtcrm_post_type_name('contact'),
+				'post_status' => 'any',
+				'posts_per_page' => 10,
+				's' => $query,
+			));
+
+			return $entity->posts;
 		}
 	}
 }

@@ -236,6 +236,19 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			parent::save_meta_values( $post_id );
 		}
 
+		function add_person( $name, $description = '' ) {
+			$person_id = wp_insert_post(
+				array(
+					'post_title' => $name,
+					'post_content' => $description,
+					'post_type' => $this->post_type,
+					'post_status' => 'publish',
+				)
+			);
+
+			return $person_id;
+		}
+
 		function get_by_email( $email ) {
 			return get_posts(
 				array(
