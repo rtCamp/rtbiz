@@ -17,3 +17,4 @@ if ( file_exists( $rt_autoloader_file ) ){
 if ( class_exists( 'RT_WP_Autoload' ) ){
 	$GLOBALS[ 'wp_helper_loader' ] = new RT_WP_Autoload();
 }
+
