@@ -40,6 +40,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			$this->meta_fields = array(
 				array(
 					'key' => 'contact_email',
+					'text' => __( 'Email' ),
 					'label' => __( 'Enter Email Address' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -49,6 +50,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_phone',
+					'text' => __( 'Phone' ),
 					'label' => __( 'Enter Phone Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -58,6 +60,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_fax',
+					'text' => __( 'Fax' ),
 					'label' => __( 'Enter Fax Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -67,6 +70,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_skype_id',
+					'text' => __( 'Skype' ),
 					'label' => __( 'Enter Skype Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -76,6 +80,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_twitter',
+					'text' => __( 'Twitter' ),
 					'label' => __( 'Enter Twitter Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -85,6 +90,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_facebook',
+					'text' => __( 'Facebook' ),
 					'label' => __( 'Enter Facebook Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -94,6 +100,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_linkedin',
+					'text' => __( 'Linked In' ),
 					'label' => __( 'Enter LinkedIn Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -103,6 +110,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_website',
+					'text' => __( 'Website' ),
 					'label' => __( 'Enter Website URL' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -112,6 +120,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_user_id',
+					'text' => __( 'WordPress User' ),
 					'label' => __( 'Select user for contact' ),
 					'is_autocomplete' => true,
 					'data_source' => 'WP_User',

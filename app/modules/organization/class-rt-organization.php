@@ -37,6 +37,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			$this->meta_fields = array(
 				array(
 					'key' => 'account_address',
+					'text' => __( 'Address' ),
 					'label' => __( 'Enter Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
@@ -46,6 +47,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_country',
+					'text' => __( 'Country' ),
 					'label' => __( 'Enter Country' ),
 					'is_multiple' => false,
 					'type' => 'text',
@@ -55,6 +57,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_email',
+					'text' => __( 'Email' ),
 					'label' => __( 'Enter Email Address' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -64,6 +67,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_phone',
+					'text' => __( 'Phone' ),
 					'label' => __( 'Enter Phone Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -73,6 +77,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_fax',
+					'text' => __( 'Fax' ),
 					'label' => __( 'Enter Fax Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -82,6 +87,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_skype_id',
+					'text' => __( 'Skype' ),
 					'label' => __( 'Enter Skype Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -91,6 +97,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_twitter',
+					'text' => __( 'Twitter' ),
 					'label' => __( 'Enter Twitter Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -100,6 +107,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_facebook',
+					'text' => __( 'Facebook' ),
 					'label' => __( 'Enter Facebook Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -109,6 +117,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_linkedin',
+					'text' => __( 'Linked In' ),
 					'label' => __( 'Enter LinkedIn Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
@@ -118,6 +127,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				),
 				array(
 					'key' => 'account_website',
+					'text' => __( 'Website' ),
 					'label' => __( 'Enter Website URL' ),
 					'is_multiple' => true,
 					'type' => 'text',

@@ -119,3 +119,13 @@ function rt_contacts_search_organization( $query ) {
 	global $rt_organization;
 	return $rt_organization->search( $query );
 }
+
+function rt_contacts_get_person_meta_fields() {
+	global $rt_person;
+	return $rt_person->meta_fields;
+}
+
+function rt_contacts_get_organization_meta_fields() {
+	global $rt_organization;
+	return $rt_organization->meta_fields;
+}
