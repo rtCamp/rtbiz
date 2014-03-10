@@ -157,7 +157,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					jQuery(document).on('click', ".delete-multiple", function(e) {
 						$(this).prev().remove();
 						$(this).remove();
-					})
+					});
 					jQuery(document).on('click', ".add-multiple", function(e) {
 						var tempVal = $(this).prev().val();
 						var name = $(this).prev().attr("name")
