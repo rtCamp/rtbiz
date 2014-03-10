@@ -95,7 +95,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else if( isset( $field['type'] ) && $field['type'] == 'textarea' ) {
-					$values = get_post_meta( $post->ID, $field['key'] );
+					$values = get_post_meta( $post->ID, $field['key'], true );
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else {
-					$values = get_post_meta( $post->ID, $field['key'] );
+					$values = get_post_meta( $post->ID, $field['key'], true );
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
