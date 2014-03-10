@@ -252,7 +252,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		function get_by_email( $email ) {
 			return get_posts(
 				array(
-					'meta_key' => $this->meta_key_prefix.$this->email_key,
+					'meta_key' => self::$meta_key_prefix.$this->email_key,
 					'meta_value' => $email,
 					'post_type' => $this->post_type,
 					'post_status' => 'any',

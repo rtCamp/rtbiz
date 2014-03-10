@@ -16,7 +16,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		public $enabled_post_types = array();
 		public $post_type;
 		public $meta_fields = array();
-		public $meta_key_prefix = 'rt_contacts_';
+		public static $meta_key_prefix = 'rt_contacts_';
 
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
@@ -259,19 +259,19 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		static function add_meta( $id, $key, $value, $unique = false ) {
-			add_post_meta( $id, $this->meta_key_prefix.$key, $value, $unique );
+			add_post_meta( $id, self::$meta_key_prefix.$key, $value, $unique );
 		}
 
 		static function get_meta( $id, $key, $single = false ) {
-			return get_post_meta( $id, $this->meta_key_prefix.$key, $single );
+			return get_post_meta( $id, self::$meta_key_prefix.$key, $single );
 		}
 
 		static function update_meta( $id, $key, $value, $prev_value = '' ) {
-			update_post_meta( $id, $this->meta_key_prefix.$key, $value, $prev_value );
+			update_post_meta( $id, self::$meta_key_prefix.$key, $value, $prev_value );
 		}
 
 		static function delete_meta( $id, $key, $value = '' ) {
-			delete_post_meta( $id, $this->meta_key_prefix.$key, $value );
+			delete_post_meta( $id, self::$meta_key_prefix.$key, $value );
 		}
 
 		function add() {
