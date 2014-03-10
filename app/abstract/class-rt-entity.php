@@ -62,7 +62,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		function render_additional_details_meta_box( $post ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $field['is_autocomplete'] ) && isset( $field['data_source'] ) && $field['is_autocomplete'] && $field['data_source'] == 'WP_User' ) {
-					$user_id = get_post_meta( $post->ID, $field['key'], true );
+					$user_id = $this->get_meta( $post->ID, $field['key'], true );
 				?>
 					<div class="form-field-2">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
@@ -83,7 +83,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-					$values = get_post_meta( $post->ID, $field['key'] );
+					$values = $this->get_meta( $post->ID, $field['key'] );
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
@@ -95,7 +95,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else if( isset( $field['type'] ) && $field['type'] == 'textarea' ) {
-					$values = get_post_meta( $post->ID, $field['key'], true );
+					$values = $this->get_meta( $post->ID, $field['key'], true );
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else {
-					$values = get_post_meta( $post->ID, $field['key'], true );
+					$values = $this->get_meta( $post->ID, $field['key'], true );
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
