@@ -70,14 +70,14 @@ function rt_contacts_add_person( $name, $description = '' ) {
 	return $rt_person->add_person( $name, $description );
 }
 
-function rt_contacts_connect_post_to_person( $post_type, $from = '', $to = '' ) {
+function rt_contacts_connect_post_to_person( $post_type, $from = '', $to = '', $clear_old = false ) {
 	global $rt_person;
-	$rt_person->connect_post_to_entity( $post_type, $from, $to );
+	$rt_person->connect_post_to_entity( $post_type, $from, $to, $clear_old );
 }
 
-function rt_contacts_connect_post_to_organization( $post_type, $from = '', $to = '' ) {
+function rt_contacts_connect_post_to_organization( $post_type, $from = '', $to = '', $clear_old = false ) {
 	global $rt_organization;
-	$rt_organization->connect_post_to_entity( $post_type, $from, $to );
+	$rt_organization->connect_post_to_entity( $post_type, $from, $to, $clear_old );
 }
 
 function rt_contacts_connect_organization_to_person( $from = '', $to = '' ) {
