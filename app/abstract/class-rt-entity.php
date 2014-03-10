@@ -99,7 +99,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?>><?php echo $value; ?></textarea>
+						<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?>><?php echo $values; ?></textarea>
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else {
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $value; ?>' >
+						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' >
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php }
