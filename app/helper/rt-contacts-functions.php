@@ -19,7 +19,7 @@ function rt_contacts_register_organization_connection( $post_type, $label ) {
 	$rt_organization->init_connection( $post_type, $label );
 }
 
-function rt_contacts_get_post_to_person_connection( $post_id, $post_type, $fetch_person = false ) {
+function rt_contacts_get_post_for_person_connection( $post_id, $post_type, $fetch_person = false ) {
 	global $rt_person;
 	return $rt_person->get_posts_for_entity( $post_id, $post_type, $fetch_person );
 }
