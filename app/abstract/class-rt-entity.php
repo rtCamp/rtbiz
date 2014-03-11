@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function search( $query ) {
 			$entity = new WP_Query(array(
-				'post_type' => rtcrm_post_type_name('contact'),
+				'post_type' => $this->post_type,
 				'post_status' => 'any',
 				'posts_per_page' => 10,
 				's' => $query,
