@@ -7,16 +7,15 @@
  */
 if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 
-	class RT_Theme_Update_Checker
-	{
+	class RT_Theme_Update_Checker {
 		public $theme = ''; //The theme associated with this update checker instance.
 		public $metadataUrl = ''; //The URL of the theme's metadata file.
 		public $enableAutomaticChecking = true; //Enable/disable automatic update checks.
 		public $theme_update_slug = ''; //
 		public $details_url = '';
 		protected $optionName = ''; //Where to store update info.
-		protected $automaticCheckDone   = false;
-		protected static $filterPrefix  = 'tuc_request_update_';
+		protected $automaticCheckDone = false;
+		protected static $filterPrefix = 'tuc_request_update_';
 
 		/**
 		 * Class constructor.
@@ -27,8 +26,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 * @param string  $details_url
 		 * @param boolean $enableAutomaticChecking Enable/disable automatic update checking. If set to FALSE, you'll need to explicitly call checkForUpdates() to, err, check for updates.
 		 */
-		public function __construct( $theme, $theme_update_slug, $metadataUrl, $details_url = '', $enableAutomaticChecking = true )
-		{
+		public function __construct( $theme, $theme_update_slug, $metadataUrl, $details_url = '', $enableAutomaticChecking = true ) {
 			$this->metadataUrl             = $metadataUrl;
 			$this->enableAutomaticChecking = true;
 			$this->theme                   = $theme;
@@ -44,12 +42,11 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function install_hooks()
-		{
+		public function install_hooks() {
 			include_once 'class-rt-theme-update-info.php';
 			//Check for updates when WordPress does. We can detect when that happens by tracking
 			//updates to the "update_themes" transient, which only happen in wp_update_themes().
-			if ( $this->enableAutomaticChecking ){
+			if ( $this->enableAutomaticChecking ) {
 				add_filter( 'pre_set_site_transient_update_themes', array( $this, 'on_transient_update' ) );
 			}
 
@@ -75,8 +72,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return RT_Theme_Update_Info
 		 */
-		public function request_update( $queryArgs = array() )
-		{
+		public function request_update( $queryArgs = array() ) {
 			//Query args to append to the URL. Themes can add their own by using a filter callback (see addQueryArgFilter()).
 			$queryArgs[ 'installed_version' ]    = $this->get_installed_version();
 			$queryArgs[ 'checking_for_updates' ] = true;
@@ -90,7 +86,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 			$options = apply_filters( self::$filterPrefix . 'options-' . $this->theme, $options );
 
 			$url = $this->metadataUrl;
-			if ( ! empty( $queryArgs ) ){
+			if ( ! empty( $queryArgs ) ) {
 				$url = add_query_arg( $queryArgs, $url );
 			}
 			//Send the request.
@@ -99,18 +95,19 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 			$themeUpdate = null;
 			$code        = wp_remote_retrieve_response_code( $result );
 			$body        = wp_remote_retrieve_body( $result );
-			if ( ( $code == 200 ) && ! empty( $body ) ){
+			if ( ( $code == 200 ) && ! empty( $body ) ) {
 				$themeUpdate = RT_Theme_Update_Info::from_json( $body );
 				//The update should be newer than the currently installed version.
-				if ( ( $themeUpdate != null ) && version_compare( $themeUpdate->version, $this->get_installed_version(), '<=' ) ){
+				if ( $themeUpdate === null || ( ( $themeUpdate !== null ) && version_compare( $themeUpdate->version, $this->get_installed_version(), '<=' ) ) ) {
 					$themeUpdate = null;
 				} else {
-					if ( ! empty ( $this->details_url ) ){
+					if ( ! empty ( $this->details_url ) ) {
 						$themeUpdate->details_url = $this->details_url;
 					}
 				}
 			}
 			$themeUpdate = apply_filters( self::$filterPrefix . 'result-' . $this->theme, $themeUpdate, $result );
+
 			return $themeUpdate;
 		}
 
@@ -119,9 +116,8 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return string Version number.
 		 */
-		public function get_installed_version()
-		{
-			if ( function_exists( 'wp_get_theme' ) ){
+		public function get_installed_version() {
+			if ( function_exists( 'wp_get_theme' ) ) {
 				$theme = wp_get_theme( $this->theme );
 
 				return $theme->get( 'Version' );
@@ -142,10 +138,9 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function check_for_updates()
-		{
+		public function check_for_updates() {
 			$state = get_option( $this->optionName );
-			if ( empty( $state ) ){
+			if ( empty( $state ) ) {
 				$state                 = new StdClass;
 				$state->lastCheck      = 0;
 				$state->checkedVersion = '';
@@ -168,9 +163,8 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return mixed
 		 */
-		public function on_transient_update( $value )
-		{
-			if ( ! $this->automaticCheckDone ){
+		public function on_transient_update( $value ) {
+			if ( ! $this->automaticCheckDone ) {
 				$this->check_for_updates();
 				$this->automaticCheckDone = true;
 			}
@@ -185,13 +179,12 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return array Modified update list.
 		 */
-		public function inject_update( $updates )
-		{
+		public function inject_update( $updates ) {
 			$state = get_option( $this->optionName );
 
 			//Is there an update to insert?
 
-			if ( ! empty( $state ) && isset( $state->update ) && ! empty( $state->update ) && $state->update instanceof RT_Theme_Update_Info ){
+			if ( ! empty( $state ) && isset( $state->update ) && ! empty( $state->update ) && $state->update instanceof RT_Theme_Update_Info ) {
 				$updates->response[ $this->theme ] = $state->update->to_wp_format();
 			} else {
 				$this->delete_stored_data();
@@ -205,8 +198,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function delete_stored_data()
-		{
+		public function delete_stored_data() {
 			delete_option( $this->optionName );
 		}
 
@@ -220,8 +212,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function add_query_arg_filter( $callback )
-		{
+		public function add_query_arg_filter( $callback ) {
 			add_filter( self::$filterPrefix . 'query_args-' . $this->theme, $callback );
 		}
 
@@ -236,8 +227,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function add_http_request_arg_filter( $callback )
-		{
+		public function add_http_request_arg_filter( $callback ) {
 			add_filter( self::$filterPrefix . 'options-' . $this->theme, $callback );
 		}
 
@@ -255,8 +245,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 *
 		 * @return void
 		 */
-		public function add_result_filter( $callback )
-		{
+		public function add_result_filter( $callback ) {
 			add_filter( self::$filterPrefix . 'result-' . $this->theme, $callback, 10, 2 );
 		}
 	}
