@@ -158,10 +158,14 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 		/**
 		 *
+		 * @param array $data
+		 * @param array $where
+		 * @param null  $format
+		 * @param null  $where_format
+		 *
+		 * @return
 		 * @global wpdb $wpdb
 		 *
-		 * @param array  $data
-		 * @param array  $where
 		 */
 		function update( $data, $where, $format = null, $where_format = null )
 		{
