@@ -181,10 +181,10 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 
 		function save_meta_values($post_id) {
 			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST['account_meta'][$field['key']] ) ) {
+				if ( isset( $_POST['account_meta'][$field['key']] ) && !empty( $_POST['account_meta'][$field['key']] ) ) {
 					$account_meta[$field['key']] = $_POST['account_meta'][$field['key']];
 					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-						$oldmeta = get_post_meta( $post_id, $field['key'] );
+						$oldmeta = self::get_meta( $post_id, $field['key'] );
 						foreach ( $oldmeta as $ometa ) {
 							self::delete_meta( $post_id, $field['key'], $ometa );
 						}
@@ -195,11 +195,16 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 						}
 					} else {
 						$old_value = self::get_meta( $post_id, $field['key'], true );
-						if ( ! isset( $old_value ) ) {
+						if ( empty( $old_value ) ) {
 							self::add_meta( $post_id, $field['key'], $_POST['account_meta'][$field['key']], true );
 						} else {
 							self::update_meta( $post_id, $field['key'], $_POST['account_meta'][$field['key']] );
 						}
+					}
+				} else {
+					$oldmeta = get_post_meta( $post_id, $field['key'] );
+					foreach ( $oldmeta as $ometa ) {
+						self::delete_meta( $post_id, $field['key'], $ometa );
 					}
 				}
 			}
