@@ -110,6 +110,15 @@ function rt_contacts_get_organization_capabilities() {
 	return $rt_organization->get_post_type_capabilities();
 }
 
+function rt_contacts_get_dependent_capabilities() {
+	global $rt_contacts_roles;
+	$caps = array();
+	foreach ( $rt_contacts_roles->global_caps as $cap ) {
+		$caps[$cap] = true;
+	}
+	return $caps;
+}
+
 function rt_contacts_search_person( $query ) {
 	global $rt_person;
 	return $rt_person->search( $query );
