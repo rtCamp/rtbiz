@@ -14,6 +14,8 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 	class Rt_Contacts {
 
+		public $menu_page_slug = 'rt-contacts';
+
 		public function __construct() {
 			$this->check_p2p_dependency();
 			$this->init_modules();
@@ -30,7 +32,7 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 		function register_menu() {
 			global $rt_contacts_roles;
-			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], 'rt-contacts', array( $this, 'contacts_ui' ), RT_CONTACTS_URL . 'assets/img/contacts-16X16.png', '90.399' );
+			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->menu_page_slug, array( $this, 'contacts_ui' ), RT_CONTACTS_URL . 'assets/img/contacts-16X16.png', '90.399' );
 		}
 
 		function contacts_ui() {

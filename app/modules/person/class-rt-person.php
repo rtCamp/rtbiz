@@ -17,7 +17,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
-			$labels = array(
+			$this->labels = array(
 				'name' => __( 'Person' ),
 				'singular_name' => __( 'Person' ),
 				'menu_name' => __( 'People' ),
@@ -32,7 +32,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				'not_found_in_trash' => __( 'No people found in Trash' ),
 				'not_found_in_trash' => __( 'No people found in Trash' ),
 			);
-			$this->register_post_type( $this->post_type, $labels, RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
+			$this->register_post_type( $this->post_type, $this->labels, RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
 			$this->setup_meta_fields();
 		}
 

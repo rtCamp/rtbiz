@@ -14,7 +14,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 	class Rt_Organization extends Rt_Entity {
 		public function __construct() {
 			parent::__construct( 'rt_account' );
-			$labels = array(
+			$this->labels = array(
 				'name' => __( 'Organization' ),
 				'singular_name' => __( 'Organization' ),
 				'menu_name' => __( 'Organizations' ),
@@ -29,7 +29,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
 				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
 			);
-			$this->register_post_type( $this->post_type, $labels, RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
+			$this->register_post_type( $this->post_type, $this->labels, RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
 			$this->setup_meta_fields();
 		}
 

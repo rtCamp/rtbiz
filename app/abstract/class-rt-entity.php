@@ -15,6 +15,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		public $enabled_post_types = array();
 		public $post_type;
+		public $labels;
 		public $meta_fields = array();
 		public static $meta_key_prefix = 'rt_contacts_';
 
@@ -36,9 +37,16 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
+
+				add_action( 'admin_menu', array( $this, 'register_pages' ) );
 			}
 
 			do_action( 'rt_contacts_entity_hooks', $this );
+		}
+
+		function register_pages() {
+			global $rt_contacts;
+			add_submenu_page( $rt_contacts->menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
 		}
 
 		function change_publish_button( $translation, $text ) {
