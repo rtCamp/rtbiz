@@ -18,7 +18,7 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 			$this->check_p2p_dependency();
 			$this->init_modules();
 			$this->register_organization_person_connection();
-
+			$this->init_roles();
 			$this->hooks();
 		}
 
@@ -29,7 +29,8 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 		}
 
 		function register_menu() {
-			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), 'manage_options', 'rt-contacts', array( $this, 'contacts_ui' ), RT_CONTACTS_URL . 'assets/img/contacts-16X16.png', '90.399' );
+			global $rt_contacts_roles;
+			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], 'rt-contacts', array( $this, 'contacts_ui' ), RT_CONTACTS_URL . 'assets/img/contacts-16X16.png', '90.399' );
 		}
 
 		function contacts_ui() {
@@ -52,6 +53,11 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 			global $rt_person, $rt_organization;
 			$rt_person = new Rt_Person();
 			$rt_organization = new Rt_Organization();
+		}
+
+		function init_roles() {
+			global $rt_contacts_roles;
+			$rt_contacts_roles = new Rt_Contacts_Roles();
 		}
 
 		function register_organization_person_connection() {
