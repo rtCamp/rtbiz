@@ -15,6 +15,9 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 	class Rt_Contacts {
 
 		public $menu_page_slug = 'rt-contacts';
+		public $settings_page_slug = 'rt-contacts-settings';
+		public $templateURL;
+		public $menu_order = array();
 
 		public function __construct() {
 			$this->check_p2p_dependency();
@@ -22,21 +25,65 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 			$this->register_organization_person_connection();
 			$this->init_roles();
 			$this->hooks();
+
+			$this->init_menu_order();
+
+			$this->templateURL = apply_filters('rt_contacts_template_url', 'rt_contacts/');
+		}
+
+		function init_menu_order() {
+			$this->menu_order[$this->menu_page_slug] = 5;
+
+			global $rt_person, $rt_organization;
+
+			$this->menu_order['post-new.php?post_type='.$rt_person->post_type] = 10;
+			$this->menu_order['edit.php?post_type='.$rt_person->post_type] = 15;
+			$this->menu_order['post-new.php?post_type='.$rt_organization->post_type] = 50;
+			$this->menu_order['edit.php?post_type='.$rt_organization->post_type] = 55;
+
+			$this->menu_order[$this->settings_page_slug] = 100;
 		}
 
 		function hooks() {
 			if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
+				add_filter( 'custom_menu_order', array($this, 'contacts_pages_order') );
 			}
 		}
 
 		function register_menu() {
 			global $rt_contacts_roles;
-			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->menu_page_slug, array( $this, 'contacts_ui' ), RT_CONTACTS_URL . 'assets/img/contacts-16X16.png', '90.399' );
+			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url', RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
+			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->menu_page_slug, array( $this, 'contacts_ui' ), $contacts_logo_url, '90.399' );
+			add_submenu_page( $this->menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->settings_page_slug, array( $this, 'settings_ui' ) );
+		}
+
+		function contacts_pages_order( $menu_order ) {
+			global $submenu;
+			if ( isset( $submenu[$this->menu_page_slug] ) && ! empty( $submenu[$this->menu_page_slug] ) ) {
+				$menu = $submenu[$this->menu_page_slug];
+				$new_menu = array();
+
+				foreach ( $menu as $p_key => $item ) {
+					foreach ( $this->menu_order as $slug => $order ) {
+						if ( false !== array_search( $slug, $item ) ) {
+							$new_menu[$order] = $item;
+						}
+					}
+				}
+				ksort( $new_menu );
+				$submenu[$this->menu_page_slug] = $new_menu;
+			}
+
+			return $menu_order;
 		}
 
 		function contacts_ui() {
 			echo 'Contacts Dashboard';
+		}
+
+		function settings_ui() {
+			rt_contacts_get_template( 'settings.php' );
 		}
 
 		function check_p2p_dependency() {
