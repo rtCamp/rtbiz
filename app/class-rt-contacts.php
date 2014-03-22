@@ -53,7 +53,10 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 		function register_menu() {
 			global $rt_contacts_roles;
-			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url', RT_CONTACTS_URL . 'assets/img/contacts-16X16.png' );
+			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url' );
+			if ( empty( $contacts_logo_url ) ) {
+				$contacts_logo_url = RT_CONTACTS_URL . 'assets/img/contacts-16X16.png';
+			}
 			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->menu_page_slug, array( $this, 'contacts_ui' ), $contacts_logo_url, '90.399' );
 			add_submenu_page( $this->menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->settings_page_slug, array( $this, 'settings_ui' ) );
 		}
