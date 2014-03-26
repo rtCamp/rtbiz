@@ -34,7 +34,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url' );
 			if ( empty( $contacts_logo_url ) ) {
-				$contacts_logo_url = RT_CONTACTS_URL . 'assets/img/contacts-16X16.png';
+				$contacts_logo_url = RT_CONTACTS_URL . 'app/assets/img/contacts-16X16.png';
 			}
 			$this->register_post_type( $this->post_type, $this->labels, $contacts_logo_url );
 			$this->setup_meta_fields();
