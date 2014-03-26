@@ -21,7 +21,7 @@ if ( ! defined( 'RT_CONTACTS_URL' ) ) {
 	define( 'RT_CONTACTS_URL', plugin_dir_url( __FILE__ ) );
 }
 if ( !defined( 'RT_CONTACTS_PATH_TEMPLATES' ) ) {
-	define( 'RT_CONTACTS_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'app/view/' );
+	define( 'RT_CONTACTS_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
 }
 
 /**
