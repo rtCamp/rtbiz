@@ -23,14 +23,12 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 	/**
 	 * Class RT_WP_Attributes_Model
 	 */
-	class RT_Attributes_Model extends RT_DB_Model
-	{
+	class RT_Attributes_Model extends RT_DB_Model {
 
 		/**
 		 *
 		 */
-		public function __construct()
-		{
+		public function __construct() {
 			parent::__construct( 'wp_attributes' );
 		}
 
@@ -39,8 +37,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return bool
 		 */
-		function attribute_exists( $attribute_name )
-		{
+		function attribute_exists( $attribute_name ) {
 			$attributes = $this->get_all_attributes();
 			foreach ( $attributes as $attribute ) {
 				if ( $attribute_name == $attribute->attribute_name ) {
@@ -54,8 +51,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		/**
 		 * @return array
 		 */
-		function get_all_attributes()
-		{
+		function get_all_attributes() {
 			return parent::get( array() );
 		}
 
@@ -64,8 +60,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return bool
 		 */
-		function get_attribute( $attribute_id )
-		{
+		function get_attribute( $attribute_id ) {
 			$args      = array( 'id' => $attribute_id );
 			$attribute = parent::get( $args );
 			if ( empty( $attribute ) ) {
@@ -80,8 +75,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return bool
 		 */
-		function get_attribute_name( $attribute_id )
-		{
+		function get_attribute_name( $attribute_id ) {
 			$attribute = $this->get_attribute( $attribute_id );
 			if ( empty( $attribute ) ) {
 				return false;
@@ -95,8 +89,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return int
 		 */
-		function add_attribute( $data )
-		{
+		function add_attribute( $data ) {
 			return parent::insert( $data );
 		}
 
@@ -106,8 +99,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function update_attribute( $data, $where )
-		{
+		function update_attribute( $data, $where ) {
 			return parent::update( $data, $where );
 		}
 
@@ -116,8 +108,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 		 *
 		 * @return int
 		 */
-		function delete_attribute( $where )
-		{
+		function delete_attribute( $where ) {
 			return parent::delete( $where );
 		}
 	}

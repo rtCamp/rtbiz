@@ -18,8 +18,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 	/**
 	 * Class RT_WP_Attributes
 	 */
-	class RT_Attributes
-	{
+	class RT_Attributes {
 
 		/**
 		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
@@ -54,8 +53,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
 		 */
-		public function __construct( $module_name )
-		{
+		public function __construct( $module_name ) {
 			//Register AutoLoader for attributes
 			$this->auto_loader();
 			// Database upgrade if required
@@ -68,8 +66,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 *
 		 */
-		function db_upgrade()
-		{
+		function db_upgrade() {
 			$updateDB = new  RT_DB_Update( WP_HELPER_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
 			$updateDB->db_version_option_name .= '_ATTRIBUTES';
 			$updateDB->install_db_version = $updateDB->get_install_db_version();
@@ -79,8 +76,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Initialize the Database model object which will be used for DB transactions
 		 */
-		function init_db_model()
-		{
+		function init_db_model() {
 			$this->attributes_db_model           = new RT_Attributes_Model();
 			$this->attributes_relationship_model = new RT_Attributes_Relationship_Model();
 		}
@@ -90,8 +86,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 * @internal param $module_id
 		 */
-		function register_taxonomies()
-		{
+		function register_taxonomies() {
 
 		}
 
@@ -101,8 +96,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param string $page_slug - slug of page on under which the attributes page is to be shown
 		 * @param string $post_type - post type for which the attributes are to be listed
 		 */
-		function add_attributes_page( $page_slug = '', $post_type = '' )
-		{
+		function add_attributes_page( $page_slug = '', $post_type = '' ) {
 
 			$this->page_slug = $page_slug;
 			$this->post_type = $post_type;
@@ -117,8 +111,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Renders the Attributes Listing Page
 		 */
-		function render_attributes_page()
-		{
+		function render_attributes_page() {
 			// Perform Any action according to query variable passed in the REQUEST
 			$action_completed = $this->perform_action();
 
@@ -138,8 +131,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Edit Attribute Screen
 		 */
-		function edit_attribute_ui()
-		{
+		function edit_attribute_ui() {
 			$edit = absint( $_GET[ 'edit' ] );
 
 			$attribute_to_edit = $this->attributes_db_model->get_attribute( $edit );
@@ -156,8 +148,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Add Attribute Screen
 		 */
-		function add_attribute_ui()
-		{
+		function add_attribute_ui() {
 			$rt_wp_attributes_model = $this->attributes_db_model;
 
 			include 'templates/template-rt-add-attribute.php';
@@ -170,8 +161,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		function sanitize_taxonomy( $taxonomy )
-		{
+		function sanitize_taxonomy( $taxonomy ) {
 			$taxonomy = strtolower( stripslashes( strip_tags( $taxonomy ) ) );
 			$taxonomy = preg_replace( '/&.+?;/', '', $taxonomy ); // Kill entities
 			$taxonomy = str_replace( array( '.', '\'', '"' ), '', $taxonomy ); // Kill quotes and full stops.
@@ -191,8 +181,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 * @return string|void
 		 */
-		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = '' )
-		{
+		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = '' ) {
 			// Forbidden attribute names
 			// http://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms
 			$reserved_terms = array( 'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and', 'category__in', 'category__not_in', 'category_name', 'comments_per_page', 'comments_popup', 'cpage', 'day', 'debug', 'error', 'exact', 'feed', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more', 'name', 'nav_menu', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm', 'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type', 'post_status', 'post_tag', 'post_type', 'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 's', 'search', 'second', 'sentence', 'showposts', 'static', 'subpost', 'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id', 'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'type', 'w', 'withcomments', 'withoutcomments', 'year', );
@@ -231,8 +220,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_render_type
 		 * @param $attribute_orderby
 		 */
-		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby )
-		{
+		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
 
 			$attribute = array( 'attribute_label' => $attribute_label, 'attribute_name' => $attribute_name, 'attribute_store_as' => $attribute_store_as, 'attribute_render_type' => $attribute_render_type, 'attribute_orderby' => $attribute_orderby, );
 
@@ -249,8 +237,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param $attribute_render_type
 		 * @param $attribute_orderby
 		 */
-		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby )
-		{
+		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as, $attribute_render_type, $attribute_orderby ) {
 
 			$attribute = array( 'attribute_label' => $attribute_label, 'attribute_name' => $attribute_name, 'attribute_store_as' => $attribute_store_as, 'attribute_render_type' => $attribute_render_type, 'attribute_orderby' => $attribute_orderby, );
 
@@ -260,8 +247,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Performs Add, Save, Delete Attributes
 		 */
-		function perform_action()
-		{
+		function perform_action() {
 			global $wpdb;
 
 			$action_completed = false;
@@ -360,8 +346,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		/**
 		 * Register AutoLoader for rt-attributes
 		 */
-		function auto_loader()
-		{
+		function auto_loader() {
 			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
 	} //end class

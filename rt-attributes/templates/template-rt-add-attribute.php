@@ -40,21 +40,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					$attribute_taxonomies = $rt_wp_attributes_model->get_all_attributes();
-					if ( $attribute_taxonomies ) :
-						foreach ( $attribute_taxonomies as $tax ) :
-							?>
-							<tr>
+<?php
+$attribute_taxonomies = $rt_wp_attributes_model->get_all_attributes();
+if ( $attribute_taxonomies ) {
+	foreach ( $attribute_taxonomies as $tax ) {
+		?>
+						<tr>
 							<td>
-								<?php echo esc_html( $tax->attribute_label ); ?>
+		<?php echo esc_html( $tax->attribute_label ); ?>
 								<div class="row-actions">
 									<span class="edit">
 										<a href="<?php echo esc_url( add_query_arg( 'edit', $tax->id ) ); ?>"><?php _e( 'Edit' ); ?></a> |
 									</span>
 									<span class="delete">
-										<a class="delete"
-										   href="<?php echo esc_url( add_query_arg( 'delete', $tax->id ) ); ?>"><?php _e( 'Delete' ); ?></a>
+										<a class="delete" href="<?php echo esc_url( add_query_arg( 'delete', $tax->id ) ); ?>"><?php _e( 'Delete' ); ?></a>
 									</span>
 								</div>
 							</td>
@@ -62,46 +61,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_store_as ) ) ); ?></td>
 							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_render_type ) ) ); ?></td>
 							<td>
-								<?php
-								switch ( $tax->attribute_orderby ) {
-									case 'name' :
-										_e( 'Name' );
-										break;
-									case 'id' :
-										_e( 'Term ID' );
-										break;
-									default:
-										_e( 'Custom ordering' );
-										break;
-								}
-								?>
+		<?php
+		switch ( $tax->attribute_orderby ) {
+			case 'name' :
+				_e( 'Name' );
+				break;
+			case 'id' :
+				_e( 'Term ID' );
+				break;
+			default:
+				_e( 'Custom ordering' );
+				break;
+		}
+		?>
 							</td>
 							<td colspan="2">
-								<?php
-								if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) :
-									$terms_array = array();
-									$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
-									if ( $terms ) :
-										foreach ( $terms as $term ) :
-											$terms_array[ ] = $term->name;
-										endforeach;
-										echo esc_html( implode( ' , ', $terms_array ) );
-									else :
-										echo '<span class="na">&ndash;</span>';
-									endif;
-								else :
-									echo '<span class="na">&ndash;</span>';
-								endif;
-								?>
+		<?php
+		if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) {
+			$terms_array = array();
+			$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
+			if ( $terms ) {
+				foreach ( $terms as $term ) {
+					$terms_array[ ] = $term->name;
+				}
+				echo esc_html( implode( ' , ', $terms_array ) );
+			} else {
+				echo '<span class="na">&ndash;</span>';
+			}
+		} else {
+			echo '<span class="na">&ndash;</span>';
+		}
+		?>
 							</td>
-							</tr><?php
-						endforeach;
-					else :
-						?>
-						<tr>
-						<td colspan="6"><?php _e( 'No attributes currently exist.' ); ?></td></tr><?php
-					endif;
-					?>
+							</tr>
+		<?php
+	}
+} else {
+	?>
+							<tr><td colspan="6"><?php _e( 'No attributes currently exist.' ); ?></td></tr>
+	<?php
+}
+	?>
 					</tbody>
 				</table>
 			</div>
