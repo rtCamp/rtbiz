@@ -96,19 +96,20 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param string $page_slug - slug of page on under which the attributes page is to be shown
 		 * @param string $post_type - post type for which the attributes are to be listed
 		 */
-		function add_attributes_page( $page_slug = '', $post_type = '' ) {
+		function add_attributes_page( $page_slug = '', $post_type = '', $cap = 'manage_options' ) {
 
 			$this->page_slug = $page_slug;
 			$this->post_type = $post_type;
+			$this->cap = $cap;
 
 			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 		}
 
 		function register_attribute_menu() {
 			if ( ! empty( $this->page_slug ) ) {
-				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			}
 		}
 
