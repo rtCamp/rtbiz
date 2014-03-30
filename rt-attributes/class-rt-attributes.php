@@ -101,8 +101,12 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->page_slug = $page_slug;
 			$this->post_type = $post_type;
 
-			if ( ! empty( $page_slug ) ) {
-				add_submenu_page( $page_slug, __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt_attributes', array( $this, 'render_attributes_page' ) );
+			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+		}
+
+		function register_attribute_menu() {
+			if ( ! empty( $this->page_slug ) ) {
+				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			} else {
 				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), 'manage_options', 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			}
