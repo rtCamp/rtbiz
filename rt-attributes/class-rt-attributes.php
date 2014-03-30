@@ -36,6 +36,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $post_type;
 
 		/**
+		 * @var $cap - CApability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 */
+		var $cap;
+
+		/**
 		 * @var - Attributes DB Model Object
 		 */
 		var $attributes_db_model;
