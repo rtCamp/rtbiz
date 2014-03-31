@@ -19,6 +19,22 @@ if ( ! defined( 'ABSPATH' ) ){
  * Date: 2/20/14
  * Time: 4:04 AM
  */
+
+$edit = absint( $_GET[ 'edit' ] );
+
+$attribute_to_edit = $this->attributes_db_model->get_attribute( $edit );
+
+$att_store_as    = $attribute_to_edit->attribute_store_as;
+$att_render_type = $attribute_to_edit->attribute_render_type;
+$att_label       = $attribute_to_edit->attribute_label;
+$att_name        = $attribute_to_edit->attribute_name;
+$att_orderby     = $attribute_to_edit->attribute_orderby;
+$att_relations   = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_to_edit->id );
+$att_post_types  = array();
+foreach ($att_relations as $relation) {
+	$att_post_types[] = $relation->post_type;
+}
+
 ?>
 <div class="wrap">
 	<h2><i class="icon-tag"></i> <?php _e( 'Edit Attribute' ) ?></h2>
@@ -43,6 +59,7 @@ if ( ! defined( 'ABSPATH' ) ){
 					<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 				</td>
 			</tr>
+			<?php if( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_store_as"><?php _e( 'Store As' ); ?></label>
@@ -56,6 +73,8 @@ if ( ! defined( 'ABSPATH' ) ){
 					<p class="description"><?php _e( 'Determines how you want to store attributes.' ); ?></p>
 				</td>
 			</tr>
+			<?php } ?>
+			<?php if( $this->render_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
@@ -81,6 +100,8 @@ if ( ! defined( 'ABSPATH' ) ){
 					<p class="description"><?php _e( 'Determines how you select attributes.' ); ?></p>
 				</td>
 			</tr>
+			<?php } ?>
+			<?php if( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_orderby"><?php _e( 'Default sort order' ); ?></label>
@@ -94,6 +115,29 @@ if ( ! defined( 'ABSPATH' ) ){
 					<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 				</td>
 			</tr>
+			<?php } ?>
+			<?php if( ! empty( $this->post_type ) ) { ?>
+			<tr>
+				<th></th>
+				<td>
+					<input type="hidden" name="attribute_post_types[]" value="<?php echo $this->post_type; ?>" />
+				</td>
+			</tr>
+			<?php } else { ?>
+			<tr class="form-field form-required">
+				<th scope="row">
+					<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
+				</th>
+				<td>
+					<?php $all_post_types = get_post_types( array( '_builtin' => true ), 'objects' ); ?>
+					<?php foreach ( $all_post_types as $pt ) { ?>
+					<label><input type="checkbox" name="attribute_post_types[]" value="" /><?php var_dump($pt); ?></label>
+					<?php } ?>
+
+					<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
+				</td>
+			</tr>
+			<?php } ?>
 			</tbody>
 		</table>
 		<p class="submit"><input type="submit" name="save_attribute" id="submit" class="button-primary" value="<?php _e( 'Update' ); ?>"></p>
