@@ -56,17 +56,17 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $orderby_required;
 
 		/**
-		 * @var - Attributes DB Model Object
+		 * @var $attributes_db_model - Attributes DB Model Object
 		 */
 		var $attributes_db_model;
 
 		/**
-		 * @var - Attributes Relationship DB Model Object
+		 * @var $attributes_relationship_model - Attributes Relationship DB Model Object
 		 */
 		var $attributes_relationship_model;
 
 		/**
-		 * @var RT_WP_Autoload
+		 * @var $auto_loader - RT_WP_Autoload
 		 */
 		var $auto_loader;
 
@@ -341,6 +341,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
+			do_action( 'rt_attributes_relations_added', $attribute_id, $post_types );
 		}
 
 		function update_attribute_relations( $attribute_id, $post_types ) {
@@ -355,6 +356,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
+			do_action( 'rt_attributes_relations_updated', $attribute_id, $post_types );
 		}
 
 		/**
