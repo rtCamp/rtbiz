@@ -24,43 +24,24 @@ if ( !defined( 'RT_CONTACTS_PATH_TEMPLATES' ) ) {
 	define( 'RT_CONTACTS_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
 }
 
-/**
- * Auto Loader Function
- *
- * Autoloads classes on instantiation. Used by spl_autoload_register.
- *
- * @param string $class_name The name of the class to autoload
- */
-function rt_contacts_autoloader( $class_name ) {
+function rt_contacts_include() {
+	include_once RT_CONTACTS_PATH . 'app/lib/wp-helpers.php';
 
-	$file_name = 'class-' . implode( '-', array_map( 'strtolower', explode( '_', $class_name ) ) );
+	include_once RT_CONTACTS_PATH . 'app/helper/rt-contacts-functions.php';
 
-	$rt_contacts_paths = array(
-		'app/' . $file_name . '.php',
-		'app/abstract/' . $file_name . '.php',
-		'app/modules/organization/' . $file_name . '.php',
-		'app/modules/person/' . $file_name . '.php',
-	);
-	foreach ( $rt_contacts_paths as $path ) {
-		$path = RT_CONTACTS_PATH . $path;
-		if ( file_exists( $path ) ) {
-			include $path;
-			break;
-		}
-	}
+	global $rt_contacts_app_autoload, $rt_contacts_abstract_autoload, $rt_contacts_attributes_autoload, $rt_contacts_modules_autoload;
+	$rt_contacts_app_autoload = new RT_WP_Autoload( RT_CONTACTS_PATH . 'app/' );
+	$rt_contacts_abstract_autoload = new RT_WP_Autoload( RT_CONTACTS_PATH . 'app/abstract/' );
+	$rt_contacts_attributes_autoload = new RT_WP_Autoload( RT_CONTACTS_PATH . 'app/attributes/' );
+	$rt_contacts_modules_autoload = new RT_WP_Autoload( RT_CONTACTS_PATH . 'app/modules/' );
 }
-
-/**
- * Register the autoloader function into spl_autoload
- */
-spl_autoload_register( 'rt_contacts_autoloader' );
 
 function rt_contacts_init() {
 
+	rt_contacts_include();
+
 	global $rt_contacts;
 	$rt_contacts = new Rt_Contacts();
-
-	include_once RT_CONTACTS_PATH . 'app/helper/rt-contacts-functions.php';
 }
 
 add_action( 'init', 'rt_contacts_init', 1 );
