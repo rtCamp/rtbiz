@@ -11,7 +11,9 @@ $rt_autoloader_file = realpath( dirname( __FILE__ ) ) . '/rt-wp-autoloader/class
 if ( file_exists( $rt_autoloader_file ) ){
 	include_once $rt_autoloader_file ;
 }
-define( 'WP_HELPER_FILE', __FILE__ );
+if ( ! defined( 'WP_HELPER_FILE' ) ) {
+	define( 'WP_HELPER_FILE', __FILE__ );
+}
 /**
  * Initiate Loader class
  */
