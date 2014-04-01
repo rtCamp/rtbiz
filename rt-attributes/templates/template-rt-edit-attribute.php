@@ -38,7 +38,7 @@ foreach ($att_relations as $relation) {
 ?>
 <div class="wrap">
 	<h2><i class="icon-tag"></i> <?php _e( 'Edit Attribute' ) ?></h2>
-	<form action="?edit=<?php echo absint( $edit ); ?>" method="post">
+	<form method="post">
 		<table class="form-table">
 			<tbody>
 			<tr class="form-field form-required">
