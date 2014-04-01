@@ -33,27 +33,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tr>
 						<th scope="col"><?php _e( 'Name' ); ?></th>
 						<th scope="col"><?php _e( 'Slug' ); ?></th>
-						<?php if( $this->storage_type_required ) { ?>
+						<?php if ( $this->storage_type_required ) { ?>
 						<th scope="col"><?php _e( 'Store As' ); ?></th>
 						<?php } ?>
-						<?php if( $this->render_type_required ) { ?>
+						<?php if ( $this->render_type_required ) { ?>
 						<th scope="col"><?php _e( 'Render Type' ); ?></th>
 						<?php } ?>
-						<?php if( $this->orderby_required ) { ?>
+						<?php if ( $this->orderby_required ) { ?>
 						<th scope="col"><?php _e( 'Order by' ); ?></th>
 						<?php } ?>
 						<th scope="col" colspan="2"><?php _e( 'Terms' ); ?></th>
-						<?php if( !empty( $this->post_type ) ) { ?>
+						<?php if ( ! empty( $this->post_type ) ) { ?>
 						<th scope="col"><!-- Configure Terms --></th>
 						<?php } ?>
 					</tr>
 					</thead>
 					<tbody>
 					<?php
-					$attribute_taxonomies = $this->attributes_db_model->get_all_attributes();
-					if ( $attribute_taxonomies ) {
-						foreach ( $attribute_taxonomies as $tax ) {
-					?>
+$attribute_taxonomies = $this->attributes_db_model->get_all_attributes();
+if ( $attribute_taxonomies ) {
+	foreach ( $attribute_taxonomies as $tax ) {
+		?>
 						<tr>
 							<td>
 								<?php echo esc_html( $tax->attribute_label ); ?>
@@ -67,53 +67,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							</td>
 							<td><?php echo esc_html( $tax->attribute_name ); ?></td>
-							<?php if( $this->storage_type_required ) { ?>
+							<?php if ( $this->storage_type_required ) { ?>
 							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_store_as ) ) ); ?></td>
 							<?php } ?>
-							<?php if( $this->render_type_required ) { ?>
+							<?php if ( $this->render_type_required ) { ?>
 							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_render_type ) ) ); ?></td>
 							<?php } ?>
-							<?php if( $this->orderby_required ) { ?>
+							<?php if ( $this->orderby_required ) { ?>
 							<td>
-							<?php switch ( $tax->attribute_orderby ) {
-									case 'name' :
-										_e( 'Name' );
-										break;
-									case 'id' :
-										_e( 'Term ID' );
-										break;
-									default:
-										_e( 'Custom ordering' );
-										break;
-							} ?>
+			<?php
+			switch ( $tax->attribute_orderby ) {
+				case 'name' :
+					_e( 'Name' );
+					break;
+				case 'id' :
+					_e( 'Term ID' );
+					break;
+				default:
+					_e( 'Custom ordering' );
+					break;
+			}
+			?>
 							</td>
 							<?php } ?>
 							<td colspan="2">
-							<?php
-							if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) {
-								$terms_array = array();
-								$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
-								if ( $terms ) {
-									foreach ( $terms as $term ) {
-										$terms_array[ ] = $term->name;
-									}
-									echo esc_html( implode( ' , ', $terms_array ) );
-								} else {
-									echo '<span class="na">&ndash;</span>';
-								}
-							} else {
-								echo '<span class="na">&ndash;</span>';
-							}
-							?>
+		<?php
+		if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) {
+			$terms_array = array();
+			$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
+			if ( $terms ) {
+				foreach ( $terms as $term ) {
+					$terms_array[ ] = $term->name;
+				}
+				echo esc_html( implode( ' , ', $terms_array ) );
+			} else {
+				echo '<span class="na">&ndash;</span>';
+			}
+		} else {
+			echo '<span class="na">&ndash;</span>';
+		}
+		?>
 							</td>
-							<?php if( ! empty( $this->post_type ) && $tax->attribute_store_as == 'taxonomy' ) { ?>
+							<?php if ( ! empty( $this->post_type ) && $tax->attribute_store_as == 'taxonomy' ) { ?>
 							<td>
-								<a href="<?php echo admin_url( 'edit-tags.php?taxonomy='.$this->sanitize_taxonomy( $tax->attribute_name ).'&post_type='.$this->post_type ); ?>" class="button alignright configure-terms"><?php _e( 'Configure Terms' ); ?></a>
+								<a href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->sanitize_taxonomy( $tax->attribute_name ).'&post_type='.$this->post_type ) ); ?>" class="button alignright configure-terms"><?php _e( 'Configure Terms' ); ?></a>
 							</td>
 							<?php } ?>
 						</tr>
-						<?php }
-					} else { ?>
+	<?php
+	}
+} else {
+	?>
 						<tr><td colspan="6"><?php _e( 'No attributes currently exist.' ); ?></td></tr>
 					<?php } ?>
 					</tbody>
@@ -141,7 +145,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 							<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 						</div>
-						<?php if( $this->storage_type_required ) { ?>
+						<?php if ( $this->storage_type_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_store_as"><?php _e( 'Store As' ); ?></label>
 							<select name="attribute_store_as" id="attribute_store_as">
@@ -153,7 +157,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 						<?php } ?>
-						<?php if( $this->render_type_required ) { ?>
+						<?php if ( $this->render_type_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
 							<select name="attribute_render_type" id="attribute_render_type">
@@ -177,7 +181,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 						<?php } ?>
-						<?php if( $this->orderby_required ) { ?>
+						<?php if ( $this->orderby_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_orderby"><?php _e( 'Default sort order' ); ?></label>
 							<select name="attribute_orderby" id="attribute_orderby">
@@ -189,14 +193,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
 						<?php } ?>
-						<?php if( ! empty( $this->post_type ) ) { ?>
-						<input type="hidden" name="attribute_post_types[]" value="<?php echo $this->post_type; ?>" />
+						<?php if ( ! empty( $this->post_type ) ) { ?>
+						<input type="hidden" name="attribute_post_types[]" value="<?php echo esc_html( $this->post_type ); ?>" />
 						<?php } else { ?>
 						<div>
 							<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
 							<?php $all_post_types = get_post_types( '', 'objects' ); ?>
 							<?php foreach ( $all_post_types as $pt ) { ?>
-							<label><input type="checkbox" name="attribute_post_types[]" value="<?php echo $pt->name; ?>" /><?php echo $pt->labels->name; ?></label>
+							<label><input type="checkbox" name="attribute_post_types[]" value="<?php echo esc_html( $pt->name ); ?>" /><?php echo esc_html( $pt->labels->name ); ?></label>
 							<?php } ?>
 
 							<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>

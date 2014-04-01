@@ -31,7 +31,7 @@ $att_name        = $attribute_to_edit->attribute_name;
 $att_orderby     = $attribute_to_edit->attribute_orderby;
 $att_relations   = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_to_edit->id );
 $att_post_types  = array();
-foreach ($att_relations as $relation) {
+foreach ( $att_relations as $relation ) {
 	$att_post_types[] = $relation->post_type;
 }
 
@@ -59,7 +59,7 @@ foreach ($att_relations as $relation) {
 					<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 				</td>
 			</tr>
-			<?php if( $this->storage_type_required ) { ?>
+			<?php if ( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_store_as"><?php _e( 'Store As' ); ?></label>
@@ -74,7 +74,7 @@ foreach ($att_relations as $relation) {
 				</td>
 			</tr>
 			<?php } ?>
-			<?php if( $this->render_type_required ) { ?>
+			<?php if ( $this->render_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
@@ -101,7 +101,7 @@ foreach ($att_relations as $relation) {
 				</td>
 			</tr>
 			<?php } ?>
-			<?php if( $this->storage_type_required ) { ?>
+			<?php if ( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_orderby"><?php _e( 'Default sort order' ); ?></label>
@@ -116,11 +116,11 @@ foreach ($att_relations as $relation) {
 				</td>
 			</tr>
 			<?php } ?>
-			<?php if( ! empty( $this->post_type ) ) { ?>
+			<?php if ( ! empty( $this->post_type ) ) { ?>
 			<tr>
 				<th></th>
 				<td>
-					<input type="hidden" name="attribute_post_types[]" value="<?php echo $this->post_type; ?>" />
+					<input type="hidden" name="attribute_post_types[]" value="<?php echo esc_html( $this->post_type ); ?>" />
 				</td>
 			</tr>
 			<?php } else { ?>
@@ -131,7 +131,7 @@ foreach ($att_relations as $relation) {
 				<td>
 					<?php $all_post_types = get_post_types( '', 'objects' ); ?>
 					<?php foreach ( $all_post_types as $pt ) { ?>
-					<label><input type="checkbox" name="attribute_post_types[]" <?php echo ( in_array( $pt->name, $att_post_types ) ) ? 'checked="checked"' : ''; ?> value="<?php echo $pt->name; ?>" /><?php echo $pt->labels->name; ?></label>
+					<label><input type="checkbox" name="attribute_post_types[]" <?php echo esc_html( ( in_array( $pt->name, $att_post_types ) ) ? 'checked="checked"' : '' ); ?> value="<?php echo esc_html( $pt->name ); ?>" /><?php echo esc_html( $pt->labels->name ); ?></label>
 					<?php } ?>
 
 					<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
