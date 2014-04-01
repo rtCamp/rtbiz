@@ -50,8 +50,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tbody>
 					<?php
 $attribute_taxonomies = $this->attributes_db_model->get_all_attributes();
+$relation_attr_ids = array();
+if ( ! empty( $this->post_type ) ) {
+	$relations = $this->attributes_relationship_model->get_relations_by_post_type( $this->post_type );
+	foreach ( $relations as $relation ) {
+		$relation_attr_ids[] = $relation->attr_id;
+	}
+}
 if ( $attribute_taxonomies ) {
 	foreach ( $attribute_taxonomies as $tax ) {
+		if ( ! empty( $this->post_type ) && ! in_array( $tax->id, $relation_attr_ids )  ) {
+			continue;
+		}
 		?>
 						<tr>
 							<td>
