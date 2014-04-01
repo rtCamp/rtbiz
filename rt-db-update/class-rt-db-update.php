@@ -176,7 +176,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		{
 			global $wpdb;
 
-			if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $table_name . '%' ) ) == 1 ){
+			if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $table_name . '%' ) ) >= 1 ){
 				return true;
 			}
 
