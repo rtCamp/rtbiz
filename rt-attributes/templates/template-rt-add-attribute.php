@@ -42,7 +42,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php if ( $this->orderby_required ) { ?>
 						<th scope="col"><?php _e( 'Order by' ); ?></th>
 						<?php } ?>
-						<th scope="col" colspan="2"><?php _e( 'Terms' ); ?></th>
 						<?php if ( ! empty( $this->post_type ) ) { ?>
 						<th scope="col"><!-- Configure Terms --></th>
 						<?php } ?>
@@ -90,27 +89,9 @@ if ( $attribute_taxonomies ) {
 			?>
 							</td>
 							<?php } ?>
-							<td colspan="2">
-		<?php
-		if ( taxonomy_exists( $this->sanitize_taxonomy( $tax->attribute_name ) ) ) {
-			$terms_array = array();
-			$terms       = get_terms( $this->sanitize_taxonomy( $tax->attribute_name ), 'orderby=name&hide_empty=0' );
-			if ( $terms ) {
-				foreach ( $terms as $term ) {
-					$terms_array[ ] = $term->name;
-				}
-				echo esc_html( implode( ' , ', $terms_array ) );
-			} else {
-				echo '<span class="na">&ndash;</span>';
-			}
-		} else {
-			echo '<span class="na">&ndash;</span>';
-		}
-		?>
-							</td>
 							<?php if ( ! empty( $this->post_type ) && $tax->attribute_store_as == 'taxonomy' ) { ?>
 							<td>
-								<a href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->sanitize_taxonomy( $tax->attribute_name ).'&post_type='.$this->post_type ) ); ?>" class="button alignright configure-terms"><?php _e( 'Configure Terms' ); ?></a>
+								<a href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->sanitize_taxonomy( $tax->attribute_name ).'&post_type='.$this->post_type ) ); ?>" class="button alignright configure-terms"><?php _e( 'Terms' ); ?></a>
 							</td>
 							<?php } ?>
 						</tr>
