@@ -359,6 +359,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			do_action( 'rt_attributes_relations_updated', $attribute_id, $post_types );
 		}
 
+		function delete_attribute_relations( $attribute_id ) {
+			$relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
+			foreach ( $relations as $r ) {
+				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $r->attr_id, 'post_type' => $r->post_type ) );
+			}
+			do_action( 'rt_attributes_relations_deleted', $attribute_id );
+		}
+
 		/**
 		 * Add attribute in database
 		 *
@@ -498,6 +506,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 							wp_delete_term( $term->term_id, $taxonomy );
 						}
 					}
+
+					$this->delete_attribute_relations( $attribute_id );
 
 					do_action( 'rt_wp_attribute_deleted', $attribute_id, $attribute_name, $taxonomy );
 
