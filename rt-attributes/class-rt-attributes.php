@@ -161,8 +161,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			$object_types = (array) $taxonomy->object_type;
 
-			foreach ( $object_types as &$object_type )
+			foreach ( $object_types as &$object_type ) {
 				list( $object_type ) = explode( ':', $object_type );
+			}
 
 			$object_types = array_unique( $object_types );
 
@@ -171,8 +172,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$check_attachments = true;
 			}
 
-			if ( $object_types )
+			if ( $object_types ) {
 				$object_types = esc_sql( array_filter( $object_types, 'post_type_exists' ) );
+			}
 
 			foreach ( (array) $terms as $term ) {
 				$count = 0;
