@@ -124,14 +124,14 @@ foreach ($att_relations as $relation) {
 				</td>
 			</tr>
 			<?php } else { ?>
-			<tr class="form-field form-required">
+			<tr class="form-required">
 				<th scope="row">
 					<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
 				</th>
 				<td>
-					<?php $all_post_types = get_post_types( array( '_builtin' => true ), 'objects' ); ?>
+					<?php $all_post_types = get_post_types( '', 'objects' ); ?>
 					<?php foreach ( $all_post_types as $pt ) { ?>
-					<label><input type="checkbox" name="attribute_post_types[]" value="" /><?php var_dump($pt); ?></label>
+					<label><input type="checkbox" name="attribute_post_types[]" <?php echo ( in_array( $pt->name, $att_post_types ) ) ? 'checked="checked"' : ''; ?> value="<?php echo $pt->name; ?>" /><?php echo $pt->labels->name; ?></label>
 					<?php } ?>
 
 					<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>

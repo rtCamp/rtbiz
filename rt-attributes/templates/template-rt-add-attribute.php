@@ -192,11 +192,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php if( ! empty( $this->post_type ) ) { ?>
 						<input type="hidden" name="attribute_post_types[]" value="<?php echo $this->post_type; ?>" />
 						<?php } else { ?>
-						<div class="form-field">
+						<div>
 							<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
-							<?php $all_post_types = get_post_types( array( '_builtin' => true ), 'objects' ); ?>
+							<?php $all_post_types = get_post_types( '', 'objects' ); ?>
 							<?php foreach ( $all_post_types as $pt ) { ?>
-							<label><input type="checkbox" name="attribute_post_types[]" value="" /><?php var_dump($pt); ?></label>
+							<label><input type="checkbox" name="attribute_post_types[]" value="<?php echo $pt->name; ?>" /><?php echo $pt->labels->name; ?></label>
 							<?php } ?>
 
 							<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
