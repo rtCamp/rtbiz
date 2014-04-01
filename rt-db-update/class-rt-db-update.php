@@ -153,7 +153,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 				$this->update_version();
 				do_action( 'rt_db_update_finished' );
 				//Hook for individual plugin
-				do_action( 'rt_db_update_finished_' . $this->rt_plugin_info->name );
+				do_action( 'rt_db_update_finished_' . str_replace( '-', '_', sanitize_title( $this->rt_plugin_info->name ) ) );
 			}
 		}
 
