@@ -105,7 +105,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_relations_by_post_type( $post_type );
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if( $attr->attribute_store_as == 'taxonomy' ) {
+				if ( $attr->attribute_store_as == 'taxonomy' ) {
 					$this->register_taxonomy( $relation->post_type, $relation->attr_id );
 				}
 			}
@@ -115,13 +115,16 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
 			$name = rtcrm_attribute_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
-			if( $name ) {
+			if ( $name ) {
 				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
 				$show_in_nav_menus = apply_filters( 'rt_wp_attributes_show_in_nav_menus', false, $name );
 
-				register_taxonomy( $name,
+				register_taxonomy(
+					$name,
 					apply_filters( 'rt_wp_attributes_taxonomy_objects_' . $name, $post_type ),
-					apply_filters( 'rt_wp_attributes_taxonomy_args_' . $name, array(
+					apply_filters(
+						'rt_wp_attributes_taxonomy_args_' . $name,
+						array(
 						'hierarchical' 				=> $hierarchical,
 						'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
 						'labels' => array(
@@ -134,20 +137,21 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 								'edit_item' 				=> __( 'Edit' ) . ' ' . $label,
 								'update_item' 				=> __( 'Update' ) . ' ' . $label,
 								'add_new_item' 				=> __( 'Add New' ) . ' ' . $label,
-								'new_item_name' 			=> __( 'New' ) . ' ' . $label
+								'new_item_name' 			=> __( 'New' ) . ' ' . $label,
 							),
 						'show_ui' 					=> true,
 						'query_var' 				=> true,
-//						'capabilities'			=> array(
-//							'manage_terms' 		=> 'manage_rtcrm_terms',
-//							'edit_terms' 		=> 'edit_rtcrm_terms',
-//							'delete_terms' 		=> 'delete_rtcrm_terms',
-//							'assign_terms' 		=> 'assign_rtcrm_terms',
-//						),
+						//'capabilities'			=> array(
+						//	'manage_terms' 		=> 'manage_rtcrm_terms',
+						//	'edit_terms' 		=> 'edit_rtcrm_terms',
+						//	'delete_terms' 		=> 'delete_rtcrm_terms',
+						//	'assign_terms' 		=> 'assign_rtcrm_terms',
+						//),
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
-//						'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
+						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
-					) )
+						)
+					)
 				);
 			}
 		}
@@ -174,11 +178,13 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$count = 0;
 
 				// Attachments can be 'inherit' status, we need to base count off the parent's status if so
-				if ( $check_attachments )
+				if ( $check_attachments ) {
 					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts p1 WHERE p1.ID = $wpdb->term_relationships.object_id  AND post_type = 'attachment' AND term_taxonomy_id = %d", $term ) );
+				}
 
-				if ( $object_types )
-					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode("', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+				if ( $object_types ) {
+					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode( "', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+				}
 
 				do_action( 'edit_term_taxonomy', $term, $taxonomy );
 				$wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
@@ -196,16 +202,16 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function add_attributes_page( $page_slug = '', $post_type = '', $cap = 'manage_options', $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
 
-			$this->page_slug = $page_slug;
-			$this->post_type = $post_type;
-			$this->cap = $cap;
-			$this->render_type_required = $render_type_required;
+			$this->page_slug             = $page_slug;
+			$this->post_type             = $post_type;
+			$this->cap                   = $cap;
+			$this->render_type_required  = $render_type_required;
 			$this->storage_type_required = $storage_type_required;
-			$this->orderby_required = $orderby_required;
+			$this->orderby_required      = $orderby_required;
 
 			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 
-			if( !empty( $this->post_type ) ) {
+			if ( ! empty( $this->post_type ) ) {
 				$this->register_attribute_mappings( $this->post_type );
 			}
 		}
