@@ -20,15 +20,18 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 	 */
 	class RT_Attributes {
 
-		public static $attributes_menu_page_slug = 'rt-wp-attributes';
-
 		/**
 		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
 		 */
 		var $module_name;
 
 		/**
-		 * @var $page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
+		 * @var $parent_page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
+		 */
+		var $parent_page_slug;
+
+		/**
+		 * @var $page_slug - Page slug for Attributes Page
 		 */
 		var $page_slug;
 
@@ -204,9 +207,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param bool $storage_type_required
 		 * @param bool $orderby_required
 		 */
-		function add_attributes_page( $page_slug = '', $post_type = '', $cap = 'manage_options', $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
+		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $cap = 'manage_options', $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
 
 			$this->page_slug             = $page_slug;
+			$this->parent_page_slug      = $parent_page_slug;
 			$this->post_type             = $post_type;
 			$this->cap                   = $cap;
 			$this->render_type_required  = $render_type_required;
@@ -224,10 +228,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * This method registers an attributes menu page which will list all the available attributes that can be linked to any post types as per need.
 		 */
 		function register_attribute_menu() {
-			if ( ! empty( $this->page_slug ) ) {
-				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, self::$attributes_menu_page_slug, array( $this, 'render_attributes_page' ) );
+			if ( ! empty( $this->parent_page_slug ) ) {
+				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, self::$attributes_menu_page_slug, array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			}
 		}
 
@@ -240,7 +244,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// If an attribute was added, edited or deleted: then redirect to the attributes page
 			if ( ! empty( $action_completed ) ) {
-				wp_redirect( admin_url( 'admin.php?page=' . self::$attributes_menu_page_slug ) );
+				wp_redirect( admin_url( 'admin.php?page=' . $this->page_slug ) );
 			}
 
 			// Show admin interface
