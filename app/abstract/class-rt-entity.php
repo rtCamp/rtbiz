@@ -46,7 +46,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function register_pages() {
 			global $rt_contacts;
-			add_submenu_page( $rt_contacts->menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
+			add_submenu_page( Rt_Contacts::$menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
 		}
 
 		function change_publish_button( $translation, $text ) {

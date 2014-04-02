@@ -223,7 +223,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function register_attribute_menu() {
 			if ( ! empty( $this->page_slug ) ) {
-				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				var_dump(add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) ));
 			} else {
 				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
 			}

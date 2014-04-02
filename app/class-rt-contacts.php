@@ -14,25 +14,25 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 	class Rt_Contacts {
 
-		public $menu_page_slug = 'rt-contacts';
-		public $settings_page_slug = 'rt-contacts-settings';
+		public static $menu_page_slug = 'rt-contacts';
+		public static $settings_page_slug = 'rt-contacts-settings';
 		public $templateURL;
 		public $menu_order = array();
 
 		public function __construct() {
 			$this->check_p2p_dependency();
+			$this->init_roles();
 			$this->init_modules();
 			$this->register_organization_person_connection();
-			$this->init_roles();
 			$this->hooks();
 
 			$this->init_menu_order();
 
-			$this->templateURL = apply_filters('rt_contacts_template_url', 'rt_contacts/');
+			$this->templateURL = apply_filters( 'rt_contacts_template_url', 'rt_contacts/' );
 		}
 
 		function init_menu_order() {
-			$this->menu_order[$this->menu_page_slug] = 5;
+			$this->menu_order[self::$menu_page_slug] = 5;
 
 			global $rt_person, $rt_organization;
 
@@ -41,7 +41,7 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 			$this->menu_order['post-new.php?post_type='.$rt_organization->post_type] = 50;
 			$this->menu_order['edit.php?post_type='.$rt_organization->post_type] = 55;
 
-			$this->menu_order[$this->settings_page_slug] = 100;
+			$this->menu_order[self::$settings_page_slug] = 100;
 		}
 
 		function hooks() {
@@ -57,14 +57,17 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 			if ( empty( $contacts_logo_url ) ) {
 				$contacts_logo_url = RT_CONTACTS_URL . 'app/assets/img/contacts-16X16.png';
 			}
-			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->menu_page_slug, array( $this, 'contacts_ui' ), $contacts_logo_url, '90.399' );
-			add_submenu_page( $this->menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_contacts_roles->global_caps['manage_contacts'], $this->settings_page_slug, array( $this, 'settings_ui' ) );
+			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], self::$menu_page_slug, array( $this, 'contacts_ui' ), $contacts_logo_url, '90.399' );
+			add_submenu_page( self::$menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_contacts_roles->global_caps['manage_contacts'], self::$settings_page_slug, array( $this, 'settings_ui' ) );
 		}
 
 		function contacts_pages_order( $menu_order ) {
 			global $submenu;
-			if ( isset( $submenu[$this->menu_page_slug] ) && ! empty( $submenu[$this->menu_page_slug] ) ) {
-				$menu = $submenu[$this->menu_page_slug];
+			echo '<pre>';
+			var_dump($submenu);
+			echo '</pre>';
+			if ( isset( $submenu[self::$menu_page_slug] ) && ! empty( $submenu[self::$menu_page_slug] ) ) {
+				$menu = $submenu[self::$menu_page_slug];
 				$new_menu = array();
 
 				foreach ( $menu as $p_key => $item ) {
@@ -75,7 +78,7 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 					}
 				}
 				ksort( $new_menu );
-				$submenu[$this->menu_page_slug] = $new_menu;
+				$submenu[self::$menu_page_slug] = $new_menu;
 			}
 
 			return $menu_order;
@@ -102,9 +105,10 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 		<?php }
 
 		function init_modules() {
-			global $rt_person, $rt_organization;
-			$rt_person = new Rt_Person();
-			$rt_organization = new Rt_Organization();
+			global $rt_person, $rt_organization, $rt_contacts_attributes;
+			$rt_person              = new Rt_Person();
+			$rt_organization        = new Rt_Organization();
+			$rt_contacts_attributes = new Rt_Contacts_Attributes();
 		}
 
 		function init_roles() {
