@@ -118,7 +118,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		function register_taxonomy( $post_type, $attr_id ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
-			$name = rtcrm_attribute_taxonomy_name( $tax->attribute_name );
+			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
 			if ( $name ) {
 				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
