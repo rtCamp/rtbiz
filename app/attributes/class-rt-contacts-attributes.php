@@ -14,11 +14,14 @@
  */
 if ( ! class_exists( 'Rt_Contacts_Attributes' ) ) {
 	class Rt_Contacts_Attributes {
+
+		var $attributes_page_slug = 'rt-contacts-attributes';
+
 		public function __construct() {
 			global $rt_attributes, $rt_plugin_info, $rt_contacts_roles;
 			$rt_plugin_info = new RT_Plugin_Info( RT_CONTACTS_PATH . 'index.php' );
 			$rt_attributes = new RT_Attributes( $rt_plugin_info->name );
-			$rt_attributes->add_attributes_page( Rt_Contacts::$menu_page_slug, '', $rt_contacts_roles->global_caps['manage_contacts'] );
+			$rt_attributes->add_attributes_page( $this->attributes_page_slug ,Rt_Contacts::$menu_page_slug, '', $rt_contacts_roles->global_caps['manage_contacts'] );
 		}
 	}
 }

@@ -63,9 +63,7 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 		function contacts_pages_order( $menu_order ) {
 			global $submenu;
-			echo '<pre>';
-			var_dump($submenu);
-			echo '</pre>';
+
 			if ( isset( $submenu[self::$menu_page_slug] ) && ! empty( $submenu[self::$menu_page_slug] ) ) {
 				$menu = $submenu[self::$menu_page_slug];
 				$new_menu = array();
