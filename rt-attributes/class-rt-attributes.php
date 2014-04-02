@@ -20,6 +20,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 	 */
 	class RT_Attributes {
 
+		public static $attributes_menu_page_slug = 'rt-wp-attributes';
+
 		/**
 		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
 		 */
@@ -223,9 +225,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function register_attribute_menu() {
 			if ( ! empty( $this->page_slug ) ) {
-				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, self::$attributes_menu_page_slug, array( $this, 'render_attributes_page' ) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, self::$attributes_menu_page_slug, array( $this, 'render_attributes_page' ) );
 			}
 		}
 
@@ -238,7 +240,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// If an attribute was added, edited or deleted: then redirect to the attributes page
 			if ( ! empty( $action_completed ) ) {
-				wp_redirect( admin_url( 'admin.php?page=rt-wp-attributes' ) );
+				wp_redirect( admin_url( 'admin.php?page=' . self::$attributes_menu_page_slug ) );
 			}
 
 			// Show admin interface
