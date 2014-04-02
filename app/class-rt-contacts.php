@@ -34,12 +34,14 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 		function init_menu_order() {
 			$this->menu_order[self::$menu_page_slug] = 5;
 
-			global $rt_person, $rt_organization;
+			global $rt_person, $rt_organization, $rt_contacts_attributes;
 
 			$this->menu_order['post-new.php?post_type='.$rt_person->post_type] = 10;
 			$this->menu_order['edit.php?post_type='.$rt_person->post_type] = 15;
 			$this->menu_order['post-new.php?post_type='.$rt_organization->post_type] = 50;
 			$this->menu_order['edit.php?post_type='.$rt_organization->post_type] = 55;
+
+			$this->menu_order[$rt_contacts_attributes->attributes_page_slug] = 90;
 
 			$this->menu_order[self::$settings_page_slug] = 100;
 		}
