@@ -106,8 +106,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->attributes_relationship_model = new RT_Attributes_Relationship_Model();
 		}
 
-		function register_attribute_mappings( $post_type ) {
-			$relations = $this->attributes_relationship_model->get_relations_by_post_type( $post_type );
+		function register_attribute_mappings() {
+			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
 				if ( $attr->attribute_store_as == 'taxonomy' ) {
@@ -219,9 +219,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 
-			if ( ! empty( $this->post_type ) ) {
-				$this->register_attribute_mappings( $this->post_type );
-			}
+			$this->register_attribute_mappings();
 		}
 
 		/**

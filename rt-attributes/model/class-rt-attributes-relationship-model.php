@@ -42,6 +42,10 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 			return parent::get( $args );
 		}
 
+		function get_all_relations() {
+			return parent::get( array() );
+		}
+
 		function add_relation( $data ) {
 			return parent::insert( $data );
 		}
