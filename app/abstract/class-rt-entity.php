@@ -21,7 +21,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
-			$this->hooks();
+
+			add_action( 'wp_loaded', array( $this,'hooks' ) );
 		}
 
 		function hooks() {
@@ -221,7 +222,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				'publicly_queryable' => false,
 				'show_ui' => true, // Show the UI in admin panel
 				'show_in_nav_menus' => true,
-				'show_in_menu' => 'rt-contacts',
+				'show_in_menu' => Rt_Biz::$menu_page_slug,
 				'show_in_admin_bar' => true,
 				'menu_icon' => $menu_icon,
 				'supports' => array( 'title', 'editor', 'author', 'comments', 'thumbnail' ),

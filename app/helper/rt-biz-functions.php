@@ -147,9 +147,8 @@ function rt_biz_get_organization_capabilities() {
 }
 
 function rt_biz_get_dependent_capabilities() {
-	global $rt_biz_roles;
 	$caps = array();
-	foreach ( $rt_biz_roles->global_caps as $cap ) {
+	foreach ( Rt_Biz_Roles::$global_caps as $cap ) {
 		$caps[$cap] = true;
 	}
 	return $caps;
@@ -173,4 +172,12 @@ function rt_biz_get_person_meta_fields() {
 function rt_biz_get_organization_meta_fields() {
 	global $rt_organization;
 	return $rt_organization->meta_fields;
+}
+
+function rt_biz_get_logo_url() {
+	$logo_url = Rt_Biz_Settings::$rt_biz_settings->getOption( 'logo_url' );
+	if ( empty( $logo_url ) ) {
+		$logo_url = RT_BIZ_URL . 'app/assets/img/rt-biz-16X16.png';
+	}
+	return $logo_url;
 }

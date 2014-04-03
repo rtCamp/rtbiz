@@ -18,10 +18,10 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 		var $attributes_page_slug = 'rt-biz-attributes';
 
 		public function __construct() {
-			global $rt_attributes, $rt_plugin_info, $rt_biz_roles;
+			global $rt_attributes, $rt_plugin_info;
 			$rt_plugin_info = new RT_Plugin_Info( RT_BIZ_PATH . 'index.php' );
 			$rt_attributes = new RT_Attributes( $rt_plugin_info->name );
-			$rt_attributes->add_attributes_page( $this->attributes_page_slug ,  Rt_Biz::$menu_page_slug, '', $rt_biz_roles->global_caps['manage_rt_biz'] );
+			$rt_attributes->add_attributes_page( $this->attributes_page_slug ,  Rt_Biz::$menu_page_slug, '', Rt_Biz_Roles::$global_caps['manage_rt_biz'] );
 		}
 	}
 }

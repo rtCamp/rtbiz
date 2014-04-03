@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 if ( ! class_exists( 'Rt_Biz_Roles' ) ) {
 	class Rt_Biz_Roles {
 
-		public $global_caps = array(
+		public static $global_caps = array(
 			'manage_rt_biz' => 'manage_rt_biz',
 		);
 
@@ -41,7 +41,7 @@ if ( ! class_exists( 'Rt_Biz_Roles' ) ) {
 			if( empty( $role ) ) {
 
 				global $rt_person, $rt_organization;
-				$caps = array( $this->global_caps['manage_rt_biz'] => true );
+				$caps = array( self::$global_caps['manage_rt_biz'] => true );
 				$caps = array_merge( $caps, $rt_person->get_post_type_capabilities());
 				$caps = array_merge( $caps, $rt_organization->get_post_type_capabilities());
 
