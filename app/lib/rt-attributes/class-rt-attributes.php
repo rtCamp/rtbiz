@@ -80,6 +80,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		var $auto_loader;
 
+		static $attribute_mappings;
+
+
 		/**
 		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
 		 */
@@ -91,6 +94,12 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			$this->module_name = $module_name;
 			$this->init_db_model();
+
+			self::$attribute_mappings = array();
+			$relations = $this->attributes_relationship_model->get_all_relations();
+			foreach ( $relations as $relation ) {
+				self::$attribute_mappings[$relation->id] = 'unregistered';
+			}
 		}
 
 		/**
@@ -115,8 +124,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if ( $attr->attribute_store_as == 'taxonomy' ) {
+				if ( $attr->attribute_store_as == 'taxonomy' && self::$attribute_mappings[$relation->id] == 'unregistered' ) {
 					$this->register_taxonomy( $relation->post_type, $relation->attr_id );
+					self::$attribute_mappings[$relation->id] = 'registered';
 				}
 			}
 		}
