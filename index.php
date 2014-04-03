@@ -27,7 +27,7 @@ if ( !defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 	define( 'RT_BIZ_TEXT_DOMAIN', 'rt-biz' );
 }
 
-function rtb_include() {
+function rt_biz_include() {
 	include_once RT_BIZ_PATH . 'app/lib/wp-helpers.php';
 
 	include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
@@ -39,9 +39,9 @@ function rtb_include() {
 	$rtb_modules_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/modules/' );
 }
 
-function rtb_init() {
+function rt_biz_init() {
 
-	rtb_include();
+	rt_biz_include();
 
 	global $rt_biz;
 	$rt_biz = new Rt_Biz();

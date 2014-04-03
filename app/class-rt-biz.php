@@ -21,8 +21,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		public function __construct() {
 			$this->check_p2p_dependency();
-			$this->init_roles();
 			$this->init_modules();
+			$this->init_roles();
+			$this->init_attributes();
 			$this->register_organization_person_connection();
 			$this->hooks();
 
@@ -105,15 +106,19 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		<?php }
 
 		function init_modules() {
-			global $rt_person, $rt_organization, $rt_biz_attributes;
+			global $rt_person, $rt_organization;
 			$rt_person              = new Rt_Person();
 			$rt_organization        = new Rt_Organization();
-			$rt_biz_attributes = new Rt_Biz_Attributes();
 		}
 
 		function init_roles() {
 			global $rt_biz_roles;
 			$rt_biz_roles = new Rt_Biz_Roles();
+		}
+
+		function init_attributes() {
+			global $rt_biz_attributes;
+			$rt_biz_attributes = new Rt_Biz_Attributes();
 		}
 
 		function register_organization_person_connection() {
