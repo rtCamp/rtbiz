@@ -228,9 +228,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function register_attribute_menu() {
 			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
+				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			}
 		}
 
