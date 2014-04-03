@@ -80,7 +80,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		var $auto_loader;
 
-		static $attribute_mappings;
+		static $attribute_mappings = array();
 
 
 		/**
@@ -95,10 +95,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->module_name = $module_name;
 			$this->init_db_model();
 
-			self::$attribute_mappings = array();
-			$relations = $this->attributes_relationship_model->get_all_relations();
-			foreach ( $relations as $relation ) {
-				self::$attribute_mappings[$relation->id] = 'unregistered';
+			if ( empty( self::$attribute_mappings ) ) {
+				$relations = $this->attributes_relationship_model->get_all_relations();
+				foreach ( $relations as $relation ) {
+					self::$attribute_mappings[$relation->id] = 'unregistered';
+				}
 			}
 		}
 
@@ -371,6 +372,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$data = array(
 					'attr_id' => $attribute_id,
 					'post_type' => $pt,
+					'settings' => maybe_serialize( array( 'caps' => $this->attr_cap ) ),
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
