@@ -173,11 +173,3 @@ function rt_biz_get_organization_meta_fields() {
 	global $rt_organization;
 	return $rt_organization->meta_fields;
 }
-
-function rt_biz_get_logo_url() {
-	$logo_url = Rt_Biz_Settings::$rt_biz_settings->getOption( 'logo_url' );
-	if ( empty( $logo_url ) ) {
-		$logo_url = RT_BIZ_URL . 'app/assets/img/rt-biz-16X16.png';
-	}
-	return $logo_url;
-}

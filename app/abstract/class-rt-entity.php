@@ -21,8 +21,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
+			$this->hooks();
+		}
 
-			add_action( 'wp_loaded', array( $this,'hooks' ) );
+		function init_entity() {
+			$this->register_post_type( $this->post_type, $this->labels );
 		}
 
 		function hooks() {

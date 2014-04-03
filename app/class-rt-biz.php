@@ -15,12 +15,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 	class Rt_Biz {
 
 		public static $menu_page_slug = 'rt-biz';
+		public static $menu_position = 3.500;
 		public static $settings_page_slug = 'rt-biz-settings';
 		public $templateURL;
 		public $menu_order = array();
 
 		public function __construct() {
 			$this->check_p2p_dependency();
+
+			$this->hooks();
 
 			$this->init_settings();
 			$this->init_modules();
@@ -29,8 +32,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->init_menu_order();
 
 			$this->register_organization_person_connection();
-
-			add_action( 'wp_loaded', array( $this,'hooks' ) );
 
 			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
 		}
@@ -58,8 +59,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function register_menu() {
-			$logo_url = rt_biz_get_logo_url();
-			add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$menu_page_slug, array( $this, 'biz_ui' ), $logo_url, '90.399' );
+			$logo_url = '';
+			add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$menu_page_slug, array( $this, 'biz_ui' ), $logo_url, self::$menu_position );
 		}
 
 		function biz_pages_order( $menu_order ) {

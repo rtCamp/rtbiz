@@ -29,9 +29,8 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
 				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
 			);
-			$logo_url = rt_biz_get_logo_url();
-			$this->register_post_type( $this->post_type, $this->labels, $logo_url );
 			$this->setup_meta_fields();
+			add_action( 'init', array( $this, 'init_entity' ) );
 		}
 
 		function setup_meta_fields() {

@@ -18,6 +18,10 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 		var $attributes_page_slug = 'rt-biz-attributes';
 
 		public function __construct() {
+			add_action( 'init', array( $this, 'init_attributes' ) );
+		}
+
+		function init_attributes() {
 			global $rt_attributes, $rt_plugin_info;
 			$rt_plugin_info = new RT_Plugin_Info( RT_BIZ_PATH . 'index.php' );
 			$rt_attributes = new RT_Attributes( $rt_plugin_info->name );

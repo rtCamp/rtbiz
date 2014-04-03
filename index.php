@@ -48,4 +48,4 @@ function rt_biz_init() {
 	$rt_biz = new Rt_Biz();
 }
 
-add_action( 'init', 'rt_biz_init', 1 );
+add_action( 'plugins_loaded', 'rt_biz_init' );
