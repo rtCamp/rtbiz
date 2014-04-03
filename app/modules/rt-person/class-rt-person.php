@@ -32,11 +32,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				'not_found_in_trash' => __( 'No people found in Trash' ),
 				'not_found_in_trash' => __( 'No people found in Trash' ),
 			);
-			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url' );
-			if ( empty( $contacts_logo_url ) ) {
-				$contacts_logo_url = RT_CONTACTS_URL . 'app/assets/img/contacts-16X16.png';
+			$logo_url = get_site_option( 'rt_biz_logo_url' );
+			if ( empty( $logo_url ) ) {
+				$logo_url = RT_BIZ_URL . 'app/assets/img/rt-biz-16X16.png';
 			}
-			$this->register_post_type( $this->post_type, $this->labels, $contacts_logo_url );
+			$this->register_post_type( $this->post_type, $this->labels, $logo_url );
 			$this->setup_meta_fields();
 		}
 
@@ -140,7 +140,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 			);
 
-			$this->meta_fields = apply_filters( 'rt_contacts_person_meta_fields', $this->meta_fields );
+			$this->meta_fields = apply_filters( 'rt_biz_person_meta_fields', $this->meta_fields );
 		}
 
 		function print_metabox_js() { ?>

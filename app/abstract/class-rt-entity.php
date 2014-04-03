@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 /**
- * Description of rt-contacts-abstrast-entity
+ * Description of class-rt-entity
  *
  * @author udit
  */
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		public $post_type;
 		public $labels;
 		public $meta_fields = array();
-		public static $meta_key_prefix = 'rt_contacts_';
+		public static $meta_key_prefix = 'rt_biz_';
 
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
@@ -41,12 +41,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_action( 'admin_menu', array( $this, 'register_pages' ) );
 			}
 
-			do_action( 'rt_contacts_entity_hooks', $this );
+			do_action( 'rt_biz_entity_hooks', $this );
 		}
 
 		function register_pages() {
-			global $rt_contacts;
-			add_submenu_page( Rt_Contacts::$menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
+			add_submenu_page( Rt_Biz::$menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
 		}
 
 		function change_publish_button( $translation, $text ) {
@@ -64,7 +63,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		function entity_meta_boxes() {
-			add_meta_box( 'rt-contacts-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
+			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
 		}
 
 		function render_additional_details_meta_box( $post ) {
@@ -120,10 +119,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					</div>
 				<?php }
 			}
-			do_action( 'rt_contacts_render_meta_fields', $post, $this );
-			wp_nonce_field( 'rt_contacts_additional_details_metabox', 'rt_contacts_additional_details_metabox_nonce' );
+			do_action( 'rt_biz_render_meta_fields', $post, $this );
+			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
 			$this->print_metabox_js();
-			do_action( 'rt_contacts_print_metabox_js', $post, $this );
+			do_action( 'rt_biz_print_metabox_js', $post, $this );
 		}
 
 		function print_metabox_js() { }
@@ -135,14 +134,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			 */
 
 			// Check if our nonce is set.
-			if ( ! isset( $_POST['rt_contacts_additional_details_metabox_nonce'] ) ) {
+			if ( ! isset( $_POST['rt_biz_additional_details_metabox_nonce'] ) ) {
 				return;
 			}
 
-			$nonce = $_POST['rt_contacts_additional_details_metabox_nonce'];
+			$nonce = $_POST['rt_biz_additional_details_metabox_nonce'];
 
 			// Verify that the nonce is valid.
-			if ( ! wp_verify_nonce( $nonce, 'rt_contacts_additional_details_metabox' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'rt_biz_additional_details_metabox' ) ) {
 				return;
 			}
 
@@ -157,7 +156,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		function save_meta_values( $post_id ) {
-			do_action( 'rt_contacts_save_entity_meta', $post_id, $this );
+			do_action( 'rt_biz_save_entity_meta', $post_id, $this );
 		}
 
 		function post_table_columns( $columns ) {

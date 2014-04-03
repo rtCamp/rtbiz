@@ -6,16 +6,16 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 /**
- * Description of class-rt-contacts
+ * Description of class-rt-biz
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Contacts' ) ) {
+if ( ! class_exists( 'Rt_Biz' ) ) {
 
-	class Rt_Contacts {
+	class Rt_Biz {
 
-		public static $menu_page_slug = 'rt-contacts';
-		public static $settings_page_slug = 'rt-contacts-settings';
+		public static $menu_page_slug = 'rt-biz';
+		public static $settings_page_slug = 'rt-biz-settings';
 		public $templateURL;
 		public $menu_order = array();
 
@@ -28,20 +28,20 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 			$this->init_menu_order();
 
-			$this->templateURL = apply_filters( 'rt_contacts_template_url', 'rt_contacts/' );
+			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
 		}
 
 		function init_menu_order() {
 			$this->menu_order[self::$menu_page_slug] = 5;
 
-			global $rt_person, $rt_organization, $rt_contacts_attributes;
+			global $rt_person, $rt_organization, $rt_biz_attributes;
 
 			$this->menu_order['post-new.php?post_type='.$rt_person->post_type] = 10;
 			$this->menu_order['edit.php?post_type='.$rt_person->post_type] = 15;
 			$this->menu_order['post-new.php?post_type='.$rt_organization->post_type] = 50;
 			$this->menu_order['edit.php?post_type='.$rt_organization->post_type] = 55;
 
-			$this->menu_order[$rt_contacts_attributes->attributes_page_slug] = 90;
+			$this->menu_order[$rt_biz_attributes->attributes_page_slug] = 90;
 
 			$this->menu_order[self::$settings_page_slug] = 100;
 		}
@@ -49,21 +49,21 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 		function hooks() {
 			if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
-				add_filter( 'custom_menu_order', array($this, 'contacts_pages_order') );
+				add_filter( 'custom_menu_order', array($this, 'biz_pages_order') );
 			}
 		}
 
 		function register_menu() {
-			global $rt_contacts_roles;
-			$contacts_logo_url = get_site_option( 'rt_contacts_logo_url' );
-			if ( empty( $contacts_logo_url ) ) {
-				$contacts_logo_url = RT_CONTACTS_URL . 'app/assets/img/contacts-16X16.png';
+			global $rt_biz_roles;
+			$logo_url = get_site_option( 'rt_biz_logo_url' );
+			if ( empty( $logo_url ) ) {
+				$logo_url = RT_BIZ_URL . 'app/assets/img/rt-biz-16X16.png';
 			}
-			add_menu_page( __( 'Contacts' ), __( 'Contacts' ), $rt_contacts_roles->global_caps['manage_contacts'], self::$menu_page_slug, array( $this, 'contacts_ui' ), $contacts_logo_url, '90.399' );
-			add_submenu_page( self::$menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_contacts_roles->global_caps['manage_contacts'], self::$settings_page_slug, array( $this, 'settings_ui' ) );
+			add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), $rt_biz_roles->global_caps['manage_rt_biz'], self::$menu_page_slug, array( $this, 'biz_ui' ), $logo_url, '90.399' );
+			add_submenu_page( self::$menu_page_slug, __( 'Settings' ), __( 'Settings' ), $rt_biz_roles->global_caps['manage_rt_biz'], self::$settings_page_slug, array( $this, 'settings_ui' ) );
 		}
 
-		function contacts_pages_order( $menu_order ) {
+		function biz_pages_order( $menu_order ) {
 			global $submenu;
 
 			if ( isset( $submenu[self::$menu_page_slug] ) && ! empty( $submenu[self::$menu_page_slug] ) ) {
@@ -85,11 +85,11 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 		}
 
 		function contacts_ui() {
-			echo 'Contacts Dashboard';
+			echo 'rtBiz Dashboard';
 		}
 
 		function settings_ui() {
-			rt_contacts_get_template( 'settings.php' );
+			rt_biz_get_template( 'settings.php' );
 		}
 
 		function check_p2p_dependency() {
@@ -100,20 +100,20 @@ if ( ! class_exists( 'Rt_Contacts' ) ) {
 
 		function p2p_admin_notice() { ?>
 			<div class="updated">
-				<p><?php _e( sprintf( 'WordPress Contacts : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="'.admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ).'">'.__( 'install' ).'</a>', '<a href="'.admin_url( 'plugins.php' ).'">'.__( 'activate' ).'</a>' ) ); ?></p>
+				<p><?php _e( sprintf( 'rtBiz : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="'.admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ).'">'.__( 'install' ).'</a>', '<a href="'.admin_url( 'plugins.php' ).'">'.__( 'activate' ).'</a>' ) ); ?></p>
 			</div>
 		<?php }
 
 		function init_modules() {
-			global $rt_person, $rt_organization, $rt_contacts_attributes;
+			global $rt_person, $rt_organization, $rt_biz_attributes;
 			$rt_person              = new Rt_Person();
 			$rt_organization        = new Rt_Organization();
-			$rt_contacts_attributes = new Rt_Contacts_Attributes();
+			$rt_biz_attributes = new Rt_Biz_Attributes();
 		}
 
 		function init_roles() {
-			global $rt_contacts_roles;
-			$rt_contacts_roles = new Rt_Contacts_Roles();
+			global $rt_biz_roles;
+			$rt_biz_roles = new Rt_Biz_Roles();
 		}
 
 		function register_organization_person_connection() {

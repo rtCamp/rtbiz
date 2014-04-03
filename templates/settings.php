@@ -6,8 +6,8 @@
  * and open the template in the editor.
  */
 
-if ( isset( $_POST['rt_contacts_logo_url'] ) ) {
-	update_site_option( 'rt_contacts_logo_url', $_POST['rt_contacts_logo_url'] );
+if ( isset( $_POST['rt_biz_logo_url'] ) ) {
+	update_site_option( 'rt_biz_logo_url', $_POST['rt_biz_logo_url'] );
 }
 
 if(!isset($_REQUEST["type"])){
@@ -15,18 +15,18 @@ if(!isset($_REQUEST["type"])){
 }
 ?>
 <div class="wrap">
-	<div id="icon-options-general" class="icon32"><br></div><h2><?php _e( 'Contacts Settings' ); ?></h2>
+	<div id="icon-options-general" class="icon32"><br></div><h2><?php _e( 'rtBiz Settings' ); ?></h2>
 	<ul class="subsubsub">
-		<li><a href="<?php echo admin_url( 'admin.php?page=rt-contacts-settings&type=other' );?>" <?php if ( $_REQUEST['type'] == 'other' ) echo ' class="current"'; ?> ><?php _e( 'Other' ); ?></a></li>
+		<li><a href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz::$settings_page_slug . '&type=other' );?>" <?php if ( $_REQUEST['type'] == 'other' ) echo ' class="current"'; ?> ><?php _e( 'Other' ); ?></a></li>
 	</ul>
 
-	<form method="post" action="<?php echo admin_url( 'admin.php?page=rt-contacts-settings&type=' . $_REQUEST['type']); ?>">
+	<form method="post" action="<?php echo admin_url( 'admin.php?page=' . Rt_Biz::$settings_page_slug . '&type=' . $_REQUEST['type']); ?>">
 		<table class="form-table crm-option">
 			<tbody>
 			<?php if( $_REQUEST['type'] == 'other' ) { ?>
 				<tr valign="top">
-					<th scope="row"><label for="rt_contacts_logo_url"><?php _e( 'Contacts Plugin Icon (Logo) URL' ); ?></label></th>
-					<td><input type="text" name="rt_contacts_logo_url" value="<?php echo get_site_option( 'rt_contacts_logo_url', '' ); ?>" /></td>
+					<th scope="row"><label for="rt_biz_logo_url"><?php _e( 'rtBiz Icon (Logo) URL' ); ?></label></th>
+					<td><input type="text" name="rt_biz_logo_url" value="<?php echo get_site_option( 'rt_biz_logo_url', '' ); ?>" /></td>
 				</tr>
 			<?php } ?>
 			</tbody>
