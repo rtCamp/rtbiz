@@ -29,7 +29,8 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		}
 
 		function load_settings() {
-//			self::$settings['logo_url'] = self::$titan_obj->getOption( 'logo_url' );
+			self::$titan_obj = $this->get_settings_instance();
+			self::$settings['logo_url'] = self::$titan_obj->getOption( 'logo_url' );
 		}
 
 		function init_settings() {
