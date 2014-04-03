@@ -30,7 +30,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->register_organization_person_connection();
 
-			$this->hooks();
+			add_action( 'wp_loaded', array( $this,'hooks' ) );
 
 			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
 		}
