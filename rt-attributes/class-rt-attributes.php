@@ -124,14 +124,16 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
+				$settings = maybe_unserialize( $relation->settings );
+				$caps = ( isset( $settings['caps'] ) && is_array( $settings['caps'] ) ) ? $settings['caps'] : array();
 				if ( $attr->attribute_store_as == 'taxonomy' && self::$attribute_mappings[$relation->id] == 'unregistered' ) {
-					$this->register_taxonomy( $relation->post_type, $relation->attr_id );
+					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $caps );
 					self::$attribute_mappings[$relation->id] = 'registered';
 				}
 			}
 		}
 
-		function register_taxonomy( $post_type, $attr_id ) {
+		function register_taxonomy( $post_type, $attr_id, $caps ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
 			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
@@ -161,7 +163,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 							),
 						'show_ui' 					=> true,
 						'query_var' 				=> true,
-						'capabilities'				=> $this->attr_cap,
+						'capabilities'				=> $caps,
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
@@ -353,6 +355,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$data = array(
 					'attr_id' => $attribute_id,
 					'post_type' => $pt,
+					'settings' => maybe_serialize( array( 'caps' => $this->attr_cap ) ),
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
