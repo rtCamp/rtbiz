@@ -399,6 +399,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as = 'taxonomy', $attribute_render_type = '', $attribute_orderby = '' ) {
 
 			$attribute = array(
+				'module_name' => $this->module_name,
 				'attribute_label' => $attribute_label,
 				'attribute_name' => $attribute_name,
 				'attribute_store_as' => $attribute_store_as,
