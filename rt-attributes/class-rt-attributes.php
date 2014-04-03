@@ -41,9 +41,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $post_type;
 
 		/**
-		 * @var $cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
 		 */
-		var $cap;
+		var $page_cap;
+
+		/**
+		 * @var $attr_cap - Capability for Attributes (Taxonomy / Terms); if not passed, default cap will be empty array ( array() )
+		 */
+		var $attr_cap;
 
 		/**
 		 * @var $render_type_required - Render Type for the attribute; Dropdown, Checklist, Rating Stars etc.,
@@ -146,12 +151,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 							),
 						'show_ui' 					=> true,
 						'query_var' 				=> true,
-						//'capabilities'			=> array(
-						//	'manage_terms' 		=> 'manage_rtcrm_terms',
-						//	'edit_terms' 		=> 'edit_rtcrm_terms',
-						//	'delete_terms' 		=> 'delete_rtcrm_terms',
-						//	'assign_terms' 		=> 'assign_rtcrm_terms',
-						//),
+						'capabilities'				=> $this->attr_cap,
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
@@ -207,12 +207,13 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param bool $storage_type_required
 		 * @param bool $orderby_required
 		 */
-		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $cap = 'manage_options', $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
+		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
 
 			$this->page_slug             = $page_slug;
 			$this->parent_page_slug      = $parent_page_slug;
 			$this->post_type             = $post_type;
-			$this->cap                   = $cap;
+			$this->page_cap              = $page_cap;
+			$this->attr_cap              = $attr_cap;
 			$this->render_type_required  = $render_type_required;
 			$this->storage_type_required = $storage_type_required;
 			$this->orderby_required      = $orderby_required;
