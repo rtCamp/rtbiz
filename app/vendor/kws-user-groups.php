@@ -37,7 +37,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 			add_action( 'init', array( &$this, 'register_user_taxonomy' ) );
 			add_action( 'create_term', array( &$this, 'meta_save' ), 10, 2 );
 			add_action( 'edit_term', array( &$this, 'meta_save' ), 10, 2 );
-			add_action( 'admin_menu', array( &$this, 'add_user_group_admin_page' ) );
+//			add_action( 'admin_menu', array( &$this, 'add_user_group_admin_page' ) );
 			add_filter( 'user-group_row_actions', array( &$this, 'row_actions' ), 1, 2 );
 			add_action( 'manage_user-group_custom_column', array( &$this, 'manage_user_group_column' ), 10, 3 );
 			add_filter( 'manage_edit-user-group_columns', array( &$this, 'manage_user_group_user_column' ) );
@@ -114,7 +114,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 
 			$tax = get_taxonomy( 'user-group' );
 
-			$page = add_users_page( esc_attr( $tax->labels->menu_name ), esc_attr( $tax->labels->menu_name ), $tax->cap->manage_terms, 'edit-tags.php?taxonomy=' . $tax->name );
+//			$page = add_users_page( esc_attr( $tax->labels->menu_name ), esc_attr( $tax->labels->menu_name ), $tax->cap->manage_terms, 'edit-tags.php?taxonomy=' . $tax->name );
 		}
 
 		function manage_user_group_user_column( $columns )
@@ -307,19 +307,19 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 		function register_user_taxonomy()
 		{
 			$lable = array(
-				'name' => __( 'User Groups' ),
-				'singular_name' => __( 'Group' ),
-				'menu_name' => __( 'User Groups' ),
-				'search_items' => __( 'Search Groups' ),
-				'popular_items' => __( 'Popular Groups' ),
-				'all_items' => __( 'All User Groups' ),
-				'edit_item' => __( 'Edit User Group' ),
-				'update_item' => __( 'Update User Group' ),
-				'add_new_item' => __( 'Add New User Group' ),
-				'new_item_name' => __( 'New User Group Name' ),
-				'separate_items_with_commas' => __( 'Separate user groups with commas' ),
-				'add_or_remove_items' => __( 'Add or remove user groups' ),
-				'choose_from_most_used' => __( 'Choose from the most popular user groups' ), );
+				'name' => __( 'Departments' ),
+				'singular_name' => __( 'Departmet' ),
+				'menu_name' => __( 'Departments' ),
+				'search_items' => __( 'Search Departments' ),
+				'popular_items' => __( 'Popular Departments' ),
+				'all_items' => __( 'All User Departments' ),
+				'edit_item' => __( 'Edit Department' ),
+				'update_item' => __( 'Update Department' ),
+				'add_new_item' => __( 'Add New Department' ),
+				'new_item_name' => __( 'New Department Name' ),
+				'separate_items_with_commas' => __( 'Separate departments with commas' ),
+				'add_or_remove_items' => __( 'Add or remove departments' ),
+				'choose_from_most_used' => __( 'Choose from the most popular departments' ), );
 
 			$arg = array(
 				'public' => false,
@@ -376,14 +376,14 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 				</style>
 
 				<script type="text/javascript">
-					jQuery(document).ready(function ($) {
-						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
-						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
-						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
-						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
-						$('#tag-slug').parent('div.form-field').hide();
-						$('.inline-edit-col input[name=slug]').parents('label').hide();
-					});
+//					jQuery(document).ready(function ($) {
+//						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
+//						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+//						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+//						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
+//						$('#tag-slug').parent('div.form-field').hide();
+//						$('.inline-edit-col input[name=slug]').parents('label').hide();
+//					});
 				</script>
 			<?php
 			} elseif ( self::is_edit_user_group( 'edit' ) ) {
@@ -394,14 +394,14 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 					}
 				</style>
 				<script type="text/javascript">
-					jQuery(document).ready(function ($) {
-						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
-						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
-						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
-						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
-						$('#edittag #slug').parents('tr.form-field').addClass('hide-if-js');
-						$('.form-table .form-field').not('.hide-if-js').css('display', 'table-row');
-					});
+//					jQuery(document).ready(function ($) {
+//						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
+//						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+//						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+//						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
+//						$('#edittag #slug').parents('tr.form-field').addClass('hide-if-js');
+//						$('.form-table .form-field').not('.hide-if-js').css('display', 'table-row');
+//					});
 				</script>
 			<?php
 			}
