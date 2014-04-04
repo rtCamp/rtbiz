@@ -23,7 +23,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		public function __construct() {
 			$this->check_p2p_dependency();
 
-			$this->hooks();
+			add_action( 'init', array( $this, 'hooks' ), 11 );
 
 			$this->init_settings();
 			$this->init_modules();
@@ -59,7 +59,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function register_menu() {
-			$logo_url = '';
+			$logo_url = Rt_Biz_Settings::$settings['logo_url'];
 			add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$menu_page_slug, array( $this, 'biz_ui' ), $logo_url, self::$menu_position );
 		}
 

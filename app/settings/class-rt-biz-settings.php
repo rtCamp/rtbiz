@@ -20,16 +20,17 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		public static $settings;
 
 		public function __construct() {
-			$this->embedd_titan_framework();
+			if ( ! $this->embedd_titan_framework() ) {
+				return;
+			}
 
 			self::$titan_obj = $this->get_settings_instance();
 
-			add_action( 'after_setup_theme', array( $this, 'init_settings' ) );
-			add_action( 'after_setup_theme', array( $this, 'load_settings' ) );
+			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 15 );
+			add_action( 'init', array( $this, 'load_settings' ) );
 		}
 
 		function load_settings() {
-			self::$titan_obj = $this->get_settings_instance();
 			self::$settings['logo_url'] = self::$titan_obj->getOption( 'logo_url' );
 		}
 
@@ -48,7 +49,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'name' => __( 'General' ), // Name of the tab
 				'id' => 'general', // Unique ID of the tab
 				'title' => __( 'General' ), // Title to display in the admin panel when tab is active
-					) );
+			) );
 			$general_tab->createOption( array(
 				'name' => __( 'Icon (Logo) URL' ), // Name of the option
 				'desc' => 'This logo will be used for all the Menu, Submenu, Post Types Menu Icons in rtBiz', // Description of the option
@@ -80,7 +81,6 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 
 		function is_titan_activated() {
 			// Check if the framework plugin is activated
-			$useEmbeddedFramework = true;
 			$activePlugins = get_option( 'active_plugins' );
 			if ( is_array( $activePlugins ) ) {
 				foreach ( $activePlugins as $plugin ) {
@@ -101,17 +101,19 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			 */
 
 			if ( $this->is_plugin_activation_action() ) {
-				return;
+				return false;
 			}
 
 			if ( $this->is_titan_activated() ) {
-				return;
+				return true;
 			}
 
 			// Use the embedded Titan Framework
 			if ( ! class_exists( 'TitanFramework' ) ) {
 				require_once( RT_BIZ_PATH . 'app/vendor/titan-framework/titan-framework.php' );
+				return true;
 			}
+			return false;
 		}
 
 	}
