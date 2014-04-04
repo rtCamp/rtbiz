@@ -33,10 +33,9 @@ function rt_biz_include() {
 
 	include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
 
-	global $rtb_app_autoload, $rtb_abstract_autoload, $rtb_attributes_autoload, $rtb_modules_autoload, $rtb_settings_autoload;
+	global $rtb_app_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload;
 	$rtb_app_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/' );
 	$rtb_abstract_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/abstract/' );
-	$rtb_attributes_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/attributes/' );
 	$rtb_modules_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/modules/' );
 	$rtb_settings_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/settings/' );
 }
