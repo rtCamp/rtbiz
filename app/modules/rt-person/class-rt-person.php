@@ -34,6 +34,51 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
+			add_action( 'init', array( $this, 'check_filters' ) );
+
+			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 16 );
+		}
+
+		function check_filters() {
+			if ( isset( $_REQUEST['rt-biz-my-team'] ) && $_REQUEST['rt-biz-my-team'] ) {
+				add_filter( 'posts_where', array( $this,'filter_my_team_where' ), 10, 2 );
+				add_filter( 'posts_join', array( $this,'filter_my_team_join' ), 10, 2 );
+			}
+		}
+
+		function filter_my_team_where( $where, $query_obj ) {
+			global $wpdb;
+			$where .= " AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . "is_our_team_mate' AND {$wpdb->postmeta}.meta_value = '1'";
+			return $where;
+		}
+
+		function filter_my_team_join( $join, $query_obj ) {
+			global $wpdb;
+			$join .= " JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
+			return $join;
+		}
+
+		function person_meta_box() {
+			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox(array(
+				'name' => __( 'Our Team-mate' ), // Name of the menu item
+				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
+				'id' => 'rt-biz-person-our-team-mate', // Unique ID of the menu item
+				// 'capability' => 'manage_options', // User role
+				// 'icon' => 'dashicons-admin-generic', // Menu icon for top level menus only
+				// 'position' => 100.01 // Menu position for top level menus only
+				'post_type' => $this->post_type, // Post type, can be an array of post types
+				'context' => 'side', // normal, advanced, or side
+				'hide_custom_fields' => true, // If true, the custom fields box will not be shown
+			));
+			$our_team_mate->createOption( array(
+				'name' => __( 'Is our team mate ?' ), // Name of the option
+				'desc' => 'This is a checkbox which decides this contacts is part of our team or not.', // Description of the option
+				'id' => 'is_our_team_mate', // Unique ID of the option
+				'type' => 'checkbox', //
+				'default' => 0, // Menu icon for top level menus only
+				'example' => '', // An example value for this field, will be displayed in a <code>
+				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
+			) );
 		}
 
 		function setup_meta_fields() {

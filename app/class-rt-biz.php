@@ -14,9 +14,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 	class Rt_Biz {
 
-		public static $menu_page_slug = 'rt-biz';
+		public static $dashboard_slug = 'rt-biz-dashboard';
+		public $dashboard_screen;
+		public static $department_slug = 'rt-biz-department';
+		public static $access_control_slug = 'rt-biz-access-control';
+		public static $client_slug = 'rt-biz-client';
+		public static $company_slug = 'rt-biz-company';
 		public static $menu_position = 3.500;
-		public static $settings_page_slug = 'rt-biz-settings';
+		public static $settings_slug = 'rt-biz-settings';
 		public $templateURL;
 		public $menu_order = array();
 
@@ -29,7 +34,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->init_modules();
 			$this->init_roles();
 			$this->init_attributes();
-			$this->init_menu_order();
+//			$this->init_menu_order();
 
 			$this->register_organization_person_connection();
 
@@ -37,7 +42,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function init_menu_order() {
-			$this->menu_order[ self::$menu_page_slug ] = 5;
+			$this->menu_order[ self::$dashboard_slug ] = 5;
+
+			$this->menu_order[ self::$my_team_slug ] = 6;
 
 			global $rt_person, $rt_organization, $rt_biz_attributes;
 
@@ -48,30 +55,44 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->menu_order[ $rt_biz_attributes->attributes_page_slug ] = 90;
 
-			$this->menu_order[ self::$settings_page_slug ] = 100;
+			$this->menu_order[ self::$settings_slug ] = 100;
 		}
 
 		function hooks() {
 			if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
-				add_filter( 'custom_menu_order', array( $this, 'biz_pages_order' ) );
+//				add_filter( 'custom_menu_order', array( $this, 'biz_pages_order' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_styles_scripts' ) );
+			}
+		}
+
+		function load_styles_scripts() {
+			global $rt_person;
+			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
+			if ( isset( $_REQUEST['rt-biz-my-team'] ) ) {
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
 			}
 		}
 
 		function register_menu() {
+			global $rt_person;
 			$logo_url = Rt_Biz_Settings::$settings['logo_url'];
-			add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$menu_page_slug, array( $this, 'biz_ui' ), $logo_url, self::$menu_position );
+			$this->dashboard_screen = add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
+			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
+			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
+			add_submenu_page( self::$dashboard_slug, __( 'Department' ), __( '--- Department' ), 'read', self::$department_slug, array( $this, 'department_ui' ) );
+			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), 'read', self::$access_control_slug, array( $this, 'access_control_ui' ) );
+			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), 'read', self::$company_slug, array( $this, 'company_ui' ) );
 		}
 
 		function biz_pages_order( $menu_order ) {
 			global $submenu;
 
-//			echo '<pre>';
-//			var_dump($submenu);
-//			die();
-
-			if ( isset( $submenu[ self::$menu_page_slug ] ) && ! empty( $submenu[ self::$menu_page_slug ] ) ) {
-				$menu = $submenu[ self::$menu_page_slug ];
+			if ( isset( $submenu[ self::$dashboard_slug ] ) && ! empty( $submenu[ self::$dashboard_slug ] ) ) {
+				$menu = $submenu[ self::$dashboard_slug ];
 				$new_menu = array();
 
 				foreach ( $menu as $p_key => $item ) {
@@ -82,14 +103,26 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					}
 				}
 				ksort( $new_menu );
-				$submenu[ self::$menu_page_slug ] = $new_menu;
+				$submenu[ self::$dashboard_slug ] = $new_menu;
 			}
 
 			return $menu_order;
 		}
 
-		function biz_ui() {
-			echo 'rtBiz Dashboard';
+		function dashboard_ui() {
+			rt_biz_get_template( 'dashboard.php' );
+		}
+
+		function department_ui() {
+			echo 'Department';
+		}
+
+		function access_control_ui() {
+			echo 'Access Control';
+		}
+
+		function company_ui() {
+			echo 'Company';
 		}
 
 		function check_p2p_dependency() {

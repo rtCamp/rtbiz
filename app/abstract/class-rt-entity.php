@@ -41,15 +41,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
-
-				add_action( 'admin_menu', array( $this, 'register_pages' ) );
 			}
 
 			do_action( 'rt_biz_entity_hooks', $this );
-		}
-
-		function register_pages() {
-			add_submenu_page( Rt_Biz::$menu_page_slug, $this->labels['add_new_item'], $this->labels['add_new_item'], "publish_{$this->post_type}s", 'post-new.php?post_type='.$this->post_type );
 		}
 
 		function change_publish_button( $translation, $text ) {
@@ -218,16 +212,16 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			return $tmpStr;
 		}
 
-		function register_post_type( $name, $labels = array(), $menu_icon = '' ) {
+		function register_post_type( $name, $labels = array() ) {
 			$args = array(
 				'labels' => $labels,
 				'public' => false,
 				'publicly_queryable' => false,
 				'show_ui' => true, // Show the UI in admin panel
-				'show_in_nav_menus' => true,
-				'show_in_menu' => Rt_Biz::$menu_page_slug,
-				'show_in_admin_bar' => true,
-				'menu_icon' => $menu_icon,
+				'show_in_nav_menus' => false,
+				'show_in_menu' => false,
+				'show_in_admin_bar' => false,
+//				'menu_icon' => $menu_icon,
 				'supports' => array( 'title', 'editor', 'author', 'comments', 'thumbnail' ),
 				'capability_type' => $name,
 			);

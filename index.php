@@ -8,7 +8,7 @@
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
-  Text Domain: rt-biz
+  Text Domain: rt_biz
  */
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
@@ -24,7 +24,7 @@ if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
 	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
 }
 if ( !defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
-	define( 'RT_BIZ_TEXT_DOMAIN', 'rt-biz' );
+	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
 }
 
 function rt_biz_include() {

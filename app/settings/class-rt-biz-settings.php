@@ -38,8 +38,8 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			$settings_page = self::$titan_obj->createAdminPanel( array(
 				'name' => __( 'Settings' ), // Name of the menu item
 				'title' => __( 'Settings' ), // Title displayed on the top of the admin panel
-				'parent' => Rt_Biz::$menu_page_slug, // id of parent, if blank, then this is a top level menu
-				'id' => Rt_Biz::$settings_page_slug, // Unique ID of the menu item
+				'parent' => Rt_Biz::$dashboard_slug, // id of parent, if blank, then this is a top level menu
+				'id' => Rt_Biz::$settings_slug, // Unique ID of the menu item
 				'capability' => Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], // User role
 //				'icon' => $logo_url, // Menu icon for top level menus only http://melchoyce.github.io/dashicons/
 				'position' => 10, // Menu position. Can be used for both top and sub level menus
@@ -115,7 +115,5 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			}
 			return false;
 		}
-
 	}
-
 }
