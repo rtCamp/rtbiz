@@ -29,6 +29,7 @@ if ( !defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 
 function rt_biz_include() {
 	include_once RT_BIZ_PATH . 'app/lib/wp-helpers.php';
+	include_once RT_BIZ_PATH . 'app/vendor/kws-user-groups.php';
 
 	include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
 
