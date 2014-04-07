@@ -173,3 +173,8 @@ function rt_biz_get_organization_meta_fields() {
 	global $rt_organization;
 	return $rt_organization->meta_fields;
 }
+
+function rt_biz_get_user_groups() {
+	$user_groups = get_terms( 'user-group', array( 'hide_empty' => false ) );
+	return $user_groups;
+}

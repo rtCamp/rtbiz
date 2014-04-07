@@ -35,6 +35,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->register_organization_person_connection();
 
 			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
+			do_action( 'rt_biz_init' );
 		}
 
 		function init_menu_order() {
@@ -83,7 +84,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), 'read', 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), 'read', self::$access_control_slug, array( $this, 'access_control_ui' ) );
+			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), 'read', self::$access_control_slug, array( Rt_Biz_Access_Control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), 'read', 'edit.php?post_type='.$rt_organization->post_type );
@@ -112,10 +113,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function dashboard_ui() {
 			rt_biz_get_template( 'dashboard.php' );
-		}
-
-		function access_control_ui() {
-			echo 'Access Control';
 		}
 
 		function check_p2p_dependency() {

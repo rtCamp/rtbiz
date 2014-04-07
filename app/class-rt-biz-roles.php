@@ -58,7 +58,7 @@ if ( ! class_exists( 'Rt_Biz_Roles' ) ) {
 					$selected = '';
 				} ?>
 				<h3><?php _e( 'rtBiz' ); ?></h3>
-				<a href="?rt_biz_reset_roles=true"><?php _e('Reset Roles'); ?></a>
+				<a href="<?php echo add_query_arg( 'rt_biz_reset_roles', true, $_SERVER['REQUEST_URI'] ); ?>"><?php _e('Reset Roles'); ?></a>
 				<table class="form-table">
 					<tbody>
 						<tr>
