@@ -45,6 +45,15 @@ function rt_biz_locate_template( $template_name, $template_path = '', $default_p
 	return apply_filters('rt_biz_locate_template', $template, $template_name, $template_path);
 }
 
+function rt_biz_sanitize_module_key( $key ) {
+	$filtered = strtolower( remove_accents( stripslashes( strip_tags( $key ) ) ) );
+	$filtered = preg_replace( '/&.+?;/', '', $filtered ); // Kill entities
+	$filtered = str_replace( array( '.', '\'', '"' ), '', $filtered ); // Kill quotes and full stops.
+	$filtered = str_replace( array( ' ' ), '-', $filtered ); // Replace spaces.
+
+	return $filtered;
+}
+
 function rt_biz_register_person_connection( $post_type, $label ) {
 	global $rt_person;
 	$rt_person->init_connection( $post_type, $label );
@@ -177,4 +186,16 @@ function rt_biz_get_organization_meta_fields() {
 function rt_biz_get_user_groups() {
 	$user_groups = get_terms( 'user-group', array( 'hide_empty' => false ) );
 	return $user_groups;
+}
+
+function rt_biz_get_acl_permissions() {
+	return Rt_Access_Control::$permissions;
+}
+
+function rt_biz_get_modules() {
+	return Rt_Access_Control::$modules;
+}
+
+function rt_biz_get_minimum_access_role( $module_key, $role = 'no_access' ) {
+	return Rt_Access_Control::get_capability_from_access_role( $module_key, $role );
 }

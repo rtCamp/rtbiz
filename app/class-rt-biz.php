@@ -27,7 +27,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			add_action( 'init', array( $this, 'hooks' ), 11 );
 
+			$this->init_access_control();
 			$this->init_settings();
+			$this->init_biz_acl();
 			$this->init_modules();
 			$this->init_roles();
 //			$this->init_menu_order();
@@ -78,16 +80,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function register_menu() {
-			global $rt_person, $rt_organization;
+			global $rt_person, $rt_organization, $rt_access_control;
 			$logo_url = Rt_Biz_Settings::$settings['logo_url'];
-			$this->dashboard_screen = add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
-			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
-			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), 'read', 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
-			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), 'read', 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), 'read', self::$access_control_slug, array( Rt_Biz_Access_Control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
-			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), 'read', 'edit.php?post_type='.$rt_person->post_type );
-			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), 'read', 'edit.php?post_type='.$rt_organization->post_type );
+			$this->dashboard_screen = add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
+			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
+			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
+			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit-tags.php?taxonomy=user-group' );
+			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
+			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), rt_biz_get_minimum_access_role( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_organization->post_type );
 		}
 
 		function biz_pages_order( $menu_order ) {
@@ -140,9 +142,19 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_roles = new Rt_Biz_Roles();
 		}
 
+		function init_access_control() {
+			global $rt_access_control;
+			$rt_access_control = new Rt_Access_Control();
+		}
+
 		function init_settings() {
 			global $rt_biz_setttings;
 			$rt_biz_setttings = new Rt_Biz_Settings();
+		}
+
+		function init_biz_acl() {
+			global $rt_biz_acl;
+			$rt_biz_acl = new Rt_Biz_ACL();
 		}
 
 		function register_organization_person_connection() {
