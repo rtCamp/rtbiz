@@ -36,10 +36,15 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		}
 
 		function load_settings() {
-			self::$settings['logo_url'] = self::$titan_obj->getOption( 'logo_url' );
+			self::$settings['logo_url'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'logo_url' ) : '';
 		}
 
 		function init_settings() {
+
+			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
+				return;
+			}
+
 			$settings_page = self::$titan_obj->createAdminPanel( array(
 				'name' => __( 'Settings' ), // Name of the menu item
 				'title' => __( 'Settings' ), // Title displayed on the top of the admin panel

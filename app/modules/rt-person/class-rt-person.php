@@ -59,6 +59,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		}
 
 		function person_meta_box() {
+
+			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
+				return;
+			}
+
 			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox(array(
 				'name' => __( 'Our Team-mate' ), // Name of the menu item
 				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
