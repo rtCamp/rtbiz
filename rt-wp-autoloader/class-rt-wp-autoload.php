@@ -42,8 +42,8 @@ if ( ! class_exists( 'RT_WP_Autoload' ) ){
 			if ( file_exists( $class_path ) ){
 				include_once $class_path;
 			}
-
 			$class_path = trailingslashit( $this->dir ) . $this->get_class_file_name( $class_name );
+
 			if ( file_exists( $class_path ) ){
 				include_once $class_path;
 			}
