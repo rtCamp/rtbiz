@@ -11,10 +11,19 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if ( ! class_exists( 'Rt_Person' ) ) {
+	/**
+	 * Class Rt_Person
+	 */
 	class Rt_Person extends Rt_Entity {
 
+		/**
+		 * @var string
+		 */
 		public $email_key = 'contact_email';
 
+		/**
+		 *
+		 */
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
 			$this->labels = array(
@@ -36,9 +45,16 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			add_action( 'init', array( $this, 'init_entity' ) );
 			add_action( 'init', array( $this, 'check_filters' ) );
 
+			/**
+			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
+			 */
 			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 16 );
 		}
 
+		/**
+		 * Filters Persons on My Team Page - List View
+		 * Only When it's My Team Page.
+		 */
 		function check_filters() {
 			if ( isset( $_REQUEST['rt-biz-my-team'] ) && $_REQUEST['rt-biz-my-team'] ) {
 				add_filter( 'posts_where', array( $this,'filter_my_team_where' ), 10, 2 );
@@ -46,18 +62,39 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			}
 		}
 
+		/**
+		 *
+		 * WHERE Filter of WP_Query
+		 * Filter Persons on My Team Page - List View
+		 *
+		 * @param $where
+		 * @param $query_obj
+		 * @return string
+		 */
 		function filter_my_team_where( $where, $query_obj ) {
 			global $wpdb;
 			$where .= " AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . "is_our_team_mate' AND {$wpdb->postmeta}.meta_value = '1'";
 			return $where;
 		}
 
+		/**
+		 *
+		 * JOIN Filter of WP_Query
+		 * Filter Persons on My Team Page - List View
+		 *
+		 * @param $join
+		 * @param $query_obj
+		 * @return string
+		 */
 		function filter_my_team_join( $join, $query_obj ) {
 			global $wpdb;
 			$join .= " JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
 			return $join;
 		}
 
+		/**
+		 *  Init Settings for Team Mate MetaBox. Titan
+		 */
 		function person_meta_box() {
 
 			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
@@ -86,6 +123,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			) );
 		}
 
+		/**
+		 *  Init Meta Fields
+		 */
 		function setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
@@ -189,6 +229,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			$this->meta_fields = apply_filters( 'rt_biz_person_meta_fields', $this->meta_fields );
 		}
 
+		/**
+		 *
+		 */
 		function print_metabox_js() { ?>
 			<script>
 
@@ -267,6 +310,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			</script>
 		<?php }
 
+		/**
+		 * @param $post_id
+		 */
 		function save_meta_values($post_id) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['contact_meta'][$field['key']] ) && ! empty( $_POST['contact_meta'][$field['key']] ) ) {
@@ -299,6 +345,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			parent::save_meta_values( $post_id );
 		}
 
+		/**
+		 * @param $name
+		 * @param string $description
+		 * @return int|WP_Error
+		 */
 		function add_person( $name, $description = '' ) {
 			$person_id = wp_insert_post(
 				array(
@@ -312,6 +363,12 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			return $person_id;
 		}
 
+		/**
+		 * Returns a person if found with passed email.
+		 *
+		 * @param $email
+		 * @return array
+		 */
 		function get_by_email( $email ) {
 			return get_posts(
 				array(

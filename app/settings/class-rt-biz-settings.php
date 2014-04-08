@@ -19,26 +19,50 @@ if ( ! defined( 'ABSPATH' ) )
  */
 if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 
+	/**
+	 * Class Rt_Biz_Settings
+	 */
 	class Rt_Biz_Settings {
 
+		/**
+		 * @var TitanFramework
+		 */
 		public static $titan_obj;
+
+		/**
+		 * @var - saved Settings
+		 */
 		public static $settings;
 
+		/**
+		 *
+		 */
 		public function __construct() {
+
+			// Proceed only if Titan Framework Found
 			if ( ! $this->embedd_titan_framework() ) {
 				return;
 			}
 
+			// Init Titan Instance
 			self::$titan_obj = $this->get_settings_instance();
 
+			// Init Titan Settings
 			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 15 );
+			// Load Saved Settings Values
 			add_action( 'init', array( $this, 'load_settings' ) );
 		}
 
+		/**
+		 *  Load Settings
+		 */
 		function load_settings() {
 			self::$settings['logo_url'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'logo_url' ) : '';
 		}
 
+		/**
+		 *  Init Settings
+		 */
 		function init_settings() {
 
 			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
@@ -74,10 +98,16 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			) );
 		}
 
+		/**
+		 * @return TitanFramework
+		 */
 		function get_settings_instance() {
 			return TitanFramework::getInstance( RT_BIZ_TEXT_DOMAIN );
 		}
 
+		/**
+		 * @return bool
+		 */
 		function is_plugin_activation_action() {
 			// Don't do anything when we're activating a plugin to prevent errors
 			// on redeclaring Titan classes
@@ -89,6 +119,9 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			return false;
 		}
 
+		/**
+		 * @return bool
+		 */
 		function is_titan_activated() {
 			// Check if the framework plugin is activated
 			$activePlugins = get_option( 'active_plugins' );
@@ -104,6 +137,9 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			return false;
 		}
 
+		/**
+		 * @return bool
+		 */
 		function embedd_titan_framework() {
 			/*
 			 * When using the embedded framework, use it only if the framework
@@ -114,6 +150,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				return false;
 			}
 
+			// Titan Already available as Plugin
 			if ( $this->is_titan_activated() ) {
 				return true;
 			}

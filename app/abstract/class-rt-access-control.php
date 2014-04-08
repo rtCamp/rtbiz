@@ -18,19 +18,47 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if( ! class_exists('Rt_Access_Control') ) {
+
+	/**
+	 * Class Rt_Access_Control
+	 *
+	 * This class works as the base for all the permissions, user access for rtBiz family plugins.
+	 * All the plugins including rtBiz will register with this class for the Access Control that it requires
+	 * & from there Rt_Access_Controll will take it over.
+	 *
+	 * It will map a matrix for permissions for Plugin Modules => User Groups (Departments) and from there user access
+	 * can be set as per requirement.
+	 */
 	class Rt_Access_Control {
 
+		/**
+		 * @var - These are more of the permission roles for the access control.
+		 */
 		public static $permissions;
 
+		/**
+		 * @var - Registered Plugin Modules for Rt_Access_Control
+		 */
 		public static $modules;
 
+		/**
+		 *
+		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'init_acl' ) );
 		}
 
+		/**
+		 *  Initilize ACL on WordPress Init. So that before this gets executed;
+		 *  other addon plugins get chance to hook into it and register themselved
+		 */
 		function init_acl() {
 			/**
-			 * $biz_module = array( RT_BIZ_TEXT_DOMAIN => __( 'rtBiz' ) );
+			 *
+			 *  Filter for other addons to register.
+			 *  Array Structure is array( 'module_slug' => 'label' )
+			 *
+			 *  $biz_module = array( RT_BIZ_TEXT_DOMAIN => __( 'rtBiz' ) );
 			 */
 			self::$modules = apply_filters( 'rt_biz_modules', array() );
 
@@ -54,14 +82,33 @@ if( ! class_exists('Rt_Access_Control') ) {
 			);
 		}
 
+		/**
+		 *
+		 * This method return the capability name text if you pass the module_slug & role
+		 * It will return proper cap if passed module_key is registered with Rt_Access_Control
+		 * & passed role is valid.
+		 *
+		 * Other wise it will return empty string.
+		 *
+		 * Example : $module_key = 'rt_biz', $role = 'author'
+		 *          Return String - rt_biz_author
+		 *
+		 * @param $module_key
+		 * @param string $role
+		 * @return string
+		 */
 		function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
-			$module_key = rt_biz_sanitize_module_key( $module_key );
-			if ( isset( self::$permissions[ $role ] ) ) {
+
+			if ( isset( self::$modules[ $module_key ] ) && isset( self::$permissions[ $role ] ) ) {
+				$module_key = rt_biz_sanitize_module_key( $module_key );
 				return $module_key . '_' . $role;
 			}
 			return '';
 		}
 
+		/**
+		 *  Saves the ACL Permission Matrix to the Database
+		 */
 		function save_acl_settings() {
 			if ( ! isset( $_POST['rt_biz_acl_permissions'] ) ) {
 				return;
@@ -73,6 +120,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 			update_site_option( 'rt_biz_module_permissions', $module_permissions );
 		}
 
+		/**
+		 *  Take Action according to permission saved from the form & then display the ACL Settings UI
+		 */
 		function acl_settings_ui() {
 
 			$this->save_acl_settings();

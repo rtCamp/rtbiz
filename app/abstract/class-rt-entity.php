@@ -11,23 +11,65 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if ( ! class_exists( 'Rt_Entity' ) ) {
+
+	/**
+	 * Class Rt_Entity
+	 *
+	 * An abstract class for Rt_Person & Rt_Organization - Core Modules of rtBiz.
+	 * This will handle most of the functionalities of these two entities.
+	 *
+	 * If at all any individual entity wants to change the behavior for itself
+	 * then it will override that particular method in the its child class
+	 */
 	abstract class Rt_Entity {
 
+		/**
+		 * This array will hold all the post types that are meant to be connected with ORganization / Person
+		 * Other plugin addons will register their useful post type here in the array and accordingly will be connected
+		 * with person / organization via Posts 2 Posts
+		 *
+		 * @var array
+		 */
 		public $enabled_post_types = array();
+
+		/**
+		 * @var - Entity Core Post Type (Organization / Person)
+		 */
 		public $post_type;
+
+		/**
+		 * @var - Post Type Labels (Organization / Person)
+		 */
 		public $labels;
+
+		/**
+		 * @var array - Meta Fields Keys for Entity (Organzation / Person)
+		 */
 		public $meta_fields = array();
+
+		/**
+		 * @var string - Meta Key Prefix
+		 */
 		public static $meta_key_prefix = 'rt_biz_';
 
+		/**
+		 * @param $post_type
+		 */
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
 			$this->hooks();
 		}
 
+		/**
+		 *  Register Rt_Entity Core Post Type
+		 */
 		function init_entity() {
 			$this->register_post_type( $this->post_type, $this->labels );
 		}
 
+		/**
+		 *  Actions/Filtes used by Rt_Entity
+		 */
 		function hooks() {
 
 			if ( is_admin() ) {
@@ -46,6 +88,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_entity_hooks', $this );
 		}
 
+		/**
+		 * @param $translation
+		 * @param $text
+		 * @return string
+		 */
 		function change_publish_button( $translation, $text ) {
 			if ( $this->post_type == get_post_type() && $text == 'Publish' )
 				return 'Add';
@@ -53,6 +100,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			return $translation;
 		}
 
+		/**
+		 *
+		 */
 		function enqueue_scripts_styles() {
 			global $post;
 			if ( isset( $post->post_type ) && $post->post_type == $this->post_type && !wp_script_is( 'jquery-ui-autocomplete' ) ) {
@@ -60,10 +110,19 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 		}
 
+		/**
+		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity
+		 */
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
 		}
 
+		/**
+		 *
+		 * Render Additional Info MetaBox
+		 *
+		 * @param $post
+		 */
 		function render_additional_details_meta_box( $post ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $field['is_autocomplete'] ) && isset( $field['data_source'] ) && $field['is_autocomplete'] && $field['data_source'] == 'WP_User' ) {
@@ -123,8 +182,17 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_print_metabox_js', $post, $this );
 		}
 
+		/**
+		 *  MetaBox JS - Overridden in Child Classes - Rt_Organization & Rt_Person
+		 */
 		function print_metabox_js() { }
 
+		/**
+		 *
+		 * Saves Additional Info from MetaBox
+		 *
+		 * @param $post_id
+		 */
 		function save_entity_details( $post_id ) {
 			/*
 			 * We need to verify this came from the our screen and with proper authorization,
@@ -153,23 +221,53 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$this->save_meta_values( $post_id );
 		}
 
+		/**
+		 *
+		 * Overridden in Child Classes
+		 *
+		 * @param $post_id
+		 */
 		function save_meta_values( $post_id ) {
 			do_action( 'rt_biz_save_entity_meta', $post_id, $this );
 		}
 
+		/**
+		 *
+		 * Overridden in Child Classes
+		 *
+		 * @param $columns
+		 * @return mixed|void
+		 */
 		function post_table_columns( $columns ) {
 			return apply_filters( 'rt_entity_columns', $columns, $this );
 		}
 
+		/**
+		 *
+		 * Overridden in Child Classes
+		 *
+		 * @param $column
+		 * @param $post_id
+		 */
 		function manage_post_table_columns( $column, $post_id ) {
 			do_action( 'rt_entity_manage_columns', $column, $post_id, $this );
 		}
 
+		/**
+		 *
+		 * Registers post type for Connection with Rt_Entity (Organization / Person)
+		 *
+		 * @param $post_type
+		 * @param $label
+		 */
 		function init_connection( $post_type, $label ) {
 			add_action( 'p2p_init', array( $this, 'create_connection' ) );
 			$this->enabled_post_types[$post_type] = $label;
 		}
 
+		/**
+		 *  Create a connection between registered post types and Rt_Entity
+		 */
 		function create_connection() {
 			foreach ( $this->enabled_post_types as $post_type => $label ) {
 				if ( function_exists( 'p2p_register_connection_type' ) ) {
@@ -182,6 +280,15 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 		}
 
+		/**
+		 *
+		 *
+		 *
+		 * @param $post_type
+		 * @param string $from
+		 * @param string $to
+		 * @param bool $clear_old
+		 */
 		function connect_post_to_entity( $post_type, $from = '', $to = '', $clear_old = false ) {
 			if ( function_exists( 'p2p_create_connection' ) && function_exists( 'p2p_connection_exists' ) && function_exists( 'p2p_delete_connections' ) ) {
 				if ( $clear_old ) {
@@ -193,6 +300,15 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 		}
 
+		/**
+		 *
+		 * Converts Connections into String form. Kind of toString method.
+		 *
+		 * @param $post_id
+		 * @param $connection
+		 * @param string $term_seperator
+		 * @return string
+		 */
 		static function connection_to_string( $post_id, $connection, $term_seperator = ' , ' ) {
 			$post = get_post( $post_id );
 			$termsArr = get_posts(array(
@@ -212,6 +328,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			return $tmpStr;
 		}
 
+		/**
+		 * @param $name
+		 * @param array $labels
+		 */
 		function register_post_type( $name, $labels = array() ) {
 			$args = array(
 				'labels' => $labels,
@@ -228,6 +348,12 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			register_post_type( $name, $args );
 		}
 
+		/**
+		 * @param $post_id
+		 * @param $post_type
+		 * @param bool $fetch_entity
+		 * @return array
+		 */
 		function get_posts_for_entity( $post_id, $post_type, $fetch_entity = false ) {
 			$args = array(
 				'post_type' => $post_type,
@@ -245,6 +371,12 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			return get_posts( $args );
 		}
 
+		/**
+		 *
+		 * Returns Rt_Entity Caps
+		 *
+		 * @return array
+		 */
 		function get_post_type_capabilities() {
 			return array(
 				"edit_{$this->post_type}" => true,
@@ -263,34 +395,70 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			);
 		}
 
+		/**
+		 * @param $id
+		 * @param $key
+		 * @param $value
+		 * @param bool $unique
+		 */
 		static function add_meta( $id, $key, $value, $unique = false ) {
 			add_post_meta( $id, self::$meta_key_prefix.$key, $value, $unique );
 		}
 
+		/**
+		 * @param $id
+		 * @param $key
+		 * @param bool $single
+		 * @return mixed
+		 */
 		static function get_meta( $id, $key, $single = false ) {
 			return get_post_meta( $id, self::$meta_key_prefix.$key, $single );
 		}
 
+		/**
+		 * @param $id
+		 * @param $key
+		 * @param $value
+		 * @param string $prev_value
+		 */
 		static function update_meta( $id, $key, $value, $prev_value = '' ) {
 			update_post_meta( $id, self::$meta_key_prefix.$key, $value, $prev_value );
 		}
 
+		/**
+		 * @param $id
+		 * @param $key
+		 * @param string $value
+		 */
 		static function delete_meta( $id, $key, $value = '' ) {
 			delete_post_meta( $id, self::$meta_key_prefix.$key, $value );
 		}
 
+		/**
+		 *
+		 */
 		function add() {
 
 		}
 
+		/**
+		 *
+		 */
 		function update() {
 
 		}
 
+		/**
+		 *
+		 */
 		function delete() {
 
 		}
 
+		/**
+		 * @param $query
+		 * @return array
+		 */
 		function search( $query ) {
 			$entity = new WP_Query(array(
 				'post_type' => $this->post_type,

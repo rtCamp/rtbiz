@@ -11,7 +11,13 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if ( ! class_exists( 'Rt_Organization' ) ) {
+	/**
+	 * Class Rt_Organization
+	 */
 	class Rt_Organization extends Rt_Entity {
+		/**
+		 *
+		 */
 		public function __construct() {
 			parent::__construct( 'rt_account' );
 			$this->labels = array(
@@ -33,6 +39,9 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			add_action( 'init', array( $this, 'init_entity' ) );
 		}
 
+		/**
+		 *  Init Meta Fields
+		 */
 		function setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
@@ -140,6 +149,9 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			$this->meta_fields = apply_filters( 'rt_biz_organization_meta_fields', $this->meta_fields );
 		}
 
+		/**
+		 *  Print JS for Additional Info MetaBox
+		 */
 		function print_metabox_js() { ?>
 			<script>
 
@@ -179,6 +191,12 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			</script>
 		<?php }
 
+		/**
+		 *
+		 * Save Meta Fields
+		 *
+		 * @param $post_id
+		 */
 		function save_meta_values($post_id) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['account_meta'][$field['key']] ) && !empty( $_POST['account_meta'][$field['key']] ) ) {
@@ -212,6 +230,14 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			parent::save_meta_values( $post_id );
 		}
 
+		/**
+		 * @param $name
+		 * @param string $note
+		 * @param string $address
+		 * @param string $country
+		 * @param array $meta
+		 * @return int|WP_Error
+		 */
 		function add_organization( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 			$org_id = wp_insert_post(
 				array(
