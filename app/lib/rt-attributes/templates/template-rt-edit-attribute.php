@@ -82,10 +82,10 @@ foreach ( $att_relations as $relation ) {
 				<td>
 					<select name="attribute_render_type" id="attribute_render_type">
 						<optgroup label="Taxonomy">
-							<!--<option value="autocomplete" <?php selected( $att_render_type, 'autocomplete' ); ?>><?php _e( 'Autocomplete' ); ?></option>-->
+							<option value="autocomplete" <?php selected( $att_render_type, 'autocomplete' ); ?>><?php _e( 'Autocomplete' ); ?></option>
 							<option value="dropdown" <?php selected( $att_render_type, 'dropdown' ); ?>><?php _e( 'Dropdown' ); ?></option>
 							<option value="checklist" <?php selected( $att_render_type, 'checklist' ); ?>><?php _e( 'Checklist' ); ?></option>
-							<!--<option value="radio" <?php selected( $att_render_type, 'radio' ); ?>><?php _e( 'Radio' ); ?></option>-->
+							<option value="radio" <?php selected( $att_render_type, 'radio' ); ?>><?php _e( 'Radio' ); ?></option>
 							<option value="rating-stars" <?php selected( $att_render_type, 'rating-stars' ); ?>><?php _e( 'Rating Stars' ); ?></option>
 						</optgroup>
 						<optgroup label="Meta">
@@ -93,7 +93,7 @@ foreach ( $att_relations as $relation ) {
 							<option value="datetime" <?php selected( $att_render_type, 'datetime' ); ?>><?php _e( 'Date & Time' ); ?></option>
 							<option value="currency" <?php selected( $att_render_type, 'currency' ); ?>><?php _e( 'Currency' ); ?></option>
 							<option value="text" <?php selected( $att_render_type, 'text' ); ?>><?php _e( 'Text' ); ?></option>
-							<!--<option value="richtext" <?php selected( $att_render_type, 'richtext' ); ?>><?php _e( 'Rich Text' ); ?></option>-->
+							<option value="richtext" <?php selected( $att_render_type, 'richtext' ); ?>><?php _e( 'Rich Text' ); ?></option>
 						</optgroup>
 						<?php do_action( 'rt_wp_attributes_admin_attribute_render_types' ); ?>
 					</select>
