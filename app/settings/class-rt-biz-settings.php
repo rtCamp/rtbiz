@@ -48,7 +48,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			self::$titan_obj = $this->get_settings_instance();
 
 			// Init Titan Settings
-			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 15 );
+			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 20 );
 			// Load Saved Settings Values
 			add_action( 'init', array( $this, 'load_settings' ) );
 		}
@@ -74,7 +74,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'title' => __( 'Settings' ), // Title displayed on the top of the admin panel
 				'parent' => Rt_Biz::$dashboard_slug, // id of parent, if blank, then this is a top level menu
 				'id' => Rt_Biz::$settings_slug, // Unique ID of the menu item
-				'capability' => Rt_Biz_Roles::$global_caps[ 'manage_rt_biz' ], // User role
+				'capability' => rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), // User role
 //				'icon' => $logo_url, // Menu icon for top level menus only http://melchoyce.github.io/dashicons/
 				'position' => 10, // Menu position. Can be used for both top and sub level menus
 				'use_form' => true, // If false, options will not be wrapped in a form

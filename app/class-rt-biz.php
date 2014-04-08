@@ -65,7 +65,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->init_settings();
 			$this->init_biz_acl();
 			$this->init_modules();
-			$this->init_roles();
 //			$this->init_menu_order();
 
 			$this->register_organization_person_connection();
@@ -203,11 +202,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			global $rt_person, $rt_organization;
 			$rt_person = new Rt_Person();
 			$rt_organization = new Rt_Organization();
-		}
-
-		function init_roles() {
-			global $rt_biz_roles;
-			$rt_biz_roles = new Rt_Biz_Roles();
 		}
 
 		/**

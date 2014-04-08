@@ -45,11 +45,11 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 *
 		 */
 		public function __construct() {
-			add_action( 'init', array( $this, 'init_acl' ) );
+			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
 		}
 
 		/**
-		 *  Initilize ACL on WordPress Init. So that before this gets executed;
+		 *  Initilize ACL on plugins_loaded with 15 priority. So that before this gets executed;
 		 *  other addon plugins get chance to hook into it and register themselved
 		 */
 		function init_acl() {
@@ -97,7 +97,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 * @param string $role
 		 * @return string
 		 */
-		function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
+		public static function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
 
 			if ( isset( self::$modules[ $module_key ] ) && isset( self::$permissions[ $role ] ) ) {
 				$module_key = rt_biz_sanitize_module_key( $module_key );

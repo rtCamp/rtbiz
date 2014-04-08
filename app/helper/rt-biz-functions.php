@@ -369,7 +369,7 @@ function rt_biz_get_user_groups() {
 function rt_biz_get_acl_permissions() {
 	return Rt_Access_Control::$permissions;
 }
-``
+
 /**
  * @return mixed
  */
