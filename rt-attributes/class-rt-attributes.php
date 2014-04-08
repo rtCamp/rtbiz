@@ -80,8 +80,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		var $auto_loader;
 
-		static $attribute_mappings = array();
-
 
 		/**
 		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
@@ -94,13 +92,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			$this->module_name = $module_name;
 			$this->init_db_model();
-
-			if ( empty( self::$attribute_mappings ) ) {
-				$relations = $this->attributes_relationship_model->get_all_relations();
-				foreach ( $relations as $relation ) {
-					self::$attribute_mappings[$relation->id] = 'unregistered';
-				}
-			}
 		}
 
 		/**
@@ -125,11 +116,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				$settings = maybe_unserialize( $relation->settings );
-				$caps = ( isset( $settings['caps'] ) && is_array( $settings['caps'] ) ) ? $settings['caps'] : array();
-				if ( $attr->attribute_store_as == 'taxonomy' && self::$attribute_mappings[$relation->id] == 'unregistered' ) {
-					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $caps );
-					self::$attribute_mappings[$relation->id] = 'registered';
+				if ( $attr->attribute_store_as == 'taxonomy' && $attr->module_name == $this->module_name ) {
+					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $this->attr_cap );
 				}
 			}
 		}
@@ -356,7 +344,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$data = array(
 					'attr_id' => $attribute_id,
 					'post_type' => $pt,
-					'settings' => maybe_serialize( array( 'caps' => $this->attr_cap ) ),
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
@@ -372,7 +359,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$data = array(
 					'attr_id' => $attribute_id,
 					'post_type' => $pt,
-					'settings' => maybe_serialize( array( 'caps' => $this->attr_cap ) ),
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
