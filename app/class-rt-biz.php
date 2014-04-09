@@ -60,11 +60,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->check_p2p_dependency();
 
 			add_action( 'init', array( $this, 'hooks' ), 11 );
+			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
 
+			$this->init_modules();
 			$this->init_access_control();
 			$this->init_settings();
-			$this->init_biz_acl();
-			$this->init_modules();
 //			$this->init_menu_order();
 
 			$this->register_organization_person_connection();
@@ -225,9 +225,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Initialize rtBiz ACL. It will register the rtBiz module it self to Rt_Access_Control.
 		 *  Accordingly Rt_Access_Control will provide user permissions to the groups
 		 */
-		function init_biz_acl() {
-			global $rt_biz_acl;
-			$rt_biz_acl = new Rt_Biz_ACL();
+		function register_rt_biz_module( $modules ) {
+			global $rt_person, $rt_organization;
+			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
+				'label' => __( 'rtBiz' ),
+				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
+			);
+			return $modules;
 		}
 
 		/**

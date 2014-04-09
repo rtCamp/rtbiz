@@ -46,6 +46,42 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 */
 		public function __construct() {
 			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
+			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 999, 4 );
+
+			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
+			add_action( 'show_user_profile', array( $this, 'profile_level_permission' ), 1 );
+			add_action( 'profile_update', array( $this, 'save_profile_level_permission' ), 10, 2 );
+		}
+
+		function filter_caps( $all_caps, $required_caps, $args, $user ) {
+
+			$rt_biz_caps = array();
+			foreach ( self::$modules as $mkey => $m ) {
+				foreach ( self::$permissions as $pkey => $p ) {
+					$rt_biz_caps[] = $mkey . '_' . $pkey;
+				}
+			}
+
+			if ( isset( $all_caps['administrator'] ) && $all_caps['administrator'] ) {
+				foreach ( $rt_biz_caps as $cap ) {
+					$all_caps[$cap] = true;
+				}
+				return $all_caps;
+			}
+
+			foreach ( $required_caps as $cap ) {
+				if ( ! in_array( $cap, $rt_biz_caps ) ) {
+					continue;
+				}
+				echo '<pre>';
+//				var_dump($all_caps);
+				var_dump($required_caps);
+				var_dump($args);
+//				var_dump($user);
+				echo '</pre>';
+			}
+
+			return $all_caps;
 		}
 
 		/**
@@ -58,7 +94,12 @@ if( ! class_exists('Rt_Access_Control') ) {
 			 *  Filter for other addons to register.
 			 *  Array Structure is array( 'module_slug' => 'label' )
 			 *
-			 *  $biz_module = array( RT_BIZ_TEXT_DOMAIN => __( 'rtBiz' ) );
+			 *  $biz_module = array(
+			 *		RT_BIZ_TEXT_DOMAIN => array(
+			 *			'label' => __( 'rtBiz' ),
+			 *			'post_types' => array( 'post', 'page', 'rt_contact', 'rt_lead', ),
+			 *		),
+			 *  );
 			 */
 			self::$modules = apply_filters( 'rt_biz_modules', array() );
 
@@ -128,6 +169,42 @@ if( ! class_exists('Rt_Access_Control') ) {
 			$this->save_acl_settings();
 
 			rt_biz_get_template( 'acl-settings.php' );
+		}
+
+		function profile_level_permission( $user ) {
+			$current_user = new WP_User( get_current_user_id() );
+			if ( $current_user->has_cap( 'create_users' ) ) {
+				$modules     = rt_biz_get_modules();
+				$permissions = rt_biz_get_acl_permissions();
+				$user_permissions = get_user_meta( $user->ID, 'rt_biz_profile_permissions', true );
+				?>
+				<h3><?php _e( 'rtBiz Profile Access' ); ?></h3>
+				<table class="form-table">
+					<tbody>
+						<?php foreach ( $modules as $mkey => $m ) { ?>
+						<tr>
+							<th><?php echo $m['label']; ?></th>
+							<td>
+								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
+								<?php foreach ( $permissions as $pkey => $p ) { ?>
+								<option value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && $user_permissions[$mkey] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
+								<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<?php
+			}
+		}
+
+		function save_profile_level_permission( $user_id, $old_data ) {
+			if ( current_user_can( 'create_users' ) ) {
+				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
+					update_user_meta( $user_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
+				}
+			}
 		}
 	}
 }

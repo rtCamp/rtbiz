@@ -26,9 +26,9 @@ $module_permissions = get_site_option( 'rt_biz_module_permissions' );
 					</tr>
 				</thead>
 				<tbody id="the-list">
-					<?php foreach ( $modules as $mkey => $mname ) { ?>
+					<?php foreach ( $modules as $mkey => $m ) { ?>
 					<tr>
-						<td><strong><?php echo $mname; ?></strong></td>
+						<td><strong><?php echo $m['label']; ?></strong></td>
 						<?php foreach ( $user_groups as $ug ) { ?>
 							<td>
 								<select name="rt_biz_module_permissions[<?php echo $mkey ?>][<?php echo $ug->term_id; ?>]">
