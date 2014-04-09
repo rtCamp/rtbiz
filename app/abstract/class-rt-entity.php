@@ -85,6 +85,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 			}
 
+			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
+
 			do_action( 'rt_biz_entity_hooks', $this );
 		}
 
@@ -468,6 +470,23 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			));
 
 			return $entity->posts;
+		}
+
+		function get_user_from_name() {
+			if ( ! isset($_POST['query'] ) ) {
+				wp_die( 'Invalid request Data' );
+			}
+			$query = $_POST['query'];
+			global $wpdb;
+
+			$results = $wpdb->get_results("select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;");
+			$arrReturn = array();
+			foreach ($results as $author) {
+				$arrReturn[] = array("id" => $author->ID, "label" => $author->display_name, "imghtml" => get_avatar($author->user_email, 25));
+			}
+			header('Content-Type: application/json');
+			echo json_encode($arrReturn);
+			die(0);
 		}
 	}
 }
