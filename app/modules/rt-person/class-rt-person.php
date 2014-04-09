@@ -21,6 +21,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		public $email_key = 'contact_email';
 
+		static $our_team_mate_key = 'is_our_team_mate';
+
 		/**
 		 *
 		 */
@@ -48,7 +50,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			/**
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
-			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 16 );
+			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 22 );
 		}
 
 		/**
@@ -57,36 +59,36 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function check_filters() {
 			if ( isset( $_REQUEST['rt-biz-my-team'] ) && $_REQUEST['rt-biz-my-team'] ) {
-				add_filter( 'posts_where', array( $this,'filter_my_team_where' ), 10, 2 );
-				add_filter( 'posts_join', array( $this,'filter_my_team_join' ), 10, 2 );
+				add_filter( 'posts_where', array( $this,'filter_our_team_where' ), 10, 2 );
+				add_filter( 'posts_join', array( $this,'filter_our_team_join' ), 10, 2 );
 			}
 		}
 
 		/**
 		 *
 		 * WHERE Filter of WP_Query
-		 * Filter Persons on My Team Page - List View
+		 * Filter Persons on Our Team Page - List View
 		 *
 		 * @param $where
 		 * @param $query_obj
 		 * @return string
 		 */
-		function filter_my_team_where( $where, $query_obj ) {
+		function filter_our_team_where( $where, $query_obj ) {
 			global $wpdb;
-			$where .= " AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . "is_our_team_mate' AND {$wpdb->postmeta}.meta_value = '1'";
+			$where .= " AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key ."' AND {$wpdb->postmeta}.meta_value = '1'";
 			return $where;
 		}
 
 		/**
 		 *
 		 * JOIN Filter of WP_Query
-		 * Filter Persons on My Team Page - List View
+		 * Filter Persons on Our Team Page - List View
 		 *
 		 * @param $join
 		 * @param $query_obj
 		 * @return string
 		 */
-		function filter_my_team_join( $join, $query_obj ) {
+		function filter_our_team_join( $join, $query_obj ) {
 			global $wpdb;
 			$join .= " JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
 			return $join;
@@ -97,7 +99,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function person_meta_box() {
 
-			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
+			if ( ! isset( Rt_Biz_Settings::$titan_obj ) || empty( Rt_Biz_Settings::$titan_obj ) ) {
 				return;
 			}
 
@@ -115,7 +117,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			$our_team_mate->createOption( array(
 				'name' => __( 'Is our team mate ?' ), // Name of the option
 				'desc' => 'This is a checkbox which decides this contacts is part of our team or not.', // Description of the option
-				'id' => 'is_our_team_mate', // Unique ID of the option
+				'id' => self::$our_team_mate_key, // Unique ID of the option
 				'type' => 'checkbox', //
 				'default' => 0, // Menu icon for top level menus only
 				'example' => '', // An example value for this field, will be displayed in a <code>
@@ -374,6 +376,18 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				array(
 					'meta_key' => self::$meta_key_prefix.$this->email_key,
 					'meta_value' => $email,
+					'post_type' => $this->post_type,
+					'post_status' => 'any',
+					'nopaging' => true,
+				)
+			);
+		}
+
+		function get_employees() {
+			return get_posts(
+				array(
+					'meta_key' => self::$meta_key_prefix.self::$our_team_mate_key,
+					'meta_value' => '1',
 					'post_type' => $this->post_type,
 					'post_status' => 'any',
 					'nopaging' => true,

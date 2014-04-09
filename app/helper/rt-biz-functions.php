@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * rt-biz Helper Functions
  *
@@ -384,4 +382,9 @@ function rt_biz_get_modules() {
  */
 function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 	return Rt_Access_Control::get_capability_from_access_role( $module_key, $role );
+}
+
+function rt_biz_get_employees() {
+	global $rt_person;
+	return $rt_person->get_employees();
 }
