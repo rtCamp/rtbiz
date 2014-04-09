@@ -60,10 +60,18 @@ if( ! class_exists('Rt_Access_Control') ) {
 				foreach ( self::$permissions as $pkey => $p ) {
 					$rt_biz_caps[] = $mkey . '_' . $pkey;
 				}
+				$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
+				foreach ( $post_types as $pt ) {
+					$post_caps = self::get_admin_post_caps( $pt );
+					$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
+				}
 			}
 
 			if ( isset( $all_caps['administrator'] ) && $all_caps['administrator'] ) {
-				foreach ( $rt_biz_caps as $cap ) {
+				foreach ( $required_caps as $cap ) {
+					if ( ! in_array( $cap, $rt_biz_caps ) ) {
+						continue;
+					}
 					$all_caps[$cap] = true;
 				}
 				return $all_caps;
@@ -73,14 +81,35 @@ if( ! class_exists('Rt_Access_Control') ) {
 				if ( ! in_array( $cap, $rt_biz_caps ) ) {
 					continue;
 				}
-				echo '<pre>';
-//				var_dump($all_caps);
-				var_dump($required_caps);
-				var_dump($args);
-//				var_dump($user);
-				echo '</pre>';
-			}
 
+				$profile_permissions = get_user_meta($user->ID, 'rt_biz_profile_permissions', true );
+				if ( ! empty( $profile_permissions ) && is_array( $profile_permissions ) ) {
+					$valid_caps = array();
+					foreach ( $profile_permissions as $mkey => $pp ) {
+						$valid_role_value = -1;
+						foreach ( self::$permissions as $ap ) {
+							if ( intval( $pp ) > $valid_role && intval($pp) >= $ap['value'] ) {
+								$valid_role_value = $ap['value'];
+							}
+						}
+						$valid_role_key = self::get_role_key( $valid_role_value );
+						$role_cap = self::get_capability_from_access_role( $mkey, $valid_role_key );
+						if ( empty( $role_cap ) ) {
+							continue;
+						}
+						$valid_caps[ $role_cap ] = true;
+						$post_types = ( isset( self::$modules[$mkey]['post_types'] ) && is_array( self::$modules[$mkey]['post_types'] ) ) ? self::$modules[$mkey]['post_types'] : array();
+						foreach ( $post_types as $pt ) {
+							$post_caps = call_user_func( array( 'Rt_Access_Control', 'get_'.$valid_role_key.'_post_caps' ), $pt );
+							if ( ! empty( $post_caps ) && is_array( $post_caps ) ) {
+								$valid_caps = array_merge( $valid_caps, $post_caps );
+							}
+						}
+						$all_caps = array_merge( $all_caps, $valid_caps );
+					}
+					return $all_caps;
+				}
+			}
 			return $all_caps;
 		}
 
@@ -106,19 +135,23 @@ if( ! class_exists('Rt_Access_Control') ) {
 			self::$permissions = array(
 				'no_access' => array(
 					'value' => 0,
-					'name' => __( 'No Access' ),
+					'name' => __( 'No Role' ),
+					'tooltip' => __( 'No Access' ),
 				),
 				'author' => array(
 					'value' => 10,
-					'name' => __( 'Author - Read/Write (Self)' ),
+					'name' => __( 'Author' ),
+					'tooltip' => __( 'Read/Write (Self)' ),
 				),
 				'editor' => array(
 					'value' => 20,
-					'name' => __( 'Editor - Read/Write (Everything)' ),
+					'name' => __( 'Editor' ),
+					'tooltip' => __( 'Read/Write (Everything)' ),
 				),
 				'admin' => array(
 					'value' => 30,
-					'name' => __( 'Admin - Read/Write (Everything) + Settings' ),
+					'name' => __( 'Admin' ),
+					'tooltip' => __( 'Read/Write (Everything) + Settings' ),
 				),
 			);
 		}
@@ -138,13 +171,94 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 * @param string $role
 		 * @return string
 		 */
-		public static function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
+		static function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
 
 			if ( isset( self::$modules[ $module_key ] ) && isset( self::$permissions[ $role ] ) ) {
 				$module_key = rt_biz_sanitize_module_key( $module_key );
 				return $module_key . '_' . $role;
 			}
 			return '';
+		}
+
+		static function get_role_key( $role_value ) {
+			foreach ( self::$permissions as $pkey => $p ) {
+				if ( $p['value'] == $role_value ) {
+					return $pkey;
+				}
+			}
+			return '';
+		}
+
+		static function get_no_access_post_caps( $post_type ) {
+			return array(
+				"edit_{$post_type}" => false,
+				"read_{$post_type}" => false,
+				"delete_{$post_type}" => false,
+				"edit_{$post_type}s" => false,
+				"edit_others_{$post_type}s" => false,
+				"publish_{$post_type}s" => false,
+				"read_private_{$post_type}s" => false,
+				"delete_{$post_type}s" => false,
+				"delete_private_{$post_type}s" => false,
+				"delete_published_{$post_type}s" => false,
+				"delete_others_{$post_type}s" => false,
+				"edit_private_{$post_type}s" => false,
+				"edit_published_{$post_type}s" => false,
+			);
+		}
+
+		static function get_author_post_caps( $post_type ) {
+			return array(
+				"edit_{$post_type}" => true,
+				"read_{$post_type}" => true,
+				"delete_{$post_type}" => true,
+				"edit_{$post_type}s" => true,
+				"edit_others_{$post_type}s" => false,
+				"publish_{$post_type}s" => true,
+				"read_private_{$post_type}s" => false,
+				"delete_{$post_type}s" => true,
+				"delete_private_{$post_type}s" => false,
+				"delete_published_{$post_type}s" => true,
+				"delete_others_{$post_type}s" => false,
+				"edit_private_{$post_type}s" => false,
+				"edit_published_{$post_type}s" => true,
+			);
+		}
+
+		static function get_editor_post_caps( $post_type ) {
+			return array(
+				"edit_{$post_type}" => true,
+				"read_{$post_type}" => true,
+				"delete_{$post_type}" => true,
+				"edit_{$post_type}s" => true,
+				"edit_others_{$post_type}s" => true,
+				"publish_{$post_type}s" => true,
+				"read_private_{$post_type}s" => true,
+				"delete_{$post_type}s" => true,
+				"delete_private_{$post_type}s" => true,
+				"delete_published_{$post_type}s" => true,
+				"delete_others_{$post_type}s" => true,
+				"edit_private_{$post_type}s" => true,
+				"edit_published_{$post_type}s" => true,
+			);
+		}
+
+		static function get_admin_post_caps( $post_type ) {
+			return array(
+				"edit_{$post_type}" => true,
+				"read_{$post_type}" => true,
+				"delete_{$post_type}" => true,
+				"edit_{$post_type}s" => true,
+				"edit_others_{$post_type}s" => true,
+				"publish_{$post_type}s" => true,
+				"read_private_{$post_type}s" => true,
+				"delete_{$post_type}s" => true,
+				"delete_private_{$post_type}s" => true,
+				"delete_published_{$post_type}s" => true,
+				"delete_others_{$post_type}s" => true,
+				"edit_private_{$post_type}s" => true,
+				"edit_published_{$post_type}s" => true,
+			);
 		}
 
 		/**
@@ -186,9 +300,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 							<th><?php echo $m['label']; ?></th>
 							<td>
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
-								<?php foreach ( $permissions as $pkey => $p ) { ?>
-								<option value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && $user_permissions[$mkey] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
-								<?php } ?>
+									<?php foreach ( $permissions as $pkey => $p ) { ?>
+									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && $user_permissions[$mkey] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
+									<?php } ?>
 								</select>
 							</td>
 						</tr>
