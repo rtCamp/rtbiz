@@ -1,7 +1,7 @@
-WP-Helpers [![Build Status](https://travis-ci.org/rtCamp/wp-helpers.png)](https://travis-ci.org/rtCamp/wp-helpers)
+rtLib [![Build Status](https://travis-ci.org/rtCamp/wp-helpers.png)](https://travis-ci.org/rtCamp/wp-helpers)
 ==========
 
-WP Helpers is library of class that are required in development of any WordPress plugins.
+rtLib is library of class that are required in development of any WordPress plugins.
 
 Following are some classes
 
