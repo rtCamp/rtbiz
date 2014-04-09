@@ -461,13 +461,15 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param $query
 		 * @return array
 		 */
-		function search( $query ) {
-			$entity = new WP_Query(array(
+		function search( $query, $args = array() ) {
+			$query_args = array(
 				'post_type' => $this->post_type,
 				'post_status' => 'any',
 				'posts_per_page' => 10,
 				's' => $query,
-			));
+			);
+			$args = array_merge( $query_args, $args );
+			$entity = new WP_Query( $args );
 
 			return $entity->posts;
 		}

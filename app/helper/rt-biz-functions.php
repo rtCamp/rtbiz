@@ -322,9 +322,9 @@ function rt_biz_get_dependent_capabilities() {
  * @param $query
  * @return mixed
  */
-function rt_biz_search_person( $query ) {
+function rt_biz_search_person( $query, $args = array() ) {
 	global $rt_person;
-	return $rt_person->search( $query );
+	return $rt_person->search( $query, $args );
 }
 
 /**
@@ -332,9 +332,9 @@ function rt_biz_search_person( $query ) {
  * @param $query
  * @return mixed
  */
-function rt_biz_search_organization( $query ) {
+function rt_biz_search_organization( $query, $args = array() ) {
 	global $rt_organization;
-	return $rt_organization->search( $query );
+	return $rt_organization->search( $query, $args );
 }
 
 /**
@@ -387,4 +387,12 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 function rt_biz_get_employees() {
 	global $rt_person;
 	return $rt_person->get_employees();
+}
+
+function rt_biz_search_employees( $query ) {
+	$args = array(
+		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,
+		'meta_value' => '1',
+	);
+	return rt_biz_search_person($query, $args);
 }
