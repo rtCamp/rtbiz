@@ -24,7 +24,11 @@ if ( ! isset ( $rt_wp_helper ) ) {
 		if ( file_exists( $rt_autoloader_file ) ) {
 			include_once $rt_autoloader_file;
 		}
-		define( 'WP_HELPER_FILE', $rt_wp_helper[ 'wp_helper_path' ] );
+
+		if ( ! defined( 'WP_HELPER_FILE' ) ) {
+			define( 'WP_HELPER_FILE', $rt_wp_helper[ 'wp_helper_path' ] );
+		}
+
 		/**
 		 * Initiate Loader class
 		 */

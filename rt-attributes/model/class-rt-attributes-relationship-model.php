@@ -23,15 +23,12 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 	/**
 	 * Class RT_WP_Attributes_Relationship_Model
 	 */
-	class RT_Attributes_Relationship_Model extends RT_DB_Model
-	{
-		public function __construct()
-		{
+	class RT_Attributes_Relationship_Model extends RT_DB_Model {
+		public function __construct() {
 			parent::__construct( 'wp_attributes_relationship' );
 		}
 
-		function get_relations_by_post_type( $post_type, $attr_id = '' )
-		{
+		function get_relations_by_post_type( $post_type, $attr_id = '' ) {
 			$args = array( 'post_type' => $post_type );
 			if ( ! empty( $attr_id ) ) {
 				$args[ 'attr_id' ] = $attr_id;
@@ -40,18 +37,24 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 			return parent::get( $args );
 		}
 
-		function add_relation( $data )
-		{
+		function get_relations_by_attribute( $attr_id ) {
+			$args = array( 'attr_id' => $attr_id );
+			return parent::get( $args );
+		}
+
+		function get_all_relations() {
+			return parent::get( array() );
+		}
+
+		function add_relation( $data ) {
 			return parent::insert( $data );
 		}
 
-		function delete_relation( $where )
-		{
+		function delete_relation( $where ) {
 			return parent::delete( $where );
 		}
 
-		function update_relation( $data, $where )
-		{
+		function update_relation( $data, $where ) {
 			return parent::update( $data, $where );
 		}
 	}
