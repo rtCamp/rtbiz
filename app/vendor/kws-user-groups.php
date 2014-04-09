@@ -376,14 +376,14 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 				</style>
 
 				<script type="text/javascript">
-//					jQuery(document).ready(function ($) {
+					jQuery(document).ready(function ($) {
 //						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
 //						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 //						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
 //						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
-//						$('#tag-slug').parent('div.form-field').hide();
-//						$('.inline-edit-col input[name=slug]').parents('label').hide();
-//					});
+						$('#tag-slug').parent('div.form-field').hide();
+						$('.inline-edit-col input[name=slug]').parents('label').hide();
+					});
 				</script>
 			<?php
 			} elseif ( self::is_edit_user_group( 'edit' ) ) {
@@ -394,14 +394,14 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 					}
 				</style>
 				<script type="text/javascript">
-//					jQuery(document).ready(function ($) {
+					jQuery(document).ready(function ($) {
 //						$('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
 //						$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 //						$('#menu-users a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
 //						$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
-//						$('#edittag #slug').parents('tr.form-field').addClass('hide-if-js');
-//						$('.form-table .form-field').not('.hide-if-js').css('display', 'table-row');
-//					});
+						$('#edittag #slug').parents('tr.form-field').addClass('hide-if-js');
+						$('.form-table .form-field').not('.hide-if-js').css('display', 'table-row');
+					});
 				</script>
 			<?php
 			}
