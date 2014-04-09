@@ -1,4 +1,4 @@
-rtLib [![Build Status](https://travis-ci.org/rtCamp/wp-helpers.png)](https://travis-ci.org/rtCamp/wp-helpers)
+rtLib [![Build Status](https://travis-ci.org/rtCamp/rt-lib.png)](https://travis-ci.org/rtCamp/rt-lib)
 ==========
 
 rtLib is library of class that are required in development of any WordPress plugins.
