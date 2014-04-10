@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'plugins_loaded', array( 'KWS_User_Groups', 'load' ), 200 );
+add_action( 'plugins_loaded', array( 'KWS_User_Groups', 'load' ), 1 );
 
 if ( ! class_exists( 'KWS_User_Groups' ) ){
 	class KWS_User_Groups
@@ -8,6 +8,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 
 		static function load()
 		{
+			global $KWS_User_Groups;
 			$KWS_User_Groups = new KWS_User_Groups();
 		}
 
