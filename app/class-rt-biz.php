@@ -35,7 +35,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * @var float - rtBiz Menu Slug
 		 */
-		public static $menu_position = 3.500;
+		public static $menu_position = 30;
 
 		/**
 		 * @var string - rtBiz Settings Page Slug
