@@ -56,11 +56,16 @@ if( ! class_exists('Rt_Access_Control') ) {
 		function filter_caps( $all_caps, $required_caps, $args, $user ) {
 
 			$rt_biz_caps = array();
+			// $m - module
+			// $mkey - module_key
 			foreach ( self::$modules as $mkey => $m ) {
+				// $p - permission
+				// $pkey - permission_key
 				foreach ( self::$permissions as $pkey => $p ) {
 					$rt_biz_caps[] = $mkey . '_' . $pkey;
 				}
 				$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
+				// $pt - post_type
 				foreach ( $post_types as $pt ) {
 					$post_caps = self::get_admin_post_caps( $pt );
 					$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
@@ -85,19 +90,88 @@ if( ! class_exists('Rt_Access_Control') ) {
 				$profile_permissions = get_user_meta($user->ID, 'rt_biz_profile_permissions', true );
 				if ( ! empty( $profile_permissions ) && is_array( $profile_permissions ) ) {
 					$valid_caps = array();
+					// $mkey - module_key
+					// $pp - profile_permission
 					foreach ( $profile_permissions as $mkey => $pp ) {
 						$valid_role_value = -1;
+						// $ap - available_permission
 						foreach ( self::$permissions as $ap ) {
-							if ( intval( $pp ) > $valid_role && intval($pp) >= $ap['value'] ) {
+							if ( intval( $pp ) > $valid_role_value && intval($pp) >= $ap['value'] ) {
 								$valid_role_value = $ap['value'];
 							}
 						}
 						$valid_role_key = self::get_role_key( $valid_role_value );
-						$role_cap = self::get_capability_from_access_role( $mkey, $valid_role_key );
-						if ( empty( $role_cap ) ) {
-							continue;
+						// $ap - available_permission
+						foreach ( self::$permissions as $ap ) {
+							if ( $ap['value'] > $valid_role_value ) {
+								continue;
+							}
+							$role_cap = self::get_capability_from_access_role( $mkey, self::get_role_key( $ap['value'] ) );
+							if ( empty( $role_cap ) ) {
+								continue;
+							}
+							$valid_caps[ $role_cap ] = true;
 						}
-						$valid_caps[ $role_cap ] = true;
+						$post_types = ( isset( self::$modules[$mkey]['post_types'] ) && is_array( self::$modules[$mkey]['post_types'] ) ) ? self::$modules[$mkey]['post_types'] : array();
+						// $pt - post_type
+						foreach ( $post_types as $pt ) {
+							$post_caps = call_user_func( array( 'Rt_Access_Control', 'get_'.$valid_role_key.'_post_caps' ), $pt );
+							if ( ! empty( $post_caps ) && is_array( $post_caps ) ) {
+								$valid_caps = array_merge( $valid_caps, $post_caps );
+							}
+						}
+						$all_caps = array_merge( $all_caps, $valid_caps );
+					}
+					continue;
+				}
+
+				global $KWS_User_Groups;
+				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+				$ug_terms = $KWS_User_Groups->get_user_user_groups( $user );
+				$user_groups = array();
+				if ( ! $ug_terms instanceof WP_Error ) {
+					// $ug - user_group
+					foreach ( $ug_terms as $ug ) {
+						$user_groups[] = $ug->term_id;
+					}
+				}
+				if ( ! empty( $module_permissions ) && is_array( $module_permissions ) ) {
+					// $mkey - module_key
+					// $m - module
+					foreach ( $module_permissions as $mkey => $m ) {
+						// $gp - group_permission
+						$gp = -1;
+						$valid_caps = array();
+						// $ugkey - user_group_key
+						// $p - permission
+						foreach ( $m as $ugkey => $p ) {
+							if ( ! in_array( $ugkey, $user_groups ) ) {
+								continue;
+							}
+
+							if ( $p > $gp ) {
+								$gp = $p;
+							}
+						}
+						$valid_role_value = -1;
+						// $ap - available_permission
+						foreach ( self::$permissions as $ap ) {
+							if ( intval( $gp ) > $valid_role_value && intval($gp) >= $ap['value'] ) {
+								$valid_role_value = $ap['value'];
+							}
+						}
+						$valid_role_key = self::get_role_key( $valid_role_value );
+						// $ap - available_permission
+						foreach ( self::$permissions as $ap ) {
+							if ( $ap['value'] > $valid_role_value ) {
+								continue;
+							}
+							$role_cap = self::get_capability_from_access_role( $mkey, self::get_role_key( $ap['value'] ) );
+							if ( empty( $role_cap ) ) {
+								continue;
+							}
+							$valid_caps[ $role_cap ] = true;
+						}
 						$post_types = ( isset( self::$modules[$mkey]['post_types'] ) && is_array( self::$modules[$mkey]['post_types'] ) ) ? self::$modules[$mkey]['post_types'] : array();
 						foreach ( $post_types as $pt ) {
 							$post_caps = call_user_func( array( 'Rt_Access_Control', 'get_'.$valid_role_key.'_post_caps' ), $pt );
@@ -107,7 +181,6 @@ if( ! class_exists('Rt_Access_Control') ) {
 						}
 						$all_caps = array_merge( $all_caps, $valid_caps );
 					}
-					return $all_caps;
 				}
 			}
 			return $all_caps;
@@ -300,6 +373,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 							<th><?php echo $m['label']; ?></th>
 							<td>
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
+									<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
 									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && $user_permissions[$mkey] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
 									<?php } ?>
@@ -316,6 +390,11 @@ if( ! class_exists('Rt_Access_Control') ) {
 		function save_profile_level_permission( $user_id, $old_data ) {
 			if ( current_user_can( 'create_users' ) ) {
 				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
+					foreach ( $_REQUEST['rt_biz_profile_permissions'] as $mkey => $p ) {
+						if ( strlen( $p ) == 0 ) {
+							unset( $_REQUEST['rt_biz_profile_permissions'][$mkey] );
+						}
+					}
 					update_user_meta( $user_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
 				}
 			}
