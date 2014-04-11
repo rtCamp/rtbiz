@@ -33,7 +33,7 @@ $module_permissions = get_site_option( 'rt_biz_module_permissions' );
 							<td>
 								<select name="rt_biz_module_permissions[<?php echo $mkey ?>][<?php echo $ug->term_id; ?>]">
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
-									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $module_permissions[$mkey][$ug->term_id] ) && $module_permissions[$mkey][$ug->term_id] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>;
+									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $module_permissions[$mkey][$ug->term_id] ) && intval( $module_permissions[$mkey][$ug->term_id] ) == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>;
 									<?php } ?>
 								</select>
 							</td>

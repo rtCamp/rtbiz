@@ -361,6 +361,14 @@ function rt_biz_get_user_groups() {
 	return $user_groups;
 }
 
+function rt_biz_get_group_users( $group_term_id ) {
+	$user_ids = get_objects_in_term( $group_term_id, 'user-group' );
+	if ( ! $user_ids instanceof WP_Error ) {
+		return $user_ids;
+	}
+	return array();
+}
+
 /**
  * @return mixed
  */
@@ -395,4 +403,9 @@ function rt_biz_search_employees( $query ) {
 		'meta_value' => '1',
 	);
 	return rt_biz_search_person($query, $args);
+}
+
+function rt_biz_get_module_users( $module_key ) {
+	global $rt_access_control;
+	return $rt_access_control->get_module_users( $module_key );
 }

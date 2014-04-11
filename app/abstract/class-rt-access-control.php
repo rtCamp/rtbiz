@@ -46,7 +46,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 */
 		public function __construct() {
 			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
-			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 999, 4 );
+			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
 			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
 			add_action( 'show_user_profile', array( $this, 'profile_level_permission' ), 1 );
@@ -96,7 +96,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 						$valid_role_value = -1;
 						// $ap - available_permission
 						foreach ( self::$permissions as $ap ) {
-							if ( intval( $pp ) > $valid_role_value && intval($pp) >= $ap['value'] ) {
+							if ( intval( $pp ) > $valid_role_value && intval( $pp ) >= $ap['value'] ) {
 								$valid_role_value = $ap['value'];
 							}
 						}
@@ -149,14 +149,14 @@ if( ! class_exists('Rt_Access_Control') ) {
 								continue;
 							}
 
-							if ( $p > $gp ) {
+							if ( intval( $p ) > $gp ) {
 								$gp = $p;
 							}
 						}
 						$valid_role_value = -1;
 						// $ap - available_permission
 						foreach ( self::$permissions as $ap ) {
-							if ( intval( $gp ) > $valid_role_value && intval($gp) >= $ap['value'] ) {
+							if ( intval( $gp ) > $valid_role_value && intval( $gp ) >= $ap['value'] ) {
 								$valid_role_value = $ap['value'];
 							}
 						}
@@ -334,6 +334,50 @@ if( ! class_exists('Rt_Access_Control') ) {
 			);
 		}
 
+		function get_module_users( $module_key ) {
+
+			global $wpdb;
+			$users = array();
+			$module_key_length = strlen( $module_key );
+
+			/**
+			 *	Include All the admins
+			 */
+			$users = array_merge($users, get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) ) );
+
+			/**
+			 *	Include All Profile Access Level Users
+			 */
+			$user_meta = $wpdb->get_results( "SELECT * from {$wpdb->usermeta} WHERE meta_key = 'rt_biz_profile_permissions' and meta_value REGEXP 's:{$module_key_length}:\"{$module_key}\";s:[0-9]*:\"[0-9]*\"'" );
+			// $um - user_meta single
+			foreach ( $user_meta as $um ) {
+				$pp = get_user_meta( $um->user_id, 'rt_biz_profile_permissions', true );
+				if ( isset( $pp[$module_key] ) && intval( $pp[$module_key] ) == 0 ) {
+					continue;
+				}
+				$users[] = $um->user_id;
+			}
+
+			/**
+			 *	Include All Group Access Level Users
+			 */
+			$user_groups = rt_biz_get_user_groups();
+			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+			// $ug - user_group single
+			foreach ( $user_groups as $ug ) {
+				if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
+					$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
+				}
+			}
+
+			$user_obj = array();
+			foreach ( array_unique( $users ) as $id ) {
+				$user_obj[] = new WP_User( $id );
+			}
+
+			return $user_obj;
+		}
+
 		/**
 		 *  Saves the ACL Permission Matrix to the Database
 		 */
@@ -375,7 +419,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 									<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
-									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && $user_permissions[$mkey] == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
+									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[$mkey] ) && intval( $user_permissions[$mkey] ) == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
 									<?php } ?>
 								</select>
 							</td>
