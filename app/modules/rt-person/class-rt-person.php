@@ -21,6 +21,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		public $email_key = 'contact_email';
 
+		public $user_id_key = 'contact_user_id';
+
 		static $our_team_mate_key = 'is_our_team_mate';
 
 		/**
@@ -376,6 +378,26 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				array(
 					'meta_key' => self::$meta_key_prefix.$this->email_key,
 					'meta_value' => $email,
+					'post_type' => $this->post_type,
+					'post_status' => 'any',
+					'nopaging' => true,
+				)
+			);
+		}
+
+		function get_contact_for_wp_user( $user_id ) {
+			return get_posts(
+				array(
+					'meta_query' => array(
+						array(
+							'key' => self::$meta_key_prefix.self::$our_team_mate_key,
+							'value' => '1',
+						),
+						array(
+							'key' => self::$meta_key_prefix.$this->user_id_key,
+							'value' => $user_id,
+						),
+					),
 					'post_type' => $this->post_type,
 					'post_status' => 'any',
 					'nopaging' => true,

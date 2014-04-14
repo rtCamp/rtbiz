@@ -409,3 +409,8 @@ function rt_biz_get_module_users( $module_key ) {
 	global $rt_access_control;
 	return $rt_access_control->get_module_users( $module_key );
 }
+
+function rt_biz_get_contact_for_wp_user( $user_id ) {
+	global $rt_person;
+	return $rt_person->get_contact_for_wp_user( $user_id );
+}
