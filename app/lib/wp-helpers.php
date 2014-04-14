@@ -7,7 +7,7 @@
   Author: rtcamp
   Author URI: http://rtcamp.com/
  */
-$rt_helper_version = '0.1';
+$rt_helper_version = '0.2';
 $rt_wp_helper_path = __FILE__;
 
 #. '/rt-wp-autoloader/class-rt-wp-autoload.php';
