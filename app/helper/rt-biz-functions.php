@@ -304,19 +304,6 @@ function rt_biz_get_organization_capabilities() {
 }
 
 /**
- * Returns Dependant Caps for rtBiz to be accessed
- *
- * @return array
- */
-function rt_biz_get_dependent_capabilities() {
-	$caps = array();
-	foreach ( Rt_Biz_Roles::$global_caps as $cap ) {
-		$caps[$cap] = true;
-	}
-	return $caps;
-}
-
-/**
  * Search person
  *
  * @param $query
