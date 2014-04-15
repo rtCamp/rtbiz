@@ -158,9 +158,8 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			// Use the embedded Titan Framework
 			if ( ! class_exists( 'TitanFramework' ) ) {
 				require_once( RT_BIZ_PATH . 'app/vendor/titan-framework/titan-framework.php' );
-				return true;
 			}
-			return false;
+			return true;
 		}
 	}
 }
