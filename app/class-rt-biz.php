@@ -110,22 +110,30 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Admin side as of now. Slipt up in case of front end.
 		 */
 		function load_styles_scripts() {
-			global $rt_person, $rt_organization, $post;
+			global $rt_person, $rt_organization;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 			if ( isset( $_REQUEST['rt-biz-my-team'] ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
 			}
 
+			if ( isset( $_REQUEST['post'] ) && $_REQUEST['action'] && $_REQUEST['action'] == 'edit' ) {
+				$is_our_team_mate = get_post_meta( $_REQUEST['post'], Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
+				if ( $is_our_team_mate ) {
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
+				}
+
+				$post_type = get_post_type( $_REQUEST['post'] );
+				if ( in_array( $post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_module_page_active', '1' );
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
+				}
+			}
+
 			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == 'user-group' ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
-			}
-
-			if ( ( isset($post) && in_array( $post->post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) )
-				|| ( isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_person->post_type, $rt_organization->post_type ) ) ) ) {
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_module_page_active', '1' );
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 			}
 		}
 
