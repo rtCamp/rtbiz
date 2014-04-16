@@ -122,8 +122,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
 			}
 
-			if ( in_array( $post->post_type, array( $rt_person->post_type, $rt_organization->post_type ) )
-				|| in_array( $_REQUEST['post_type'], array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+			if ( ( isset($post) && in_array( $post->post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) )
+				|| ( isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_person->post_type, $rt_organization->post_type ) ) ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_module_page_active', '1' );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 			}
