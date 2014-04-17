@@ -117,6 +117,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
+			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
 
 		/**
