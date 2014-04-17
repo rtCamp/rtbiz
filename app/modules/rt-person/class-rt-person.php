@@ -332,15 +332,10 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 							self::add_meta( $post_id, $field['key'], $nmeta );
 						}
 					} else {
-						$old_value = self::get_meta( $post_id, $field['key'], true );
-						if ( empty( $old_value ) ) {
-							self::add_meta( $post_id, $field['key'], $_POST['contact_meta'][$field['key']], true );
-						} else {
-							self::update_meta( $post_id, $field['key'], $_POST['contact_meta'][$field['key']] );
-						}
+						self::update_meta( $post_id, $field['key'], $_POST['contact_meta'][$field['key']] );
 					}
 				} else {
-					$oldmeta = get_post_meta( $post_id, $field['key'] );
+					$oldmeta = self::get_meta( $post_id, $field['key'] );
 					foreach ( $oldmeta as $ometa ) {
 						self::delete_meta( $post_id, $field['key'], $ometa );
 					}
