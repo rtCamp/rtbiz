@@ -28,6 +28,7 @@ jQuery(document).ready(function($) {
 		$('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
 		$('#'+rt_biz_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 		$('#'+rt_biz_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+		$(window).resize();
 	}
 
 	/*
@@ -36,5 +37,6 @@ jQuery(document).ready(function($) {
 	if ( typeof rt_biz_dashboard_screen != 'undefined' && typeof rt_biz_module_page_active != 'undefined' ) {
 		$('#'+rt_biz_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 		$('#'+rt_biz_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+		$(window).resize();
 	}
 });
