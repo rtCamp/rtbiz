@@ -400,6 +400,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 		}
 
+		function get_wp_user_for_person( $person_id ) {
+			$user_id = self::get_meta( $person_id, $this->user_id_key, true );
+			return $user_id;
+		}
+
 		function get_employees() {
 			return get_posts(
 				array(

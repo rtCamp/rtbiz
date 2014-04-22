@@ -397,7 +397,12 @@ function rt_biz_get_module_users( $module_key ) {
 	return $rt_access_control->get_module_users( $module_key );
 }
 
-function rt_biz_get_contact_for_wp_user( $user_id ) {
+function rt_biz_get_person_for_wp_user( $user_id ) {
 	global $rt_person;
 	return $rt_person->get_contact_for_wp_user( $user_id );
+}
+
+function rt_biz_get_wp_user_for_person( $person_id ) {
+	global $rt_person;
+	return $rt_person->get_wp_user_for_person( $person_id );
 }
