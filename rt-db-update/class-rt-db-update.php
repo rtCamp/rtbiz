@@ -88,10 +88,11 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 			}
 
 			$this->mu_single_table = $mu_single_table;
-			if ( false !== strpos( $this->plugin_path, '/plugins' ) ) {
-				$this->rt_plugin_info = new RT_Plugin_Info( $this->plugin_path );
-			} else {
+
+			if ( false !== strpos( $this->plugin_path, '/themes' ) ) {
 				$this->rt_plugin_info = new RT_Theme_Info( $this->plugin_path );
+			} else {
+				$this->rt_plugin_info = new RT_Plugin_Info( $this->plugin_path );
 			}
 			if ( $current_version == false ){
 				$current_version = $this->rt_plugin_info->version;
