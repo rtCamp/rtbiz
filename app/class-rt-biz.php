@@ -143,7 +143,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function register_menu() {
 			global $rt_person, $rt_organization, $rt_access_control;
 			$logo_url = Rt_Biz_Settings::$settings['logo_url'];
-			$this->dashboard_screen = add_menu_page( __( 'rtBiz' ), __( 'rtBiz' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
+			$menu_label = Rt_Biz_Settings::$settings['menu_label'];
+			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
 			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit-tags.php?taxonomy=user-group' );

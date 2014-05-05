@@ -58,6 +58,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		 */
 		function load_settings() {
 			self::$settings['logo_url'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'logo_url' ) : '';
+			self::$settings['menu_label'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'menu_label' ) : '';
 		}
 
 		/**
@@ -83,6 +84,15 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'name' => __( 'General' ), // Name of the tab
 				'id' => 'general', // Unique ID of the tab
 				'title' => __( 'General' ), // Title to display in the admin panel when tab is active
+			) );
+			$general_tab->createOption( array(
+				'name' => __( 'Menu Label' ), // Name of the option
+				'desc' => 'This label will be used for the Menu Item label for rtBiz', // Description of the option
+				'id' => 'menu_label', // Unique ID of the option
+				'type' => 'text', //
+				'default' => __( 'rtBiz' ), // Menu icon for top level menus only
+				'example' => '', // An example value for this field, will be displayed in a <code>
+				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
 			) );
 			$general_tab->createOption( array(
 				'name' => __( 'Icon (Logo) URL' ), // Name of the option
