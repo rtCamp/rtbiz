@@ -57,7 +57,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Provides useful actions/filters for other rtBiz addons to hook.
 		 */
 		public function __construct() {
-			$this->check_p2p_dependency();
+
+			if ( ! $this->check_p2p_dependency() ) {
+				return false;
+			}
 
 			add_action( 'init', array( $this, 'hooks' ), 11 );
 			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
@@ -194,9 +197,30 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  If not found; rtBiz will throw admin notice to either install / activate it.
 		 */
 		function check_p2p_dependency() {
+			$flag = true;
+			$used_function = array(
+				'p2p_register_connection_type',
+				'p2p_create_connection',
+				'p2p_connection_exists',
+				'p2p_delete_connections',
+				'p2p_register_connection_type',
+			);
+
+			foreach ( $used_function as $fn ) {
+				if ( ! function_exists( $fn ) ) {
+					$flag = false;
+				}
+			}
+
 			if ( ! class_exists( 'P2P_Box_Factory' ) ) {
+				$flag = false;
+			}
+
+			if ( ! $flag ) {
 				add_action( 'admin_notices', array( $this, 'p2p_admin_notice' ) );
 			}
+
+			return $flag;
 		}
 
 		/**
@@ -261,13 +285,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function organization_person_connection() {
 			global $rt_organization, $rt_person;
-			if ( function_exists( 'p2p_register_connection_type' ) ) {
-				p2p_register_connection_type( array(
-					'name' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
-					'from' => $rt_organization->post_type,
-					'to' => $rt_person->post_type,
-				) );
-			}
+			p2p_register_connection_type( array(
+				'name' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
+				'from' => $rt_organization->post_type,
+				'to' => $rt_person->post_type,
+			) );
 		}
 
 		/**
@@ -279,10 +301,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function connect_organization_to_person( $from = '', $to = '' ) {
 			global $rt_organization, $rt_person;
-			if ( function_exists( 'p2p_create_connection' ) && function_exists( 'p2p_connection_exists' ) ) {
-				if ( ! p2p_connection_exists( $rt_organization->post_type . '_to_' . $rt_person->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
-					p2p_create_connection( rtcrm_post_type_name( 'account' ) . '_to_' . rtcrm_post_type_name( 'contact' ), array( 'from' => $from, 'to' => $to ) );
-				}
+			if ( ! p2p_connection_exists( $rt_organization->post_type . '_to_' . $rt_person->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+				p2p_create_connection( $rt_organization->post_type . '_to_' . $rt_person->post_type, array( 'from' => $from, 'to' => $to ) );
 			}
 		}
 
