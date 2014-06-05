@@ -384,6 +384,11 @@ function rt_biz_get_employees() {
 	return $rt_person->get_employees();
 }
 
+function rt_biz_get_clients() {
+    global $rt_person;
+    return $rt_person->get_clients();
+}
+
 function rt_biz_search_employees( $query ) {
 	$args = array(
 		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,

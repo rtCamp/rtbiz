@@ -416,5 +416,17 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				)
 			);
 		}
+
+        function get_clients() {
+            return get_posts(
+                array(
+                    'meta_key' => self::$meta_key_prefix.self::$our_team_mate_key,
+                    'meta_value' => '0',
+                    'post_type' => $this->post_type,
+                    'post_status' => 'any',
+                    'nopaging' => true,
+                )
+            );
+        }
 	}
 }
