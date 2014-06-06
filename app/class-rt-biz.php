@@ -58,11 +58,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __construct() {
 
-			if ( ! $this->check_p2p_dependency() ) {
-				return false;
-			}
+            if ( ! $this->check_p2p_dependency() ) {
+                return false;
+            }
 
-			add_action( 'init', array( $this, 'hooks' ), 11 );
+            add_action( 'init', array( $this, 'hooks' ), 11 );
 			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
 
 			$this->init_modules();
