@@ -21,7 +21,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		public function __construct() {
 			parent::__construct( 'rt_account' );
 			$this->labels = array(
-				'name' => __( 'Organization' ),
+				'name' => __( 'Organizations' ),
 				'singular_name' => __( 'Organization' ),
 				'menu_name' => __( 'Organizations' ),
 				'all_items' => __( 'All Organizations' ),
@@ -65,16 +65,6 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'description' => __( 'Organization country.' ),
 				),
 				array(
-					'key' => 'account_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Enter Email Address' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_email][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Valid email address.' ),
-				),
-				array(
 					'key' => 'account_phone',
 					'text' => __( 'Phone' ),
 					'label' => __( 'Enter Phone Number' ),
@@ -93,6 +83,26 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
+				),
+				array(
+					'key' => 'account_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Enter Email Address' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'account_meta[account_email][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Valid email address.' ),
+				),
+				array(
+					'key' => 'account_website',
+					'text' => __( 'Website' ),
+					'label' => __( 'Enter Website URL' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'account_meta[account_website][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Website URL.' ),
 				),
 				array(
 					'key' => 'account_skype_id',
@@ -133,16 +143,6 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'name' => 'account_meta[account_linkedin][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-				),
-				array(
-					'key' => 'account_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Enter Website URL' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_website][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Website URL.' ),
 				),
 			);
 
