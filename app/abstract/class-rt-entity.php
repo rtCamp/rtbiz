@@ -127,7 +127,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param $post
 		 */
 		function render_additional_details_meta_box( $post ) {
+			do_action( 'rt_biz_before_render_meta_fields', $post, $this );
 			foreach ( $this->meta_fields as $field ) {
+				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
 				if ( isset( $field['is_autocomplete'] ) && isset( $field['data_source'] ) && $field['is_autocomplete'] && $field['data_source'] == 'WP_User' ) {
 					$user_id = self::get_meta( $post->ID, $field['key'], true );
 				?>
@@ -179,7 +181,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					</div>
 				<?php }
 			}
-			do_action( 'rt_biz_render_meta_fields', $post, $this );
+			do_action( 'rt_biz_after_render_meta_fields', $post, $this );
 			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
 			$this->print_metabox_js();
 			do_action( 'rt_biz_print_metabox_js', $post, $this );
