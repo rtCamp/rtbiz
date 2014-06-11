@@ -151,6 +151,23 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						<input type='hidden' <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?> />
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
+				<?php } else if ( isset ( $field['is_datepicker'] ) && $field['is_datepicker'] ) {
+					$values = self::get_meta( $post->ID, $field['key'], true );
+				?>
+					<script>
+						jQuery(document).ready(function($) {
+							$(document).on('focus', ".datepicker",function(){
+								$(this).datepicker({
+									'dateFormat': 'dd/mm/yy'
+								});
+							});
+						});
+					</script>
+					<div class="form-field">
+						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
+						<input type="text" <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="datepicker '.$field['class'].'"' : 'class="datepicker"'; ?>>
+						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+					</div>
 				<?php } else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
 					$values = self::get_meta( $post->ID, $field['key'] );
 				?>
@@ -168,7 +185,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?>><?php echo $values; ?></textarea>
+						<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>><?php echo $values; ?></textarea>
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php } else {
@@ -176,7 +193,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				?>
 					<div class="form-field">
 						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' >
+						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>>
 						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
 					</div>
 				<?php }
