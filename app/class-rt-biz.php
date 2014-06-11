@@ -129,6 +129,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				$post_type = get_post_type( $_REQUEST['post'] );
 				if ( in_array( $post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+					if ( !  wp_style_is( 'rt-jquery-ui-css' ) ) {
+						wp_enqueue_style('rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all');
+					}
+					if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
+						wp_enqueue_script( 'jquery-ui-datepicker' );
+					}
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_module_page_active', '1' );
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				}
