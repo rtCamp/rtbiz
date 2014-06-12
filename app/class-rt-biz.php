@@ -65,6 +65,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
             add_action( 'init', array( $this, 'hooks' ), 11 );
 			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
 
+			$this->update_database();
+
+			$this->init_db_models();
+
 			$this->init_modules();
 			$this->init_access_control();
 			$this->init_settings();
@@ -74,6 +78,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
 			do_action( 'rt_biz_init' );
+		}
+
+		function update_database() {
+			$updateDB = new RT_DB_Update( trailingslashit( RT_BIZ_PATH ) . 'index.php', trailingslashit( RT_BIZ_PATH . 'app/schema/' ) );
+			$updateDB->do_upgrade();
+		}
+
+		function init_db_models() {
+			global $rt_biz_notification_rules_model;
+
+			$rt_biz_notification_rules_model = new RT_Biz_Notification_Rules_Model();
 		}
 
 		/**
@@ -232,13 +247,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 *  Posts 2 Posts Plugin Admin Notice
 		 */
-		function p2p_admin_notice() {
-			?>
+		function p2p_admin_notice() { ?>
 			<div class="updated">
 				<p><?php _e( sprintf( 'rtBiz : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="' . admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ) . '">' . __( 'install' ) . '</a>', '<a href="' . admin_url( 'plugins.php' ) . '">' . __( 'activate' ) . '</a>' ) ); ?></p>
 			</div>
-		<?php
-		}
+		<?php }
 
 		/**
 		 *  Initialize Rt_Person & Rt_Organization
