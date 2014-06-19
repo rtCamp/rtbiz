@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/
   Description: WordPress for Business
-  Version: 0.0.1
+  Version: 0.0.3
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -12,7 +12,7 @@
  */
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '0.0.1' );
+	define( 'RT_BIZ_VERSION', '0.0.3' );
 }
 if ( ! defined( 'RT_BIZ_PATH' ) ) {
 	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
@@ -34,11 +34,12 @@ function rt_biz_include() {
 
 	include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
 
-	global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload;
+	global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_notification_autoload;
 	$rtb_app_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/' );
 	$rtb_models_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/models/' );
 	$rtb_abstract_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/abstract/' );
 	$rtb_modules_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/modules/' );
+	$rtb_notification_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/notification/' );
 	$rtb_settings_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/settings/' );
 }
 
@@ -51,3 +52,16 @@ function rt_biz_init() {
 }
 
 add_action( 'plugins_loaded', 'rt_biz_init' );
+
+function rt_biz_deactivate() {
+	wp_clear_scheduled_hook( 'rtpm_notification_queue_cron_hook' );
+}
+
+register_deactivation_hook( __FILE__, 'rt_biz_deactivate' );
+
+function rt_biz_notification_init_hook() {
+	// Notification Queue Execute Function
+	add_action( 'rtpm_notification_queue_cron_hook', array( RT_Biz_Notification_Queue, 'execute_notification_queue_cron' ) );
+}
+
+add_action( 'init', 'rt_biz_notification_init_hook' );
