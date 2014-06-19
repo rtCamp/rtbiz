@@ -62,12 +62,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
                 return false;
             }
 
-            add_action( 'init', array( $this, 'hooks' ), 11 );
+			add_action( 'init', array( $this, 'hooks' ), 11 );
 			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
 
 			$this->update_database();
 
 			$this->init_db_models();
+
+			$this->init_notification_queue();
 
 			$this->init_modules();
 			$this->init_access_control();
@@ -86,9 +88,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function init_db_models() {
-			global $rt_biz_notification_rules_model;
+			global $rt_biz_notification_rules_model, $rt_biz_notification_queue_model;
 
 			$rt_biz_notification_rules_model = new RT_Biz_Notification_Rules_Model();
+			$rt_biz_notification_queue_model = new RT_Biz_Notification_Queue_Model();
+		}
+
+		function init_notification_queue() {
+			global $rt_biz_notification_queue;
+			$rt_biz_notification_queue = new RT_Biz_Notification_Queue();
 		}
 
 		/**
