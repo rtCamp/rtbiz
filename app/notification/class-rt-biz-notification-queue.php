@@ -29,13 +29,13 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 
 		function activate() {
 			if ( ! wp_next_scheduled( 'rtpm_notification_queue_cron_hook' ) ) {
-				wp_schedule_event( time(), 'rtpm_notification_queue_cron_time', 'rtpm_notification_queue_cron_hook' );
+				wp_schedule_event( time(), 'everyminute', 'rtpm_notification_queue_cron_hook' );
 			}
 		}
 
 		// add cron time interval
 		function notification_queue_cron_interval( $interval ) {
-			$interval[ 'rtpm_notification_queue_cron_time' ] = array( 'interval' => 60, 'display' => __( 'Every minute' ) );
+			$interval[ 'everyminute' ] = array( 'interval' => 60, 'display' => __( 'Every Minute' ) );
 			return $interval;
 		}
 
