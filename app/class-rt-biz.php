@@ -58,7 +58,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __construct() {
 
-            if ( ! $this->check_p2p_dependency() ) {
+			// DOIN CRON check put because p2p not getting loaded in wp cron hence exception.
+            if ( ! $this->check_p2p_dependency() && ! defined( 'DOING_CRON' ) ) {
                 return false;
             }
 

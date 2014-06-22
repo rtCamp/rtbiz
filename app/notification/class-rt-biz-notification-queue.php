@@ -52,7 +52,7 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 					} catch (Exception $e) {
 						$flag = false;
 					}
-					error_log(var_export($flag,true));
+
 					if ( $flag ) {
 						$rt_biz_notification_queue_model->update( array( 'sent' => 'yes' ), array( 'id' => $n['id'] ) );
 					} else {
