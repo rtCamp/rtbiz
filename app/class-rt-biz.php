@@ -294,8 +294,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function register_rt_biz_module( $modules ) {
 			global $rt_person, $rt_organization;
+			$rt_biz_options = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN.'_options' ) );
+			$menu_label = $rt_biz_options['menu_label'];
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
-				'label' => __( 'rtBiz' ),
+				'label' => $menu_label,
 				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
 			);
 			return $modules;

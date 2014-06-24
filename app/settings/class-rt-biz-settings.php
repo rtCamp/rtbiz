@@ -50,7 +50,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			// Init Titan Settings
 			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 20 );
 			// Load Saved Settings Values
-			add_action( 'init', array( $this, 'load_settings' ) );
+			add_action( 'after_setup_theme', array( $this, 'load_settings' ) );
 		}
 
 		/**
