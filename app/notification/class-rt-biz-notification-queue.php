@@ -40,15 +40,15 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 			return $interval;
 		}
 
-		static function execute_notification_queue_cron() {
-			$rt_biz_notification_queue_model = new RT_Biz_Notification_Queue_Model();
+		function execute_notification_queue_cron() {
+			global $rt_biz_notification_queue_model;
 			$notifications = $rt_biz_notification_queue_model->get_by_sent('no');
 
 			if ( $notifications['total'] && ! empty( $notifications['result'] ) ) {
 				foreach ( $notifications['result'] as $n ) {
 					$flag = false;
 					try {
-						$flag = self::send_notification( $n['user'], $n['timestamp'], $n['subject'], $n['message'], $n['attachment'], $n['module'], $n['entity'], $n['entity_id'] );
+						$flag = $this->send_notification( $n['user'], $n['timestamp'], $n['subject'], $n['message'], $n['attachment'], $n['module'], $n['entity'], $n['entity_id'] );
 					} catch (Exception $e) {
 						$flag = false;
 					}
@@ -62,13 +62,13 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 			}
 		}
 
-		static function send_notification( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id ) {
+		function send_notification( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id ) {
 
 			// As of now only email - so send email. Later on other methods will be added such as sms, in-app notification etc.
-			return self::send_email( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id );
+			return $this->send_email( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id );
 		}
 
-		static function send_email( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id ) {
+		function send_email( $user_id, $timestamp, $subject, $message, $attachment, $module, $entity, $entity_id ) {
 
 			// as of now only email preference. later on user preference will be added for how he/she wants to get notified.
 			$user = get_user_by( 'id', $user_id );

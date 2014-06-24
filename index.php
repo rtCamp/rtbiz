@@ -61,7 +61,8 @@ register_deactivation_hook( __FILE__, 'rt_biz_deactivate' );
 
 function rt_biz_notification_init_hook() {
 	// Notification Queue Execute Function
-	add_action( 'rtpm_notification_queue_cron_hook', array( RT_Biz_Notification_Queue, 'execute_notification_queue_cron' ) );
+	global $rt_biz_notification_queue;
+	add_action( 'rtpm_notification_queue_cron_hook', array( $rt_biz_notification_queue, 'execute_notification_queue_cron' ) );
 }
 
 add_action( 'init', 'rt_biz_notification_init_hook' );
