@@ -21,6 +21,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		public $email_key = 'contact_email';
 
+		public $website_url_key = 'contact_website';
+
 		public $user_id_key = 'contact_user_id';
 
 		static $our_team_mate_key = 'is_our_team_mate';
@@ -53,6 +55,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
 			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 22 );
+
+			/**
+			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
+			 */
+			add_action( 'user_register', array( $this, 'person_create_for_wp_user' ) );
 		}
 
 		/**
@@ -551,5 +558,12 @@ if ( ! class_exists( 'Rt_Person' ) ) {
                 )
             );
         }
+
+		function person_create_for_wp_user( $user_id ) {
+			$user = get_user_by( 'id', $user_id );
+			$person_id = $this->add_person( $user->display_name );
+			Rt_Person::add_meta( $person_id, $this->email_key, $user->user_email );
+			Rt_Person::add_meta( $person_id, $this->website_url_key, $user->user_url );
+		}
 	}
 }
