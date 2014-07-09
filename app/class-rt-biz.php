@@ -242,10 +242,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( ! class_exists( 'P2P_Box_Factory' ) ) {
-				$flag = false;
-			}
-
 			if ( ! $flag ) {
 				add_action( 'admin_notices', array( $this, 'p2p_admin_notice' ) );
 			}
