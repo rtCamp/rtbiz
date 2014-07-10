@@ -73,8 +73,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		function hooks() {
 
 			if ( is_admin() ) {
-				add_filter( 'manage_'.$this->post_type.'_posts_columns', array( $this, 'post_table_columns' ), 10, 1 );
-				add_action( 'manage_'.$this->post_type.'_posts_custom_column', array( $this, 'manage_post_table_columns' ), 10, 2 );
+				add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'post_table_columns' ), 10, 1 );
+				add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'manage_post_table_columns' ), 10, 2 );
 
 				add_action( 'add_meta_boxes', array( $this, 'entity_meta_boxes' ) );
 				add_action( 'admin_init', array( $this, 'entity_meta_boxes' ) );
@@ -107,8 +107,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function enqueue_scripts_styles() {
 			global $post;
-			if ( isset( $post->post_type ) && $post->post_type == $this->post_type && !wp_script_is( 'jquery-ui-autocomplete' ) ) {
-				wp_enqueue_script('jquery-ui-autocomplete', '', array('jquery-ui-widget', 'jquery-ui-position'), '1.9.2',true);
+			if ( isset( $post->post_type ) && $post->post_type == $this->post_type && ! wp_script_is( 'jquery-ui-autocomplete' ) ) {
+				wp_enqueue_script( 'jquery-ui-autocomplete', '', array( 'jquery-ui-widget', 'jquery-ui-position' ), '1.9.2', true );
 			}
 		}
 
@@ -130,73 +130,88 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_before_render_meta_fields', $post, $this );
 			foreach ( $this->meta_fields as $field ) {
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-				if ( isset( $field['is_autocomplete'] ) && isset( $field['data_source'] ) && $field['is_autocomplete'] && $field['data_source'] == 'WP_User' ) {
-					$user_id = self::get_meta( $post->ID, $field['key'], true );
-				?>
+				if ( isset( $field[ 'is_autocomplete' ] ) && isset( $field[ 'data_source' ] ) && $field[ 'is_autocomplete' ] && $field[ 'data_source' ] == 'WP_User' ) {
+					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
+					?>
 					<div class="form-field-2">
-						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input type="text" class="<?php echo $field['autocomplete_class']; ?>" />
-						<div id="<?php echo $field['selected_div_id']; ?>">
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<input type="text" class="<?php echo $field[ 'autocomplete_class' ]; ?>" />
+						<div id="<?php echo $field[ 'selected_div_id' ]; ?>">
 							<?php if ( $user_id ) { ?>
-								<div id='<?php echo $field['selected_item_id_prefix'].$user_id; ?>'>
+								<div id='<?php echo $field[ 'selected_item_id_prefix' ] . $user_id; ?>'>
 									<?php
 									$acuser = new WP_User( intval( $user_id ) );
 									echo get_avatar( $acuser->user_email, 32 );
 									echo $acuser->display_name;
 									?>
-									&nbsp;<a href='<?php echo $field['remove_item_href'] ?>'>X</a>
+									&nbsp;<a href='<?php echo $field[ 'remove_item_href' ] ?>'>X</a>
 								</div>
 							<?php } ?>
 						</div>
-						<input type='hidden' <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?> />
-						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+						<input type='hidden' <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?> />
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
-				<?php } else if ( isset ( $field['is_datepicker'] ) && $field['is_datepicker'] ) {
-					$values = self::get_meta( $post->ID, $field['key'], true );
-				?>
+					<?php
+				} else if ( isset( $field[ 'is_datepicker' ] ) && $field[ 'is_datepicker' ] ) {
+					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+					?>
 					<script>
-						jQuery(document).ready(function($) {
-							$(document).on('focus', ".datepicker",function(){
-								$(this).datepicker({
+						jQuery( document ).ready( function( $ ) {
+							$( document ).on( 'focus', ".datepicker", function() {
+								$( this ).datepicker( {
 									'dateFormat': 'dd/mm/yy'
-								});
-							});
-						});
+								} );
+							} );
+						} );
 					</script>
 					<div class="form-field">
-						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input type="text" <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="datepicker '.$field['class'].'"' : 'class="datepicker"'; ?>>
-						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<input type="text" <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="datepicker ' . $field[ 'class' ] . '"' : 'class="datepicker"'; ?>>
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
-				<?php } else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-					$values = self::get_meta( $post->ID, $field['key'] );
-				?>
+					<?php
+				} else if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
+					$values = self::get_meta( $post->ID, $field[ 'key' ] );
+					?>
 					<div class="form-field">
-						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>><button data-type='<?php echo ( stristr( $field['key'], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>><button data-type='<?php echo ( stristr( $field[ 'key' ], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
 						<?php foreach ( $values as $value ) { ?>
-							<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>>
+							<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>>
 							<button type='button' class='button delete-multiple'> - </button>
 						<?php } ?>
-						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
-				<?php } else if( isset( $field['type'] ) && $field['type'] == 'textarea' ) {
-					$values = self::get_meta( $post->ID, $field['key'], true );
-				?>
+					<?php
+				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'textarea' ) {
+					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+					?>
 					<div class="form-field">
-						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>><?php echo $values; ?></textarea>
-						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<textarea <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>><?php echo $values; ?></textarea>
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
-				<?php } else {
-					$values = self::get_meta( $post->ID, $field['key'], true );
-				?>
+					<?php
+				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'user_group' ) {
+					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
+					$values = call_user_func( $field[ 'data_source' ], $user_id );
+					?>
 					<div class="form-field">
-						<?php if ( isset( $field['label'] ) ) { ?><label><?php echo $field['label']; ?></label><?php } ?>
-						<input <?php echo ( isset( $field['type'] ) ) ? 'type="'.$field['type'].'"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="'.$field['name'].'"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="'.$field['id'].'"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="'.$field['class'].'"' : ''; ?>>
-						<?php echo ( isset( $field['description'] ) ) ? '<p class="description">'.$field['description'].'</p>' : ''; ?>
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<?php echo $values; ?>
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
-				<?php }
+					<?php
+				} else {
+					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+					?>
+					<div class="form-field">
+						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
+						<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>>
+						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+					</div>
+					<?php
+				}
 			}
 			do_action( 'rt_biz_after_render_meta_fields', $post, $this );
 			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
@@ -207,7 +222,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		/**
 		 *  MetaBox JS - Overridden in Child Classes - Rt_Organization & Rt_Person
 		 */
-		function print_metabox_js() { }
+		function print_metabox_js() {
+
+		}
 
 		/**
 		 *
@@ -222,11 +239,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			 */
 
 			// Check if our nonce is set.
-			if ( ! isset( $_POST['rt_biz_additional_details_metabox_nonce'] ) ) {
+			if ( ! isset( $_POST[ 'rt_biz_additional_details_metabox_nonce' ] ) ) {
 				return;
 			}
 
-			$nonce = $_POST['rt_biz_additional_details_metabox_nonce'];
+			$nonce = $_POST[ 'rt_biz_additional_details_metabox_nonce' ];
 
 			// Verify that the nonce is valid.
 			if ( ! wp_verify_nonce( $nonce, 'rt_biz_additional_details_metabox' ) ) {
@@ -284,7 +301,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function init_connection( $post_type, $label ) {
 			add_action( 'p2p_init', array( $this, 'create_connection' ) );
-			$this->enabled_post_types[$post_type] = $label;
+			$this->enabled_post_types[ $post_type ] = $label;
 		}
 
 		/**
@@ -293,7 +310,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		function create_connection() {
 			foreach ( $this->enabled_post_types as $post_type => $label ) {
 				p2p_register_connection_type( array(
-					'name' => $post_type.'_to_'.$this->post_type,
+					'name' => $post_type . '_to_' . $this->post_type,
 					'from' => $post_type,
 					'to' => $this->post_type,
 				) );
@@ -311,10 +328,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function connect_post_to_entity( $post_type, $from = '', $to = '', $clear_old = false ) {
 			if ( $clear_old ) {
-				p2p_delete_connections( $post_type.'_to_'.$this->post_type, array( 'from' => $from ) );
+				p2p_delete_connections( $post_type . '_to_' . $this->post_type, array( 'from' => $from ) );
 			}
-			if ( ! p2p_connection_exists( $post_type.'_to_'.$this->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
-				p2p_create_connection( $post_type.'_to_'.$this->post_type, array( 'from' => $from, 'to' => $to ) );
+			if ( ! p2p_connection_exists( $post_type . '_to_' . $this->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+				p2p_create_connection( $post_type . '_to_' . $this->post_type, array( 'from' => $from, 'to' => $to ) );
 			}
 		}
 
@@ -329,14 +346,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		static function connection_to_string( $post_id, $connection, $term_seperator = ' , ' ) {
 			$post = get_post( $post_id );
-			$termsArr = get_posts(array(
-				'connected_type' => $post->post_type.'_to_'.$connection,
+			$termsArr = get_posts( array(
+				'connected_type' => $post->post_type . '_to_' . $connection,
 				'connected_items' => $post,
 				'nopaging' => true,
 				'suppress_filters' => false,
-			));
+					) );
 			$tmpStr = '';
-			if( $termsArr ) {
+			if ( $termsArr ) {
 				$sep = '';
 				foreach ( $termsArr as $tObj ) {
 					$tmpStr .= $sep . $tObj->post_title;
@@ -376,14 +393,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$args = array(
 				'post_type' => $post_type,
 				'post_status' => 'any',
-				'connected_type' => $post_type.'_to_'.$this->post_type,
+				'connected_type' => $post_type . '_to_' . $this->post_type,
 				'connected_items' => $post_id,
 				'nopaging' => true,
 				'suppress_filters' => false,
 			);
 
 			if ( $fetch_entity ) {
-				$args['post_type'] = $this->post_type;
+				$args[ 'post_type' ] = $this->post_type;
 			}
 
 			return get_posts( $args );
@@ -420,7 +437,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param bool $unique
 		 */
 		static function add_meta( $id, $key, $value, $unique = false ) {
-			add_post_meta( $id, self::$meta_key_prefix.$key, $value, $unique );
+			add_post_meta( $id, self::$meta_key_prefix . $key, $value, $unique );
 		}
 
 		/**
@@ -430,7 +447,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @return mixed
 		 */
 		static function get_meta( $id, $key, $single = false ) {
-			return get_post_meta( $id, self::$meta_key_prefix.$key, $single );
+			return get_post_meta( $id, self::$meta_key_prefix . $key, $single );
 		}
 
 		/**
@@ -440,7 +457,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param string $prev_value
 		 */
 		static function update_meta( $id, $key, $value, $prev_value = '' ) {
-			update_post_meta( $id, self::$meta_key_prefix.$key, $value, $prev_value );
+			update_post_meta( $id, self::$meta_key_prefix . $key, $value, $prev_value );
 		}
 
 		/**
@@ -449,7 +466,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param string $value
 		 */
 		static function delete_meta( $id, $key, $value = '' ) {
-			delete_post_meta( $id, self::$meta_key_prefix.$key, $value );
+			delete_post_meta( $id, self::$meta_key_prefix . $key, $value );
 		}
 
 		/**
@@ -491,20 +508,22 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		function get_user_from_name() {
-			if ( ! isset($_POST['query'] ) ) {
+			if ( ! isset( $_POST[ 'query' ] ) ) {
 				wp_die( 'Invalid request Data' );
 			}
-			$query = $_POST['query'];
+			$query = $_POST[ 'query' ];
 			global $wpdb;
 
-			$results = $wpdb->get_results("select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;");
+			$results = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
 			$arrReturn = array();
-			foreach ($results as $author) {
-				$arrReturn[] = array("id" => $author->ID, "label" => $author->display_name, "imghtml" => get_avatar($author->user_email, 25));
+			foreach ( $results as $author ) {
+				$arrReturn[] = array( "id" => $author->ID, "label" => $author->display_name, "imghtml" => get_avatar( $author->user_email, 25 ) );
 			}
-			header('Content-Type: application/json');
-			echo json_encode($arrReturn);
-			die(0);
+			header( 'Content-Type: application/json' );
+			echo json_encode( $arrReturn );
+			die( 0 );
 		}
+
 	}
+
 }
