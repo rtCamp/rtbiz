@@ -168,6 +168,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_address]',
 					'class' => '',
 					'description' => __( 'Address.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_postal_address',
@@ -178,6 +179,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_postal_address]',
 					'class' => '',
 					'description' => __( 'Postal Address.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_tfn',
@@ -188,6 +190,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_tfn]',
 					'id' => 'contact_meta_contact_tfn',
 					'description' => __( 'Tax File Number.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_phone',
@@ -278,6 +281,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_kin_name]',
 					'id' => 'contact_meta_contact_kin_name',
 					'description' => __( 'Next of Kin Name.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_kin_address',
@@ -288,6 +292,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_kin_address]',
 					'id' => 'contact_meta_contact_kin_address',
 					'description' => __( 'Next of Kin Address.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_kin_number',
@@ -298,6 +303,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_kin_number]',
 					'id' => 'contact_meta_contact_kin_number',
 					'description' => __( 'Next of Kin Number.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_kin_relation',
@@ -308,6 +314,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_kin_relation]',
 					'id' => 'contact_meta_contact_kin_relation',
 					'description' => __( 'Next of Kin Relation.' ),
+					'hide_for_team_mate' => true,
 				),
 //				array(
 //					'key' => 'contact_designation',
@@ -339,6 +346,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_commence_date]',
 					'id' => 'contact_meta_contact_commence_date',
 					'description' => __( 'Date of Commencement.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_terminate_date',
@@ -350,6 +358,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_terminate_date]',
 					'id' => 'contact_meta_contact_terminate_date',
 					'description' => __( 'Date of Termination.' ),
+					'hide_for_team_mate' => true,
 				),
 				array(
 					'key' => 'contact_user_id',
