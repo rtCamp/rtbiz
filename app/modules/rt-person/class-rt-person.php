@@ -67,7 +67,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * Only When it's My Team Page.
 		 */
 		function check_filters() {
-			if ( isset( $_REQUEST['rt-biz-my-team'] ) && $_REQUEST['rt-biz-my-team'] ) {
+			if ( isset( $_REQUEST[ 'post_type' ] ) && $_REQUEST[ 'post_type' ] == $this->post_type ) {
 				add_filter( 'posts_where', array( $this,'filter_our_team_where' ), 10, 2 );
 				add_filter( 'posts_join', array( $this,'filter_our_team_join' ), 10, 2 );
 			}
@@ -84,7 +84,14 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function filter_our_team_where( $where, $query_obj ) {
 			global $wpdb;
-			$where .= " AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key ."' AND {$wpdb->postmeta}.meta_value = '1'";
+
+			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
+				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
+					$where .= " AND {$wpdb->postmeta}.meta_value = '1'";
+				} else {
+					$where .= " AND ( {$wpdb->postmeta}.meta_value = '0' OR {$wpdb->postmeta}.meta_value IS NULL )";
+				}
+			}
 			return $where;
 		}
 
@@ -99,7 +106,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function filter_our_team_join( $join, $query_obj ) {
 			global $wpdb;
-			$join .= " JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
+			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
+				$join .= " LEFT JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "'";
+			}
 			return $join;
 		}
 
