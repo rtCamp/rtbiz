@@ -573,15 +573,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		}
 
         function get_clients() {
-            return get_posts(
-                array(
-                    'meta_key' => self::$meta_key_prefix.self::$our_team_mate_key,
-                    'meta_value' => '0',
-                    'post_type' => $this->post_type,
-                    'post_status' => 'any',
-                    'nopaging' => true,
-                )
-            );
+			global $wpdb;
+			$clients = $wpdb->get_results("SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )");
+			return $clients;
         }
 
 		function person_create_for_wp_user( $user_id ) {
