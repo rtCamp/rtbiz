@@ -83,7 +83,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 			foreach ( $terms as $term ) {
 				$href  = empty( $page ) ? add_query_arg( array( 'user-group' => $term->slug ), admin_url( 'users.php' ) ) : add_query_arg( array( 'user-group' => $term->slug ), $page );
 				$color = self::get_meta( 'group-color', $term->term_id );
-				$in[ ] = sprintf( '%s%s%s', '<a style="text-decoration:none; color:white; cursor: pointer; border:0; padding:2px 3px; float:left; margin:0 .3em .2em 0; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . ';" href="' . $href . '" title="' . esc_attr( $term->description ) . '">', $term->name, '</a>' );
+				$in[ ] = sprintf( '%s%s%s', '<a style="text-decoration:none; color:white; cursor: pointer; border:0; padding:2px 3px; margin:0 .3em .2em 0; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . ';" href="' . $href . '" title="' . esc_attr( $term->description ) . '">', $term->name, '</a>' );
 			}
 
 			return implode( '', $in );

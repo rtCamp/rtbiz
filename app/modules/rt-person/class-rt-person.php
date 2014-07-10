@@ -367,6 +367,13 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'class' => '',
 					'description' => __( 'User to which this contact belongs.' ),
 				),
+				array(
+					'key' => 'contact_user_id',
+					'type' => 'user_group',
+					'text' => __( 'Department' ),
+					'label' => __( 'Department : ' ),
+					'data_source' => array( 'KWS_User_Groups', 'get_user_user_group_tags' ),
+				),
 			);
 
 			$this->meta_fields = apply_filters( 'rt_biz_person_meta_fields', $this->meta_fields );
