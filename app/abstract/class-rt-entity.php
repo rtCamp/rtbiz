@@ -130,6 +130,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_before_render_meta_fields', $post, $this );
 			foreach ( $this->meta_fields as $field ) {
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
+				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
+				if( $is_our_team_mate && isset( $field['hide_for_team_mate'] ) && $field['hide_for_team_mate'] ) {
+					continue;
+				}
 				if ( isset( $field[ 'is_autocomplete' ] ) && isset( $field[ 'data_source' ] ) && $field[ 'is_autocomplete' ] && $field[ 'data_source' ] == 'WP_User' ) {
 					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
 					?>
