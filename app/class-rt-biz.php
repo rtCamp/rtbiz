@@ -69,6 +69,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_db_models();
 
+			$this->init_attributes();
+
 			$this->init_notification_queue();
 
 			$this->init_modules();
@@ -92,6 +94,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$rt_biz_notification_rules_model = new RT_Biz_Notification_Rules_Model();
 			$rt_biz_notification_queue_model = new RT_Biz_Notification_Queue_Model();
+		}
+
+		function init_attributes() {
+			global $rt_biz_attributes;
+			$rt_biz_attributes = new Rt_Biz_Attributes();
 		}
 
 		function init_notification_queue() {
