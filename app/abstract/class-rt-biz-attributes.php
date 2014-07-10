@@ -28,8 +28,8 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 		}
 
 		function init_attributes() {
-			global $rt_biz_attributes;
-			$rt_biz_attributes = new RT_Attributes( RT_CRM_TEXT_DOMAIN );
+			global $rt_biz_rt_attributes;
+			$rt_biz_rt_attributes = new RT_Attributes( RT_CRM_TEXT_DOMAIN );
 
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
@@ -41,7 +41,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$rt_biz_attributes->add_attributes_page( $this->attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
+			$rt_biz_rt_attributes->add_attributes_page( $this->attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
 		}
 
 	}
