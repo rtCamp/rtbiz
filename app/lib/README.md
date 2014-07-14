@@ -11,6 +11,8 @@ Following are some classes
 * RT_Plugin_Update_Checker
 * RT_WP_Autoloader
 * RT_Theme_Update_Checker
+* RT_Email_Template
+* RT_Attributes
 
 **NOTE**: Development in progress
 
