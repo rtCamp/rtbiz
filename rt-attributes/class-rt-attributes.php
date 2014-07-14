@@ -26,7 +26,12 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $module_name;
 
 		/**
-		 * @var $page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
+		 * @var $parent_page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
+		 */
+		var $parent_page_slug;
+
+		/**
+		 * @var $page_slug - Page slug for Attributes Page
 		 */
 		var $page_slug;
 
@@ -36,9 +41,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $post_type;
 
 		/**
-		 * @var $cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
 		 */
-		var $cap;
+		var $page_cap;
+
+		/**
+		 * @var $attr_cap - Capability for Attributes (Taxonomy / Terms); if not passed, default cap will be empty array ( array() )
+		 */
+		var $attr_cap;
 
 		/**
 		 * @var $render_type_required - Render Type for the attribute; Dropdown, Checklist, Rating Stars etc.,
@@ -56,19 +66,20 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		var $orderby_required;
 
 		/**
-		 * @var - Attributes DB Model Object
+		 * @var $attributes_db_model - Attributes DB Model Object
 		 */
 		var $attributes_db_model;
 
 		/**
-		 * @var - Attributes Relationship DB Model Object
+		 * @var $attributes_relationship_model - Attributes Relationship DB Model Object
 		 */
 		var $attributes_relationship_model;
 
 		/**
-		 * @var RT_WP_Autoload
+		 * @var $auto_loader - RT_WP_Autoload
 		 */
 		var $auto_loader;
+
 
 		/**
 		 * @param $module_name - A Unique module name to identify for which module / post_types the attributes i.e., taxonomies are to be registered
@@ -101,19 +112,19 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->attributes_relationship_model = new RT_Attributes_Relationship_Model();
 		}
 
-		function register_attribute_mappings( $post_type ) {
-			$relations = $this->attributes_relationship_model->get_relations_by_post_type( $post_type );
+		function register_attribute_mappings() {
+			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if ( $attr->attribute_store_as == 'taxonomy' ) {
-					$this->register_taxonomy( $relation->post_type, $relation->attr_id );
+				if ( $attr->attribute_store_as == 'taxonomy' && $attr->module_name == $this->module_name ) {
+					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $this->attr_cap );
 				}
 			}
 		}
 
-		function register_taxonomy( $post_type, $attr_id ) {
+		function register_taxonomy( $post_type, $attr_id, $caps ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
-			$name = rtcrm_attribute_taxonomy_name( $tax->attribute_name );
+			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
 			if ( $name ) {
 				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
@@ -141,12 +152,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 							),
 						'show_ui' 					=> true,
 						'query_var' 				=> true,
-						//'capabilities'			=> array(
-						//	'manage_terms' 		=> 'manage_rtcrm_terms',
-						//	'edit_terms' 		=> 'edit_rtcrm_terms',
-						//	'delete_terms' 		=> 'delete_rtcrm_terms',
-						//	'assign_terms' 		=> 'assign_rtcrm_terms',
-						//),
+						'capabilities'				=> $caps,
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
@@ -202,30 +208,30 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param bool $storage_type_required
 		 * @param bool $orderby_required
 		 */
-		function add_attributes_page( $page_slug = '', $post_type = '', $cap = 'manage_options', $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
+		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
 
 			$this->page_slug             = $page_slug;
+			$this->parent_page_slug      = $parent_page_slug;
 			$this->post_type             = $post_type;
-			$this->cap                   = $cap;
+			$this->page_cap              = $page_cap;
+			$this->attr_cap              = $attr_cap;
 			$this->render_type_required  = $render_type_required;
 			$this->storage_type_required = $storage_type_required;
 			$this->orderby_required      = $orderby_required;
 
 			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 
-			if ( ! empty( $this->post_type ) ) {
-				$this->register_attribute_mappings( $this->post_type );
-			}
+			$this->register_attribute_mappings();
 		}
 
 		/**
 		 * This method registers an attributes menu page which will list all the available attributes that can be linked to any post types as per need.
 		 */
 		function register_attribute_menu() {
-			if ( ! empty( $this->page_slug ) ) {
-				add_submenu_page( $this->page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+			if ( ! empty( $this->parent_page_slug ) ) {
+				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->cap, 'rt-wp-attributes', array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
 			}
 		}
 
@@ -238,7 +244,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// If an attribute was added, edited or deleted: then redirect to the attributes page
 			if ( ! empty( $action_completed ) ) {
-				wp_redirect( admin_url( 'admin.php?page=rt-wp-attributes' ) );
+				wp_redirect( admin_url( 'admin.php?page=' . $this->page_slug ) );
 			}
 
 			// Show admin interface
@@ -341,6 +347,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
+			do_action( 'rt_attributes_relations_added', $attribute_id, $post_types );
 		}
 
 		function update_attribute_relations( $attribute_id, $post_types ) {
@@ -355,6 +362,15 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				);
 				$this->attributes_relationship_model->add_relation( $data );
 			}
+			do_action( 'rt_attributes_relations_updated', $attribute_id, $post_types );
+		}
+
+		function delete_attribute_relations( $attribute_id ) {
+			$relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
+			foreach ( $relations as $r ) {
+				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $r->attr_id, 'post_type' => $r->post_type ) );
+			}
+			do_action( 'rt_attributes_relations_deleted', $attribute_id );
 		}
 
 		/**
@@ -369,6 +385,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as = 'taxonomy', $attribute_render_type = '', $attribute_orderby = '' ) {
 
 			$attribute = array(
+				'module_name' => $this->module_name,
 				'attribute_label' => $attribute_label,
 				'attribute_name' => $attribute_name,
 				'attribute_store_as' => $attribute_store_as,
@@ -496,6 +513,8 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 							wp_delete_term( $term->term_id, $taxonomy );
 						}
 					}
+
+					$this->delete_attribute_relations( $attribute_id );
 
 					do_action( 'rt_wp_attribute_deleted', $attribute_id, $attribute_name, $taxonomy );
 

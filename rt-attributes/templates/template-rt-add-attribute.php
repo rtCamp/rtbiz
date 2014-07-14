@@ -153,10 +153,10 @@ if ( $attribute_taxonomies ) {
 							<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
 							<select name="attribute_render_type" id="attribute_render_type">
 								<optgroup label="Taxonomy">
-									<!--<option value="autocomplete"><?php _e( 'Autocomplete' ); ?></option>-->
+									<option value="autocomplete"><?php _e( 'Autocomplete' ); ?></option>
 									<option value="dropdown"><?php _e( 'Dropdown' ); ?></option>
 									<option value="checklist"><?php _e( 'Checklist' ); ?></option>
-									<!--<option value="radio"><?php _e( 'Radio' ); ?></option>-->
+									<option value="radio"><?php _e( 'Radio' ); ?></option>
 									<option value="rating-stars"><?php _e( 'Rating Stars' ); ?></option>
 								</optgroup>
 								<optgroup label="Meta">
@@ -164,7 +164,7 @@ if ( $attribute_taxonomies ) {
 									<option value="datetime"><?php _e( 'Date & Time' ); ?></option>
 									<option value="currency"><?php _e( 'Currency' ); ?></option>
 									<option value="text"><?php _e( 'Text' ); ?></option>
-									<!--<option value="richtext"><?php _e( 'Rich Text' ); ?></option>-->
+									<option value="richtext"><?php _e( 'Rich Text' ); ?></option>
 								</optgroup>
 								<?php do_action( 'rt_wp_attributes_admin_attribute_render_types' ); ?>
 							</select>
