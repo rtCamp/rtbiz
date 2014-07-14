@@ -15,4 +15,4 @@ CREATE TABLE %s (
 	message TEXT DEFAULT NULL,
 	user TEXT NOT NULL,
 	PRIMARY KEY  (id)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
