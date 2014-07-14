@@ -109,7 +109,7 @@ if ( $attribute_taxonomies ) {
 	}
 } else {
 	?>
-						<tr><td colspan="6"><?php _e( 'No attributes currently exist.' ); ?></td></tr>
+						<tr><td><?php _e( 'No attributes currently exist.' ); ?></td></tr>
 					<?php } ?>
 					</tbody>
 				</table>
