@@ -39,4 +39,21 @@ jQuery(document).ready(function($) {
 		$('#'+rt_biz_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
 		$(window).resize();
 	}
+
+	/**
+	 * WordPress Menu Hack for New Person & New Organization Page
+	 * */
+	if ( typeof rt_biz_dashboard_screen != 'undefined' && typeof rt_biz_module_new_page != 'undefined' ) {
+		$('#'+rt_biz_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+		$('#'+rt_biz_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+		$('li.'+rt_biz_dashboard_screen+' ul li').removeClass('current');
+		$('li.'+rt_biz_dashboard_screen+' ul li a').removeClass('current');
+		$('li.'+rt_biz_dashboard_screen+' ul li a').each(function(e) {
+			if ( this.href == rt_biz_module_new_page ) {
+				$(this).parent().addClass("current");
+	            $(this).addClass('current');
+			}
+		});
+		$(window).resize();
+	}
 });
