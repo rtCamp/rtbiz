@@ -170,6 +170,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
+			if( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset($_REQUEST['post_type']) && in_array( $_REQUEST['post_type'], array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+				if ( !  wp_style_is( 'rt-jquery-ui-css' ) ) {
+					wp_enqueue_style('rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all');
+				}
+				if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
+					wp_enqueue_script( 'jquery-ui-datepicker' );
+				}
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_module_new_page', admin_url( 'edit.php?post_type='.$rt_person->post_type ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
+			}
+
 			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == 'user-group' ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
