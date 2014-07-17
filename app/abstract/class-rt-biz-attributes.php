@@ -29,7 +29,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 
 		function init_attributes() {
 			global $rt_biz_rt_attributes;
-			$rt_biz_rt_attributes = new RT_Attributes( RT_CRM_TEXT_DOMAIN );
+			$rt_biz_rt_attributes = new RT_Attributes( RT_BIZ_TEXT_DOMAIN );
 
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
