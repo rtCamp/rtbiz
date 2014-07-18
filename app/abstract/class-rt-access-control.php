@@ -408,8 +408,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_user_meta( $user->ID, 'rt_biz_profile_permissions', true );
+				$menu_label = Rt_Biz_Settings::$settings['menu_label'];
 				?>
-				<h3><?php _e( 'rtBiz Profile Access' ); ?></h3>
+				<h3><?php echo $menu_label . __( ' Profile Access' ); ?></h3>
 				<table class="form-table">
 					<tbody>
 						<?php foreach ( $modules as $mkey => $m ) { ?>
