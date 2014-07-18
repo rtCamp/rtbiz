@@ -150,7 +150,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
 			}
 
-			if ( isset( $_REQUEST['post'] ) && $_REQUEST['action'] && $_REQUEST['action'] == 'edit' ) {
+			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
 				$is_our_team_mate = get_post_meta( $_REQUEST['post'], Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
 				if ( $is_our_team_mate ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
