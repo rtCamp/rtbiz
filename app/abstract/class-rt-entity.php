@@ -131,7 +131,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
 				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
-				if( $is_our_team_mate && isset( $field['hide_for_team_mate'] ) && $field['hide_for_team_mate'] ) {
+				if( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
 				if ( isset( $field[ 'is_autocomplete' ] ) && isset( $field[ 'data_source' ] ) && $field[ 'is_autocomplete' ] && $field[ 'data_source' ] == 'WP_User' ) {
