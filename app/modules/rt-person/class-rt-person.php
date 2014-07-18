@@ -141,6 +141,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				'example' => '', // An example value for this field, will be displayed in a <code>
 				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
 			) );
+
+			do_action( 'rt_biz_person_meta_box' );
 		}
 
 		/**
