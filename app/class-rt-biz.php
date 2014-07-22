@@ -58,9 +58,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __construct() {
 
-            if ( ! $this->check_p2p_dependency() ) {
-                return false;
-            }
+			if ( ! $this->check_p2p_dependency() ) {
+				return false;
+			}
 
 			add_action( 'init', array( $this, 'hooks' ), 11 );
 			add_filter( 'rt_biz_modules', array( $this, 'register_rt_biz_module' ) );
@@ -77,6 +77,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->init_access_control();
 			$this->init_settings();
 //			$this->init_menu_order();
+
+			$this->init_dashboard();
 
 			$this->register_organization_person_connection();
 
@@ -127,6 +129,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order[ self::$settings_slug ] = 100;
 		}
 
+		function init_dashboard() {
+			global $rt_biz_dashboard, $rt_biz_reports;
+			$rt_biz_dashboard = new Rt_Biz_Dashboard();
+			$page_slugs = array(
+				self::$dashboard_slug,
+			);
+			$rt_biz_reports = new Rt_Reports( $page_slugs );
+		}
+
 		/**
 		 *  Actions/Filters used by rtBiz
 		 */
@@ -145,22 +156,22 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function load_styles_scripts() {
 			global $rt_person, $rt_organization;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
-			if ( isset( $_REQUEST['rt-biz-my-team'] ) ) {
+			if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' ) );
 			}
 
-			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
-				$is_our_team_mate = get_post_meta( $_REQUEST['post'], Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
+			if ( isset( $_REQUEST[ 'post' ] ) && isset( $_REQUEST[ 'action' ] ) && $_REQUEST[ 'action' ] == 'edit' ) {
+				$is_our_team_mate = get_post_meta( $_REQUEST[ 'post' ], Rt_Person::$meta_key_prefix . Rt_Person::$our_team_mate_key, true );
 				if ( $is_our_team_mate ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-					wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' ) );
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' ) );
 				}
 
-				$post_type = get_post_type( $_REQUEST['post'] );
+				$post_type = get_post_type( $_REQUEST[ 'post' ] );
 				if ( in_array( $post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
-					if ( !  wp_style_is( 'rt-jquery-ui-css' ) ) {
-						wp_enqueue_style('rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all');
+					if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
+						wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 					}
 					if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 						wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -170,18 +181,18 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset($_REQUEST['post_type']) && in_array( $_REQUEST['post_type'], array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
-				if ( !  wp_style_is( 'rt-jquery-ui-css' ) ) {
-					wp_enqueue_style('rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all');
+			if ( $_SERVER[ 'SCRIPT_NAME' ] == '/wp-admin/post-new.php' && isset( $_REQUEST[ 'post_type' ] ) && in_array( $_REQUEST[ 'post_type' ], array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
+					wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 				}
 				if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 					wp_enqueue_script( 'jquery-ui-datepicker' );
 				}
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_module_new_page', admin_url( 'edit.php?post_type='.$rt_person->post_type ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_module_new_page', admin_url( 'edit.php?post_type=' . $rt_person->post_type ) );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 			}
 
-			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == 'user-group' ) {
+			if ( isset( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == 'user-group' ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
 			}
@@ -191,17 +202,21 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Registers all the menus/submenus for rtBiz
 		 */
 		function register_menu() {
-			global $rt_person, $rt_organization, $rt_access_control;
-			$logo_url = Rt_Biz_Settings::$settings['logo_url'];
-			$menu_label = Rt_Biz_Settings::$settings['menu_label'];
+			global $rt_person, $rt_organization, $rt_access_control, $rt_biz_dashboard;
+			$logo_url = Rt_Biz_Settings::$settings[ 'logo_url' ];
+			$menu_label = Rt_Biz_Settings::$settings[ 'menu_label' ];
 			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
-			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
-			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type.'&rt-biz-my-team=true' );
+
+			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
+			$rt_biz_dashboard->setup_dashboard();
+
+			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' );
+			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit-tags.php?taxonomy=user-group' );
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type );
-			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_person->post_type );
-			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type='.$rt_organization->post_type );
+			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
+			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_organization->post_type );
 		}
 
 		/**
@@ -269,11 +284,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 *  Posts 2 Posts Plugin Admin Notice
 		 */
-		function p2p_admin_notice() { ?>
+		function p2p_admin_notice() {
+			?>
 			<div class="updated">
 				<p><?php _e( sprintf( 'rtBiz : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="' . admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ) . '">' . __( 'install' ) . '</a>', '<a href="' . admin_url( 'plugins.php' ) . '">' . __( 'activate' ) . '</a>' ) ); ?></p>
 			</div>
-		<?php }
+			<?php
+		}
 
 		/**
 		 *  Initialize Rt_Person & Rt_Organization
@@ -307,8 +324,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function register_rt_biz_module( $modules ) {
 			global $rt_person, $rt_organization;
-			$rt_biz_options = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN.'_options' ) );
-			$menu_label = $rt_biz_options['menu_label'];
+			$rt_biz_options = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN . '_options' ) );
+			$menu_label = $rt_biz_options[ 'menu_label' ];
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label' => $menu_label,
 				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
