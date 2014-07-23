@@ -68,8 +68,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function page_actions() {
 
 			if ( isset( $_REQUEST[ 'page' ] ) && $_REQUEST[ 'page' ] === Rt_Biz::$dashboard_slug ) {
-				do_action( 'add_meta_boxes_' . $this->screen_id, $this );
-				do_action( 'add_meta_boxes', $this->screen_id, $this );
+				do_action( 'add_meta_boxes_' . $this->screen_id, null );
+				do_action( 'add_meta_boxes', $this->screen_id, null );
 
 				/* Enqueue WordPress' script for handling the metaboxes */
 				wp_enqueue_script( 'postbox' );
