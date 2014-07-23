@@ -58,7 +58,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 
 		}
 
-		function get_user_user_groups( $user = '' )
+		static function get_user_user_groups( $user = '' )
 		{
 			if ( is_object( $user ) ){
 				$user_id = $user->ID;
