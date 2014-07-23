@@ -73,7 +73,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 			return $user_groups;
 		}
 
-		function get_user_user_group_tags( $user, $page = null )
+		static function get_user_user_group_tags( $user, $page = null )
 		{
 			$terms = self::get_user_user_groups( $user );
 			if ( empty( $terms ) ){
