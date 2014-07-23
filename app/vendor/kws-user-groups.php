@@ -748,7 +748,10 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 				}
 				$ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
-				$Query->query_where .= " AND $wpdb->users.ID IN ($ids)";
+				if ( ! empty( $ids ) ) {
+					$Query->query_where .= " AND $wpdb->users.ID IN ( $ids )";
+				}
+
 			}
 
 		}
