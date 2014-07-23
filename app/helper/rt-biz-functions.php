@@ -123,6 +123,16 @@ function rt_biz_get_post_for_organization_connection( $post_id, $post_type, $fet
 	return $rt_organization->get_posts_for_entity( $post_id, $post_type, $fetch_organization );
 }
 
+function rt_biz_get_person_labels() {
+	global $rt_person;
+	return $rt_person->labels;
+}
+
+function rt_biz_get_organization_labels() {
+	global $rt_organization;
+	return $rt_organization->labels;
+}
+
 /**
  * Returns person post type
  *
