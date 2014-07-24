@@ -68,48 +68,41 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function check_filters() {
 			if ( isset( $_REQUEST[ 'post_type' ] ) && $_REQUEST[ 'post_type' ] == $this->post_type ) {
-				add_filter( 'posts_where', array( $this,'filter_our_team_where' ), 10, 2 );
-				add_filter( 'posts_join', array( $this,'filter_our_team_join' ), 10, 2 );
+				add_action( 'parse_query', array( $this, 'filter_our_team' ) );
 			}
 		}
 
 		/**
 		 *
-		 * WHERE Filter of WP_Query
+		 * Query Filter of WP_Query
 		 * Filter Persons on Our Team Page - List View
 		 *
 		 * @param $where
 		 * @param $query_obj
 		 * @return string
 		 */
-		function filter_our_team_where( $where, $query_obj ) {
-			global $wpdb;
-
+		function filter_our_team( $query_obj ) {
 			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
 				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
-					$where .= " AND {$wpdb->postmeta}.meta_value = '1'";
+					$qv = &$query_obj->query_vars;
+					$qv['meta_query'][] = array(
+						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+						'value' => '1',
+					);
 				} else {
-					$where .= " AND ( {$wpdb->postmeta}.meta_value = '0' OR {$wpdb->postmeta}.meta_value IS NULL )";
+					$qv = &$query_obj->query_vars;
+					$qv['meta_query']['relation'] = 'OR';
+					$qv['meta_query'][] = array(
+						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+						'value' => '0',
+					);
+					$qv['meta_query'][] = array(
+						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+						'value' => '0',
+						'compare' => 'NOT EXISTS',
+					);
 				}
 			}
-			return $where;
-		}
-
-		/**
-		 *
-		 * JOIN Filter of WP_Query
-		 * Filter Persons on Our Team Page - List View
-		 *
-		 * @param $join
-		 * @param $query_obj
-		 * @return string
-		 */
-		function filter_our_team_join( $join, $query_obj ) {
-			global $wpdb;
-			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
-				$join .= " LEFT JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "'";
-			}
-			return $join;
 		}
 
 		/**
