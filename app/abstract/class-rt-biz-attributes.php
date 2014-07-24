@@ -131,7 +131,6 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 						$tax = get_taxonomy( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) );
 						wp_dropdown_categories( array(
 							'show_option_all' => __( "Show All {$tax->label}" ),
-							'show_option_none' => __( "No {$tax->label}" ),
 							'taxonomy' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
 							'name' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
 							'orderby' => 'name',
