@@ -207,7 +207,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 		}
 
 		// Code from http://serennu.com/colour/rgbtohsl.php
-		function get_text_color( $hexcode = '' )
+		static function get_text_color( $hexcode = '' )
 		{
 			$hexcode = str_replace( '#', '', $hexcode );
 
@@ -264,7 +264,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 			}
 		}
 
-		function save_user_user_groups( $user_id, $user_groups = array(), $bulk = false )
+		static function save_user_user_groups( $user_id, $user_groups = array(), $bulk = false )
 		{
 			$tax = get_taxonomy( 'user-group' );
 
@@ -863,7 +863,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 		<?php
 		}
 
-		function get_meta( $key = '', $term_id = 0 )
+		static function get_meta( $key = '', $term_id = 0 )
 		{
 
 			if ( isset( $_GET[ 'tag_ID' ] ) ){
@@ -887,7 +887,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 
 		}
 
-		function is_edit_user_group( $page = false )
+		static function is_edit_user_group( $page = false )
 		{
 			global $pagenow;
 
