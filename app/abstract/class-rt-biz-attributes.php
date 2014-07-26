@@ -129,17 +129,20 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 					$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 					if ( $attr->attribute_store_as == 'taxonomy' ) {
 						$tax = get_taxonomy( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) );
-						wp_dropdown_categories( array(
+						$args = array(
 							'show_option_all' => __( "Show All {$tax->label}" ),
 							'taxonomy' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
 							'name' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
 							'orderby' => 'name',
-							'selected' => $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ],
 							'hierarchical' => true,
 							'depth' => 3,
 							'show_count' => false, // Show # listings in parens
 							'hide_empty' => true, // Don't show businesses w/o listings
-						) );
+						);
+						if ( isset( $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
+							$args['selected'] = $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
+						}
+						wp_dropdown_categories( $args );
 					}
 				}
 			}
