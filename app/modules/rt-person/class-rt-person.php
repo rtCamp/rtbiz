@@ -475,6 +475,66 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		}
 
 		/**
+		 *
+		 * Columns in List View
+		 *
+		 * @param $columns
+		 * @return mixed|void
+		 */
+		function post_table_columns( $columns ) {
+			$columns[ 'contact_phone' ] = __( 'Phone Number' );
+			$columns[ 'contact_email' ] = __( 'Email ID' );
+			$columns[ 'contact_company' ] = __( 'Company' );
+
+			$columns = parent::post_table_columns( $columns );
+
+			return $columns;
+		}
+
+		/**
+		 *
+		 * Manage Columns for List View
+		 *
+		 * @param $column
+		 * @param $post_id
+		 */
+		function manage_post_table_columns( $column, $post_id ) {
+
+			switch ( $column ) {
+				case 'contact_phone':
+					$val = self::get_meta( $post_id, 'contact_phone' );
+					if ( ! empty( $val ) ) {
+						echo implode( ' , ', $val );
+					}
+					break;
+
+				case 'contact_email':
+					$val = self::get_meta( $post_id, 'contact_email' );
+					if ( ! empty( $val ) ) {
+						$emails = array();
+						foreach ( $val as $e ) {
+							$emails[] = '<a href="mailto:' . $e . '">' . $e . '</a>';
+						}
+						echo implode( ' , ', $emails );
+					}
+					break;
+
+				case 'contact_company':
+					$val = rt_biz_get_organization_to_person_connection( $post_id );
+					if ( ! empty( $val ) ) {
+						$organizations = array();
+						foreach ( $val as $o ) {
+							$organizations[] = '<a href="' . get_edit_post_link( $o->ID ) . '">' . $o->post_title . '</a>';
+						}
+						echo implode( ', ', $organizations );
+					}
+					break;
+			}
+
+			parent::manage_post_table_columns( $column, $post_id );
+		}
+
+		/**
 		 * @param $name
 		 * @param string $description
 		 * @return int|WP_Error
