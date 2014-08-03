@@ -54,7 +54,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			/**
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
-			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 22 );
+			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 27 );
 
 			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
@@ -111,6 +111,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		function person_meta_box() {
 
 			if ( ! isset( Rt_Biz_Settings::$titan_obj ) || empty( Rt_Biz_Settings::$titan_obj ) ) {
+				return;
+			}
+
+			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			if ( ! current_user_can( $editor_cap ) ) {
 				return;
 			}
 

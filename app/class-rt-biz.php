@@ -73,8 +73,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_notification_queue();
 
-			$this->init_modules();
 			$this->init_access_control();
+			$this->init_modules();
 			$this->init_settings();
 //			$this->init_menu_order();
 

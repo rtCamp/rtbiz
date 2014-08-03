@@ -45,7 +45,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 *
 		 */
 		public function __construct() {
-			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
+			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 25 );
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
 			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
