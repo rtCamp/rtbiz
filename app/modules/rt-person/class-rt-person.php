@@ -132,7 +132,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			));
 			$our_team_mate->createOption( array(
 				'name' => __( 'Is our team mate ?' ), // Name of the option
-				'desc' => 'This is a checkbox which decides this contacts is part of our team or not.', // Description of the option
+				'desc' => 'This is a checkbox which decides this contact is part of our team or not. If this box is ticked it will allow employees to upload/edit their documents from their profile page', // Description of the option
 				'id' => self::$our_team_mate_key, // Unique ID of the option
 				'type' => 'checkbox', //
 				'default' => 0, // Menu icon for top level menus only
