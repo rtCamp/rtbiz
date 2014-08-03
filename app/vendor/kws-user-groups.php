@@ -191,7 +191,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 										   id="user-group-<?php echo esc_attr( $term->slug ); ?>"
 										   value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, is_object_in_term( $user->ID, 'user-group', $term->slug ) ); ?> />
 									<label
-										for="user-group-<?php echo esc_attr( $term->slug ); ?>"<?php echo esc_html( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
+										for="user-group-<?php echo esc_attr( $term->slug ); ?>"<?php echo $color; ?>><?php echo esc_html( $term->name ); ?></label>
 								</li>
 			<?php
 				}
