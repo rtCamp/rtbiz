@@ -198,6 +198,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					<?php
 				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'user_group' ) {
 					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
+					if ( empty( $user_id ) ) {
+						continue;
+					}
 					?>
 					<div class="">
 						<?php call_user_func( $field[ 'data_source' ], new WP_User( $user_id ) ); ?>
