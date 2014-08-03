@@ -198,11 +198,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					<?php
 				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'user_group' ) {
 					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
-					$values = call_user_func( $field[ 'data_source' ], $user_id );
 					?>
-					<div class="form-field">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<?php echo $values; ?>
+					<div class="">
+						<?php call_user_func( $field[ 'data_source' ], new WP_User( $user_id ) ); ?>
 						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php

@@ -147,6 +147,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 *  Init Meta Fields
 		 */
 		function setup_meta_fields() {
+			global $KWS_User_Groups;
 			$this->meta_fields = array(
 				array(
 					'key' => 'contact_dob',
@@ -361,7 +362,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'type' => 'user_group',
 					'text' => __( 'Department' ),
 					'label' => __( 'Department : ' ),
-					'data_source' => array( 'KWS_User_Groups', 'get_user_user_group_tags' ),
+					'data_source' => array( $KWS_User_Groups, 'edit_user_user_group_section' ),
 				),
 			);
 
