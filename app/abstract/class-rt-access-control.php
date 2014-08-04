@@ -172,6 +172,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 							}
 							$valid_caps[ $role_cap ] = true;
 						}
+						if ( empty( $valid_role_key ) ) {
+							continue;
+						}
 						$post_types = ( isset( self::$modules[$mkey]['post_types'] ) && is_array( self::$modules[$mkey]['post_types'] ) ) ? self::$modules[$mkey]['post_types'] : array();
 						foreach ( $post_types as $pt ) {
 							$post_caps = call_user_func( array( 'Rt_Access_Control', 'get_'.$valid_role_key.'_post_caps' ), $pt );
