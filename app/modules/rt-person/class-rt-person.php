@@ -565,7 +565,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * @return array
 		 */
 		function get_by_email( $email ) {
-			return get_posts(
+			return ( ! empty( $email ) ) ? get_posts(
 				array(
 					'meta_key' => self::$meta_key_prefix.$this->email_key,
 					'meta_value' => $email,
@@ -573,7 +573,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'post_status' => 'any',
 					'nopaging' => true,
 				)
-			);
+			) : array();
 		}
 
 		function get_contact_for_wp_user( $user_id ) {
