@@ -99,7 +99,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'desc' => 'This logo will be used for all the Menu, Submenu, Post Types Menu Icons in rtBiz', // Description of the option
 				'id' => 'logo_url', // Unique ID of the option
 				'type' => 'text', //
-				'default' => RT_BIZ_URL . 'app/assets/img/rt-biz-16X16.png', // Menu icon for top level menus only
+				'default' => RT_BIZ_URL . 'app/assets/img/biz-16X16.png', // Menu icon for top level menus only
 				'example' => 'http://google.com/icon.png', // An example value for this field, will be displayed in a <code>
 				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
 			) );
