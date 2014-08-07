@@ -193,7 +193,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					} );
 				} );
 			</script>
-		<?php
+			<?php
 
 		}
 
@@ -229,6 +229,43 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			}
 
 			parent::save_meta_values( $post_id );
+		}
+
+		/**
+		 *
+		 * Columns in List View
+		 *
+		 * @param $columns
+		 * @return mixed|void
+		 */
+		function post_table_columns( $columns ) {
+
+			$columns[ 'country' ] = __( 'Country' );
+
+			$columns = parent::post_table_columns( $columns );
+
+			return $columns;
+		}
+
+		/**
+		 *
+		 * Manage Columns for List View
+		 *
+		 * @param $column
+		 * @param $post_id
+		 */
+		function manage_post_table_columns( $column, $post_id ) {
+
+			switch ( $column ) {
+				case 'country':
+					$val = self::get_meta( $post_id, 'account_country' );
+					if ( ! empty( $val ) ) {
+						echo implode( ' , ', $val );
+					}
+					break;
+			}
+
+			parent::manage_post_table_columns( $column, $post_id );
 		}
 
 		/**
