@@ -55,7 +55,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
 			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 22 );
-
+                        
 			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
 			 */
@@ -137,7 +137,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 
 			do_action( 'rt_biz_person_meta_box' );
 		}
-
+                
 		/**
 		 *  Init Meta Fields
 		 */
@@ -337,22 +337,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				),
 				array(
 					'key' => 'contact_user_id',
-					'text' => __( 'WordPress User' ),
-					'label' => __( 'Select user for contact' ),
-					'is_autocomplete' => true,
-					'data_source' => 'WP_User',
-					'autocomplete_class' => 'user-autocomplete',
-					'selected_div_id' => 'selected-user-contact',
-					'selected_item_id_prefix' => 'subscribe-auth-',
-					'remove_item_href' => '#deleteContactUser',
-					'type' => 'hidden',
-					'name' => 'contact_meta[contact_user_id]',
-					'id' => 'contact_meta_userid',
-					'class' => '',
-					'description' => __( 'User to which this contact belongs.' ),
-				),
-				array(
-					'key' => 'contact_user_id',
 					'type' => 'user_group',
 					'text' => __( 'Department' ),
 					'label' => __( 'Department : ' ),
@@ -463,7 +447,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 						}
 					} else {
 						self::update_meta( $post_id, $field['key'], $_POST['contact_meta'][$field['key']] );
-					}
+                                        }
 				} else {
 					$oldmeta = self::get_meta( $post_id, $field['key'] );
 					foreach ( $oldmeta as $ometa ) {
