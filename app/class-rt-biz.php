@@ -80,6 +80,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_dashboard();
 
+			$this->init_help();
+
 			$this->register_organization_person_connection();
 
 			$this->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
@@ -117,14 +119,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->menu_order[ self::$my_team_slug ] = 6;
 
-			global $rt_person, $rt_organization, $rt_biz_attributes;
+			$this->menu_order[ 'post-new.php?post_type=' . rt_biz_get_person_post_type() ] = 10;
+			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_person_post_type() ] = 15;
+			$this->menu_order[ 'post-new.php?post_type=' . rt_biz_get_organization_post_type() ] = 50;
+			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_organization_post_type() ] = 55;
 
-			$this->menu_order[ 'post-new.php?post_type=' . $rt_person->post_type ] = 10;
-			$this->menu_order[ 'edit.php?post_type=' . $rt_person->post_type ] = 15;
-			$this->menu_order[ 'post-new.php?post_type=' . $rt_organization->post_type ] = 50;
-			$this->menu_order[ 'edit.php?post_type=' . $rt_organization->post_type ] = 55;
-
-			$this->menu_order[ $rt_biz_attributes->attributes_page_slug ] = 90;
+			$this->menu_order[ Rt_Biz_Attributes::$attributes_page_slug ] = 90;
 
 			$this->menu_order[ self::$settings_slug ] = 100;
 		}
@@ -136,6 +136,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				self::$dashboard_slug,
 			);
 			$rt_biz_reports = new Rt_Reports( $page_slugs );
+		}
+
+		function init_help() {
+			global $rt_biz_help;
+			$rt_biz_help = new Rt_Biz_Help();
 		}
 
 		/**
