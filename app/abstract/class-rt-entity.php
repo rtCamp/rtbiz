@@ -118,6 +118,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
 			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
+                        add_meta_box( 'rt-biz-contacts-details', __( 'Contacts' ), array( $this, 'render_contact_details_meta_box' ), $this->post_type, 'side', 'low' );
+			
 		}
 
 		/**
@@ -223,7 +225,33 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$this->print_metabox_js();
 			do_action( 'rt_biz_print_metabox_js', $post, $this );
 		}
-
+                
+		function render_contact_details_meta_box( $post ) {
+                    global $current_user;
+                    if ($current_user->roles[0] == 'administrator') {
+                            $user_id = self::get_meta( $post->ID, 'contact_user_id', true );
+					?>
+					<div class="form-field-2">
+						<label><?php_e( 'Select user for contact' ) ?></label>
+						<input type="text" class="user-autocomplete" />
+						<div id="selected-user-contact">
+							<?php if ( $user_id ) { ?>
+								<div id='<?php echo 'subscribe-auth-' . $user_id; ?>'>
+									<?php
+									$acuser = new WP_User( intval( $user_id ) );
+									echo get_avatar( $acuser->user_email, 32 );
+									echo $acuser->display_name;
+									?>
+									&nbsp;<a href='#deleteContactUser'>X</a>
+								</div>
+							<?php } ?>
+						</div>
+                                                <input type='hidden' name="contact_meta[contact_user_id]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
+						<?php echo '<p class="description">' . __( 'User to which this contact belongs.' ) . '</p>'  ?>
+					</div>
+					<?php
+                    }
+            }
 		/**
 		 *  MetaBox JS - Overridden in Child Classes - Rt_Organization & Rt_Person
 		 */
