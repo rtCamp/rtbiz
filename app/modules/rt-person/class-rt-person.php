@@ -490,7 +490,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		function post_table_columns( $columns ) {
 			$columns[ 'contact_phone' ] = __( 'Phone Number' );
 			$columns[ 'contact_email' ] = __( 'Email ID' );
-			$columns[ 'contact_company' ] = __( 'Company' );
+			$columns[ 'contact_organization' ] = __( 'Organization' );
 
 			$columns = parent::post_table_columns( $columns );
 
@@ -525,7 +525,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					}
 					break;
 
-				case 'contact_company':
+				case 'contact_organization':
 					$val = rt_biz_get_organization_to_person_connection( $post_id );
 					if ( ! empty( $val ) ) {
 						$organizations = array();

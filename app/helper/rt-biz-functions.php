@@ -236,16 +236,25 @@ function rt_biz_add_person( $name, $description = '' ) {
 	return $rt_person->add_person( $name, $description );
 }
 
+function rt_biz_clear_post_connections_to_person( $post_type, $from ) {
+	global $rt_person;
+	$rt_person->clear_post_connections_to_entity( $post_type, $from );
+}
+
+function rt_biz_clear_post_connections_to_organization( $post_type, $from ) {
+	global $rt_organization;
+	$rt_organization->clear_post_connections_to_entity( $post_type, $from );
+}
+
 /**
  *
  * @param $post_type
  * @param string $from
  * @param string $to
- * @param bool $clear_old
  */
-function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '', $clear_old = false ) {
+function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '' ) {
 	global $rt_person;
-	$rt_person->connect_post_to_entity( $post_type, $from, $to, $clear_old );
+	$rt_person->connect_post_to_entity( $post_type, $from, $to );
 }
 
 /**
