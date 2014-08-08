@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if ( ! class_exists( 'Rt_Person' ) ) {
+
 	/**
 	 * Class Rt_Person
 	 */
@@ -20,11 +21,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * @var string
 		 */
 		public $email_key = 'contact_email';
-
 		public $website_url_key = 'contact_website';
-
 		public $user_id_key = 'contact_user_id';
-
 		static $our_team_mate_key = 'is_our_team_mate';
 
 		/**
@@ -85,24 +83,70 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
 				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
 					$qv = &$query_obj->query_vars;
-					$qv['meta_query'][] = array(
+					$qv[ 'meta_query' ][] = array(
 						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
 						'value' => '1',
 					);
 				} else {
 					$qv = &$query_obj->query_vars;
-					$qv['meta_query']['relation'] = 'OR';
-					$qv['meta_query'][] = array(
+					$qv[ 'meta_query' ][ 'relation' ] = 'OR';
+					$qv[ 'meta_query' ][] = array(
 						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
 						'value' => '0',
 					);
-					$qv['meta_query'][] = array(
+					$qv[ 'meta_query' ][] = array(
 						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
 						'value' => '0',
 						'compare' => 'NOT EXISTS',
 					);
 				}
 			}
+		}
+
+		/**
+		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity
+		 */
+		function entity_meta_boxes() {
+			parent::entity_meta_boxes();
+			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			if ( ! current_user_can( $editor_cap ) ) {
+				return;
+			}
+			add_meta_box( 'rt-biz-wp-user-details', __( 'WordPress User Details' ), array( $this, 'render_wp_user_details_meta_box' ), $this->post_type, 'side', 'high' );
+		}
+
+		function render_wp_user_details_meta_box( $post ) {
+
+			$user_id = self::get_meta( $post->ID, $this->user_id_key, true );
+			?>
+			<div class="form-field-2">
+				<label><?php _e( 'Select user for contact' ) ?></label>
+				<input type="text" class="user-autocomplete" />
+				<div id="selected-user-contact">
+					<?php if ( $user_id ) { ?>
+						<div id='<?php echo 'subscribe-auth-' . $user_id; ?>'>
+							<?php
+							$acuser = new WP_User( intval( $user_id ) );
+							echo get_avatar( $acuser->user_email, 32 );
+							echo $acuser->display_name;
+							?>
+							&nbsp;<a href='#deleteContactUser'>X</a>
+						</div>
+					<?php } ?>
+				</div>
+				<input type='hidden' name="contact_meta[contact_user_id]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
+				<?php echo '<p class="description">' . __( 'User to which this contact belongs.' ) . '</p>' ?>
+			</div>
+			<?php
+			if ( empty( $user_id ) ) {
+				return;
+			}
+			global $KWS_User_Groups;
+			?>
+			<div class="">
+				<?php $KWS_User_Groups->edit_user_user_group_section( new WP_User( $user_id ) ); ?>
+			</div>
+			<?php
 		}
 
 		/**
@@ -119,7 +163,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				return;
 			}
 
-			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox(array(
+			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox( array(
 				'name' => __( 'Our Team-mate' ), // Name of the menu item
 				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
 				'id' => 'rt-biz-person-our-team-mate', // Unique ID of the menu item
@@ -129,7 +173,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 				'post_type' => $this->post_type, // Post type, can be an array of post types
 				'context' => 'side', // normal, advanced, or side
 				'hide_custom_fields' => true, // If true, the custom fields box will not be shown
-			));
+					) );
 			$our_team_mate->createOption( array(
 				'name' => __( 'Is our team mate ?' ), // Name of the option
 				'desc' => 'This is a checkbox which decides this contact is part of our team or not. If this box is ticked it will allow employees to upload/edit their documents from their profile page', // Description of the option
@@ -142,12 +186,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 
 			do_action( 'rt_biz_person_meta_box' );
 		}
-                
+
 		/**
 		 *  Init Meta Fields
 		 */
 		function setup_meta_fields() {
-			global $KWS_User_Groups;
 			$this->meta_fields = array(
 				array(
 					'key' => 'contact_dob',
@@ -341,13 +384,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'description' => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
 				),
-				array(
-					'key' => 'contact_user_id',
-					'type' => 'user_group',
-					'text' => __( 'Department' ),
-					'label' => __( 'Department : ' ),
-					'data_source' => array( $KWS_User_Groups, 'edit_user_user_group_section' ),
-				),
 			);
 
 			$this->meta_fields = apply_filters( 'rt_biz_person_meta_fields', $this->meta_fields );
@@ -356,108 +392,110 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		/**
 		 *
 		 */
-		function print_metabox_js() { ?>
+		function print_metabox_js() {
+			?>
 			<script>
 
-				function IsEmail(email) {
+				function IsEmail( email ) {
 					var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-					if (!regex.test(email)) {
+					if ( ! regex.test( email ) ) {
 						return false;
 					} else {
 						return true;
 					}
 				}
 
-				jQuery(document).ready(function($) {
+				jQuery( document ).ready( function( $ ) {
 
-					if(jQuery(".user-autocomplete").length > 0){
-						jQuery(".user-autocomplete").autocomplete({
+					if ( jQuery( ".user-autocomplete" ).length > 0 ) {
+						jQuery( ".user-autocomplete" ).autocomplete( {
 							source: function( request, response ) {
-							$.ajax({
-							  url: ajaxurl,
-							  dataType: "json",
-							  type:'post',
-							  data: {
-								action: "seach_user_from_name",
-								maxRows: 10,
-								query: request.term
-							  },
-							  success: function( data ) {
-								response( $.map( data, function( item ) {
-								  return {
-									id: item.id ,
-									imghtml: item.imghtml,
-									label:item.label
-								  }
-								}));
-							  }
-							});
-						  },minLength: 2,
-							select: function(event, ui) {
-								jQuery("#selected-user-contact").html("<div id='subscribe-auth-" + ui.item.id + "'>" +  ui.item.imghtml + ui.item.label + " &nbsp;<a href='#deleteContactUser'>X</a></div>")
-								jQuery(".user-autocomplete").val("");
-								jQuery("#contact_meta_userid").val(ui.item.id);
+								$.ajax( {
+									url: ajaxurl,
+									dataType: "json",
+									type: 'post',
+									data: {
+										action: "seach_user_from_name",
+										maxRows: 10,
+										query: request.term
+									},
+									success: function( data ) {
+										response( $.map( data, function( item ) {
+											return {
+												id: item.id,
+												imghtml: item.imghtml,
+												label: item.label
+											}
+										} ) );
+									}
+								} );
+							}, minLength: 2,
+							select: function( event, ui ) {
+								jQuery( "#selected-user-contact" ).html( "<div id='subscribe-auth-" + ui.item.id + "'>" + ui.item.imghtml + ui.item.label + " &nbsp;<a href='#deleteContactUser'>X</a></div>" )
+								jQuery( ".user-autocomplete" ).val( "" );
+								jQuery( "#contact_meta_userid" ).val( ui.item.id );
 								return false;
 							}
-						}).data("ui-autocomplete")._renderItem = function(ul, item) {
-							return $("<li></li>").data("ui-autocomplete-item", item).append("<a class='ac-subscribe-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>").appendTo(ul);
+						} ).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+							return $( "<li></li>" ).data( "ui-autocomplete-item", item ).append( "<a class='ac-subscribe-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>" ).appendTo( ul );
 						};
 
-						$(document).on("click", "a[href=#deleteContactUser]", function() {
-							$(this).parent().remove();
-							jQuery("#contact_meta_userid").val("");
-						});
+						$( document ).on( "click", "a[href=#deleteContactUser]", function() {
+							$( this ).parent().remove();
+							jQuery( "#contact_meta_userid" ).val( "" );
+						} );
 					}
 
-					jQuery(document).on('click', ".delete-multiple", function(e) {
-						$(this).prev().remove();
-						$(this).remove();
-					});
-					jQuery(document).on('click', ".add-multiple", function(e) {
-						var tempVal = $(this).prev().val();
-						var name = $(this).prev().attr("name")
-						if (tempVal == '')
+					jQuery( document ).on( 'click', ".delete-multiple", function( e ) {
+						$( this ).prev().remove();
+						$( this ).remove();
+					} );
+					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
+						var tempVal = $( this ).prev().val();
+						var name = $( this ).prev().attr( "name" )
+						if ( tempVal == '' )
 							return;
-						if ($(this).data("type") != undefined) {
-							if ($(this).data("type") == 'email') {
-								if (!IsEmail(tempVal))
+						if ( $( this ).data( "type" ) != undefined ) {
+							if ( $( this ).data( "type" ) == 'email' ) {
+								if ( ! IsEmail( tempVal ) )
 									return;
 							}
 						}
 
-						$(this).prev().val('');
+						$( this ).prev().val( '' );
 
-						$(this).after("<button type='button' class='button delete-multiple'> - </button>");
-						$(this).after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
-					});
-				});
+						$( this ).after( "<button type='button' class='button delete-multiple'> - </button>" );
+						$( this ).after( "<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />" );
+					} );
+				} );
 			</script>
-		<?php }
+			<?php
+		}
 
 		/**
 		 * @param $post_id
 		 */
-		function save_meta_values($post_id) {
+		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST['contact_meta'][$field['key']] ) && ! empty( $_POST['contact_meta'][$field['key']] ) ) {
-					$contact_meta[$field['key']] = $_POST['contact_meta'][$field['key']];
-					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-						$oldmeta = self::get_meta( $post_id, $field['key'] );
+				if ( isset( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) ) {
+					$contact_meta[ $field[ 'key' ] ] = $_POST[ 'contact_meta' ][ $field[ 'key' ] ];
+					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
+						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
 						foreach ( $oldmeta as $ometa ) {
-							self::delete_meta( $post_id, $field['key'], $ometa );
+							self::delete_meta( $post_id, $field[ 'key' ], $ometa );
 						}
-						foreach ( $contact_meta[$field['key']] as $nmeta ) {
+						foreach ( $contact_meta[ $field[ 'key' ] ] as $nmeta ) {
 							if ( $nmeta == '' )
 								continue;
-							self::add_meta( $post_id, $field['key'], $nmeta );
+							self::add_meta( $post_id, $field[ 'key' ], $nmeta );
 						}
 					} else {
-						self::update_meta( $post_id, $field['key'], $_POST['contact_meta'][$field['key']] );
-                                        }
+						self::update_meta( $post_id, $field[ 'key' ], $_POST[ 'contact_meta' ][ $field[ 'key' ] ] );
+					}
 				} else {
-					$oldmeta = self::get_meta( $post_id, $field['key'] );
+					$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
 					foreach ( $oldmeta as $ometa ) {
-						self::delete_meta( $post_id, $field['key'], $ometa );
+						self::delete_meta( $post_id, $field[ 'key' ], $ometa );
 					}
 				}
 			}
@@ -531,12 +569,12 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function add_person( $name, $description = '' ) {
 			$person_id = wp_insert_post(
-				array(
-					'post_title' => $name,
-					'post_content' => $description,
-					'post_type' => $this->post_type,
-					'post_status' => 'publish',
-				)
+					array(
+						'post_title' => $name,
+						'post_content' => $description,
+						'post_type' => $this->post_type,
+						'post_status' => 'publish',
+					)
 			);
 
 			return $person_id;
@@ -550,33 +588,33 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 */
 		function get_by_email( $email ) {
 			return ( ! empty( $email ) ) ? get_posts(
-				array(
-					'meta_key' => self::$meta_key_prefix.$this->email_key,
-					'meta_value' => $email,
-					'post_type' => $this->post_type,
-					'post_status' => 'any',
-					'nopaging' => true,
-				)
-			) : array();
+							array(
+								'meta_key' => self::$meta_key_prefix . $this->email_key,
+								'meta_value' => $email,
+								'post_type' => $this->post_type,
+								'post_status' => 'any',
+								'nopaging' => true,
+							)
+					) : array();
 		}
 
 		function get_contact_for_wp_user( $user_id ) {
 			return get_posts(
-				array(
-					'meta_query' => array(
-						array(
-							'key' => self::$meta_key_prefix.self::$our_team_mate_key,
-							'value' => '1',
+					array(
+						'meta_query' => array(
+							array(
+								'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+								'value' => '1',
+							),
+							array(
+								'key' => self::$meta_key_prefix . $this->user_id_key,
+								'value' => $user_id,
+							),
 						),
-						array(
-							'key' => self::$meta_key_prefix.$this->user_id_key,
-							'value' => $user_id,
-						),
-					),
-					'post_type' => $this->post_type,
-					'post_status' => 'any',
-					'nopaging' => true,
-				)
+						'post_type' => $this->post_type,
+						'post_status' => 'any',
+						'nopaging' => true,
+					)
 			);
 		}
 
@@ -587,21 +625,21 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 
 		function get_employees() {
 			return get_posts(
-				array(
-					'meta_key' => self::$meta_key_prefix.self::$our_team_mate_key,
-					'meta_value' => '1',
-					'post_type' => $this->post_type,
-					'post_status' => 'any',
-					'nopaging' => true,
-				)
+					array(
+						'meta_key' => self::$meta_key_prefix . self::$our_team_mate_key,
+						'meta_value' => '1',
+						'post_type' => $this->post_type,
+						'post_status' => 'any',
+						'nopaging' => true,
+					)
 			);
 		}
 
-        function get_clients() {
+		function get_clients() {
 			global $wpdb;
-			$clients = $wpdb->get_results("SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )");
+			$clients = $wpdb->get_results( "SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )" );
 			return $clients;
-        }
+		}
 
 		function person_create_for_wp_user( $user_id ) {
 			$user = get_user_by( 'id', $user_id );
@@ -609,5 +647,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			Rt_Person::add_meta( $person_id, $this->email_key, $user->user_email );
 			Rt_Person::add_meta( $person_id, $this->website_url_key, $user->user_url );
 		}
+
 	}
+
 }

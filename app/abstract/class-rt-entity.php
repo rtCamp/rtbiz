@@ -117,10 +117,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
-			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
-                        add_meta_box( 'rt-biz-contacts-details', __( 'Contacts' ), array( $this, 'render_contact_details_meta_box' ), $this->post_type, 'side', 'low' );
-			
+			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );			
 		}
+
+
 
 		/**
 		 *
@@ -136,29 +136,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				if( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
-				if ( isset( $field[ 'is_autocomplete' ] ) && isset( $field[ 'data_source' ] ) && $field[ 'is_autocomplete' ] && $field[ 'data_source' ] == 'WP_User' ) {
-					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
-					?>
-					<div class="form-field-2">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<input type="text" class="<?php echo $field[ 'autocomplete_class' ]; ?>" />
-						<div id="<?php echo $field[ 'selected_div_id' ]; ?>">
-							<?php if ( $user_id ) { ?>
-								<div id='<?php echo $field[ 'selected_item_id_prefix' ] . $user_id; ?>'>
-									<?php
-									$acuser = new WP_User( intval( $user_id ) );
-									echo get_avatar( $acuser->user_email, 32 );
-									echo $acuser->display_name;
-									?>
-									&nbsp;<a href='<?php echo $field[ 'remove_item_href' ] ?>'>X</a>
-								</div>
-							<?php } ?>
-						</div>
-						<input type='hidden' <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?> />
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
-					</div>
-					<?php
-				} else if ( isset( $field[ 'is_datepicker' ] ) && $field[ 'is_datepicker' ] ) {
+
+				if ( isset( $field[ 'is_datepicker' ] ) && $field[ 'is_datepicker' ] ) {
 					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
 					?>
 					<script>
@@ -226,32 +205,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_print_metabox_js', $post, $this );
 		}
                 
-		function render_contact_details_meta_box( $post ) {
-                    global $current_user;
-                    if ($current_user->roles[0] == 'administrator') {
-                            $user_id = self::get_meta( $post->ID, 'contact_user_id', true );
-					?>
-					<div class="form-field-2">
-						<label><?php_e( 'Select user for contact' ) ?></label>
-						<input type="text" class="user-autocomplete" />
-						<div id="selected-user-contact">
-							<?php if ( $user_id ) { ?>
-								<div id='<?php echo 'subscribe-auth-' . $user_id; ?>'>
-									<?php
-									$acuser = new WP_User( intval( $user_id ) );
-									echo get_avatar( $acuser->user_email, 32 );
-									echo $acuser->display_name;
-									?>
-									&nbsp;<a href='#deleteContactUser'>X</a>
-								</div>
-							<?php } ?>
-						</div>
-                                                <input type='hidden' name="contact_meta[contact_user_id]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
-						<?php echo '<p class="description">' . __( 'User to which this contact belongs.' ) . '</p>'  ?>
-					</div>
-					<?php
-                    }
-            }
 		/**
 		 *  MetaBox JS - Overridden in Child Classes - Rt_Organization & Rt_Person
 		 */
