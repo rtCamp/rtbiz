@@ -134,7 +134,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 						</div>
 					<?php } ?>
 				</div>
-				<input type='hidden' name="contact_meta[contact_user_id]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
+				<input type='hidden' name="contact_meta[<?php echo $this->user_id_key ?>]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
 				<?php echo '<p class="description">' . __( 'User to which this contact belongs.' ) . '</p>' ?>
 			</div>
 			<?php
@@ -499,6 +499,17 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					}
 				}
 			}
+
+			if ( isset( $_POST[ 'contact_meta' ][ $this->user_id_key ] ) && ! empty( $_POST['contact_meta'] ) ) {
+				self::update_meta( $post_id, $this->user_id_key, $_POST[ 'contact_meta' ][ $this->user_id_key ] );
+			} else {
+				self::delete_meta( $post_id, $this->user_id_key, self::get_meta( $post_id, $this->user_id_key, true ) );
+			}
+
+			if ( isset( $_POST[ 'contact_meta' ][ $this->user_id_key ] ) && ! empty( $_POST['contact_meta'] ) ) {
+				KWS_User_Groups::save_user_user_groups( $_POST[ 'contact_meta' ][ $this->user_id_key ] );
+			}
+
 			parent::save_meta_values( $post_id );
 		}
 
