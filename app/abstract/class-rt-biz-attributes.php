@@ -21,7 +21,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 
 	class Rt_Biz_Attributes {
 
-		var $attributes_page_slug = 'rtpm-attributes';
+		public static $attributes_page_slug = 'rtbiz-attributes';
 
 		public function __construct() {
 			add_action( 'init', array( $this, 'init_attributes' ) );
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$rt_biz_rt_attributes->add_attributes_page( $this->attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
+			$rt_biz_rt_attributes->add_attributes_page( self::$attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
 		}
 
 		function attributes_columns( $columns, $entity_obj ) {

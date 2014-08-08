@@ -350,6 +350,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 		}
 
+		function clear_post_connections_to_entity( $post_type, $from ) {
+			p2p_delete_connections( $post_type . '_to_' . $this->post_type, array( 'from' => $from ) );
+		}
+
 		/**
 		 *
 		 *
@@ -357,12 +361,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param $post_type
 		 * @param string $from
 		 * @param string $to
-		 * @param bool $clear_old
 		 */
-		function connect_post_to_entity( $post_type, $from = '', $to = '', $clear_old = false ) {
-			if ( $clear_old ) {
-				p2p_delete_connections( $post_type . '_to_' . $this->post_type, array( 'from' => $from ) );
-			}
+		function connect_post_to_entity( $post_type, $from = '', $to = '' ) {
 			if ( ! p2p_connection_exists( $post_type . '_to_' . $this->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
 				p2p_create_connection( $post_type . '_to_' . $this->post_type, array( 'from' => $from, 'to' => $to ) );
 			}
