@@ -328,7 +328,8 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 				'rewrite' => false,
 				'capabilities' => array( 'manage_terms' => 'edit_users', ) );
 
-			register_taxonomy( 'user-group', 'user', $arg );
+            $supported_post_types = apply_filters('rtbiz_dept_Supported_PT', array( 'user' ) );
+            register_taxonomy( 'user-group', $supported_post_types, $arg );
 		}
 
 		function meta_save( $term_id, $tt_id )
