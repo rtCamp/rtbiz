@@ -906,14 +906,16 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
                 
                 static function get_department_support(){
                     
-                    foreach (Rt_Access_Control::$modules as $module) {
+                    $supports = array( 'user' );
+                    
+                    foreach ( Rt_Access_Control::$modules as $module ) {
                         
-                        foreach ($module['post_types'] as $post_type) {
+                        foreach ( $module['post_types'] as $post_type ) {
                             
-                           $supports[]=$post_type;
+                           $supports[] = $post_type;
                         }
                     }
-
+                    
                     return $supports;
                 }
             }
