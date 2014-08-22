@@ -25,11 +25,13 @@ In case of users where it causes enough ambiguity; we decided to take control in
 Also those functions will give correct user relationships when fetched.
 
 ##DB Schema
-rt_user_group_relationships
-|
-| - user_id
-| - term_taxonomy_id
-| - term_order
+| rt_user_group_relationships |
+-------------------------------
+| user_id                     |
+| term_taxonomy_id            |
+| term_order                  |
+-------------------------------
+
 
 ```php
 ```
