@@ -126,6 +126,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
 			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
+			$show_admin_column = true;
 			if ( $name ) {
 				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
 				$show_in_nav_menus = apply_filters( 'rt_wp_attributes_show_in_nav_menus', false, $name );
@@ -154,6 +155,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 						'query_var' 				=> true,
 						'capabilities'				=> $caps,
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
+						'show_admin_column'			=> $show_admin_column,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
 						)
