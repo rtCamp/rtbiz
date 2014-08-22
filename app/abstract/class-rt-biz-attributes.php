@@ -71,8 +71,10 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 				if ( $attr->attribute_store_as == 'taxonomy' && $attr->attribute_name == $column ) {
 					$terms = wp_get_post_terms( $post_id, $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) );
 					$links = array();
-					foreach ( $terms as $t ) {
-						$links[] = '<a href="' . add_query_arg( array( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) => $t->term_id ) ) . '">' . $t->name . '</a>';
+					if ( ! $terms instanceof WP_Error) {
+						foreach ( $terms as $t ) {
+							$links[] = '<a href="' . add_query_arg( array( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) => $t->term_id ) ) . '">' . $t->name . '</a>';
+						}
 					}
 
 					if ( ! empty( $links ) ) {
@@ -129,20 +131,22 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 					$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 					if ( $attr->attribute_store_as == 'taxonomy' ) {
 						$tax = get_taxonomy( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) );
-						$args = array(
-							'show_option_all' => __( "Show All {$tax->label}" ),
-							'taxonomy' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
-							'name' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
-							'orderby' => 'name',
-							'hierarchical' => true,
-							'depth' => 3,
-							'show_count' => false, // Show # listings in parens
-							'hide_empty' => true, // Don't show businesses w/o listings
-						);
-						if ( isset( $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
-							$args['selected'] = $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
+						if ( ! empty( $tax ) ) {
+							$args = array(
+								'show_option_all' => __( "Show All {$tax->label}" ),
+								'taxonomy' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
+								'name' => $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
+								'orderby' => 'name',
+								'hierarchical' => true,
+								'depth' => 3,
+								'show_count' => false, // Show # listings in parens
+								'hide_empty' => true, // Don't show businesses w/o listings
+							);
+							if ( isset( $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
+								$args['selected'] = $wp_query->query[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
+							}
+							wp_dropdown_categories( $args );
 						}
-						wp_dropdown_categories( $args );
 					}
 				}
 			}
