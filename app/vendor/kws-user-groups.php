@@ -54,7 +54,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 			/* Cleanup stuff */
 			add_action( 'delete_user', array( &$this, 'delete_term_relationships' ) );
 			add_filter( 'sanitize_user', array( &$this, 'disable_username' ) );
-
+                        
 
 		}
 
@@ -328,8 +328,7 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 				'rewrite' => false,
 				'capabilities' => array( 'manage_terms' => 'edit_users', ) );
 
-            $supported_post_types = apply_filters('rtbiz_dept_Supported_PT', array( 'user' ) );
-            register_taxonomy( 'user-group', $supported_post_types, $arg );
+                        register_taxonomy( 'user-group', self::get_department_support(), $arg );
 		}
 
 		function meta_save( $term_id, $tt_id )
@@ -904,5 +903,20 @@ if ( ! class_exists( 'KWS_User_Groups' ) ){
 
 			return false;
 		}
-	}
+                
+                static function get_department_support(){
+                    
+                    $supports = array( 'user' );
+                    
+                    foreach ( Rt_Access_Control::$modules as $module ) {
+                        
+                        foreach ( $module['post_types'] as $post_type ) {
+                            
+                           $supports[] = $post_type;
+                        }
+                    }
+                    
+                    return $supports;
+                }
+            }
 }
