@@ -171,7 +171,8 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 			switch ( $column ) {
 				case 'users':
 					$term = get_term( $term_id, 'user-group' );
-					echo '<a href="' . admin_url( 'users.php?user-group=' . $term->slug ) . '">' . sprintf( _n( __( '%s User' ), __( '%s Users' ), $term->count ), $term->count ) . '</a>';
+                                   
+					echo '<a href="' . admin_url( 'users.php?user-group=' . $term->slug ) . '">' . sprintf( _n( __( '%s User' ), __( '%s Users' ), count( self::get_groups_users( $term_id ) ) ), count( self::get_groups_users( $term_id ) ) ) . '</a>';
 					break;
 				case 'color':
 					$color = self::get_meta( 'group-color', $term_id );
