@@ -31,5 +31,52 @@ rt_user_group_relationships
 | - term_taxonomy_id
 | - term_order
 
+
+## How to Use 
+
+Create Object of RT_User_Group Class with argument taxonomy slug and its label 
+    $obj = new RT_User_Group( Slug, Label_Array, Caps );
+
+    $terms_cap = array(
+	'manage_terms' => 'manage_custom_terms',
+	'edit_terms' => 'edit_custom_terms',
+	'delete_terms' => 'delete_custom_terms',
+	'assign_terms' => 'assign_custom_terms',
+    );
+
+    Example :-
+ 
+    $RT_User_Group = new RT_User_Group('user-group', array(
+            'name' => __( 'Departments' ),
+            'singular_name' => __( 'Departmet' ),
+            'menu_name' => __( 'Departments' ),
+            'search_items' => __( 'Search Departments' ),
+            'popular_items' => __( 'Popular Departments' ),
+            'all_items' => __( 'All User Departments' ),
+            'edit_item' => __( 'Edit Department' ),
+            'update_item' => __( 'Update Department' ),
+            'add_new_item' => __( 'Add New Department' ),
+            'new_item_name' => __( 'New Department Name' ),
+            'separate_items_with_commas' => __( 'Separate departments with commas' ),
+            'add_or_remove_items' => __( 'Add or remove departments' ),
+            'choose_from_most_used' => __( 'Choose from the most popular departments' ), 
+        )
+    );
+
+Assign Taxonomy-User Relationship
+    set_user_taxonomy( User_ID, Taxonomy_Slug  )
+
+Remove Taxonomy-User Relationship
+    remove_user_taxonomy( User_ID, Taxonomy_Slug  )
+
+Check Taxonomy-User Relationship exist or not 
+    is_user_has_taxonomy( User_ID, Taxonomy_Slug  )
+
+Get list of taxonomy for given user
+    get_user_taxonomies( User_ID )
+
+Get list of user for given taxonomy
+    get_user_by_term_slug( Taxonomy_Slug )
+
 ```php
 ```
