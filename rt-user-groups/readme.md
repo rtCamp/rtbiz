@@ -35,14 +35,23 @@ rt_user_group_relationships
 ## How to Use 
 
 Create Object of RT_User_Group Class with argument taxonomy slug and its label 
-    $obj = new RT_User_Group( Slug, Label_Array, Caps );
+    $obj = new RT_User_Group( Slug, Label_Array, Caps, Select_multiple );
 
-    $terms_cap = array(
-	'manage_terms' => 'manage_custom_terms',
-	'edit_terms' => 'edit_custom_terms',
-	'delete_terms' => 'delete_custom_terms',
-	'assign_terms' => 'assign_custom_terms',
-    );
+	Slug : Group slug
+
+	Label_Array : Group lable array
+
+	Caps : Capability for manage group
+
+		$terms_cap = array(
+			'manage_terms' => 'manage_custom_terms',
+			'edit_terms' => 'edit_custom_terms',
+			'delete_terms' => 'delete_custom_terms',
+			'assign_terms' => 'assign_custom_terms',
+		);
+
+	Select_multiple : Allow to select multiple group or single
+					  by default allows to select multiple group
 
     Example :-
  
@@ -63,20 +72,23 @@ Create Object of RT_User_Group Class with argument taxonomy slug and its label
         )
     );
 
-Assign Taxonomy-User Relationship
-    set_user_taxonomy( User_ID, Taxonomy_Slug  )
+Assign group-User Relationship
+    set_user_group( User_ID, Taxonomy_Slug  )
 
-Remove Taxonomy-User Relationship
-    remove_user_taxonomy( User_ID, Taxonomy_Slug  )
+Remove group-User Relationship
+    remove_user_group( User_ID, Taxonomy_Slug  )
 
-Check Taxonomy-User Relationship exist or not 
-    is_user_has_taxonomy( User_ID, Taxonomy_Slug  )
+Remove all user groups for given user
+	remove_all_user_groups( User_ID )
 
-Get list of taxonomy for given user
-    get_user_taxonomies( User_ID )
+Check group-User Relationship exist or not
+    is_user_has_group( User_ID, Taxonomy_Slug  )
 
-Get list of user for given taxonomy
-    get_user_by_term_slug( Taxonomy_Slug )
+Get list of groups for given user
+    get_user_groups( User_ID )
+
+Get list of user for given group slug
+    get_user_by_group_slug( Taxonomy_Slug )
 
 ```php
 ```
