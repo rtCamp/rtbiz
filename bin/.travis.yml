@@ -25,6 +25,8 @@ before_script:
     - phpenv rehash
     - npm install -g jshint
 
+    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+
 script:
     - find . -path ./bin -prune -o \( -name '*.php' -o -name '*.inc' \) -exec php -lf {} \;
     - if [ -e phpunit.xml ] || [ -e phpunit.xml.dist ]; then phpunit; fi
