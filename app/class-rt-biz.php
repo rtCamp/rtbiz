@@ -146,7 +146,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
                 
         function init_department(){
                     
-         global $rtbiz_user_group;
+         global $rtbiz_user_groups;
 
             $terms_caps = array(
 				'manage_terms' => true,//$editor_cap,
@@ -155,7 +155,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'assign_terms' => true,//$editor_cap,
 			 );
                         
-            $rtbiz_user_group = new RT_User_Group('user-group', array(
+            $rtbiz_user_groups = new RT_User_Groups('user-group', array(
 				'name' => __( 'Departments' ),
 				'singular_name' => __( 'Departmet' ),
 				'menu_name' => __( 'Departments' ),
