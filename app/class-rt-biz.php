@@ -75,7 +75,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_access_control();
 			$this->init_modules();
-			$this->init_settings();
+
+            $this->init_department();
+
+            $this->init_settings();
 //			$this->init_menu_order();
 
 			$this->init_dashboard();
@@ -136,12 +139,44 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				self::$dashboard_slug,
 			);
 			$rt_biz_reports = new Rt_Reports( $page_slugs );
-		}
+                        
 
-		function init_help() {
-			global $rt_biz_help;
-			$rt_biz_help = new Rt_Biz_Help();
+			
 		}
+                
+        function init_department(){
+                    
+         global $rtbiz_user_group;
+
+            $terms_caps = array(
+				'manage_terms' => true,//$editor_cap,
+				'edit_terms'   => true,//$editor_cap,
+				'delete_terms' => true,//$editor_cap,
+				'assign_terms' => true,//$editor_cap,
+			 );
+                        
+            $rtbiz_user_group = new RT_User_Group('user-group', array(
+				'name' => __( 'Departments' ),
+				'singular_name' => __( 'Departmet' ),
+				'menu_name' => __( 'Departments' ),
+				'search_items' => __( 'Search Departments' ),
+				'popular_items' => __( 'Popular Departments' ),
+				'all_items' => __( 'All User Departments' ),
+				'edit_item' => __( 'Edit Department' ),
+				'update_item' => __( 'Update Department' ),
+				'add_new_item' => __( 'Add New Department' ),
+				'new_item_name' => __( 'New Department Name' ),
+				'separate_items_with_commas' => __( 'Separate departments with commas' ),
+				'add_or_remove_items' => __( 'Add or remove departments' ),
+				'choose_from_most_used' => __( 'Choose from the most popular departments' ), 
+                    ), $terms_caps
+                );
+            }
+                
+            function init_help() {
+			    global $rt_biz_help;
+			    $rt_biz_help = new Rt_Biz_Help();
+		    }
 
 		/**
 		 *  Actions/Filters used by rtBiz

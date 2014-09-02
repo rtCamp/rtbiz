@@ -127,9 +127,8 @@ if( ! class_exists('Rt_Access_Control') ) {
 					continue;
 				}
 
-				global $RT_User_Group;
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-				$ug_terms = $RT_User_Group->get_user_user_groups( $user );
+				$ug_terms = rt_biz_get_user_department( $user->ID );
 				$user_groups = array();
 				if ( ! $ug_terms instanceof WP_Error ) {
 					// $ug - user_group
