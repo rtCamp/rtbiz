@@ -46,6 +46,8 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 */
 		public function __construct() {
 			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 25 );
+			add_filter( 'rtbiz_department_support', array( $this, 'add_department_support' ) );
+                        
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
 			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
@@ -125,9 +127,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 					continue;
 				}
 
-				global $KWS_User_Groups;
+				global $RT_User_Group;
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-				$ug_terms = $KWS_User_Groups->get_user_user_groups( $user );
+				$ug_terms = $RT_User_Group->get_user_user_groups( $user );
 				$user_groups = array();
 				if ( ! $ug_terms instanceof WP_Error ) {
 					// $ug - user_group
@@ -447,5 +449,18 @@ if( ! class_exists('Rt_Access_Control') ) {
 				}
 			}
 		}
+                
+                function add_department_support( $supports ){
+                    
+                    foreach ( self::$modules as $module ) {
+                        
+                        foreach ( $module['post_types'] as $post_type ) {
+                            
+                           $supports[] = $post_type;
+                        }
+                    }
+                    
+                    return $supports;
+                }
 	}
 }

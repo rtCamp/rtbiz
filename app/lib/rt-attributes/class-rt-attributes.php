@@ -369,12 +369,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		function delete_attribute_relations( $attribute_id ) {
 			$relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
-			$post_types = array();
 			foreach ( $relations as $r ) {
-				$post_types[] = $r->post_type;
 				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $r->attr_id, 'post_type' => $r->post_type ) );
 			}
-			do_action( 'rt_attributes_relations_deleted', $attribute_id, $post_types );
+			do_action( 'rt_attributes_relations_deleted', $attribute_id );
 		}
 
 		/**
