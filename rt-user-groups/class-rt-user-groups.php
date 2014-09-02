@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) )
  * Version 0.0.1
  */
 
-if ( ! class_exists( 'RT_User_Group' ) ) {
+if ( ! class_exists( 'RT_User_Groups' ) ) {
 
-	class RT_User_Group {
+	class RT_User_Groups {
 
 		/**
 		 * @var $user_group_slug - User group slug
@@ -106,11 +106,11 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * Init helper objects
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 */
 		function init() {
 			global $rtlib_user_group_model;
-			$rtlib_user_group_model = new RT_User_Group_Relationships_Model();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 		}
 
 		/**
@@ -739,7 +739,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * delete group while user deleted
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 */
 		function delete_term_relationships( $user_id ) {
@@ -991,7 +991,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * Assign given group for given User
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 * @param type $group_name
 		 */
@@ -1032,7 +1032,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * remove given group for given User
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 * @param type $group_name
 		 */
@@ -1050,7 +1050,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * remove all group for given User
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 */
 		function remove_all_user_groups( $user_id ) {
@@ -1065,7 +1065,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * For checking given user has given group
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 * @param type $term_taxonomy_id
 		 * @return boolean
@@ -1088,7 +1088,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * Get list of group for given user
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $user_id
 		 * @return type
 		 */
@@ -1114,7 +1114,7 @@ if ( ! class_exists( 'RT_User_Group' ) ) {
 
 		/**
 		 * Get list of user for given group
-		 * @global RT_User_Group_Relationships_Model $rtlib_user_group_model
+		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 * @param type $slug
 		 * @return type
 		 */
