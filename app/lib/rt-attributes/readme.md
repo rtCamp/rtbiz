@@ -1,5 +1,5 @@
-RT DB Model
-==========
+RT Attributes
+=============
 
 ```php
 $obj_attributes = new RT_Attributes();

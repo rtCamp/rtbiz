@@ -25,11 +25,70 @@ In case of users where it causes enough ambiguity; we decided to take control in
 Also those functions will give correct user relationships when fetched.
 
 ##DB Schema
-rt_user_group_relationships
+rt_user_groups_relationships
 |
 | - user_id
 | - term_taxonomy_id
 | - term_order
+
+
+## How to Use
+
+Create Object of RT_User_Groups Class with argument taxonomy slug and its label
+    $obj = new RT_User_Groups( Slug, Label_Array, Caps, Select_multiple );
+
+	Slug : Group slug
+
+	Label_Array : Group lable array
+
+	Caps : Capability for manage group
+
+		$terms_cap = array(
+			'manage_terms' => 'manage_custom_terms',
+			'edit_terms' => 'edit_custom_terms',
+			'delete_terms' => 'delete_custom_terms',
+			'assign_terms' => 'assign_custom_terms',
+		);
+
+	Select_multiple : Allow to select multiple group or single
+					  by default allows to select multiple group
+
+    Example :-
+
+    $RT_User_Groups = new RT_User_Groups('user-group', array(
+            'name' => __( 'Departments' ),
+            'singular_name' => __( 'Departmet' ),
+            'menu_name' => __( 'Departments' ),
+            'search_items' => __( 'Search Departments' ),
+            'popular_items' => __( 'Popular Departments' ),
+            'all_items' => __( 'All User Departments' ),
+            'edit_item' => __( 'Edit Department' ),
+            'update_item' => __( 'Update Department' ),
+            'add_new_item' => __( 'Add New Department' ),
+            'new_item_name' => __( 'New Department Name' ),
+            'separate_items_with_commas' => __( 'Separate departments with commas' ),
+            'add_or_remove_items' => __( 'Add or remove departments' ),
+            'choose_from_most_used' => __( 'Choose from the most popular departments' ),
+        )
+    );
+
+Assign group-User Relationship
+    set_user_group( User_ID, Taxonomy_Slug  )
+
+Remove group-User Relationship
+    remove_user_group( User_ID, Taxonomy_Slug  )
+
+Remove all user groups for given user
+	remove_all_user_groups( User_ID )
+
+Check group-User Relationship exist or not
+    is_user_has_group( User_ID, Taxonomy_Slug  )
+
+Get list of groups for given user
+    get_user_groups( User_ID )
+
+Get list of user for given group slug
+    get_user_by_group_slug( Taxonomy_Slug )
 
 ```php
 ```
