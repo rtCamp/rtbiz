@@ -1,4 +1,4 @@
-rt-Lib [![Build Status](https://travis-ci.org/faishal/wp-helpers.svg)](https://travis-ci.org/faishal/wp-helpers)
+rtLib [![Build Status](https://travis-ci.org/rtCamp/rt-lib.svg?branch=master)](https://travis-ci.org/rtCamp/rt-lib)
 ==========
 
 rtLib is library of class that are required in development of any WordPress plugins.
@@ -20,18 +20,18 @@ Inspired from https://github.com/zendframework/zf2/tree/master/library/Zend/
 
 To add it in your plugin/theme
 ```
-git subtree add --prefix app/lib https://github.com/rtCamp/wp-helpers.git master  --squash
+git subtree add --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
 ```
 
 To update the library
 ```
-git subtree pull --prefix app/lib https://github.com/rtCamp/wp-helpers.git master  --squash
+git subtree pull --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
 ```
 
 Add following line in plugin loader file
 
 ```
-include_once 'app/lib/wp-helpers.php';
+include_once 'app/lib/rt-lib.php';
 ```
 
 Alternatively you can add as a plugin also
