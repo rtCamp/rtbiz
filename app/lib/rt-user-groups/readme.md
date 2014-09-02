@@ -25,17 +25,17 @@ In case of users where it causes enough ambiguity; we decided to take control in
 Also those functions will give correct user relationships when fetched.
 
 ##DB Schema
-rt_user_group_relationships
+rt_user_groups_relationships
 |
 | - user_id
 | - term_taxonomy_id
 | - term_order
 
 
-## How to Use 
+## How to Use
 
-Create Object of RT_User_Group Class with argument taxonomy slug and its label 
-    $obj = new RT_User_Group( Slug, Label_Array, Caps, Select_multiple );
+Create Object of RT_User_Groups Class with argument taxonomy slug and its label
+    $obj = new RT_User_Groups( Slug, Label_Array, Caps, Select_multiple );
 
 	Slug : Group slug
 
@@ -54,8 +54,8 @@ Create Object of RT_User_Group Class with argument taxonomy slug and its label
 					  by default allows to select multiple group
 
     Example :-
- 
-    $RT_User_Group = new RT_User_Group('user-group', array(
+
+    $RT_User_Groups = new RT_User_Groups('user-group', array(
             'name' => __( 'Departments' ),
             'singular_name' => __( 'Departmet' ),
             'menu_name' => __( 'Departments' ),
@@ -68,7 +68,7 @@ Create Object of RT_User_Group Class with argument taxonomy slug and its label
             'new_item_name' => __( 'New Department Name' ),
             'separate_items_with_commas' => __( 'Separate departments with commas' ),
             'add_or_remove_items' => __( 'Add or remove departments' ),
-            'choose_from_most_used' => __( 'Choose from the most popular departments' ), 
+            'choose_from_most_used' => __( 'Choose from the most popular departments' ),
         )
     );
 
