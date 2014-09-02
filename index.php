@@ -28,7 +28,6 @@ if ( !defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 }
 
 include_once RT_BIZ_PATH . 'app/lib/wp-helpers.php';
-include_once RT_BIZ_PATH . 'app/lib/rt-user-groups/class-rt-user-group.php';
 
 function rt_biz_include() {
 

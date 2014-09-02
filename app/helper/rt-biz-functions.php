@@ -437,11 +437,11 @@ function rt_biz_get_wp_user_for_person( $person_id ) {
 }
 
 function rt_biz_get_user_department( $user_ID ) {
-	global $rtbiz_user_group;
-	return $rtbiz_user_group->get_user_groups( $user_ID );
+	global $rtbiz_user_groups;
+	return $rtbiz_user_groups->get_user_groups( $user_ID );
 }
 
 function rt_biz_get_user_department_section( $user ) {
-	global $rtbiz_user_group;
-	return $rtbiz_user_group->edit_user_user_group_section( $user );
+	global $rtbiz_user_groups;
+	return $rtbiz_user_groups->edit_user_user_group_section( $user );
 }
