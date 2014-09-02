@@ -1,6 +1,6 @@
 <?php
 /*
-  Plugin Name: rt-lib
+  Plugin Name: rtLib
   Plugin URI: http://rtcamp.com/
   Description: This plugin contains common libs that are used in many rtcamp plugins
   Version: 0.5
