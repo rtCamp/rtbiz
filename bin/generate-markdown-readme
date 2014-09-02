@@ -2,9 +2,8 @@
 <?php
 /**
  * Look for WordPress readme in current directory or above and convert into markdown readme in same directory
- * @version 1.0.1
- * @author Weston Ruter <weston@x-team.com> (@westonruter)
- * @copyright Copyright (c) 2013, X-Team <http://x-team.com/wordpress/>
+ * @version 0.0.1
+ * @author Udit Desai <desaiuditd@gmail.com> (@desaiuditd)
  * @license GPLv2+
  */
 
