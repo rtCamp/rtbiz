@@ -140,11 +140,9 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			<?php
 			if ( empty( $user_id ) ) {
 				return;
-			}
-			global $KWS_User_Groups;
-			?>
+			} ?>
 			<div class="">
-				<?php $KWS_User_Groups->edit_user_user_group_section( new WP_User( $user_id ) ); ?>
+				<?php rt_biz_get_user_department_section( new WP_User( $user_id ) ); ?>
 			</div>
 			<?php
 		}
