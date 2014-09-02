@@ -13,6 +13,8 @@ WP_VERSION=${5-master}
 
 set -ex
 
+echo $WP_TESTS_DIR
+
 # set up a WP install
 WP_CORE_DIR=/tmp/wordpress/
 mkdir -p $WP_CORE_DIR
