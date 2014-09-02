@@ -18,12 +18,12 @@ if ( ! defined( 'ABSPATH' ) )
  *
  * @author udit
  */
-if ( ! class_exists( 'RT_User_Group_Relationships_Model' ) ) {
+if ( ! class_exists( 'RT_User_Groups_Relationships_Model' ) ) {
 
-	class RT_User_Group_Relationships_Model extends RT_DB_Model {
+	class RT_User_Groups_Relationships_Model extends RT_DB_Model {
 
 		public function __construct() {
-			parent::__construct( 'user_group_relationships' );
+			parent::__construct( 'user_groups_relationships' );
 		}
 
 		function get( $columns, $offset = false, $per_page = false, $order_by = 'user_id desc' ) {
