@@ -107,19 +107,21 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$rows = array();
 			$total = 0;
 
-			foreach ( $terms as $t ) {
-				$posts = new WP_Query( array(
-					'post_type' => $post_type,
-					'post_status' => 'any',
-					'nopaging' => true,
-					$taxonomy => $t->slug,
-				) );
+			if ( ! $terms instanceof WP_Error ) {
+				foreach ( $terms as $t ) {
+					$posts = new WP_Query( array(
+						'post_type' => $post_type,
+						'post_status' => 'any',
+						'nopaging' => true,
+						$taxonomy => $t->slug,
+					) );
 
-				$rows[] = array(
-					$t->name,
-					count( $posts->posts ),
-				);
-				$total += count( $posts->posts );
+					$rows[] = array(
+						$t->name,
+						count( $posts->posts ),
+					);
+					$total += count( $posts->posts );
+				}
 			}
 
 			$posts = new WP_Query( array(
