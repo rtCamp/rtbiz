@@ -16,7 +16,6 @@ env:
     - WP_VERSION=latest WP_MULTISITE=1
 
 before_script:
-    - export WP_TESTS_DIR=/tmp/wordpress-tests/
     - export PLUGIN_DIR=$(pwd)
     - export PLUGIN_SLUG=$(basename $(pwd) | sed 's/^wp-//')
     - if [ -e phpunit.xml ] || [ -e phpunit.xml.dist ]; then bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION; cd /tmp/wordpress/wp-content/plugins; ln -s $PLUGIN_DIR $PLUGIN_SLUG; cd $PLUGIN_DIR; fi
