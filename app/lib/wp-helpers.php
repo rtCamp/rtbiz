@@ -3,7 +3,7 @@
   Plugin Name: wp-helpers
   Plugin URI: http://rtcamp.com/
   Description: This plugin contains common libs that are used in many rtcamp plugins
-  Version: 0.3
+  Version: 0.1
   Author: rtcamp
   Author URI: http://rtcamp.com/
  */

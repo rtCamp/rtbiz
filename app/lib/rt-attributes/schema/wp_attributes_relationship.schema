@@ -4,4 +4,4 @@ CREATE TABLE %s (
 	post_type VARCHAR(20) NOT NULL,
 	settings LONGTEXT,
 	PRIMARY KEY  (id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
+);
