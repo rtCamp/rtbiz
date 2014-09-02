@@ -23,7 +23,24 @@ if ( ! class_exists( 'RT_User_Group_Relationships_Model' ) ) {
 	class RT_User_Group_Relationships_Model extends RT_DB_Model {
 
 		public function __construct() {
-			parent::__construct( 'rt_user_group_relationships' );
+			parent::__construct( 'user_group_relationships' );
+		}
+
+		function get( $columns, $offset = false, $per_page = false, $order_by = 'user_id desc' ) {
+			return parent::get( $columns, $offset, $per_page, $order_by );
+		}
+
+		function is_user_has_group( $user_id ){
+			$columns = array(
+				'user_id' => $user_id,
+			);
+			$all_users_group = $this->get( $columns );
+
+			if ( count($all_users_group) > 0 ) {
+				return true;
+			}else{
+				return false;
+			}
 		}
 
 	}
