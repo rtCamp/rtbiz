@@ -67,6 +67,9 @@ Great! There are several ways you can get involved to help make Stream better:
 
 ## Changelog ##
 
+### 0.6 ###
+Test Cases updated & Code Sniffer Config updated & pre-commit hook updated
+
 ### 0.5 ###
 Initial Basic Libraries.
 
