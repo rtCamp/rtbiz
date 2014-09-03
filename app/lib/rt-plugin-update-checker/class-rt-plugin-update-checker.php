@@ -178,9 +178,9 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 		{
 			//Query args to append to the URL. Plugins can add their own by using a filter callback (see addQueryArgFilter()).
 			$installedVersion                 = $this->get_installed_version();
-			$queryArgs[ 'installed_version' ] = ( $installedVersion !== null ) ? $installedVersion : '';
-			$queryArgs[ 'admin_email' ]       = get_option( 'admin_email' );
-			$queryArgs[ 'slug' ]              = $this->slug;
+			$queryArgs['installed_version'] = ( $installedVersion !== null ) ? $installedVersion : '';
+			$queryArgs['admin_email']       = get_option( 'admin_email' );
+			$queryArgs['slug']              = $this->slug;
 			$queryArgs                        = apply_filters( 'puc_request_info_query_args-' . $this->slug, $queryArgs );
 			//Various options for the wp_remote_get() call. Plugins can filter these, too.
 			$options = array(
@@ -197,16 +197,16 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 			$result = wp_remote_get( $url, $options );
 			//Try to parse the response
 			$pluginInfo = null;
-			if ( ! is_wp_error( $result ) && isset( $result[ 'response' ][ 'code' ] ) && ( $result[ 'response' ][ 'code' ] == 200 ) && ! empty( $result[ 'body' ] ) ){
-				$pluginInfo = RT_Plugin_Update_Info::from_json( $result[ 'body' ], $this->debugMode );
+			if ( ! is_wp_error( $result ) && isset( $result['response']['code'] ) && ( $result['response']['code'] == 200 ) && ! empty( $result['body'] ) ){
+				$pluginInfo = RT_Plugin_Update_Info::from_json( $result['body'], $this->debugMode );
 			} else {
 				if ( $this->debugMode ){
 					$message = sprintf( __( 'The URL %s does not point to a valid plugin metadata file.', 'rtmedia' ), $url );
 					if ( is_wp_error( $result ) ){
 						$message .= sprintf( __( 'WP HTTP error: %s', 'rtmedia' ), $result->get_error_message() );
 					} else {
-						if ( isset( $result[ 'response' ][ 'code' ] ) ){
-							$message .= sprintf( __( 'HTTP response code is %s (expected: 200)', 'rtmedia' ), $result[ 'response' ][ 'code' ] );
+						if ( isset( $result['response']['code'] ) ){
+							$message .= sprintf( __( 'HTTP response code is %s (expected: 200)', 'rtmedia' ), $result['response']['code'] );
 						} else {
 							$message .= __( 'wp_remote_get() returned an unexpected result.', 'rtmedia' );
 						}
@@ -258,7 +258,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 			}
 			$allPlugins = get_plugins();
 			if ( array_key_exists( $this->pluginFile, $allPlugins ) && array_key_exists( 'Version', $allPlugins[ $this->pluginFile ] ) ){
-				return $allPlugins[ $this->pluginFile ][ 'Version' ];
+				return $allPlugins[ $this->pluginFile ]['Version'];
 			} else {
 				//This can happen if the filename is wrong or the plugin is installed in mu-plugins.
 				if ( $this->debugMode ){
@@ -484,7 +484,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 
 				$linkText = apply_filters( 'puc_manual_check_link-' . $this->slug, __( 'Check for updates', 'rtmedia' ) );
 				if ( ! empty( $linkText ) ){
-					$pluginMeta[ ] = sprintf( '<a href="%s">%s</a>', esc_attr( $linkUrl ), $linkText );
+					$pluginMeta[] = sprintf( '<a href="%s">%s</a>', esc_attr( $linkUrl ), $linkText );
 				}
 			}
 
@@ -500,7 +500,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 		 */
 		public function handle_manual_check()
 		{
-			$shouldCheck = isset( $_GET[ 'puc_check_for_updates' ], $_GET[ 'puc_slug' ] ) && $_GET[ 'puc_slug' ] == $this->slug && current_user_can( 'update_plugins' ) && check_admin_referer( 'puc_check_for_updates' );
+			$shouldCheck = isset( $_GET['puc_check_for_updates'], $_GET['puc_slug'] ) && $_GET['puc_slug'] == $this->slug && current_user_can( 'update_plugins' ) && check_admin_referer( 'puc_check_for_updates' );
 
 			if ( $shouldCheck ){
 				$update = $this->check_for_updates();
@@ -518,8 +518,8 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 		 */
 		public function display_manual_check_result()
 		{
-			if ( isset( $_GET[ 'puc_update_check_result' ], $_GET[ 'puc_slug' ] ) && ( $_GET[ 'puc_slug' ] == $this->slug ) ){
-				$status = strval( $_GET[ 'puc_update_check_result' ] );
+			if ( isset( $_GET['puc_update_check_result'], $_GET['puc_slug'] ) && ( $_GET['puc_slug'] == $this->slug ) ){
+				$status = strval( $_GET['puc_update_check_result'] );
 				if ( $status == 'no_update' ){
 					$message = __( 'This plugin is up to date.', 'rtmedia' );
 				} else {
