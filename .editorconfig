@@ -6,21 +6,21 @@
 root = true
 
 [*]
-indent_style = tab
-tab_width = 4
-
 # We recommend you to keep these unchanged
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-quote_type = single
+# PHP http://make.wordpress.org/core/handbook/coding-standards/php/
+# HTML http://make.wordpress.org/core/handbook/coding-standards/html/
+# CSS http://make.wordpress.org/core/handbook/coding-standards/css/
+# JavaScript http://make.wordpress.org/core/handbook/coding-standards/javascript/
+[*.php, *.css,*.scss, *.html, *.js]
+indent_style = tab
+indent_size = 4
 
-curly_bracket_next_line = true
-
-spaces_around_operators = true
-spaces_around_brackets = true
-
-# Reference : https://en.wikipedia.org/wiki/Indent_style#BSD_KNF_style
-indent_brace_style = KNF
+# package.json uses spaces instead of tabs
+[*.json]
+indent_style = space
+indent_size = 2

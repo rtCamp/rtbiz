@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ){
  * Time: 4:04 AM
  */
 
-$edit = absint( $_GET[ 'edit' ] );
+$edit = absint( $_GET['edit'] );
 
 $attribute_to_edit = $this->attributes_db_model->get_attribute( $edit );
 

@@ -74,10 +74,10 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		 */
 		public function request_update( $queryArgs = array() ) {
 			//Query args to append to the URL. Themes can add their own by using a filter callback (see addQueryArgFilter()).
-			$queryArgs[ 'installed_version' ]    = $this->get_installed_version();
-			$queryArgs[ 'checking_for_updates' ] = true;
-			$queryArgs[ 'admin_email' ]          = get_option( 'admin_email' );
-			$queryArgs[ 'slug' ]                 = $this->theme_update_slug;
+			$queryArgs['installed_version']    = $this->get_installed_version();
+			$queryArgs['checking_for_updates'] = true;
+			$queryArgs['admin_email']          = get_option( 'admin_email' );
+			$queryArgs['slug']                 = $this->theme_update_slug;
 			$queryArgs                           = apply_filters( self::$filterPrefix . 'query_args-' . $this->theme, $queryArgs );
 
 			$options = array(

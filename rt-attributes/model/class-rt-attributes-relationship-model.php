@@ -31,7 +31,7 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 		function get_relations_by_post_type( $post_type, $attr_id = '' ) {
 			$args = array( 'post_type' => $post_type );
 			if ( ! empty( $attr_id ) ) {
-				$args[ 'attr_id' ] = $attr_id;
+				$args['attr_id'] = $attr_id;
 			}
 
 			return parent::get( $args );

@@ -93,7 +93,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			$apiResponse = json_decode( $json );
 			if ( empty( $apiResponse ) || ! is_object( $apiResponse ) ){
 				if ( $triggerErrors ){
-					trigger_error( sprintf( __( 'Failed to parse plugin metadata. Try validating your .json file with %s', 'wp-helpers' ), 'http://jsonlint.com/' ), E_USER_NOTICE );
+					trigger_error( sprintf( __( 'Failed to parse plugin metadata. Try validating your .json file with %s', 'rt-lib' ), 'http://jsonlint.com/' ), E_USER_NOTICE );
 				}
 
 				return null;
@@ -103,7 +103,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			$valid = isset( $apiResponse->name ) && ! empty( $apiResponse->name ) && isset( $apiResponse->version ) && ! empty( $apiResponse->version );
 			if ( ! $valid ){
 				if ( $triggerErrors ){
-					trigger_error( __( "The plugin metadata file does not contain the required 'name' and/or 'version' keys.", 'wp-helpers' ), E_USER_NOTICE );
+					trigger_error( __( "The plugin metadata file does not contain the required 'name' and/or 'version' keys.", 'rt-lib' ), E_USER_NOTICE );
 				}
 
 				return null;
