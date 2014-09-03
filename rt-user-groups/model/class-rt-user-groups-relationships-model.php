@@ -3,8 +3,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,15 +31,13 @@ if ( ! class_exists( 'RT_User_Groups_Relationships_Model' ) ) {
 			return parent::get( $columns, $offset, $per_page, $order_by );
 		}
 
-		function is_user_has_group( $user_id ){
-			$columns = array(
-				'user_id' => $user_id,
-			);
+		function is_user_has_group( $user_id ) {
+			$columns         = array( 'user_id' => $user_id, );
 			$all_users_group = $this->get( $columns );
 
-			if ( count($all_users_group) > 0 ) {
+			if ( count( $all_users_group ) > 0 ) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 		}

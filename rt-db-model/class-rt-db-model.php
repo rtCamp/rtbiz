@@ -85,24 +85,24 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			if ( $arguments && ! empty( $arguments ) ){
 				$column_name = str_replace( 'get_by_', '', strtolower( $name ) );
 
-				if ( ! isset( $arguments[ 1 ] ) ){
+				if ( ! isset( $arguments[1] ) ){
 					$paging = true;
 				} else {
-					$paging = $arguments[ 1 ];
+					$paging = $arguments[1];
 				}
 
-				if ( ! isset( $arguments[ 2 ] ) ){
+				if ( ! isset( $arguments[2] ) ){
 					$page = 1;
 				} else {
-					$page = $arguments[ 2 ];
+					$page = $arguments[2];
 				}
 
 				$this->per_page           = apply_filters( 'rt_db_model_per_page', $this->per_page, $this->table_name );
 				$return_array             = array();
-				$return_array[ 'result' ] = false;
+				$return_array['result'] = false;
 				global $wpdb;
-				$return_array[ 'total' ] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE `' . $column_name . '`= %s', $arguments[ 0 ] ) ) );
-				if ( $return_array[ 'total' ] > 0 ){
+				$return_array['total'] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE `' . $column_name . '`= %s', $arguments[0] ) ) );
+				if ( $return_array['total'] > 0 ){
 					$other = '';
 					if ( $paging ){
 						if ( intval( $this->per_page ) < 0 ){
@@ -118,14 +118,14 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 							$offset = 0;
 						}
 
-						if ( $offset <= $return_array[ 'total' ] ){
+						if ( $offset <= $return_array['total'] ){
 							$other = ' LIMIT ' . $offset . ',' . $this->per_page;
 						} else {
 							return false;
 						}
 					}
 					//echo $wpdb->prepare("SELECT * FROM " . $this->table_name . " WHERE {$column_name} = %s {$other}", $arguments[0]);
-					$return_array[ 'result' ] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM  `' . $this->table_name . '` WHERE `' . $column_name . '` = %s ' . $other , $arguments[ 0 ] ), ARRAY_A );
+					$return_array['result'] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM  `' . $this->table_name . '` WHERE `' . $column_name . '` = %s ' . $other , $arguments[0] ), ARRAY_A );
 				}
 
 				return $return_array;
@@ -157,15 +157,12 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		}
 
 		/**
+		 * @param      $data
+		 * @param      $where
+		 * @param null $format
+		 * @param null $where_format
 		 *
-		 * @param array $data
-		 * @param array $where
-		 * @param null  $format
-		 * @param null  $where_format
-		 *
-		 * @return
-		 * @global wpdb $wpdb
-		 *
+		 * @return false|int
 		 */
 		function update( $data, $where, $format = null, $where_format = null )
 		{
@@ -193,15 +190,15 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
 				if ( is_array( $colvalue ) ){
-					if ( ! isset ( $colvalue[ 'compare' ] ) ){
+					if ( ! isset ( $colvalue['compare'] ) ){
 						$compare = 'IN';
 					} else {
-						$compare = $colvalue[ 'compare' ];
+						$compare = $colvalue['compare'];
 					}
-					if ( ! isset ( $colvalue[ 'value' ] ) ){
-						$colvalue[ 'value' ] = $colvalue;
+					if ( ! isset ( $colvalue['value'] ) ){
+						$colvalue['value'] = $colvalue;
 					}
-					$col_val_comapare = ( $colvalue[ 'value' ] ) ? '(\'' . implode( "','", $colvalue[ 'value' ] ) . '\')' : '';
+					$col_val_comapare = ( $colvalue['value'] ) ? '(\'' . implode( "','", $colvalue['value'] ) . '\')' : '';
 					$where .= " AND {$this->table_name}.{$colname} {$compare} {$col_val_comapare}";
 				} else {
 					$where .= " AND {$this->table_name}.{$colname} = '{$colvalue}'";

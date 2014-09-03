@@ -67,7 +67,7 @@ if ( ! class_exists( 'RT_Attributes_Model' ) ) {
 				return false;
 			}
 
-			return $attribute[ 0 ];
+			return $attribute[0];
 		}
 
 		/**
