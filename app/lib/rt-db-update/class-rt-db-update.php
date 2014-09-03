@@ -30,7 +30,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		/**
 		 * @var string
 		 */
-		public $plugin_path = '/../wp-helpers.php';
+		public $plugin_path = '/../rt-lib.php';
 		/**
 		 * @var string
 		 */
