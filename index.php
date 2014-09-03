@@ -23,11 +23,11 @@ if ( ! defined( 'RT_BIZ_URL' ) ) {
 if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
 	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
 }
-if ( !defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
+if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
 }
 
-include_once RT_BIZ_PATH . 'app/lib/wp-helpers.php';
+include_once RT_BIZ_PATH . 'app/lib/rt-lib.php';
 
 function rt_biz_include() {
 
