@@ -98,7 +98,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 */
 		function db_upgrade() {
-			$updateDB = new  RT_DB_Update( WP_HELPER_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
+			$updateDB = new  RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
 			$updateDB->db_version_option_name .= '_ATTRIBUTES';
 			$updateDB->install_db_version = $updateDB->get_install_db_version();
 			$updateDB->do_upgrade();
