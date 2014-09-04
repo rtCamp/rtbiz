@@ -119,8 +119,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * Update database for user group
 		 */
 		function db_upgrade() {
-			$updateDB = new  RT_DB_Update( WP_HELPER_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
-			$updateDB->db_version_option_name .= '_ATTRIBUTES';
+			$updateDB = new  RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
+			$updateDB->db_version_option_name .= '_USER_GROUPS';
 			$updateDB->install_db_version = $updateDB->get_install_db_version();
 			$updateDB->do_upgrade();
 		}
