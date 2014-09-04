@@ -63,6 +63,10 @@ Great! There are several ways you can get involved to help make Stream better:
 
 == Changelog ==
 
+= 0.7 =
+A Few bug fixes for RT_LIB_FILE constant
+DB Update Key changed for User Groups
+
 = 0.6 =
 Test Cases updated & Code Sniffer Config updated & pre-commit hook updated
 
