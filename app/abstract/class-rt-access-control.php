@@ -39,7 +39,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 		/**
 		 * @var - Registered Plugin Modules for Rt_Access_Control
 		 */
-		public static $modules;
+		public static $modules = array();
 
 		/**
 		 *
