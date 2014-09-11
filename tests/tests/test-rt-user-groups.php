@@ -1,15 +1,23 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: spock
+ * User: Utkarsh
  * Date: 10/9/14
  * Time: 3:06 PM
  */
 
 class Test_RT_User_Groups extends RT_WP_TestCase{
-    var $RT_User_Groups;
-    function setUp() {
+	/**
+	 * @var RT_User_Groups object reference
+	 */
+	var $RT_User_Groups;
+
+	/**
+	 * initialize variable with class obj reference.
+	 */
+	function setUp() {
         parent::setUp();
+        // this line let the database table in db rather than using as ghost
         //        remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
         //        remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
         $terms_cap = array(
@@ -37,7 +45,10 @@ class Test_RT_User_Groups extends RT_WP_TestCase{
         );
     }
 
-    function test_construct() {
+	/**
+	 * testing constructor is working correctly or not
+	 */
+	function test_construct() {
         $this->assertEquals( 'user-group', $this->RT_User_Groups->user_group_slug, 'Slug value is not set or invalid' );
 
         $this->assertEquals( array(
@@ -64,17 +75,19 @@ class Test_RT_User_Groups extends RT_WP_TestCase{
         ), $this->RT_User_Groups->caps, 'caps value is not set or invalid' );
     }
 
-    function test_db_upgrade() {
-        //$this -> RT_User_Groups -> db_upgrade();
 
-    }
-
-    function test_register_user_group(){
+	/**
+	 * testing register user group function
+	 */
+	function test_register_user_group(){
         $this->RT_User_Groups->register_user_group();
         $this->assertTrue( taxonomy_exists( $this->RT_User_Groups->user_group_slug ) );
     }
 
-    function test_user_group(){
+	/**
+	 * testing user group's set up functionality
+	 */
+	function test_user_group(){
        $termsid= wp_insert_term(
             'Apple group', // the term
             'user-group', // the taxonomy
@@ -93,7 +106,10 @@ class Test_RT_User_Groups extends RT_WP_TestCase{
         $this ->assertFalse($this -> RT_User_Groups -> is_user_has_group( 1, $termsid['term_taxonomy_id'] ));
     }
 
-    function test_remove_user_groups(){
+	/**
+	 * testing remove user groups functionality
+	 */
+	function test_remove_user_groups(){
         $termsid1 = wp_insert_term(
             'Orange group', // the term
             'user-group', // the taxonomy
