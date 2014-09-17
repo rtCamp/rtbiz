@@ -2,8 +2,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 /**
  * Description of class-rt-biz
@@ -76,9 +77,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->init_access_control();
 			$this->init_modules();
 
-            $this->init_department();
+			$this->init_department();
+			$this->init_wc_product_taxonomy();
 
-            $this->init_settings();
+			$this->init_settings();
 //			$this->init_menu_order();
 
 			$this->init_dashboard();
@@ -122,10 +124,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->menu_order[ self::$my_team_slug ] = 6;
 
-			$this->menu_order[ 'post-new.php?post_type=' . rt_biz_get_person_post_type() ] = 10;
-			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_person_post_type() ] = 15;
+			$this->menu_order[ 'post-new.php?post_type=' . rt_biz_get_person_post_type() ]       = 10;
+			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_person_post_type() ]           = 15;
 			$this->menu_order[ 'post-new.php?post_type=' . rt_biz_get_organization_post_type() ] = 50;
-			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_organization_post_type() ] = 55;
+			$this->menu_order[ 'edit.php?post_type=' . rt_biz_get_organization_post_type() ]     = 55;
 
 			$this->menu_order[ Rt_Biz_Attributes::$attributes_page_slug ] = 90;
 
@@ -135,48 +137,58 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function init_dashboard() {
 			global $rt_biz_dashboard, $rt_biz_reports;
 			$rt_biz_dashboard = new Rt_Biz_Dashboard();
-			$page_slugs = array(
+			$page_slugs       = array(
 				self::$dashboard_slug,
 			);
-			$rt_biz_reports = new Rt_Reports( $page_slugs );
-                        
+			$rt_biz_reports   = new Rt_Reports( $page_slugs );
 
-			
+
 		}
-                
-        function init_department(){
-                    
-         global $rtbiz_user_groups;
 
-            $terms_caps = array(
+		function init_department() {
+
+			global $rtbiz_user_groups;
+
+			$terms_caps = array(
 				'manage_terms' => true,//$editor_cap,
 				'edit_terms'   => true,//$editor_cap,
 				'delete_terms' => true,//$editor_cap,
 				'assign_terms' => true,//$editor_cap,
-			 );
-                        
-            $rtbiz_user_groups = new RT_User_Groups('user-group', array(
-				'name' => __( 'Departments' ),
-				'singular_name' => __( 'Departmet' ),
-				'menu_name' => __( 'Departments' ),
-				'search_items' => __( 'Search Departments' ),
-				'popular_items' => __( 'Popular Departments' ),
-				'all_items' => __( 'All User Departments' ),
-				'edit_item' => __( 'Edit Department' ),
-				'update_item' => __( 'Update Department' ),
-				'add_new_item' => __( 'Add New Department' ),
-				'new_item_name' => __( 'New Department Name' ),
-				'separate_items_with_commas' => __( 'Separate departments with commas' ),
-				'add_or_remove_items' => __( 'Add or remove departments' ),
-				'choose_from_most_used' => __( 'Choose from the most popular departments' ), 
-                    ), $terms_caps
-                );
-            }
-                
-            function init_help() {
-			    global $rt_biz_help;
-			    $rt_biz_help = new Rt_Biz_Help();
-		    }
+			);
+
+			$rtbiz_user_groups = new RT_User_Groups( 'user-group', array(
+					'name'                       => __( 'Departments' ),
+					'singular_name'              => __( 'Departmet' ),
+					'menu_name'                  => __( 'Departments' ),
+					'search_items'               => __( 'Search Departments' ),
+					'popular_items'              => __( 'Popular Departments' ),
+					'all_items'                  => __( 'All User Departments' ),
+					'edit_item'                  => __( 'Edit Department' ),
+					'update_item'                => __( 'Update Department' ),
+					'add_new_item'               => __( 'Add New Department' ),
+					'new_item_name'              => __( 'New Department Name' ),
+					'separate_items_with_commas' => __( 'Separate departments with commas' ),
+					'add_or_remove_items'        => __( 'Add or remove departments' ),
+					'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
+				), $terms_caps
+			);
+		}
+
+		function init_wc_product_taxonomy() {
+			global $rtbiz_wc_product;
+			$terms_caps = array(
+				'manage_terms' => true,//$editor_cap,
+				'edit_terms'   => true,//$editor_cap,
+				'delete_terms' => true,//$editor_cap,
+				'assign_terms' => true,//$editor_cap,
+			);
+			$rtbiz_wc_product = new RT_WC_Product( $terms_caps );
+		}
+
+		function init_help() {
+			global $rt_biz_help;
+			$rt_biz_help = new Rt_Biz_Help();
+		}
 
 		/**
 		 *  Actions/Filters used by rtBiz
@@ -196,19 +208,19 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function load_styles_scripts() {
 			global $rt_person, $rt_organization;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
-			if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) ) {
+			if ( isset( $_REQUEST['rt-biz-my-team'] ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' ) );
 			}
 
-			if ( isset( $_REQUEST[ 'post' ] ) && isset( $_REQUEST[ 'action' ] ) && $_REQUEST[ 'action' ] == 'edit' ) {
-				$is_our_team_mate = get_post_meta( $_REQUEST[ 'post' ], Rt_Person::$meta_key_prefix . Rt_Person::$our_team_mate_key, true );
+			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
+				$is_our_team_mate = get_post_meta( $_REQUEST['post'], Rt_Person::$meta_key_prefix . Rt_Person::$our_team_mate_key, true );
 				if ( $is_our_team_mate ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_my_team_url', admin_url( 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' ) );
 				}
 
-				$post_type = get_post_type( $_REQUEST[ 'post' ] );
+				$post_type = get_post_type( $_REQUEST['post'] );
 				if ( in_array( $post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
 					if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 						wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
@@ -221,7 +233,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( $_SERVER[ 'SCRIPT_NAME' ] == '/wp-admin/post-new.php' && isset( $_REQUEST[ 'post_type' ] ) && in_array( $_REQUEST[ 'post_type' ], array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
+						$rt_person->post_type,
+						$rt_organization->post_type
+					) )
+			) {
 				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 					wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 				}
@@ -232,7 +248,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 			}
 
-			if ( isset( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == 'user-group' ) {
+			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == 'user-group' ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
 			}
@@ -243,9 +259,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function register_menu() {
 			global $rt_person, $rt_organization, $rt_access_control, $rt_biz_dashboard;
-			$logo_url = Rt_Biz_Settings::$settings[ 'logo_url' ];
-			$menu_label = Rt_Biz_Settings::$settings[ 'menu_label' ];
-			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
+			$logo_url               = Rt_Biz_Settings::$settings['logo_url'];
+			$menu_label             = Rt_Biz_Settings::$settings['menu_label'];
+			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array(
+					$this,
+					'dashboard_ui'
+				), $logo_url, self::$menu_position );
 
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
@@ -253,7 +272,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_submenu_page( self::$dashboard_slug, __( 'Our Team' ), __( 'Our Team' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Employees' ), __( '--- Employees' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type . '&rt-biz-my-team=true' );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
+			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( '--- Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array(
+					$rt_access_control,
+					'acl_settings_ui'
+				) );
 			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_organization->post_type );
@@ -264,13 +286,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  It arranges all the menus according to $menu_order that is defined in init_menu_order()
 		 *
 		 * @param $menu_order
+		 *
 		 * @return mixed
 		 */
 		function biz_pages_order( $menu_order ) {
 			global $submenu;
 
 			if ( isset( $submenu[ self::$dashboard_slug ] ) && ! empty( $submenu[ self::$dashboard_slug ] ) ) {
-				$menu = $submenu[ self::$dashboard_slug ];
+				$menu     = $submenu[ self::$dashboard_slug ];
 				$new_menu = array();
 
 				foreach ( $menu as $p_key => $item ) {
@@ -299,7 +322,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  If not found; rtBiz will throw admin notice to either install / activate it.
 		 */
 		function check_p2p_dependency() {
-			$flag = true;
+			$flag          = true;
 			$used_function = array(
 				'p2p_register_connection_type',
 				'p2p_create_connection',
@@ -329,7 +352,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			<div class="updated">
 				<p><?php _e( sprintf( 'rtBiz : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="' . admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ) . '">' . __( 'install' ) . '</a>', '<a href="' . admin_url( 'plugins.php' ) . '">' . __( 'activate' ) . '</a>' ) ); ?></p>
 			</div>
-			<?php
+		<?php
 		}
 
 		/**
@@ -337,7 +360,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function init_modules() {
 			global $rt_person, $rt_organization;
-			$rt_person = new Rt_Person();
+			$rt_person       = new Rt_Person();
 			$rt_organization = new Rt_Organization();
 		}
 
@@ -364,12 +387,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function register_rt_biz_module( $modules ) {
 			global $rt_person, $rt_organization;
-			$rt_biz_options = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN . '_options' ) );
-			$menu_label = $rt_biz_options[ 'menu_label' ];
+			$rt_biz_options                                              = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN . '_options' ) );
+			$menu_label                                                  = $rt_biz_options['menu_label'];
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
-				'label' => $menu_label,
+				'label'      => $menu_label,
 				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
 			);
+
 			return $modules;
 		}
 
@@ -386,23 +410,30 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function organization_person_connection() {
 			global $rt_organization, $rt_person;
 			p2p_register_connection_type( array(
-				'name' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
-				'from' => $rt_organization->post_type,
-				'to' => $rt_person->post_type,
-			) );
+				                              'name' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
+				                              'from' => $rt_organization->post_type,
+				                              'to'   => $rt_person->post_type,
+			                              ) );
 		}
 
 		/**
 		 *  This establishes a connection between any entiy ( either organization - from / person - to )
 		 *  acording to the parameters passed.
 		 *
-		 * @param string $from  - Organization
-		 * @param string $to    - Person
+		 * @param string $from - Organization
+		 * @param string $to   - Person
 		 */
 		function connect_organization_to_person( $from = '', $to = '' ) {
 			global $rt_organization, $rt_person;
-			if ( ! p2p_connection_exists( $rt_organization->post_type . '_to_' . $rt_person->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
-				p2p_create_connection( $rt_organization->post_type . '_to_' . $rt_person->post_type, array( 'from' => $from, 'to' => $to ) );
+			if ( ! p2p_connection_exists( $rt_organization->post_type . '_to_' . $rt_person->post_type, array(
+					'from' => $from,
+					'to'   => $to
+				) )
+			) {
+				p2p_create_connection( $rt_organization->post_type . '_to_' . $rt_person->post_type, array(
+						'from' => $from,
+						'to'   => $to
+					) );
 			}
 		}
 
@@ -412,18 +443,20 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 *  It will return the other half objects of the connection.
 		 *
-		 * @param $connected_items  - Organization / Person Object
+		 * @param $connected_items - Organization / Person Object
+		 *
 		 * @return array
 		 */
 		function get_organization_to_person_connection( $connected_items ) {
 			global $rt_organization, $rt_person;
+
 			return get_posts(
-					array(
-						'connected_type' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
-						'connected_items' => $connected_items,
-						'nopaging' => true,
-						'suppress_filters' => false,
-					)
+				array(
+					'connected_type'   => $rt_organization->post_type . '_to_' . $rt_person->post_type,
+					'connected_items'  => $connected_items,
+					'nopaging'         => true,
+					'suppress_filters' => false,
+				)
 			);
 		}
 
