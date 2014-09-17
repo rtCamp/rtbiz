@@ -60,17 +60,19 @@ if( ! class_exists('Rt_Access_Control') ) {
 			$rt_biz_caps = array();
 			// $m - module
 			// $mkey - module_key
-			foreach ( self::$modules as $mkey => $m ) {
-				// $p - permission
-				// $pkey - permission_key
-				foreach ( self::$permissions as $pkey => $p ) {
-					$rt_biz_caps[] = $mkey . '_' . $pkey;
-				}
-				$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
-				// $pt - post_type
-				foreach ( $post_types as $pt ) {
-					$post_caps = self::get_admin_post_caps( $pt );
-					$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
+			if ( ! empty( self::$modules ) ) {
+				foreach ( self::$modules as $mkey => $m ) {
+					// $p - permission
+					// $pkey - permission_key
+					foreach ( self::$permissions as $pkey => $p ) {
+						$rt_biz_caps[] = $mkey . '_' . $pkey;
+					}
+					$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
+					// $pt - post_type
+					foreach ( $post_types as $pt ) {
+						$post_caps   = self::get_admin_post_caps( $pt );
+						$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
+					}
 				}
 			}
 
@@ -281,6 +283,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => false,
 				"edit_private_{$post_type}s" => false,
 				"edit_published_{$post_type}s" => false,
+				'manage_terms' => false,
+				'edit_terms' => false,
+				'delete_terms' => false,
+				'assign_terms' => false,
 			);
 		}
 
@@ -299,6 +305,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => false,
 				"edit_private_{$post_type}s" => false,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => false,
+				'edit_terms' => false,
+				'delete_terms' => false,
+				'assign_terms' => false,
 			);
 		}
 
@@ -317,6 +327,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => true,
 				"edit_private_{$post_type}s" => true,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => true,
+				'edit_terms' => true,
+				'delete_terms' => true,
+				'assign_terms' => true,
 			);
 		}
 
@@ -335,6 +349,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => true,
 				"edit_private_{$post_type}s" => true,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => true,
+				'edit_terms' => true,
+				'delete_terms' => true,
+				'assign_terms' => true,
 			);
 		}
 
