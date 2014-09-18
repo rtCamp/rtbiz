@@ -505,7 +505,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			}
 
 			if ( isset( $_POST[ 'contact_meta' ][ $this->user_id_key ] ) && ! empty( $_POST['contact_meta'] ) ) {
-				KWS_User_Groups::save_user_user_groups( $_POST[ 'contact_meta' ][ $this->user_id_key ] );
+				rt_biz_save_user_user_group( $_POST[ 'contact_meta' ][ $this->user_id_key ] );
 			}
 
 			parent::save_meta_values( $post_id );
