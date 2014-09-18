@@ -445,3 +445,8 @@ function rt_biz_get_user_department_section( $user ) {
 	global $rtbiz_user_groups;
 	return $rtbiz_user_groups->edit_user_user_group_section( $user );
 }
+
+function rt_biz_save_user_user_group( $user_id  ) {
+	global $rtbiz_user_groups;
+	return $rtbiz_user_groups->save_user_user_group( $user_id );
+}
