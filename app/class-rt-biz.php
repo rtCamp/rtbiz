@@ -57,7 +57,22 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Class Contstructor - This will initialize rtBiz alltogether
 		 *  Provides useful actions/filters for other rtBiz addons to hook.
 		 */
+
 		public function __construct() {
+
+			global $rtbiz_plugins;
+			$rtbiz_plugins = array(
+				'posts-to-posts' => array(
+					'project_type' => 'all', 'name' => esc_html__( 'Create many-to-many relationships between all types of posts.', 'posts-to-posts' ), 'active' => class_exists( 'posts-to-posts' ), 'filename' => 'posts-to-posts.php',),
+			);
+
+			function rtbiz_plugins_enque_js() {
+				wp_enqueue_script( 'rtbiz-plugins', RT_BIZ_URL . "app/assets/javascripts/post2post_plugin_check.js", '', false, true );
+				wp_localize_script( 'rtbiz-plugins', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
+			}
+			add_action( 'admin_enqueue_scripts', 'rtbiz_plugins_enque_js' );
+			add_action( 'wp_ajax_rtBiz_install_plugin', array( $this, 'rtBiz_install_plugin_ajax' ), 10 );
+			add_action( 'wp_ajax_rtBiz_activate_plugin', array( $this,'rtBiz_activate_plugin_ajax' ), 10 );
 
 			if ( ! $this->check_p2p_dependency() ) {
 				return false;
@@ -338,11 +353,180 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			if ( ! $flag ) {
-				add_action( 'admin_notices', array( $this, 'p2p_admin_notice' ) );
+				add_action( 'admin_notices', array( $this, 'admin_notice_post2post_not_installed' ) );
 			}
 
 			return $flag;
 		}
+
+		/**
+		 * hook for admin notices that checks if post to post is installed if not it let it download and install
+		 */
+		function admin_notice_post2post_not_installed() {
+			?>
+			<div class="error post2post-not-installed-error">
+				<?php
+				if ( ! $this->is_post2post_plugin_installed( 'posts-to-posts' ) ) {
+					$nonce = wp_create_nonce( 'rtBiz_install_plugin_posts-to-posts' );
+					?>
+					<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
+					                                                            onclick="install_post2post_plugin('posts-to-posts','rtBiz_install_plugin','<?php echo $nonce ?>')">here</a> <?php _e( 'to install posts-to-posts.', 'posts-to-posts' ) ?>
+					</p>
+				<?php
+				} else {
+					if ( $this->is_post2post_plugin_installed( 'posts-to-posts' ) && ! $this->is_post2post_plugin_active( 'posts-to-posts' ) ) {
+						$path  = $this->get_path_for_post2post_plugins( 'posts-to-posts' );
+						$nonce = wp_create_nonce( 'rtBiz_activate_plugin_' . $path );
+						?>
+						<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
+						                                                            onclick="activate_post2post_plugins('<?php echo $path ?>','rtBiz_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate posts-to-posts.', 'posts-to-posts' ) ?>
+						</p>
+					<?php
+					}
+				}
+				?>
+			</div>
+		<?php
+		}
+
+		/**
+		 * @param $slug
+		 * get file path for post to post plugin
+		 *
+		 * @return string
+		 */
+		function get_path_for_post2post_plugins( $slug ) {
+			global $rtbiz_plugins;
+			$filename = ( ! empty( $rtbiz_plugins[ $slug ]['filename'] ) ) ? $rtbiz_plugins[ $slug ]['filename'] : $slug . '.php';
+
+			return $slug . '/' . $filename;
+		}
+
+		/**
+		 * @param $slug
+		 * check if post to post plugin is active or not
+		 *
+		 * @return bool
+		 */
+		function is_post2post_plugin_active( $slug ) {
+			global $rtbiz_plugins;
+			if ( empty( $rtbiz_plugins[ $slug ] ) ) {
+				return false;
+			}
+
+			return $rtbiz_plugins[ $slug ]['active'];
+		}
+
+
+		/**
+		 * @param $slug
+		 * check if is post to post plugin in installed
+		 *
+		 * @return bool
+		 */
+		function is_post2post_plugin_installed( $slug ) {
+			global $rtbiz_plugins;
+			if ( empty( $rtbiz_plugins[ $slug ] ) ) {
+				return false;
+			}
+
+			if ( $this->is_post2post_plugin_active( $slug ) || file_exists( WP_PLUGIN_DIR . '/' . $this->get_path_for_post2post_plugins( $slug ) ) ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * ajax call for installing plugin
+		 */
+		function rtBiz_install_plugin_ajax() {
+
+			if ( empty( $_POST['plugin_slug'] ) ) {
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rt_biz' ) );
+			}
+			check_ajax_referer( 'rtBiz_install_plugin_' . $_POST['plugin_slug'] );
+
+			if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', 'rt_biz' ) );
+			}
+			$this->rtBiz_install_plugin( $_POST['plugin_slug'] );
+
+			echo 'true';
+			die();
+		}
+
+		/**
+		 * @param $plugin_slug
+		 * ajax call calls uses this function to install plugin
+		 */
+		function rtBiz_install_plugin( $plugin_slug ) {
+			include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+
+			$api = plugins_api( 'plugin_information', array( 'slug'   => $plugin_slug,
+			                                                 'fields' => array( 'sections' => false )
+				) );
+
+			if ( is_wp_error( $api ) ) {
+				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'rt_biz' ), $api->get_error_message() ) );
+			}
+
+			$upgrader = new Plugin_Upgrader( new rtbiz_Plugin_Upgrader_Skin( array(
+				                                                                 'nonce'  => 'install-plugin_' . $plugin_slug,
+				                                                                 'plugin' => $plugin_slug,
+				                                                                 'api'    => $api,
+			                                                                 ) ) );
+
+			$install_result = $upgrader->install( $api->download_link );
+
+			if ( ! $install_result || is_wp_error( $install_result ) ) {
+				// $install_result can be false if the file system isn't writeable.
+				$error_message = __( 'Please ensure the file system is writeable', 'rt_biz' );
+
+				if ( is_wp_error( $install_result ) ) {
+					$error_message = $install_result->get_error_message();
+				}
+
+				die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'rt_biz' ), $error_message ) );
+			}
+
+			$activate_result = activate_plugin( $this->get_path_for_post2post_plugins( $plugin_slug ) );
+			if ( is_wp_error( $activate_result ) ) {
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), $activate_result->get_error_message() ) );
+			}
+		}
+
+		/**
+		 * ajax call for active plugin
+		 */
+		function rtBiz_activate_plugin_ajax() {
+			if ( empty( $_POST['path'] ) ) {
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rt_biz' ) );
+			}
+			check_ajax_referer( 'rtBiz_activate_plugin_' . $_POST['path'] );
+
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				die( __( 'ERROR: You lack permissions to activate plugins.', 'rt_biz' ) );
+			}
+
+			$this->rtBiz_activate_plugin( $_POST['path'] );
+
+			echo 'true';
+			die();
+		}
+
+		/**
+		 * @param $plugin_path
+		 * ajax call for active plugin calls this function to active plugin
+		 */
+		function rtBiz_activate_plugin( $plugin_path ) {
+
+			$activate_result = activate_plugin( $plugin_path );
+			if ( is_wp_error( $activate_result ) ) {
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'rt_biz' ), $activate_result->get_error_message() ) );
+			}
+		}
+
 
 		/**
 		 *  Posts 2 Posts Plugin Admin Notice
@@ -462,4 +646,41 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 	}
 
+}
+
+if ( ! class_exists( 'rtbiz_Plugin_Upgrader_Skin' ) ) {
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+	require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+	/**
+	 * Class rtbiz_Plugin_Upgrader_Skin
+	 * this class is used to upgrade or download plugins check function rtBiz_install_plugin in class-rt-biz
+	 */
+	class rtbiz_Plugin_Upgrader_Skin extends WP_Upgrader_Skin {
+		function __construct( $args = array() ) {
+			$defaults = array( 'type' => 'web', 'url' => '', 'plugin' => '', 'nonce' => '', 'title' => '' );
+			$args     = wp_parse_args( $args, $defaults );
+
+			$this->type = $args['type'];
+			$this->api  = isset( $args['api'] ) ? $args['api'] : array();
+			parent::__construct( $args );
+		}
+
+		public function request_filesystem_credentials( $error = false ) {
+			return true;
+		}
+
+		public function error( $errors ) {
+			die( $errors );
+		}
+
+		public function header() {
+		}
+
+		public function footer() {
+		}
+
+		public function feedback( $string ) {
+		}
+	}
 }
