@@ -6,7 +6,8 @@
 function install_post2post_plugin( plugin_slug,action,rtm_nonce ) {
 	jQuery('.post2post-not-installed-error').removeClass('error');
 	jQuery('.post2post-not-installed-error').addClass('updated');
-	jQuery('.post2post-not-installed-error p').html('<b>rtBiz :</b> Post2Post will be installed and activated. Please wait...');
+	jQuery('.post2post-not-installed-error p').html('<b>rtBiz :</b> Post2Post will be installed and activated. Please wait...<div class="spinner"> </div>');
+	jQuery("div.spinner").show();
 	var param = {
 		action: action,
 		plugin_slug: plugin_slug,
@@ -26,7 +27,8 @@ function install_post2post_plugin( plugin_slug,action,rtm_nonce ) {
 function activate_post2post_plugins( path, action, rtm_nonce ) {
 	jQuery('.post2post-not-installed-error').removeClass('error');
 	jQuery('.post2post-not-installed-error').addClass('updated');
-	jQuery('.post2post-not-installed-error p').html('<b>rtBiz  :</b> Post2Post will be activated now. Please wait.');
+	jQuery('.post2post-not-installed-error p').html('<b>rtBiz  :</b> Post2Post will be activated now. Please wait. <div class="spinner"> </div>');
+	jQuery("div.spinner").show();
 	var param = {
 		action: action,
 		path: path,
