@@ -25,6 +25,8 @@ before_script:
     - cd $(pear config-get php_dir)/PHP/CodeSniffer/Standards/
     - ln -s WordPress-Coding-Standards/WordPress WordPress
     - ln -s WordPress-Coding-Standards/WordPress-Core WordPress-Core
+    - ln -s WordPress-Coding-Standards/WordPress-Extra WordPress-Extra
+    - ln -s WordPress-Coding-Standards/WordPress-VIP WordPress-VIP
     - ls -lsa
     - rm -rf WordPress/Sniffs/VIP
     - cd $PLUGIN_DIR
