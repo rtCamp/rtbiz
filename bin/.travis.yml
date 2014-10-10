@@ -27,8 +27,6 @@ before_script:
     - ln -s WordPress-Coding-Standards/WordPress-Core WordPress-Core
     - ln -s WordPress-Coding-Standards/WordPress-Extra WordPress-Extra
     - ln -s WordPress-Coding-Standards/WordPress-VIP WordPress-VIP
-    - ls -lsa
-    - rm -rf WordPress/Sniffs/VIP
     - cd $PLUGIN_DIR
     - phpenv rehash
     - npm install -g jshint
