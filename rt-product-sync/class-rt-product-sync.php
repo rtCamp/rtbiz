@@ -41,13 +41,13 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		var $pluginName;
 
 		function is_woocommerce_active(){
-			if ( $this->pluginName == 'woocommerce' ) {
+			if ( 'woocommerce' === $this->pluginName ) {
 				return true;
 			}
 			return false;
 		}
 		function is_edd_active(){
-			if ( $this->pluginName == 'edd' ) {
+			if ( 'edd' === $this->pluginName ) {
 				return true;
 			}
 			return false;
@@ -143,7 +143,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @return void
 		 */
 		public function hooks() {
-			if ( $this->isSync == true ) {
+			if ( true === $this->isSync ) {
 				add_action( 'init', array( $this, 'old_product_synchronization_enabled' ) );
 				add_action( 'save_post', array( $this, 'insert_products' ) );
 				add_action( 'wp_untrash_post', array( $this, 'insert_products' ) );
@@ -157,7 +157,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @return void
 		 */
 		public function old_product_synchronization_enabled() {
-			if ( $this->isSync == true ) {
+			if ( true === $this->isSync ) {
 				$this->bulk_insert_products();
 				$this->delete_products();
 			}
@@ -200,7 +200,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 				return;
 			}
 
-			if ( $this->get_taxonomy( $post_id ) != false ){
+			if ( false !== $this->get_taxonomy( $post_id ) ){
 				return;
 			}
 
@@ -254,7 +254,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			global $wpdb;
 			$querystr = 'SELECT taxonomy_id FROM '.$wpdb->prefix.'taxonomymeta WHERE meta_value = '.$post_id.' limit 1';
 			$result = $wpdb -> get_results( $querystr );
-			if ( isset ( $result[0]->taxonomy_id ) ) {
+			if ( isset( $result[0]->taxonomy_id ) ) {
 				return $result[0]->taxonomy_id;
 			}
 			return false;
@@ -287,15 +287,15 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			foreach ( $taxonomies as $taxonomy => $terms ) {
 				$count ++;
 				foreach ( $terms as $term ) {
-					if ( $count == 1 ) {
+					if ( 1 === $count ) {
 						$product_array[] = $term;
 
 					}
-					if ( $count == 2 ) {
+					if ( 2 === $count ) {
 						$product_id_array[] = $term;
 					}
 				}
-				if ( $count == 1 ) {
+				if ( 1 === $count ) {
 					$i = count( $product_array );
 				}
 			}

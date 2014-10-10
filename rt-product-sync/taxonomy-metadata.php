@@ -56,7 +56,7 @@ class Taxonomy_Metadata {
 	function setup_blog( $id = false ) {
 		global $wpdb;
 
-		if ( $id !== false ) {
+		if ( false != $id ) {
 			switch_to_blog( $id );
 		}
 
