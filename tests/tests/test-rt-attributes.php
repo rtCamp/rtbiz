@@ -53,19 +53,14 @@ class test_rt_attributes extends RT_WP_TestCase {
 		$val = $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post' );
 		$this->assertEquals( $attid,  $val[0]->attr_id );
 
-		//$attid1 = $this->attributes-> add_attribute ('my_1_attribute','my_1_attribute_name');
-
 		$this->attributes->add_attributes_page( $page_slug = 'my_plugin_attribute_page_slug_1', $parent_page_slug = 'edit.php?post_type=post1', $post_type = 'post1', $page_cap = 'manage_attributes1', $terms_cap, $render_type = true, $storage_type = true, $orderby = true );
 		$this->attributes->update_attribute_relations( $attid, array( 'post1' ) );
-
-		$this->assertEquals( $attid, $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post1' )[0]->attr_id );
+		$val = $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post1' );
+		$this->assertEquals( $attid, $val[0]->attr_id );
 
 		$this->attributes->delete_attribute_relations( $attid );
-
-		$this->assertEquals( 0, sizeof( $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post1' ) ) );
-
-		// var_dump($this->attributes->get_taxonomy_name($attid));
-		// var_dump($this->attributes->error_check($attribute_id=$attid,$attribute_name='my_attribute_name'));
+		$val = $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post1' );
+		$this->assertEquals( 0, sizeof( $val ) );
 	}
 
 } 
