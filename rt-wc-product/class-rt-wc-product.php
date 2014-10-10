@@ -38,13 +38,37 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 		 * @var $caps - Capability for taxonomy
 		 */
 		var $caps = array();
+		var $pluginName;
+
+		function is_woocommerce_active(){
+			if($this->pluginName == 'woocommerce'){
+				return true;
+			}
+			return false;
+		}
+		function is_edd_active(){
+			if($this->pluginName == 'edd'){
+				return true;
+			}
+			return false;
+		}
+		function get_post_type(){
+			if( $this->is_woocommerce_active() ){
+				return 'product';
+			}
+			else if ($this->is_edd_active() ){
+				return 'download';
+			}
+		}
 
 		/**
 		 * construct
 		 *
-		 * @param $cap
+		 * @param array $cap
+		 * @param       $plugin_name
 		 */
-		public function __construct( $cap = array() ) {
+		public function __construct( $cap = array(), $plugin_name ) {
+			$this->pluginName = $plugin_name;
 
 			$this->caps = $cap;
 
@@ -123,9 +147,6 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 				add_action( 'init', array( $this, 'old_product_synchronization_enabled' ) );
 				add_action( 'save_post', array( $this, 'insert_products' ) );
 				add_action( 'wp_untrash_post', array( $this, 'insert_products' ) );
-				// add_action( 'delete_post', array( $this, 'delete_products' ) );
-				// add_action( 'trashed_post', array( $this, 'delete_products' ) );
-				// add_action( 'delete_product', array( $this, 'delete_products_meta' ) );
 			}
 		}
 
@@ -169,14 +190,13 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 			$key    = '_product_id';
 			$single = 'true';
 
-
 			// If this is just a revision, don't.
-			if ( wp_is_post_revision( $post_id ) || empty( $_POST['post_type'] ) ) {
+			if ( (wp_is_post_revision( $post_id ) && wp_is_post_autosave($post_id) ) || empty( $_POST['post_type'] ) ) {
 				return;
 			}
 
-			// If this isn't a 'product' post, don't update it.
-			if ( 'product' != $_POST['post_type'] ) {
+			// If this isn't a 'product' or 'download' post, don't update it.
+			if ( 'product' != $_POST['post_type'] && 'download' !=$_POST['post_type'] ) {
 				return;
 			}
 
@@ -193,29 +213,50 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 				return;
 			}*/
 
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => 'product' );
+			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), );
 			$products_array = get_posts( $args ); // Get Woo Commerce post object
 			$product_names  = wp_list_pluck( $products_array, 'post_title' ); // Get Woo Commerce post_title
 			$product_ids    = wp_list_pluck( $products_array, 'ID' ); // Get Woo Commerce Post ID
 
-			$term     = sanitize_title( $_POST['post_title'] );
+			$termname     = sanitize_title( $_POST['post_title'] );
+			$termid = $this->check_postid_term_exist( $_POST['post_ID'] );
 
 			if ( ! empty( $post_id ) ) {
 				$post = get_post( $post_id );
 				$slug = $post->post_name;
-				$term = wp_insert_term(
-					$term, // the term
-					$this->product_slug, // the taxonomy
-					array(
-						'slug' => $slug,
-					)
-				);
+				if ( false == $termid ) {
+					$term = wp_insert_term(
+						$termname, // the term
+						$this->product_slug, // the taxonomy
+						array(
+							'slug' => $slug,
+						)
+					);
+				}
+				else{
+					$term = wp_update_term( $termid, // the term
+					                        $this->product_slug, // the taxonomy
+					                        array(
+						                        'name' => $termname,
+						                        'slug' => $slug,
+					                        ));
+				}
 				if ( is_array( $term ) ) {
 					$term_id = $term['term_id'];
 					Rt_Wp_Ideas_Taxonomy_Metadata\add_term_meta( $term_id, $key, $post_id, true ); // todo: need to fetch product_id
 				}
 			}
 
+		}
+
+		public function check_postid_term_exist( $post_id ){
+			global $wpdb;
+			$querystr = 'SELECT taxonomy_id FROM '.$wpdb->prefix.'taxonomymeta WHERE meta_value = '.$post_id.' limit 1';
+			$result = $wpdb -> get_results( $querystr );
+			if ( isset ( $result[0]->taxonomy_id ) ) {
+				return $result[0]->taxonomy_id;
+			}
+			return false;
 		}
 
 		/**
@@ -226,7 +267,7 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 		 */
 		public function bulk_insert_products() {
 
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => 'product' );
+			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), );
 			$products_array = get_posts( $args ); // Get Woo Commerce post object
 			$product_names  = wp_list_pluck( $products_array, 'post_title' ); // Get Woo Commerce post_title
 			$product_ids    = wp_list_pluck( $products_array, 'ID' ); // Get Woo Commerce Post ID
@@ -291,7 +332,7 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 		public function delete_products() {
 			$args           = array(
 				'posts_per_page' => - 1,
-				'post_type'      => 'product',
+				'post_type'      => $this->get_post_type(),
 			); // get all woo commerce product
 			$products_array = get_posts( $args );
 			$product_names  = wp_list_pluck( $products_array, 'post_name' );
