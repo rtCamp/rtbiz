@@ -34,6 +34,8 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		 */
 		public static $settings;
 
+		public static $options;
+
 		/**
 		 *
 		 */
@@ -43,6 +45,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			if ( ! $this->embedd_titan_framework() ) {
 				return;
 			}
+			self::$options = array('1' => 'woocommerce', '2' => 'edd',);
 
 			// Init Titan Instance
 			self::$titan_obj = $this->get_settings_instance();
@@ -50,7 +53,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			// Init Titan Settings
 			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 20 );
 			// Load Saved Settings Values
-			add_action( 'after_setup_theme', array( $this, 'load_settings' ) );
+			add_action( 'after_setup_theme', array( $this, 'load_settings' ),10 );
 		}
 
 		/**
@@ -59,13 +62,14 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		function load_settings() {
 			self::$settings['logo_url'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'logo_url' ) : '';
 			self::$settings['menu_label'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'menu_label' ) : '';
+			self::$settings['product_plugin'] = ( isset( self::$titan_obj ) && ! empty( self::$titan_obj ) ) ? self::$titan_obj->getOption( 'product_plugin' ) : '';
 		}
 
 		/**
 		 *  Init Settings
 		 */
 		function init_settings() {
-
+//			$choice = array('woo' => 'Woocommerce', 'edd' => 'EDD',);
 			if ( ! isset( self::$titan_obj ) || empty( self::$titan_obj ) ) {
 				return;
 			}
@@ -103,6 +107,14 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'example' => 'http://google.com/icon.png', // An example value for this field, will be displayed in a <code>
 				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
 			) );
+			$general_tab->createOption( array(
+				                            'name' => __( 'Product Sync Option' ), // Name of the option
+				                            'desc' => 'Select the plugin you want to use for product sync', // Description of the option
+				                            'id' => 'product_plugin', // Unique ID of the option
+				                            'type' => 'radio',
+				                            'options' => self::$options,
+				                            'default' => '1',
+			                            ) );
 			$general_tab->createOption( array(
 				'type' => 'save'
 			) );
