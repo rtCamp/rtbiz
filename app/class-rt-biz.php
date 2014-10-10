@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function init_wc_product_taxonomy() {
-			global $rtbiz_wc_product;
+			global $rtbiz_product_sync;
 			$terms_caps = array(
 				'manage_terms' => true,//$editor_cap,
 				'edit_terms'   => true,//$editor_cap,
@@ -201,7 +201,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			//			error_log( "\n ".var_exsport(Rt_Biz_Settings::$options[Rt_Biz_Settings::$settings['product_plugin']], true )." ::: something", 3, "/var/tmp/my-errors.log");
 			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$options ) && is_array( Rt_Biz_Settings::$options ) ) {
 				$product_plugin   = Rt_Biz_Settings::$options[ Rt_Biz_Settings::$settings['product_plugin'] ];
-				$rtbiz_wc_product = new RT_WC_Product( $terms_caps, $product_plugin );
+				$rtbiz_product_sync = new RT_Product_Sync( $terms_caps, $product_plugin );
 			}
 		}
 
