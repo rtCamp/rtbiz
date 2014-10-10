@@ -193,8 +193,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			switch ( $column ) {
 				case 'users':
 					$term = get_term( $term_id, $this->user_group_slug );
-					$users = $this->get_user_by_group_slug( $term->slug );
-					echo '<a href="' . esc_url( admin_url( 'users.php?' . $this->user_group_slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( '%s Users', '%s Users', count( $users ), 'rtlib' ), count( $users ) ) );
+					echo '<a href="' . esc_url( admin_url( 'users.php?' . $this->user_group_slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( sanitize_title( __( '%s User' ) ), sanitize_title( __( '%s Users' ) ), $term->count ), $term->count ) ) . '</a>';
 					break;
 				case 'color':
 					$color = $this->get_group_meta( 'group-color', $term_id );
@@ -622,7 +621,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				$groups = explode( ',', $_GET[ $this->user_group_slug ] );
 				$ids    = array();
 				foreach ( $groups as $group ) {
-					$user_ids = $this->get_user_by_group_slug( $group );
+					$user_ids = $this->get_user_by_term_slug( $group );
 					if ( isset( $user_ids ) && ! empty( $user_ids ) ) {
 						$ids = array_merge( $user_ids, $ids );
 					}
@@ -682,7 +681,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				$colorblock = empty( $bgcolor ) ? '' : '<span style="width:1.18em; height:1.18em; float:left; margin-right:.25em; background-color:' . $this->get_group_meta( 'group-color', $current->term_id ) . ';"></span>';
 				?>
 				<div id="<?php echo esc_attr( $this->user_group_slug ); ?>-header">
-					<h2><?php echo balanceTags( $colorblock );
+					<h2><?php echo esc_js( $colorblock );
 						echo esc_html( sprintf( __( 'User Group: %s', 'rtlib' ), $current->name ) );
 						?> <a
 							href="<?php echo esc_url( admin_url( 'edit-tags.php?action=edit&taxonomy=' . esc_attr( $this->user_group_slug ) . '&tag_ID=' . esc_attr( $current->term_id ) . '&post_type=post' ) ); ?>"
@@ -724,7 +723,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			<form method="get"
 			      action="<?php echo esc_url( preg_replace( '/(.*?)\/users/ism', 'users', add_query_arg( $args, remove_query_arg( $this->user_group_slug ) ) ) ); ?>"
 			      style="display:inline;">
-				<?php echo balanceTags( $select ); ?>
+				<?php echo esc_js( $select ); ?>
 			</form>
 			<style type="text/css">
 				.subsubsub li. <?php echo esc_attr( $this->user_group_slug ); ?> {
