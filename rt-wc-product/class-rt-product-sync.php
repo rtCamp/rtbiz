@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'RT_WC_Product' ) ) {
+if ( ! class_exists( 'RT_Product_Sync' ) ) {
 
 	/**
 	 * Description of class-rt-wc-product
@@ -14,7 +14,7 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 	 *
 	 * @author dipesh
 	 */
-	class RT_WC_Product {
+	class RT_Product_Sync {
 
 		/**
 		 * Product taxonomy Slug
@@ -41,22 +41,22 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 		var $pluginName;
 
 		function is_woocommerce_active(){
-			if($this->pluginName == 'woocommerce'){
+			if ( $this->pluginName == 'woocommerce' ) {
 				return true;
 			}
 			return false;
 		}
 		function is_edd_active(){
-			if($this->pluginName == 'edd'){
+			if ( $this->pluginName == 'edd' ) {
 				return true;
 			}
 			return false;
 		}
 		function get_post_type(){
-			if( $this->is_woocommerce_active() ){
+			if ( $this->is_woocommerce_active( ) ) {
 				return 'product';
 			}
-			else if ($this->is_edd_active() ){
+			else if ( $this->is_edd_active( ) ) {
 				return 'download';
 			}
 		}
@@ -191,12 +191,12 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 			$single = 'true';
 
 			// If this is just a revision, don't.
-			if ( (wp_is_post_revision( $post_id ) && wp_is_post_autosave($post_id) ) || empty( $_POST['post_type'] ) ) {
+			if ( (wp_is_post_revision( $post_id ) && wp_is_post_autosave( $post_id ) ) || empty( $_POST['post_type'] ) ) {
 				return;
 			}
 
 			// If this isn't a 'product' or 'download' post, don't update it.
-			if ( 'product' != $_POST['post_type'] && 'download' !=$_POST['post_type'] ) {
+			if ( 'product' != $_POST['post_type'] && 'download' != $_POST['post_type'] ) {
 				return;
 			}
 
@@ -233,13 +233,14 @@ if ( ! class_exists( 'RT_WC_Product' ) ) {
 						)
 					);
 				}
-				else{
-					$term = wp_update_term( $termid, // the term
-					                        $this->product_slug, // the taxonomy
-					                        array(
-						                        'name' => $termname,
-						                        'slug' => $slug,
-					                        ));
+				else {
+					$term = wp_update_term(
+						$termid, // the term
+						$this->product_slug, // the taxonomy
+						array(
+							'name' => $termname,
+							'slug' => $slug,
+						) );
 				}
 				if ( is_array( $term ) ) {
 					$term_id = $term['term_id'];
