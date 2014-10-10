@@ -50,7 +50,8 @@ class test_rt_attributes extends RT_WP_TestCase {
 
 		$this->attributes->add_attribute_relations( $attid, array( 'post' ) );
 
-		$this->assertEquals( $attid, $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post' ) [0]->attr_id );
+		$val = $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post' );
+		$this->assertEquals( $attid,  $val[0]->attr_id );
 
 		//$attid1 = $this->attributes-> add_attribute ('my_1_attribute','my_1_attribute_name');
 

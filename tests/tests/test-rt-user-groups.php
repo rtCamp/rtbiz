@@ -99,10 +99,12 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 				'slug'        => 'apple',
 			) );
 		$this->RT_User_Groups->set_user_group( 1, 'apple' );
-		$this->assertEquals( '1', $this->RT_User_Groups->get_user_by_group_slug( 'apple' )[0] );
+		$val = $this->RT_User_Groups->get_user_by_group_slug( 'apple' );
+		$this->assertEquals( '1', $val[0] );
 
 		$this->assertTrue( $this->RT_User_Groups->is_user_has_group( 1, $termsid['term_taxonomy_id'] ) );
-		$this->assertEquals( 'apple', $this->RT_User_Groups->get_user_groups( 1 )[0]->slug );
+		$val = $this->RT_User_Groups->get_user_groups( 1 );
+		$this->assertEquals( 'apple', $val[0]->slug );
 
 		$this->RT_User_Groups->remove_user_group( 1, 'apple' );
 		$this->assertFalse( $this->RT_User_Groups->is_user_has_group( 1, $termsid['term_taxonomy_id'] ) );
