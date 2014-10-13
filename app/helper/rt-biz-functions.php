@@ -450,3 +450,13 @@ function rt_biz_save_user_user_group( $user_id  ) {
 	global $rtbiz_user_groups;
 	return $rtbiz_user_groups->save_user_user_group( $user_id );
 }
+
+function rt_biz_get_settings ( $key = null) {
+	if ( isset( $key ) ) {
+		if ( 'product_plugin' === $key ) {
+			return Rt_Biz_Settings::$options[ Rt_Biz_Settings::$settings[ $key ] ];
+		}
+		return Rt_Biz_Settings::$settings[ $key ];
+	}
+	return Rt_Biz_Settings::$settings;
+}
