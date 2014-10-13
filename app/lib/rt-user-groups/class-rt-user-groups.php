@@ -143,8 +143,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function save_user_group( $term_id ) {
 			if ( isset( $_POST[ $this->user_group_slug ] ) ) {
-				$term_meta             = ( array ) get_option( $this->user_group_slug . '-meta' );
-				$term_meta[ $term_id ] = ( array ) $_POST[ $this->user_group_slug ];
+				$term_meta             = (array) get_option( $this->user_group_slug . '-meta' );
+				$term_meta[ $term_id ] = (array) $_POST[ $this->user_group_slug ];
 				update_option( $this->user_group_slug . '-meta', $term_meta );
 				if ( isset( $_POST['_wp_original_http_referer'] ) ) {
 					wp_safe_redirect( $_POST['_wp_original_http_referer'] );
@@ -440,11 +440,11 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					$update_groups[ $group->slug ] = $group->slug;
 				}
 
-				if ( $action === 'add' ) {
+				if ( 'add' === $action ) {
 					if ( ! in_array( $_POST[ $this->user_group_slug ], $update_groups ) ) {
 						$this->set_user_group( $user, $_POST[ $this->user_group_slug ] );
 					}
-				} elseif ( $action === 'remove' ) {
+				} elseif ( 'remove' === $action ) {
 					if ( in_array( $_POST[ $this->user_group_slug ], $update_groups ) ) {
 						$this->remove_user_group( $user, $_POST[ $this->user_group_slug ] );
 					}
@@ -521,8 +521,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$tax = get_taxonomy( $this->user_group_slug );
 
 			/* Make sure the user can assign terms of the profession group before proceeding. */
-			if ( ! current_user_can( $tax->cap->assign_terms ) || ! current_user_can( 'assign_terms' ) )
+			if ( ! current_user_can( $tax->cap->assign_terms ) || ! current_user_can( 'assign_terms' ) ) {
 				return;
+			}
 
 			/* Get the terms of the 'profession' group. */
 			$terms = get_terms( $this->user_group_slug, array( 'hide_empty' => false ) );
@@ -583,8 +584,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				return false;
 			}
 
-			$user_groups = @$_POST[ $this->user_group_slug ];
-
+			$user_groups = ( isset( $_POST[ $this->user_group_slug ] ) ) ? $_POST[ $this->user_group_slug ] : '';
 
 			$old_terms = $this->get_user_groups( $user_id );
 
@@ -613,7 +613,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function user_query( $Query = '' ) {
 			global $pagenow, $wpdb;
 
-			if ( $pagenow !== 'users.php' ) {
+			if ( 'users.php' !== $pagenow ) {
 				return;
 			}
 
@@ -672,7 +672,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					$roles = $wp_roles->get_names();
 					if ( array_key_exists( $role, $roles ) ) {
 						$role_name = $roles[ "{$role}" ];
-						if ( substr( $role_name, - 1, 1 ) !== 's' ) {
+						if ( 's' !== substr( $role_name, - 1, 1 ) ) {
 							$role_name .= 's';
 						}
 					}
@@ -783,8 +783,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return string
 		 */
 		function disable_username( $username ) {
-			if ( $this->user_group_slug === $username )
+			if ( $this->user_group_slug === $username ) {
 				$username = '';
+			}
 
 			return $username;
 		}
@@ -815,7 +816,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 			$l = ( $var_max + $var_min ) / 2;
 
-			if ( $del_max == 0 ) {
+			if ( 0 === $del_max ) {
 				$h = 0;
 				$s = 0;
 			} else {
@@ -985,7 +986,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				return false;
 			}
 
-			$term_meta = ( array ) get_option( $this->user_group_slug . '-meta' );
+			$term_meta = (array) get_option( $this->user_group_slug . '-meta' );
 
 			if ( ! isset( $term_meta[ $term_id ] ) ) {
 				return false;
@@ -1008,11 +1009,11 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function is_edit_user_group( $page = false ) {
 			global $pagenow;
 
-			if ( ( ! $page || $page === 'edit' ) && $pagenow === 'edit-tags.php' && isset( $_GET['action'] ) && $_GET['action'] == 'edit' && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug ) {
+			if ( ( ! $page || 'edit' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug ) {
 				return true;
 			}
 
-			if ( ( ! $page || $page === 'all' ) && $pagenow === 'edit-tags.php' && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug && ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'edit' ) ) {
+			if ( ( ! $page || 'all' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug && ( ! isset( $_GET['action'] ) || 'edit' !== $_GET['action'] ) ) {
 				return true;
 			}
 
