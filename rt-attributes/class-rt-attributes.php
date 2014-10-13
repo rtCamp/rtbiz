@@ -116,7 +116,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if ( $attr->attribute_store_as == 'taxonomy' && $attr->module_name == $this->module_name ) {
+				if ( 'taxonomy' === $attr->attribute_store_as && $attr->module_name == $this->module_name ) {
 					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $this->attr_cap );
 				}
 			}
@@ -452,11 +452,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				}
 
 				// Grab the submitted data
-				$attribute_label       = ( isset( $_POST['attribute_label'] ) ) ? (string)stripslashes( $_POST['attribute_label'] ) : '';
-				$attribute_name        = ( isset( $_POST['attribute_name'] ) ) ? $this->sanitize_taxonomy( stripslashes( (string)$_POST['attribute_name'] ) ) : '';
-				$attribute_store_as    = ( $this->storage_type_required && isset( $_POST['attribute_store_as'] ) ) ? (string)stripslashes( $_POST['attribute_store_as'] ) : 'taxonomy';
-				$attribute_render_type = ( $this->render_type_required && isset( $_POST['attribute_render_type'] ) ) ? (string)stripslashes( $_POST['attribute_render_type'] ) : '';
-				$attribute_orderby     = ( $this->orderby_required && isset( $_POST['attribute_orderby'] ) ) ? (string)stripslashes( $_POST['attribute_orderby'] ) : '';
+				$attribute_label       = ( isset( $_POST['attribute_label'] ) ) ? (string) stripslashes( $_POST['attribute_label'] ) : '';
+				$attribute_name        = ( isset( $_POST['attribute_name'] ) ) ? $this->sanitize_taxonomy( stripslashes( (string) $_POST['attribute_name'] ) ) : '';
+				$attribute_store_as    = ( $this->storage_type_required && isset( $_POST['attribute_store_as'] ) ) ? (string) stripslashes( $_POST['attribute_store_as'] ) : 'taxonomy';
+				$attribute_render_type = ( $this->render_type_required && isset( $_POST['attribute_render_type'] ) ) ? (string) stripslashes( $_POST['attribute_render_type'] ) : '';
+				$attribute_orderby     = ( $this->orderby_required && isset( $_POST['attribute_orderby'] ) ) ? (string) stripslashes( $_POST['attribute_orderby'] ) : '';
 				$attribute_post_types  = ( isset( $_POST['attribute_post_types'] ) ) ? (array) $_POST['attribute_post_types'] : array();
 
 				// Auto-generate the label or slug if only one of both was provided
