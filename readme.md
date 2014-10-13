@@ -63,7 +63,7 @@ Great! There are several ways you can get involved to help make Stream better:
 1. **Report Bugs:** If you find a bug, error or other problem, please report it! You can do this by [creating a new topic](https://github.com/rtCamp/rt-lib/issues) in the issue tracker.
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtCamp/rt-lib/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
 
-[![Build Status](https://travis-ci.org/rtCamp/rt-lib.png?branch=master)](https://travis-ci.org/rtCamp/rt-lib)
+[![Build Status](https://travis-ci.org///github.com/PatelUtkarsh/rt-lib.png?branch=master)](https://travis-ci.org///github.com/PatelUtkarsh/rt-lib)
 
 ## Changelog ##
 

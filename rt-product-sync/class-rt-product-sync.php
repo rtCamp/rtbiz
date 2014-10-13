@@ -20,7 +20,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * Product taxonomy Slug
 		 * @var string
 		 */
-		var $product_slug = 'rt_wc_product';
+		var $product_slug = 'rt_product';
 
 		/**
 		 * Product taxonomy labels
@@ -99,19 +99,19 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		public function get_label(){
 			return $this->labels = array(
-				'name' => __( 'WC Products' ),
-				'singular_name' => __( 'WC Product' ),
-				'menu_name' => __( 'WC Products' ),
-				'search_items' => __( 'Search WC Products' ),
-				'popular_items' => __( 'Popular WC Products' ),
-				'all_items' => __( 'All WCProducts' ),
-				'edit_item' => __( 'Edit WC Product' ),
-				'update_item' => __( 'Update WC Product' ),
-				'add_new_item' => __( 'Add New WC Product' ),
-				'new_item_name' => __( 'New WC Product Name' ),
-				'separate_items_with_commas' => __( 'Separate WC products with commas' ),
-				'add_or_remove_items' => __( 'Add or remove WC products' ),
-				'choose_from_most_used' => __( 'Choose from the most popular WC products' ),
+				'name' => __( 'Products' ),
+				'singular_name' => __( 'Product' ),
+				'menu_name' => __( 'Products' ),
+				'search_items' => __( 'Search Products' ),
+				'popular_items' => __( 'Popular Products' ),
+				'all_items' => __( 'All Products' ),
+				'edit_item' => __( 'Edit Product' ),
+				'update_item' => __( 'Update Product' ),
+				'add_new_item' => __( 'Add New Product' ),
+				'new_item_name' => __( 'New Product Name' ),
+				'separate_items_with_commas' => __( 'Separate products with commas' ),
+				'add_or_remove_items' => __( 'Add or remove products' ),
+				'choose_from_most_used' => __( 'Choose from the most popular products' ),
 			);
 		}
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		public function register_product_taxonomy(){
 			$arg = array(
 				'hierarchical' 				=> false,
-				//'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
+				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
 				'labels' => $this->labels,
 				'show_ui' 					=> true,
 				'query_var' 				=> true,
@@ -131,8 +131,46 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 				//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 				'rewrite' => true,
 			);
-			$supports = apply_filters( 'rtlib_wc_product_support', array() );
+			$supports = apply_filters( 'rtlib_product_support', array() );
 			register_taxonomy( $this->product_slug, $supports, $arg );
+		}
+
+		public function update_post_term_count( $terms, $taxonomy ){
+			global $wpdb;
+
+			$object_types = (array) $taxonomy->object_type;
+
+			foreach ( $object_types as &$object_type ) {
+				list( $object_type ) = explode( ':', $object_type );
+			}
+
+			$object_types = array_unique( $object_types );
+
+			if ( false !== ( $check_attachments = array_search( 'attachment', $object_types ) ) ) {
+				unset( $object_types[ $check_attachments ] );
+				$check_attachments = true;
+			}
+
+			if ( $object_types ) {
+				$object_types = esc_sql( array_filter( $object_types, 'post_type_exists' ) );
+			}
+
+			foreach ( (array) $terms as $term ) {
+				$count = 0;
+
+				// Attachments can be 'inherit' status, we need to base count off the parent's status if so
+				if ( $check_attachments ) {
+					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts p1 WHERE p1.ID = $wpdb->term_relationships.object_id  AND post_type = 'attachment' AND term_taxonomy_id = %d", $term ) );
+				}
+
+				if ( $object_types ) {
+					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode( "', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+				}
+
+				do_action( 'edit_term_taxonomy', $term, $taxonomy );
+				$wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
+				do_action( 'edited_term_taxonomy', $term, $taxonomy );
+			}
 		}
 
 		/**
