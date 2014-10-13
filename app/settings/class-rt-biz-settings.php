@@ -45,7 +45,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			if ( ! $this->embedd_titan_framework() ) {
 				return;
 			}
-			self::$options = array('1' => 'woocommerce', '2' => 'edd',);
+			self::$options = array( 'none'=> 'None' ,'woocommerce' => 'Woocommerce', 'edd' => 'Easy Digital Download',);
 
 			// Init Titan Instance
 			self::$titan_obj = $this->get_settings_instance();
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				                            'id' => 'product_plugin', // Unique ID of the option
 				                            'type' => 'radio',
 				                            'options' => self::$options,
-				                            'default' => '1',
+				                            'default' => 'none',
 			                            ) );
 			$general_tab->createOption( array(
 				'type' => 'save'

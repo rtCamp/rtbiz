@@ -199,8 +199,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'assign_terms' => true,//$editor_cap,
 			);
 			//			error_log( "\n ".var_exsport(Rt_Biz_Settings::$options[Rt_Biz_Settings::$settings['product_plugin']], true )." ::: something", 3, "/var/tmp/my-errors.log");
-			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$options ) && is_array( Rt_Biz_Settings::$options ) ) {
-				$product_plugin   = Rt_Biz_Settings::$options[ Rt_Biz_Settings::$settings['product_plugin'] ];
+			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$options ) && is_array( Rt_Biz_Settings::$options ) && 'none' != Rt_Biz_Settings::$settings['product_plugin'] ) {
+				$product_plugin   = rt_biz_get_settings('product_plugin');
 				$rtbiz_product_sync = new RT_Product_Sync( $terms_caps, $product_plugin );
 			}
 		}
