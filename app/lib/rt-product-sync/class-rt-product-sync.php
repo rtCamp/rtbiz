@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'RT_Product_Sync' ) ) {
 
 	/**
-	 * Description of class-rt-wc-product
-	 * To sync WooCommerce Product With rt-wc-product taxonomy
+	 * Description of class-rt-product-sync
+	 * To sync WooCommerce Product With rt-product-sync taxonomy
 	 *
 	 * @author dipesh
 	 */
@@ -41,13 +41,13 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		var $pluginName;
 
 		function is_woocommerce_active(){
-			if ( $this->pluginName == 'woocommerce' ) {
+			if ( 'woocommerce' === $this->pluginName ) {
 				return true;
 			}
 			return false;
 		}
 		function is_edd_active(){
-			if ( $this->pluginName == 'edd' ) {
+			if ( 'edd' === $this->pluginName ) {
 				return true;
 			}
 			return false;
@@ -81,7 +81,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			//Register Product taxonomy
 			add_action( 'init', array( $this, 'register_product_taxonomy' ), 5 );
 
-			$taxonomy_metadata = new Rt_Wp_Ideas_Taxonomy_Metadata\Taxonomy_Metadata();
+			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 			$taxonomy_metadata->activate();
 			$this->hooks();
 		}
@@ -143,7 +143,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @return void
 		 */
 		public function hooks() {
-			if ( $this->isSync == true ) {
+			if ( true === $this->isSync ) {
 				add_action( 'init', array( $this, 'old_product_synchronization_enabled' ) );
 				add_action( 'save_post', array( $this, 'insert_products' ) );
 				add_action( 'wp_untrash_post', array( $this, 'insert_products' ) );
@@ -157,7 +157,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @return void
 		 */
 		public function old_product_synchronization_enabled() {
-			if ( $this->isSync == true ) {
+			if ( true === $this->isSync ) {
 				$this->bulk_insert_products();
 				$this->delete_products();
 			}
@@ -200,11 +200,11 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 				return;
 			}
 
-			if ( $this->get_taxonomy( $post_id ) != false ){
+			if ( false !== $this->get_taxonomy( $post_id ) ){
 				return;
 			}
 
-			/*// Rt_Wp_Ideas_Taxonomy_Metadata\get_term_meta($term_id, $key, $single);
+			/*// Rt_Lib_Taxonomy_Metadata\get_term_meta($term_id, $key, $single);
 			$taxonomymeta = $wpdb->get_row( "SELECT * FROM $wpdb->taxonomymeta WHERE meta_key ='_product_id' AND meta_value = $post_id " );
 			//print_r($taxonomymeta); die();
 
@@ -244,7 +244,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 				}
 				if ( is_array( $term ) ) {
 					$term_id = $term['term_id'];
-					Rt_Wp_Ideas_Taxonomy_Metadata\add_term_meta( $term_id, $key, $post_id, true ); // todo: need to fetch product_id
+					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $key, $post_id, true ); // todo: need to fetch product_id
 				}
 			}
 
@@ -254,7 +254,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			global $wpdb;
 			$querystr = 'SELECT taxonomy_id FROM '.$wpdb->prefix.'taxonomymeta WHERE meta_value = '.$post_id.' limit 1';
 			$result = $wpdb -> get_results( $querystr );
-			if ( isset ( $result[0]->taxonomy_id ) ) {
+			if ( isset( $result[0]->taxonomy_id ) ) {
 				return $result[0]->taxonomy_id;
 			}
 			return false;
@@ -287,15 +287,15 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			foreach ( $taxonomies as $taxonomy => $terms ) {
 				$count ++;
 				foreach ( $terms as $term ) {
-					if ( $count == 1 ) {
+					if ( 1 === $count ) {
 						$product_array[] = $term;
 
 					}
-					if ( $count == 2 ) {
+					if ( 2 === $count ) {
 						$product_id_array[] = $term;
 					}
 				}
-				if ( $count == 1 ) {
+				if ( 1 === $count ) {
 					$i = count( $product_array );
 				}
 			}
@@ -317,7 +317,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 					);
 					if ( is_array( $term ) ) {
 						$term_id = $term['term_id'];
-						Rt_Wp_Ideas_Taxonomy_Metadata\add_term_meta( $term_id, '_product_id', $product_id_array[ $i ], true ); // todo: need to fetch product_id
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, '_product_id', $product_id_array[ $i ], true ); // todo: need to fetch product_id
 					}
 				}
 			}
@@ -344,7 +344,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			foreach ( $product_taxonomies_to_delete as $product_taxonomy_to_delete ) {
 				$product_taxonomies_obj = get_term_by( 'slug', $product_taxonomy_to_delete, $this->product_slug );
 				wp_delete_term( $product_taxonomies_obj->term_id, $this->product_slug ); // Now Delete those products which are not present in woo-commerce product section.
-				Rt_Wp_Ideas_Taxonomy_Metadata\delete_term_meta( $product_taxonomies_obj->term_id, '_product_id' );
+				Rt_Lib_Taxonomy_Metadata\delete_term_meta( $product_taxonomies_obj->term_id, '_product_id' );
 			}
 		}
 
@@ -355,7 +355,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @return void
 		 */
 		public function delete_products_meta( $term_id ) {
-			Rt_Wp_Ideas_Taxonomy_Metadata\delete_term_meta( $term_id, '_product_id' );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, '_product_id' );
 		}
 
 	}

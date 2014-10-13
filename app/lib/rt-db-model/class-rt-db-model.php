@@ -190,12 +190,12 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
 				if ( is_array( $colvalue ) ){
-					if ( ! isset ( $colvalue['compare'] ) ){
+					if ( ! isset( $colvalue['compare'] ) ){
 						$compare = 'IN';
 					} else {
 						$compare = $colvalue['compare'];
 					}
-					if ( ! isset ( $colvalue['value'] ) ){
+					if ( ! isset( $colvalue['value'] ) ){
 						$colvalue['value'] = $colvalue;
 					}
 					$col_val_comapare = ( $colvalue['value'] ) ? '(\'' . implode( "','", $colvalue['value'] ) . '\')' : '';
@@ -207,7 +207,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$sql = $select . $where;
 
 			$sql .= " ORDER BY {$this->table_name}.$order_by";
-			if ( $offset !== false ){
+			if ( false !== $offset ){
 				if ( ! is_integer( $offset ) ) {
 					$offset = 0;
 				}

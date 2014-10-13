@@ -113,7 +113,7 @@ if ( ! class_exists( 'RT_Email_Table' ) ) {
 			$return_html = '<tr>';
 
 			if ( $alternate ) {
-				if ( $count % 2 === 0 ) {
+				if ( 0 === $count % 2 ) {
 					$td_css = self::$cell_css . 'background:#F9F9F9';
 				} else {
 					$td_css = self::$cell_css . 'background:#FFF';

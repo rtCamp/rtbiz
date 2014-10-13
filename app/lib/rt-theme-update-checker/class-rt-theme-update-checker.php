@@ -101,7 +101,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 				if ( $themeUpdate === null || ( ( $themeUpdate !== null ) && version_compare( $themeUpdate->version, $this->get_installed_version(), '<=' ) ) ) {
 					$themeUpdate = null;
 				} else {
-					if ( ! empty ( $this->details_url ) ) {
+					if ( ! empty( $this->details_url ) ) {
 						$themeUpdate->details_url = $this->details_url;
 					}
 				}

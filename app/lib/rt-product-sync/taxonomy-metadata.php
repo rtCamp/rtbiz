@@ -1,6 +1,6 @@
 <?php
 
-namespace Rt_Wp_Ideas_Taxonomy_Metadata;
+namespace Rt_Lib_Taxonomy_Metadata;
 
 /**
  * Don't load this file directly!
@@ -56,7 +56,7 @@ class Taxonomy_Metadata {
 	function setup_blog( $id = false ) {
 		global $wpdb;
 
-		if ( $id !== false ) {
+		if ( false != $id ) {
 			switch_to_blog( $id );
 		}
 

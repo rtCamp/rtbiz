@@ -58,7 +58,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 
 		public function __construct( $metadataUrl, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '' )
 		{
-			if ( strpos( $metadataUrl, 'https:' ) !== false ){
+			if ( false !== strpos( $metadataUrl, 'https:' ) ){
 				$metadataUrl = str_replace( 'https:', 'http:', $metadataUrl );
 			}
 			$this->metadataUrl = $metadataUrl;
@@ -520,10 +520,10 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 		{
 			if ( isset( $_GET['puc_update_check_result'], $_GET['puc_slug'] ) && ( $_GET['puc_slug'] == $this->slug ) ){
 				$status = strval( $_GET['puc_update_check_result'] );
-				if ( $status == 'no_update' ){
+				if ( 'no_update' == $status ){
 					$message = __( 'This plugin is up to date.', 'rtmedia' );
 				} else {
-					if ( $status == 'update_available' ){
+					if ( 'update_available' == $status ){
 						$message = __( 'A new version of this plugin is available.', 'rtmedia' );
 					} else {
 						$message = sprintf( __( 'Unknown update checker status "%s"', 'rtmedia' ), htmlentities( $status ) );
