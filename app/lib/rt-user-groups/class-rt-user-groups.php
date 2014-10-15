@@ -59,7 +59,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 			$this->db_upgrade();
 
-			add_action( 'init', array( $this, 'register_user_group' ), 5 );
+			add_action( 'plugins_loaded', array( $this, 'register_user_group' ), 12 );
 			add_action( 'create_term', array( $this, 'save_user_group' ), 10, 2 );
 			add_action( 'edit_term', array( $this, 'save_user_group' ), 10, 2 );
 
@@ -1161,6 +1161,29 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$user_ids = array();
 
 			$term = get_term_by( 'slug', esc_attr( $slug ), $this->user_group_slug );
+			if ( isset( $term ) && ! empty( $term ) ) {
+				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
+				$users   = $rtlib_user_group_model->get( $columns );
+				foreach ( $users as $user ) {
+					$user_ids[] = $user->user_id;
+				}
+			}
+
+			return $user_ids;
+		}
+
+
+		/**
+		 * Get list of user for given group id
+		 * @param $group_id
+		 *
+		 * @return array
+		 */
+		function get_user_by_group_id( $group_id ) {
+			global $rtlib_user_group_model;
+			$user_ids = array();
+
+			$term = get_term_by( 'id', $group_id, $this->user_group_slug );
 			if ( isset( $term ) && ! empty( $term ) ) {
 				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
 				$users   = $rtlib_user_group_model->get( $columns );
