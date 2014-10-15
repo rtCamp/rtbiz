@@ -33,22 +33,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tr>
 						<th scope="col"><?php _e( 'Name' ); ?></th>
 						<th scope="col"><?php _e( 'Slug' ); ?></th>
-						<?php if ( $this->storage_type_required ) { ?>
-						<th scope="col"><?php _e( 'Store As' ); ?></th>
-						<?php } ?>
-						<?php if ( $this->render_type_required ) { ?>
-						<th scope="col"><?php _e( 'Render Type' ); ?></th>
-						<?php } ?>
-						<?php if ( $this->orderby_required ) { ?>
-						<th scope="col"><?php _e( 'Order by' ); ?></th>
-						<?php } ?>
-						<?php if ( ! empty( $this->post_type ) ) { ?>
-						<th scope="col"><!-- Configure Terms --></th>
-						<?php } ?>
+						<?php echo ( $this->storage_type_required ) ? '<th scope="col">' . __( 'Store As' ) . '</th>' : ''; ?>
+						<?php echo ( $this->render_type_required ) ? '<th scope="col">' . __( 'Render Type' ) . '</th>' : ''; ?>
+						<?php echo ( $this->orderby_required ) ? '<th scope="col">' . __( 'Order by' ) . '</th>' : ''; ?>
+						<?php echo ( ! empty( $this->post_type ) ) ? '<th scope="col"><!-- Configure Terms --></th>' : ''; ?>
 					</tr>
 					</thead>
 					<tbody>
-					<?php
+<?php
 $attribute_taxonomies = $this->attributes_db_model->get_all_attributes();
 $relation_attr_ids = array();
 if ( ! empty( $this->post_type ) ) {
@@ -76,13 +68,10 @@ if ( $attribute_taxonomies ) {
 								</div>
 							</td>
 							<td><?php echo esc_html( $tax->attribute_name ); ?></td>
-							<?php if ( $this->storage_type_required ) { ?>
-							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_store_as ) ) ); ?></td>
-							<?php } ?>
-							<?php if ( $this->render_type_required ) { ?>
-							<td><?php echo esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_render_type ) ) ); ?></td>
-							<?php } ?>
-							<?php if ( $this->orderby_required ) { ?>
+							<?php echo ( $this->storage_type_required ) ? '<td>' . esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_store_as ) ) ) . '</td>' : ''; ?>
+							<?php echo ( $this->render_type_required ) ? '<td>' . esc_html( ucwords( str_replace( '-', ' ', $tax->attribute_render_type ) ) ) . '</td>' : ''; ?>
+	<?php
+		if ( $this->orderby_required ) { ?>
 							<td>
 			<?php
 			switch ( $tax->attribute_orderby ) {
@@ -98,12 +87,14 @@ if ( $attribute_taxonomies ) {
 			}
 			?>
 							</td>
-							<?php } ?>
-							<?php if ( ! empty( $this->post_type ) && 'taxonomy' === $tax->attribute_store_as ) { ?>
+	<?php
+		}
+		if ( ! empty( $this->post_type ) && 'taxonomy' === $tax->attribute_store_as ) { ?>
 							<td>
 								<a href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->get_taxonomy_name( $tax->attribute_name ).'&post_type='.$this->post_type ) ); ?>" class="button alignright configure-terms"><?php _e( 'Terms' ); ?></a>
 							</td>
-							<?php } ?>
+	<?php
+		} ?>
 						</tr>
 	<?php
 	}
@@ -136,7 +127,8 @@ if ( $attribute_taxonomies ) {
 
 							<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 						</div>
-						<?php if ( $this->storage_type_required ) { ?>
+	<?php
+	if ( $this->storage_type_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_store_as"><?php _e( 'Store As' ); ?></label>
 							<select name="attribute_store_as" id="attribute_store_as">
@@ -147,8 +139,9 @@ if ( $attribute_taxonomies ) {
 
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
-						<?php } ?>
-						<?php if ( $this->render_type_required ) { ?>
+	<?php
+	}
+	if ( $this->render_type_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
 							<select name="attribute_render_type" id="attribute_render_type">
@@ -171,8 +164,9 @@ if ( $attribute_taxonomies ) {
 
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
-						<?php } ?>
-						<?php if ( $this->orderby_required ) { ?>
+	<?php
+	}
+	if ( $this->orderby_required ) { ?>
 						<div class="form-field">
 							<label for="attribute_orderby"><?php _e( 'Default sort order' ); ?></label>
 							<select name="attribute_orderby" id="attribute_orderby">
@@ -183,20 +177,22 @@ if ( $attribute_taxonomies ) {
 
 							<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 						</div>
-						<?php } ?>
-						<?php if ( ! empty( $this->post_type ) ) { ?>
+	<?php
+	}
+	if ( ! empty( $this->post_type ) ) { ?>
 						<input type="hidden" name="attribute_post_types[]" value="<?php echo esc_html( $this->post_type ); ?>" />
-						<?php } else { ?>
+	<?php
+	} else { ?>
 						<div>
 							<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
-							<?php $all_post_types = get_post_types( '', 'objects' ); ?>
-							<?php foreach ( $all_post_types as $pt ) { ?>
+	<?php $all_post_types = get_post_types( '', 'objects' );
+	foreach ( $all_post_types as $pt ) { ?>
 							<label><input type="checkbox" name="attribute_post_types[]" value="<?php echo esc_html( $pt->name ); ?>" /><?php echo esc_html( $pt->labels->name ); ?></label>
-							<?php } ?>
+	<?php } ?>
 
 							<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
 						</div>
-						<?php } ?>
+	<?php } ?>
 						<p class="submit"><input type="submit" name="add_new_attribute" id="submit" class="button" value="<?php _e( 'Add Attribute' ); ?>"></p>
 						<?php //nonce ?>
 					</form>

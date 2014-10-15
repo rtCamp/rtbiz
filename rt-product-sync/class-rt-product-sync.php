@@ -53,12 +53,13 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			return false;
 		}
 		function get_post_type(){
+			$post_type = '';
 			if ( $this->is_woocommerce_active( ) ) {
-				return 'product';
+				$post_type = 'product';
+			} else if ( $this->is_edd_active( ) ) {
+				$post_type = 'download';
 			}
-			else if ( $this->is_edd_active( ) ) {
-				return 'download';
-			}
+			return $post_type;
 		}
 
 		/**
@@ -206,7 +207,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 *
 		 * @access public
 		 * @param $post_id
-		 * @return void
+		 * @return mixed
 		 */
 		public function get_taxonomy( $post_id ){
 			global $wpdb;
@@ -218,10 +219,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		}
 
 		/**
-		 * insert_products function.
-		 *
-		 * @access public
-		 * @return void
+		 * @param $post_id
 		 */
 		public function insert_products( $post_id ) {
 			global $wpdb;
@@ -387,10 +385,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		}
 
 		/**
-		 * delete_products_meta function.
-		 *
-		 * @access public
-		 * @return void
+		 * @param $term_id
 		 */
 		public function delete_products_meta( $term_id ) {
 			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, '_product_id' );

@@ -59,7 +59,8 @@ foreach ( $att_relations as $relation ) {
 					<p class="description"><?php _e( 'Unique slug/reference for the attribute; must be shorter than 28 characters.' ); ?></p>
 				</td>
 			</tr>
-			<?php if ( $this->storage_type_required ) { ?>
+<?php
+if ( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_store_as"><?php _e( 'Store As' ); ?></label>
@@ -73,8 +74,9 @@ foreach ( $att_relations as $relation ) {
 					<p class="description"><?php _e( 'Determines how you want to store attributes.' ); ?></p>
 				</td>
 			</tr>
-			<?php } ?>
-			<?php if ( $this->render_type_required ) { ?>
+	<?php
+}
+if ( $this->render_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_render_type"><?php _e( 'Render Type' ); ?></label>
@@ -100,8 +102,9 @@ foreach ( $att_relations as $relation ) {
 					<p class="description"><?php _e( 'Determines how you select attributes.' ); ?></p>
 				</td>
 			</tr>
-			<?php } ?>
-			<?php if ( $this->storage_type_required ) { ?>
+	<?php
+}
+if ( $this->storage_type_required ) { ?>
 			<tr class="form-field form-required">
 				<th scope="row">
 					<label for="attribute_orderby"><?php _e( 'Default sort order' ); ?></label>
@@ -115,29 +118,32 @@ foreach ( $att_relations as $relation ) {
 					<p class="description"><?php _e( 'Determines the sort order on the frontend for this attribute.' ); ?></p>
 				</td>
 			</tr>
-			<?php } ?>
-			<?php if ( ! empty( $this->post_type ) ) { ?>
+	<?php
+}
+if ( ! empty( $this->post_type ) ) { ?>
 			<tr>
 				<th></th>
 				<td>
 					<input type="hidden" name="attribute_post_types[]" value="<?php echo esc_html( $this->post_type ); ?>" />
 				</td>
 			</tr>
-			<?php } else { ?>
+	<?php
+} else { ?>
 			<tr class="form-required">
 				<th scope="row">
 					<label for="attribute_post_types"><?php _e( 'Post Types' ); ?></label>
 				</th>
 				<td>
-					<?php $all_post_types = get_post_types( '', 'objects' ); ?>
-					<?php foreach ( $all_post_types as $pt ) { ?>
+	<?php $all_post_types = get_post_types( '', 'objects' );
+	foreach ( $all_post_types as $pt ) { ?>
 					<label><input type="checkbox" name="attribute_post_types[]" <?php echo esc_html( ( in_array( $pt->name, $att_post_types ) ) ? 'checked="checked"' : '' ); ?> value="<?php echo esc_html( $pt->name ); ?>" /><?php echo esc_html( $pt->labels->name ); ?></label>
-					<?php } ?>
+	<?php } ?>
 
 					<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
 				</td>
 			</tr>
-			<?php } ?>
+	<?php
+} ?>
 			</tbody>
 		</table>
 		<p class="submit"><input type="submit" name="save_attribute" id="submit" class="button-primary" value="<?php _e( 'Update' ); ?>"></p>

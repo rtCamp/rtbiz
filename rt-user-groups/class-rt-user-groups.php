@@ -486,9 +486,10 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 						<select name="<?php echo esc_attr( $this->user_group_slug ); ?>"
 						        id="<?php echo esc_attr( $this->user_group_slug ); ?>-select" style="max-width: 300px;">
 							<option value=""><?php _e( 'Select ' . sanitize_title( $this->labels['name'] ) . '&hellip;', 'rtlib' ); ?></option>
-						<?php foreach ( $terms as $term ) { ?>
+						<?php
+			foreach ( $terms as $term ) { ?>
 							<option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
-						<?php } ?>
+			<?php } ?>
 						</select>
 						<?php wp_nonce_field( 'bulk-edit-' . $this->user_group_slug ) ?>
 					</div>
@@ -603,6 +604,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$this->remove_user_groups( $user_id, $diff );
 
 			$this->set_user_groups( $user_id, $user_groups );
+
+			return true;
 		}
 
 		/**
@@ -699,7 +702,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					   class="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $this->user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all %s', 'rtlib' ), $role_name ) ); ?>
 					</a>
 
-					<?php if ( ! empty( $role ) ) { ?>
+				<?php
+				if ( ! empty( $role ) ) { ?>
 						<a href="<?php echo esc_html( remove_query_arg( 'role' ) ); ?>"
 						   class="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $this->user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all users in "%s"', 'rtlib' ), $current->name ) ); ?>
 						</a>
@@ -733,7 +737,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			</style>
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
-					<?php if ( isset( $_GET[ $this->user_group_slug ] ) ) { ?>
+			<?php
+			if ( isset( $_GET[ $this->user_group_slug ] ) ) { ?>
 					$('ul.subsubsub li a').each(function () {
 						var $that = $(this);
 						$(this).attr('href', function () {
@@ -954,7 +959,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					</tr>
 					</tbody>
 				</table>
-			<?php } else { ?>
+				<?php
+			} else { ?>
 				<div class="form-field">
 					<p>
 						<input type="text" style="width:40%" name="<?php echo esc_attr( $this->user_group_slug ); ?>[group-color]"
