@@ -8,7 +8,7 @@
  */
 
 try {
-	if ( 'cli' !== php_sapi_name() ) {
+	if ( php_sapi_name() !== 'cli' ) {
 		throw new Exception( 'Only allowed in CLI mode.' );
 	}
 
