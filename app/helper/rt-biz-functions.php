@@ -368,7 +368,8 @@ function rt_biz_get_user_groups() {
 }
 
 function rt_biz_get_group_users( $group_term_id ) {
-	$user_ids = get_objects_in_term( $group_term_id, 'user-group' );
+	global $rtbiz_user_groups;
+	$user_ids = $rtbiz_user_groups->get_user_by_group_id( $group_term_id );
 	if ( ! $user_ids instanceof WP_Error ) {
 		return $user_ids;
 	}
