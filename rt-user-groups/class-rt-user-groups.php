@@ -57,7 +57,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$this->caps            = $caps;
 			$this->multiple        = $sel_multi;
 
-			$this->auto_loader();
+			self::auto_loader();
 
 			$this->init();
 
@@ -106,8 +106,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		/**
 		 * Auto loader for model classes
 		 */
-		function auto_loader() {
-			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
+		static function auto_loader() {
+			$auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
 
 		/**
@@ -115,8 +115,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 */
 		function init() {
-			global $rtlib_user_group_model;
-			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 		}
 
 		/**
@@ -493,9 +493,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 						<select name="<?php echo esc_attr( self::$user_group_slug ); ?>"
 						        id="<?php echo esc_attr( self::$user_group_slug ); ?>-select" style="max-width: 300px;">
 							<option value=""><?php _e( 'Select ' . sanitize_title( $this->labels['name'] ) . '&hellip;', 'rtlib' ); ?></option>
-						<?php foreach ( $terms as $term ) { ?>
-							<option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
-						<?php } ?>
+							<?php foreach ( $terms as $term ) { ?>
+								<option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
+							<?php } ?>
 						</select>
 						<?php wp_nonce_field( 'bulk-edit-' . self::$user_group_slug ) ?>
 					</div>
@@ -546,17 +546,17 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					</th>
 
 					<td>
-			<?php
-			/* If there are any terms availabel, loop through them and display radioboxes/checkboxes. */
-			if ( ! empty( $terms ) ) {
-				echo '<ul>';
-				$ele_type = $this->multiple ? 'checkbox' : 'radio';
-				foreach ( $terms as $term ) {
-					$color = $this->get_group_meta( 'group-color', $term->term_id );
-					if ( ! empty( $color ) ) {
-						$color = ' style="padding:2px .5em; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . '"';
-					}
-					?>
+						<?php
+						/* If there are any terms availabel, loop through them and display radioboxes/checkboxes. */
+						if ( ! empty( $terms ) ) {
+							echo '<ul>';
+							$ele_type = $this->multiple ? 'checkbox' : 'radio';
+							foreach ( $terms as $term ) {
+								$color = $this->get_group_meta( 'group-color', $term->term_id );
+								if ( ! empty( $color ) ) {
+									$color = ' style="padding:2px .5em; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . '"';
+								}
+								?>
 								<li><input type="<?php echo esc_attr( $ele_type ); ?>"
 								           name="<?php echo esc_attr( self::$user_group_slug ); ?>[]"
 								           id="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
@@ -565,9 +565,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 								</li> <?php
 							}
 							echo '</ul>';
-			} /* If there are no user group terms, display a message. */ else {
-				_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
-			}
+						} /* If there are no user group terms, display a message. */ else {
+							_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
+						}
 						?>
 					</td>
 				</tr>
@@ -776,7 +776,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $user_id
 		 */
 		function delete_term_relationships( $user_id ) {
-			global $rtlib_user_group_model;
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			wp_delete_object_term_relationships( $user_id, self::$user_group_slug );
 			$this->remove_all_user_groups( $user_id );
@@ -1048,7 +1048,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function set_user_group( $user_id, $group_name ) {
 
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$term = get_term_by( 'slug', $group_name, self::$user_group_slug );
 
@@ -1083,7 +1083,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $group_name
 		 */
 		function remove_user_group( $user_id, $group_name ) {
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 			$term = get_term_by( 'slug', esc_attr( $group_name ), self::$user_group_slug );
 
 			$where = array( 'user_id' => $user_id, 'term_taxonomy_id' => $term->term_taxonomy_id, );
@@ -1098,7 +1098,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $user_id
 		 */
 		function remove_all_user_groups( $user_id ) {
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$where = array( 'user_id' => $user_id, );
 
@@ -1115,7 +1115,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return boolean
 		 */
 		function is_user_has_group( $user_id, $term_taxonomy_id ) {
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$columns         = array( 'user_id' => $user_id, 'term_taxonomy_id' => $term_taxonomy_id, );
 			$all_users_group = $rtlib_user_group_model->get( $columns );
@@ -1136,7 +1136,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return type
 		 */
 		static function get_user_groups( $user_id ) {
-			global $rtlib_user_group_model;
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$columns = array( 'user_id' => $user_id, );
 
@@ -1163,8 +1164,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return type
 		 */
 		static function get_user_by_group_slug( $slug ) {
-
-			global $rtlib_user_group_model;
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 			$user_ids = array();
 
 			$term = get_term_by( 'slug', esc_attr( $slug ), self::$user_group_slug );
@@ -1185,7 +1186,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return array
 		 */
 		static function get_user_by_group_id( $group_id ) {
-			global $rtlib_user_group_model;
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 			$user_ids = array();
 
 			$term = get_term_by( 'id', $group_id, self::$user_group_slug );
