@@ -5,27 +5,6 @@ wp-plugin-dev-lib
 
 It is intended that this repo be included in plugin repo via git-subtree/submodule in a `bin/` directory.
 
-To **add** it to your repo, do:
-
-```bash
-git subtree add --prefix bin \
-  git@github.com:x-team/wp-plugin-dev-lib.git master --squash
-```
-
-To **update** the library with the latest changes:
-
-```bash
-git subtree pull --prefix bin \
-  git@github.com:x-team/wp-plugin-dev-lib.git master --squash
-```
-
-And if you have changes you want to **upstream**, do:
-
-```bash
-git subtree push --prefix bin \
-  git@github.com:x-team/wp-plugin-dev-lib.git master
-```
-
 Symlink to the `.travis.yml`, `.jshintrc` inside of the `bin/` directory you added:
 
 ```bash
@@ -49,5 +28,3 @@ What is also included in this repo is an [`svn-push`](svn-push) to push commits 
 The `/assets/` directory in the root of the project will get automatically moved one directory above in the SVN repo (alongside
 `trunk`, `branches`, and `tags`). To use, include an `svn-url` file in the root of your repo and let this file contains he full root URL
 to the WordPress.org repo for plugin (don't include `trunk`).
-
-The utilities in this project were first developed to facilitate development of [X-Team](http://x-team.com/wordpress/)'s [plugins](http://profiles.wordpress.org/x-team/).
