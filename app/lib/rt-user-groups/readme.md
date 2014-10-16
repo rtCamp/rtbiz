@@ -25,16 +25,18 @@ In case of users where it causes enough ambiguity; we decided to take control in
 Also those functions will give correct user relationships when fetched.
 
 ##DB Schema
-rt_user_groups_relationships
-|
-| - user_id
-| - term_taxonomy_id
-| - term_order
+
+**rt_user_groups_relationships**
+
+ - user_id
+ - term_taxonomy_id
+ - term_order
 
 
 ## How to Use
 
 Create Object of RT_User_Groups Class with argument taxonomy slug and its label
+
     $obj = new RT_User_Groups( Slug, Label_Array, Caps, Select_multiple );
 
 	Slug : Group slug
@@ -73,22 +75,29 @@ Create Object of RT_User_Groups Class with argument taxonomy slug and its label
     );
 
 Assign group-User Relationship
-    set_user_group( User_ID, Taxonomy_Slug  )
+
+    set_user_group( User_ID, term_Slug  )
 
 Remove group-User Relationship
-    remove_user_group( User_ID, Taxonomy_Slug  )
+
+    remove_user_group( User_ID, term_Slug  )
 
 Remove all user groups for given user
+
 	remove_all_user_groups( User_ID )
 
 Check group-User Relationship exist or not
-    is_user_has_group( User_ID, Taxonomy_Slug  )
+
+    is_user_has_group( User_ID, term_Slug  )
 
 Get list of groups for given user
+
     get_user_groups( User_ID )
 
 Get list of user for given group slug
-    get_user_by_group_slug( Taxonomy_Slug )
 
-```php
-```
+    get_user_by_group_slug( term_Slug )
+
+Get list of user for given group term id
+
+    get_user_by_group_slug( Taxonomy_Slug )
