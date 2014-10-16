@@ -112,6 +112,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 
 	/**
 	 * testing remove user groups functionality
+	 *
 	 */
 	function test_remove_user_groups() {
 		if ( ! taxonomy_exists( 'user-group' ) ){
