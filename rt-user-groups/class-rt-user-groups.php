@@ -38,16 +38,20 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		var $multiple = true;
 
+		var $to_register_posttype = array();
+
 		/**
 		 * Constructor
 		 *
-		 * @param $slug
-		 * @param $label
-		 * @param $caps
-		 * @param $sel_multi
+		 * @param      $slug
+		 * @param      $label
+		 * @param      $caps
+		 * @param      $require_support add post_types on which you want support for user group
+		 * @param bool $sel_multi
 		 */
-		public function __construct( $slug, $label, $caps, $sel_multi = true ) {
+		public function __construct( $slug, $label, $caps, $require_support = array(), $sel_multi = true ) {
 
+			$this->to_register_posttype = $require_support;
 			$this->user_group_slug = $slug;
 			$this->labels          = $label;
 			$this->caps            = $caps;
@@ -59,7 +63,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 			$this->db_upgrade();
 
-			add_action( 'plugins_loaded', array( $this, 'register_user_group' ), 12 );
+			add_action( 'init', array( $this, 'register_user_group' ), 5 );
 			add_action( 'create_term', array( $this, 'save_user_group' ), 10, 2 );
 			add_action( 'edit_term', array( $this, 'save_user_group' ), 10, 2 );
 
@@ -131,8 +135,11 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function register_user_group() {
 
 			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $this->caps, );
-
-			$supports = apply_filters( 'rtlib_user_group_support', array( 'user' ) );
+			$tmp_posttype = array( 'user' );
+			if ( ! empty( $this->to_register_posttype ) ) {
+				$tmp_posttype = $this->to_register_posttype;
+			}
+			$supports = apply_filters( 'rtlib_user_group_support', $tmp_posttype );
 			register_taxonomy( $this->user_group_slug, $supports, $arg );
 		}
 
@@ -1161,29 +1168,6 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$user_ids = array();
 
 			$term = get_term_by( 'slug', esc_attr( $slug ), $this->user_group_slug );
-			if ( isset( $term ) && ! empty( $term ) ) {
-				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
-				$users   = $rtlib_user_group_model->get( $columns );
-				foreach ( $users as $user ) {
-					$user_ids[] = $user->user_id;
-				}
-			}
-
-			return $user_ids;
-		}
-
-
-		/**
-		 * Get list of user for given group id
-		 * @param $group_id
-		 *
-		 * @return array
-		 */
-		function get_user_by_group_id( $group_id ) {
-			global $rtlib_user_group_model;
-			$user_ids = array();
-
-			$term = get_term_by( 'id', $group_id, $this->user_group_slug );
 			if ( isset( $term ) && ! empty( $term ) ) {
 				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
 				$users   = $rtlib_user_group_model->get( $columns );
