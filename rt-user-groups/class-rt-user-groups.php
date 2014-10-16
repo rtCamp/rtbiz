@@ -548,26 +548,26 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 					<td>
 						<?php
 						/* If there are any terms availabel, loop through them and display radioboxes/checkboxes. */
-						if ( ! empty( $terms ) ) {
-							echo '<ul>';
-							$ele_type = $this->multiple ? 'checkbox' : 'radio';
-							foreach ( $terms as $term ) {
-								$color = $this->get_group_meta( 'group-color', $term->term_id );
-								if ( ! empty( $color ) ) {
-									$color = ' style="padding:2px .5em; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . '"';
-								}
-								?>
-								<li><input type="<?php echo esc_attr( $ele_type ); ?>"
-								           name="<?php echo esc_attr( self::$user_group_slug ); ?>[]"
-								           id="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
-								           value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, $this->is_user_has_group( $user->ID, $term->term_taxonomy_id ) ); ?> />
-									<label for="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php printf( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
-								</li> <?php
-							}
-							echo '</ul>';
-						} /* If there are no user group terms, display a message. */ else {
-							_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
-						}
+			if ( ! empty( $terms ) ) {
+				echo '<ul>';
+				$ele_type = $this->multiple ? 'checkbox' : 'radio';
+				foreach ( $terms as $term ) {
+					$color = $this->get_group_meta( 'group-color', $term->term_id );
+					if ( ! empty( $color ) ) {
+						$color = ' style="padding:2px .5em; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . '"';
+					}
+					?>
+					<li><input type="<?php echo esc_attr( $ele_type ); ?>"
+					           name="<?php echo esc_attr( self::$user_group_slug ); ?>[]"
+					           id="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
+					           value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, $this->is_user_has_group( $user->ID, $term->term_taxonomy_id ) ); ?> />
+						<label for="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php printf( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
+					</li> <?php
+				}
+				echo '</ul>';
+			} /* If there are no user group terms, display a message. */ else {
+				_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
+			}
 						?>
 					</td>
 				</tr>
