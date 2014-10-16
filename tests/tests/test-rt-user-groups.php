@@ -49,7 +49,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 	 * testing constructor is working correctly or not
 	 */
 	function test_construct() {
-		$this->assertEquals( 'user-group', $this->RT_User_Groups->user_group_slug, 'Slug value is not set or invalid' );
+		$this->assertEquals( 'user-group', RT_User_Groups::$user_group_slug , 'Slug value is not set or invalid' );
 
 		$this->assertEquals(
 			array(
@@ -83,7 +83,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 	 */
 	function test_register_user_group() {
 		$this->RT_User_Groups->register_user_group();
-		$this->assertTrue( taxonomy_exists( $this->RT_User_Groups->user_group_slug ) );
+		$this->assertTrue( taxonomy_exists( RT_User_Groups::$user_group_slug ) );
 	}
 
 	/**
@@ -99,7 +99,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 				'slug'        => 'apple',
 			) );
 		$this->RT_User_Groups->set_user_group( 1, 'apple' );
-		$val = $this->RT_User_Groups->get_user_by_group_slug( 'apple' );
+		$val = RT_User_Groups::get_user_by_group_slug( 'apple' );
 		$this->assertEquals( '1', $val[0] );
 
 		$this->assertTrue( $this->RT_User_Groups->is_user_has_group( 1, $termsid['term_taxonomy_id'] ) );
@@ -112,6 +112,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 
 	/**
 	 * testing remove user groups functionality
+	 *
 	 */
 	function test_remove_user_groups() {
 		if ( ! taxonomy_exists( 'user-group' ) ){
