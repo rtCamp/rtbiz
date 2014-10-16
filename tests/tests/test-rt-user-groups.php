@@ -41,7 +41,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 				'separate_items_with_commas' => __( 'Separate departments with commas' ),
 				'add_or_remove_items'        => __( 'Add or remove departments' ),
 				'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
-			), $terms_cap
+			), $terms_cap, array()
 		);
 	}
 
