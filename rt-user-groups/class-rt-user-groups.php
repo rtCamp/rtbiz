@@ -63,7 +63,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 			$this->db_upgrade();
 
-			add_action( 'init', array( $this, 'register_user_group' ), 5 );
+			add_action( 'plugins_loaded', array( $this, 'register_user_group' ), 12 );
 			add_action( 'create_term', array( $this, 'save_user_group' ), 10, 2 );
 			add_action( 'edit_term', array( $this, 'save_user_group' ), 10, 2 );
 
