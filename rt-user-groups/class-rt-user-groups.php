@@ -536,13 +536,13 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$terms = get_terms( $this->user_group_slug, array( 'hide_empty' => false ) );
 			?>
 
-			<h3 id="<?php echo esc_attr( $this->user_group_slug ); ?>"><?php echo sanitize_title( $this->labels['name'] ); ?></h3>
+			<h3 id="<?php echo esc_attr( $this->user_group_slug ); ?>"><?php echo printf( $this->labels['name'] ); ?></h3>
 			<table class="form-table">
 				<tr>
 					<th>
 						<label for="<?php echo esc_attr( $this->user_group_slug ); ?>"
-						       style="font-weight:bold; display:block;"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['name'] ); ?></label>
-						<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=' . $this->user_group_slug ) ); ?>"><?php _e( 'Add a User Group', 'rtlib' ); ?></a>
+						       style="font-weight:bold; display:block;"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['singular_name'] ); ?></label>
+						<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=' . $this->user_group_slug ) ); ?>"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['singular_name'] ); ?></a>
 					</th>
 
 					<td>
@@ -561,7 +561,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 								           name="<?php echo esc_attr( $this->user_group_slug ); ?>[]"
 								           id="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
 								           value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, $this->is_user_has_group( $user->ID, $term->term_taxonomy_id ) ); ?> />
-									<label for="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php echo esc_attr( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
+									<label for="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php printf( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
 								</li> <?php
 							}
 							echo '</ul>';
@@ -1168,6 +1168,27 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$user_ids = array();
 
 			$term = get_term_by( 'slug', esc_attr( $slug ), $this->user_group_slug );
+			if ( isset( $term ) && ! empty( $term ) ) {
+				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
+				$users   = $rtlib_user_group_model->get( $columns );
+				foreach ( $users as $user ) {
+					$user_ids[] = $user->user_id;
+				}
+			}
+
+			return $user_ids;
+		}
+		/**
+		 * Get list of user for given group id
+		 * @param $group_id
+		 *
+		 * @return array
+		 */
+		function get_user_by_group_id( $group_id ) {
+			global $rtlib_user_group_model;
+			$user_ids = array();
+
+			$term = get_term_by( 'id', $group_id, $this->user_group_slug );
 			if ( isset( $term ) && ! empty( $term ) ) {
 				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
 				$users   = $rtlib_user_group_model->get( $columns );
