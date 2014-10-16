@@ -89,12 +89,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_notification_queue();
 
+//			$this->init_department();
+
 			$this->init_access_control();
 			$this->init_modules();
 
-			$this->init_department();
+			add_action( 'plugins_loaded', array($this, 'init_department'), 30 );
+//			add_action( 'after_setup_theme', array($this, 'init_department'),20 );
+
 			$this->init_settings();
-//			$this->init_menu_order();
+			//			$this->init_menu_order();
 
 			$this->init_dashboard();
 
@@ -172,9 +176,23 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'assign_terms' => true,//$editor_cap,
 			);
 
+//			Rt_Access_Control::$modules;
+			$to_register_posttype = array();
+			foreach ( Rt_Access_Control::$modules as $key => $value ){
+
+				if ( isset( $value['require_support'] ) ) {
+					if ( isset( $value['post_types'] ) ) {
+						foreach( $value['post_types'] as $posttype ) {
+							array_push( $to_register_posttype, $posttype );
+						}
+					}
+				}
+			}
+
+//			error_log( var_export( $to_register_posttype, true) . " : -> system", 3, "/var/tmp/my-errors.log");
 			$rtbiz_user_groups = new RT_User_Groups( 'user-group', array(
 					'name'                       => __( 'Departments' ),
-					'singular_name'              => __( 'Departmet' ),
+					'singular_name'              => __( 'Department' ),
 					'menu_name'                  => __( 'Departments' ),
 					'search_items'               => __( 'Search Departments' ),
 					'popular_items'              => __( 'Popular Departments' ),
@@ -186,7 +204,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'separate_items_with_commas' => __( 'Separate departments with commas' ),
 					'add_or_remove_items'        => __( 'Add or remove departments' ),
 					'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
-				), $terms_caps
+				), $terms_caps , $to_register_posttype
 			);
 		}
 
@@ -581,6 +599,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
 				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
+				'require_support' => true,
 			);
 
 			return $modules;
