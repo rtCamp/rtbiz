@@ -437,8 +437,7 @@ function rt_biz_get_wp_user_for_person( $person_id ) {
 }
 
 function rt_biz_get_user_department( $user_ID ) {
-	global $rtbiz_user_groups;
-	return $rtbiz_user_groups->get_user_groups( $user_ID );
+	return RT_User_Groups::get_user_groups( $user_ID );
 }
 
 function rt_biz_get_user_department_section( $user ) {
