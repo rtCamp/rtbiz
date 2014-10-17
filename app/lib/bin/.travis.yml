@@ -22,6 +22,8 @@ before_script:
     - pear install PHP_CodeSniffer
     - cd $(pear config-get php_dir)/PHP/CodeSniffer/Standards/
     - git clone git://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
+    - cd WordPress-Coding-Standards/
+    - git checkout -b master origin/master
     - cd $(pear config-get php_dir)/PHP/CodeSniffer/Standards/
     - ln -s WordPress-Coding-Standards/WordPress WordPress
     - ln -s WordPress-Coding-Standards/WordPress-Core WordPress-Core

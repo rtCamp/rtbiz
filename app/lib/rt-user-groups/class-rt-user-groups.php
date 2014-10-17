@@ -21,7 +21,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		/**
 		 * @var $user_group_slug - User group slug
 		 */
-		var $user_group_slug = '';
+		static $user_group_slug = '';
 
 		/**
 		 * @var $labels - Lable array
@@ -38,22 +38,26 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		var $multiple = true;
 
+		var $to_register_posttype = array();
+
 		/**
 		 * Constructor
 		 *
-		 * @param $slug
-		 * @param $label
-		 * @param $caps
-		 * @param $sel_multi
+		 * @param      $slug
+		 * @param      $label
+		 * @param      $caps
+		 * @param      $require_support add post_types on which you want support for user group
+		 * @param bool $sel_multi
 		 */
-		public function __construct( $slug, $label, $caps, $sel_multi = true ) {
+		public function __construct( $slug, $label, $caps, $require_support = array(), $sel_multi = true ) {
 
-			$this->user_group_slug = $slug;
+			$this->to_register_posttype = $require_support;
+			self::$user_group_slug = $slug;
 			$this->labels          = $label;
 			$this->caps            = $caps;
 			$this->multiple        = $sel_multi;
 
-			$this->auto_loader();
+			self::auto_loader();
 
 			$this->init();
 
@@ -63,9 +67,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			add_action( 'create_term', array( $this, 'save_user_group' ), 10, 2 );
 			add_action( 'edit_term', array( $this, 'save_user_group' ), 10, 2 );
 
-			add_filter( $this->user_group_slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
-			add_action( 'manage_' . $this->user_group_slug . '_custom_column', array( $this, 'manage_user_group_user_column_ui' ), 10, 3 );
-			add_filter( 'manage_edit-' . $this->user_group_slug . '_columns', array( $this, 'manage_user_group_user_column' ) );
+			add_filter( self::$user_group_slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
+			add_action( 'manage_' . self::$user_group_slug . '_custom_column', array( $this, 'manage_user_group_user_column_ui' ), 10, 3 );
+			add_filter( 'manage_edit-' . self::$user_group_slug . '_columns', array( $this, 'manage_user_group_user_column' ) );
 
 			add_action( 'admin_print_scripts', array( $this, 'js_includes' ) );
 			add_action( 'admin_print_styles', array( $this, 'css_includes' ) );
@@ -102,8 +106,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		/**
 		 * Auto loader for model classes
 		 */
-		function auto_loader() {
-			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
+		static function auto_loader() {
+			$auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
 
 		/**
@@ -111,8 +115,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @global RT_User_Groups_Relationships_Model $rtlib_user_group_model
 		 */
 		function init() {
-			global $rtlib_user_group_model;
-			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 		}
 
 		/**
@@ -131,9 +135,12 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function register_user_group() {
 
 			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $this->caps, );
-
-			$supports = apply_filters( 'rtlib_user_group_support', array( 'user' ) );
-			register_taxonomy( $this->user_group_slug, $supports, $arg );
+			$tmp_posttype = array( 'user' );
+			if ( ! empty( $this->to_register_posttype ) ) {
+				$tmp_posttype = $this->to_register_posttype;
+			}
+			$supports = apply_filters( 'rtlib_user_group_support', $tmp_posttype );
+			register_taxonomy( self::$user_group_slug, $supports, $arg );
 		}
 
 		/**
@@ -142,10 +149,10 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type $term_id
 		 */
 		function save_user_group( $term_id ) {
-			if ( isset( $_POST[ $this->user_group_slug ] ) ) {
-				$term_meta             = (array) get_option( $this->user_group_slug . '-meta' );
-				$term_meta[ $term_id ] = (array) $_POST[ $this->user_group_slug ];
-				update_option( $this->user_group_slug . '-meta', $term_meta );
+			if ( isset( $_POST[ self::$user_group_slug ] ) ) {
+				$term_meta             = (array) get_option( self::$user_group_slug . '-meta' );
+				$term_meta[ $term_id ] = (array) $_POST[ self::$user_group_slug ];
+				update_option( self::$user_group_slug . '-meta', $term_meta );
 				if ( isset( $_POST['_wp_original_http_referer'] ) ) {
 					wp_safe_redirect( $_POST['_wp_original_http_referer'] );
 					exit();
@@ -157,7 +164,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * add view action for group
 		 */
 		function row_actions( $actions, $term ) {
-			$actions['view'] = sprintf( __( '%sView%s', 'rtlib' ), '<a href="' . esc_url( add_query_arg( array( $this->user_group_slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
+			$actions['view'] = sprintf( __( '%sView%s', 'rtlib' ), '<a href="' . esc_url( add_query_arg( array( self::$user_group_slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
 
 			return $actions;
 		}
@@ -192,9 +199,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function manage_user_group_user_column_ui( $display, $column, $term_id ) {
 			switch ( $column ) {
 				case 'users':
-					$term = get_term( $term_id, $this->user_group_slug );
-					$users = $this->get_user_by_group_slug( $term->slug );
-					echo '<a href="' . esc_url( admin_url( 'users.php?' . $this->user_group_slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( '%s Users', '%s Users', count( $users ), 'rtlib' ), count( $users ) ) );
+					$term = get_term( $term_id, self::$user_group_slug );
+					$users = self::get_user_by_group_slug( $term->slug );
+					echo '<a href="' . esc_url( admin_url( 'users.php?' . self::$user_group_slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( '%s Users', '%s Users', count( $users ), 'rtlib' ), count( $users ) ) );
 					break;
 				case 'color':
 					$color = $this->get_group_meta( 'group-color', $term_id );
@@ -362,13 +369,13 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			//remove_all_actions('user-group_add_form_fields');
 			// If you use Rich Text tags, go ahead!
 			if ( function_exists( 'kws_rich_text_tags' ) ) {
-				add_action( $this->user_group_slug . '_edit_form_fields', 'kws_add_form' );
-				add_action( $this->user_group_slug . '_add_form_fields', 'kws_add_form' );
+				add_action( self::$user_group_slug . '_edit_form_fields', 'kws_add_form' );
+				add_action( self::$user_group_slug . '_add_form_fields', 'kws_add_form' );
 			}
-			add_action( $this->user_group_slug . '_add_form_fields', array( $this, 'user_group_group_add_new_meta_field' ), 10, 2 );
-			add_action( $this->user_group_slug . '_add_form_fields', array( $this, 'add_form_color_field' ), 11, 2 );
-			add_action( $this->user_group_slug . '_edit_form_fields', array( $this, 'user_group_group_edit_meta_field' ), 10, 2 );
-			add_action( $this->user_group_slug . '_edit_form', array( $this, 'add_form_color_field' ), 11, 2 );
+			add_action( self::$user_group_slug . '_add_form_fields', array( $this, 'user_group_group_add_new_meta_field' ), 10, 2 );
+			add_action( self::$user_group_slug . '_add_form_fields', array( $this, 'add_form_color_field' ), 11, 2 );
+			add_action( self::$user_group_slug . '_edit_form_fields', array( $this, 'user_group_group_edit_meta_field' ), 10, 2 );
+			add_action( self::$user_group_slug . '_edit_form', array( $this, 'add_form_color_field' ), 11, 2 );
 		}
 
 		/**
@@ -379,7 +386,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return type
 		 */
 		function add_group_columns_user( $defaults ) {
-			$defaults[ $this->user_group_slug ] = $this->labels['name'];
+			$defaults[ self::$user_group_slug ] = $this->labels['name'];
 			return $defaults;
 		}
 
@@ -394,15 +401,15 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function add_group_columns_user_ui( $value, $column_name, $user_id ) {
 			switch ( $column_name ) {
-				case $this->user_group_slug:
+				case self::$user_group_slug:
 					//return self::get_user_user_group_tags( $user_id );
-					$terms = $this->get_user_groups( $user_id );
+					$terms = self::get_user_groups( $user_id );
 					if ( empty( $terms ) ) {
 						return false;
 					}
 					$in = array();
 					foreach ( $terms as $term ) {
-						$href  = empty( $page ) ? add_query_arg( array( $this->user_group_slug => $term->slug ), admin_url( 'users.php' ) ) : add_query_arg( array( $this->user_group_slug => $term->slug ), $page );
+						$href  = empty( $page ) ? add_query_arg( array( self::$user_group_slug => $term->slug ), admin_url( 'users.php' ) ) : add_query_arg( array( self::$user_group_slug => $term->slug ), $page );
 						$color = $this->get_group_meta( 'group-color', $term->term_id );
 						$in[] = sprintf( '%s%s%s', '<a style="text-decoration:none; color:white; cursor: pointer; border:0; padding:2px 3px; margin:0 .3em .2em 0; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . ';" href="' . $href . '" title="' . esc_attr( $term->description ) . '">', $term->name, '</a>' );
 					}
@@ -418,35 +425,35 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return type
 		 */
 		function bulk_edit_action() {
-			if ( ! isset( $_REQUEST[ 'bulk_edit_' . $this->user_group_slug . '_submit' ] ) || empty( $_POST[ $this->user_group_slug ] ) ) {
+			if ( ! isset( $_REQUEST[ 'bulk_edit_' . self::$user_group_slug . '_submit' ] ) || empty( $_POST[ self::$user_group_slug ] ) ) {
 				return;
 			}
-			check_admin_referer( 'bulk-edit-' . $this->user_group_slug );
+			check_admin_referer( 'bulk-edit-' . self::$user_group_slug );
 
 			// Get an array of users from the string
-			parse_str( urldecode( $_POST[ 'users_' . $this->user_group_slug ] ), $users );
+			parse_str( urldecode( $_POST[ 'users_' . self::$user_group_slug ] ), $users );
 
 			if ( empty( $users ) ) {
 				return;
 			}
 
-			$action = $_POST[ 'groupaction_' . $this->user_group_slug ];
+			$action = $_POST[ 'groupaction_' . self::$user_group_slug ];
 
 			foreach ( $users['users'] as $user ) {
 				$update_groups = array();
-				$groups        = $this->get_user_groups( $user );
+				$groups        = self::get_user_groups( $user );
 
 				foreach ( $groups as $group ) {
 					$update_groups[ $group->slug ] = $group->slug;
 				}
 
 				if ( 'add' === $action ) {
-					if ( ! in_array( $_POST[ $this->user_group_slug ], $update_groups ) ) {
-						$this->set_user_group( $user, $_POST[ $this->user_group_slug ] );
+					if ( ! in_array( $_POST[ self::$user_group_slug ], $update_groups ) ) {
+						$this->set_user_group( $user, $_POST[ self::$user_group_slug ] );
 					}
 				} elseif ( 'remove' === $action ) {
-					if ( in_array( $_POST[ $this->user_group_slug ], $update_groups ) ) {
-						$this->remove_user_group( $user, $_POST[ $this->user_group_slug ] );
+					if ( in_array( $_POST[ self::$user_group_slug ], $update_groups ) ) {
+						$this->remove_user_group( $user, $_POST[ self::$user_group_slug ] );
 					}
 				}
 			}
@@ -459,50 +466,50 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			if ( ! current_user_can( 'assign_terms' ) ) {
 				return $views;
 			}
-			$terms = get_terms( $this->user_group_slug, array( 'hide_empty' => false ) );
+			$terms = get_terms( self::$user_group_slug, array( 'hide_empty' => false ) );
 			?>
-			<form method="post" id="bulk_edit_<?php echo esc_attr( $this->user_group_slug ); ?>_form" class="alignright"
+			<form method="post" id="bulk_edit_<?php echo esc_attr( self::$user_group_slug ); ?>_form" class="alignright"
 			      style="clear:right; margin:0 10px;">
 				<fieldset>
 					<legend
 						class="screen-reader-text"><?php printf( __( 'Update %s', 'rtlib' ), $this->labels['name'] ); ?></legend>
 					<div>
-						<label for="groupactionadd_<?php echo esc_attr( $this->user_group_slug ); ?>" style="margin-right:5px;">
-							<input name="groupaction_<?php echo esc_attr( $this->user_group_slug ); ?>" value="add" type="radio"
-							       id="$groupactionadd_<?php esc_attr( $this->user_group_slug ); ?>"
+						<label for="groupactionadd_<?php echo esc_attr( self::$user_group_slug ); ?>" style="margin-right:5px;">
+							<input name="groupaction_<?php echo esc_attr( self::$user_group_slug ); ?>" value="add" type="radio"
+							       id="$groupactionadd_<?php esc_attr( self::$user_group_slug ); ?>"
 							       checked="checked"/> <?php _e( 'Add users to', 'rtlib' ); ?>
 						</label>
-						<label for="groupactionremove_<?php echo esc_attr( $this->user_group_slug ); ?>">
-							<input name="groupaction_<?php echo esc_attr( $this->user_group_slug ); ?>" value="remove" type="radio"
-							       id="groupactionremove_<?php echo esc_attr( $this->user_group_slug ); ?>"/> <?php _e( 'Remove users from', 'rtlib' ); ?>
+						<label for="groupactionremove_<?php echo esc_attr( self::$user_group_slug ); ?>">
+							<input name="groupaction_<?php echo esc_attr( self::$user_group_slug ); ?>" value="remove" type="radio"
+							       id="groupactionremove_<?php echo esc_attr( self::$user_group_slug ); ?>"/> <?php _e( 'Remove users from', 'rtlib' ); ?>
 						</label>
 					</div>
 					<div>
-						<input name="users_<?php echo esc_attr( $this->user_group_slug ); ?>" value="" type="hidden"
-						       id="bulk_edit_<?php echo esc_attr( $this->user_group_slug ); ?>_users"/>
+						<input name="users_<?php echo esc_attr( self::$user_group_slug ); ?>" value="" type="hidden"
+						       id="bulk_edit_<?php echo esc_attr( self::$user_group_slug ); ?>_users"/>
 
-						<label for="<?php echo esc_attr( $this->user_group_slug ); ?>-select"
+						<label for="<?php echo esc_attr( self::$user_group_slug ); ?>-select"
 						       class="screen-reader-text"><?php echo sanitize_title( $this->labels['name'] ); ?></label>
-						<select name="<?php echo esc_attr( $this->user_group_slug ); ?>"
-						        id="<?php echo esc_attr( $this->user_group_slug ); ?>-select" style="max-width: 300px;">
+						<select name="<?php echo esc_attr( self::$user_group_slug ); ?>"
+						        id="<?php echo esc_attr( self::$user_group_slug ); ?>-select" style="max-width: 300px;">
 							<option value=""><?php _e( 'Select ' . sanitize_title( $this->labels['name'] ) . '&hellip;', 'rtlib' ); ?></option>
-						<?php foreach ( $terms as $term ) { ?>
-							<option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
-						<?php } ?>
+							<?php foreach ( $terms as $term ) { ?>
+								<option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
+							<?php } ?>
 						</select>
-						<?php wp_nonce_field( 'bulk-edit-' . $this->user_group_slug ) ?>
+						<?php wp_nonce_field( 'bulk-edit-' . self::$user_group_slug ) ?>
 					</div>
 					<div class="clear" style="margin-top:.5em;">
-						<?php submit_button( __( 'Update' ), 'small', 'bulk_edit_' . esc_attr( $this->user_group_slug ) . '_submit', false ); ?>
+						<?php submit_button( __( 'Update' ), 'small', 'bulk_edit_' . esc_attr( self::$user_group_slug ) . '_submit', false ); ?>
 					</div>
 				</fieldset>
 			</form>
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
-					$('#bulk_edit_<?php echo esc_attr( $this->user_group_slug ); ?>_form').remove().insertAfter('ul.subsubsub');
-					$('#bulk_edit_<?php echo esc_attr( $this->user_group_slug ); ?>_form').live('submit', function () {
+					$('#bulk_edit_<?php echo esc_attr( self::$user_group_slug ); ?>_form').remove().insertAfter('ul.subsubsub');
+					$('#bulk_edit_<?php echo esc_attr( self::$user_group_slug ); ?>_form').live('submit', function () {
 						var users = $('.wp-list-table.users .check-column input:checked').serialize();
-						$('#bulk_edit_<?php echo esc_attr( $this->user_group_slug ); ?>_users').val(users);
+						$('#bulk_edit_<?php echo esc_attr( self::$user_group_slug ); ?>_users').val(users);
 					});
 				});
 			</script>
@@ -518,7 +525,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return type
 		 */
 		function edit_user_user_group_section( $user ) {
-			$tax = get_taxonomy( $this->user_group_slug );
+			$tax = get_taxonomy( self::$user_group_slug );
 
 			/* Make sure the user can assign terms of the profession group before proceeding. */
 			if ( ! current_user_can( $tax->cap->assign_terms ) || ! current_user_can( 'assign_terms' ) ) {
@@ -526,21 +533,21 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			}
 
 			/* Get the terms of the 'profession' group. */
-			$terms = get_terms( $this->user_group_slug, array( 'hide_empty' => false ) );
+			$terms = get_terms( self::$user_group_slug, array( 'hide_empty' => false ) );
 			?>
 
-			<h3 id="<?php echo esc_attr( $this->user_group_slug ); ?>"><?php echo sanitize_title( $this->labels['name'] ); ?></h3>
+			<h3 id="<?php echo esc_attr( self::$user_group_slug ); ?>"><?php echo printf( $this->labels['name'] ); ?></h3>
 			<table class="form-table">
 				<tr>
 					<th>
-						<label for="<?php echo esc_attr( $this->user_group_slug ); ?>"
-						       style="font-weight:bold; display:block;"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['name'] ); ?></label>
-						<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=' . $this->user_group_slug ) ); ?>"><?php _e( 'Add a User Group', 'rtlib' ); ?></a>
+						<label for="<?php echo esc_attr( self::$user_group_slug ); ?>"
+						       style="font-weight:bold; display:block;"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['singular_name'] ); ?></label>
+						<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ); ?>"><?php printf( __( 'Add a %s', 'rtlib' ), $this->labels['singular_name'] ); ?></a>
 					</th>
 
 					<td>
-			<?php
-			/* If there are any terms availabel, loop through them and display radioboxes/checkboxes. */
+						<?php
+						/* If there are any terms availabel, loop through them and display radioboxes/checkboxes. */
 			if ( ! empty( $terms ) ) {
 				echo '<ul>';
 				$ele_type = $this->multiple ? 'checkbox' : 'radio';
@@ -550,16 +557,16 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 						$color = ' style="padding:2px .5em; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . '"';
 					}
 					?>
-								<li><input type="<?php echo esc_attr( $ele_type ); ?>"
-								           name="<?php echo esc_attr( $this->user_group_slug ); ?>[]"
-								           id="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
-								           value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, $this->is_user_has_group( $user->ID, $term->term_taxonomy_id ) ); ?> />
-									<label for="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php echo esc_attr( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
-								</li> <?php
-							}
-							echo '</ul>';
+					<li><input type="<?php echo esc_attr( $ele_type ); ?>"
+					           name="<?php echo esc_attr( self::$user_group_slug ); ?>[]"
+					           id="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"
+					           value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, $this->is_user_has_group( $user->ID, $term->term_taxonomy_id ) ); ?> />
+						<label for="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( $term->slug ); ?>"<?php printf( $color ); ?>><?php echo esc_html( $term->name ); ?></label>
+					</li> <?php
+				}
+				echo '</ul>';
 			} /* If there are no user group terms, display a message. */ else {
-				_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . $this->user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
+				_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
 			}
 						?>
 					</td>
@@ -578,15 +585,15 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function save_user_user_group( $user_id, $user_groups = array(), $bulk = false ) {
 
-			$tax = get_taxonomy( $this->user_group_slug );
+			$tax = get_taxonomy( self::$user_group_slug );
 			/* Make sure the current user can edit the user and assign terms before proceeding. */
 			if ( ! current_user_can( 'assign_terms', $user_id ) && current_user_can( $tax->cap->assign_terms ) ) {
 				return false;
 			}
 
-			$user_groups = ( isset( $_POST[ $this->user_group_slug ] ) ) ? $_POST[ $this->user_group_slug ] : '';
+			$user_groups = ( isset( $_POST[ self::$user_group_slug ] ) ) ? $_POST[ self::$user_group_slug ] : '';
 
-			$old_terms = $this->get_user_groups( $user_id );
+			$old_terms = self::get_user_groups( $user_id );
 
 			$old_groups = array();
 
@@ -617,12 +624,12 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				return;
 			}
 
-			if ( ! empty( $_GET[ $this->user_group_slug ] ) ) {
+			if ( ! empty( $_GET[ self::$user_group_slug ] ) ) {
 
-				$groups = explode( ',', $_GET[ $this->user_group_slug ] );
+				$groups = explode( ',', $_GET[ self::$user_group_slug ] );
 				$ids    = array();
 				foreach ( $groups as $group ) {
-					$user_ids = $this->get_user_by_group_slug( $group );
+					$user_ids = self::get_user_by_group_slug( $group );
 					if ( isset( $user_ids ) && ! empty( $user_ids ) ) {
 						$ids = array_merge( $user_ids, $ids );
 					}
@@ -648,15 +655,15 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function user_view_filters( $views ) {
 			global $wp_roles;
 
-			$terms   = get_terms( $this->user_group_slug, array( 'hide_empty' => false ) );
+			$terms   = get_terms( self::$user_group_slug, array( 'hide_empty' => false ) );
 			$current = false;
-			$select  = '<select name="' . esc_attr( $this->user_group_slug ) . '" id="' . esc_attr( $this->user_group_slug ) . '-select"><option value="">All ' . $this->labels['name'] . '</option>' . "\n";
+			$select  = '<select name="' . esc_attr( self::$user_group_slug ) . '" id="' . esc_attr( self::$user_group_slug ) . '-select"><option value="">All ' . $this->labels['name'] . '</option>' . "\n";
 			foreach ( $terms as $term ) {
-				$user_ids = get_objects_in_term( $term->term_id, $this->user_group_slug );
-				if ( isset( $_GET[ $this->user_group_slug ] ) && $_GET[ $this->user_group_slug ] === $term->slug ) {
+				$user_ids = get_objects_in_term( $term->term_id, self::$user_group_slug );
+				if ( isset( $_GET[ self::$user_group_slug ] ) && $_GET[ self::$user_group_slug ] === $term->slug ) {
 					$current = $term;
 				}
-				$select .= '<option value="' . $term->slug . '"' . selected( true, isset( $_GET[ $this->user_group_slug ] ) && $_GET[ $this->user_group_slug ] === $term->slug, false ) . '>' . $term->name . '</option>' . "\n";
+				$select .= '<option value="' . $term->slug . '"' . selected( true, isset( $_GET[ self::$user_group_slug ] ) && $_GET[ self::$user_group_slug ] === $term->slug, false ) . '>' . $term->name . '</option>' . "\n";
 			}
 
 			$select .= '</select>';
@@ -681,11 +688,11 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 				$colorblock = empty( $bgcolor ) ? '' : '<span style="width:1.18em; height:1.18em; float:left; margin-right:.25em; background-color:' . $this->get_group_meta( 'group-color', $current->term_id ) . ';"></span>';
 				?>
-				<div id="<?php echo esc_attr( $this->user_group_slug ); ?>-header">
+				<div id="<?php echo esc_attr( self::$user_group_slug ); ?>-header">
 					<h2><?php echo balanceTags( $colorblock );
 						echo esc_html( sprintf( __( 'User Group: %s', 'rtlib' ), $current->name ) );
 						?> <a
-							href="<?php echo esc_url( admin_url( 'edit-tags.php?action=edit&taxonomy=' . esc_attr( $this->user_group_slug ) . '&tag_ID=' . esc_attr( $current->term_id ) . '&post_type=post' ) ); ?>"
+							href="<?php echo esc_url( admin_url( 'edit-tags.php?action=edit&taxonomy=' . esc_attr( self::$user_group_slug ) . '&tag_ID=' . esc_attr( $current->term_id ) . '&post_type=post' ) ); ?>"
 							class="add-new-h2"
 							style="background:#fefefe;"><?php printf( __( 'Edit %s', 'rtlib' ), $this->labels['name'] ); ?></a>
 					</h2>
@@ -695,13 +702,13 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
                     <span><?php echo esc_html( sprintf( __( 'Showing %s in %s', 'rtlib' ), $role_name, '&ldquo;' . sanitize_title( $current->name ) . '&rdquo;' ) ); ?>
 	                    .</span>
 
-					<a href="<?php echo esc_html( remove_query_arg( $this->user_group_slug ) ); ?>"
-					   class="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $this->user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all %s', 'rtlib' ), $role_name ) ); ?>
+					<a href="<?php echo esc_html( remove_query_arg( self::$user_group_slug ) ); ?>"
+					   class="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( self::$user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all %s', 'rtlib' ), $role_name ) ); ?>
 					</a>
 
 					<?php if ( ! empty( $role ) ) { ?>
 						<a href="<?php echo esc_html( remove_query_arg( 'role' ) ); ?>"
-						   class="<?php echo esc_attr( $this->user_group_slug ); ?>-<?php echo esc_attr( $this->user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all users in "%s"', 'rtlib' ), $current->name ) ); ?>
+						   class="<?php echo esc_attr( self::$user_group_slug ); ?>-<?php echo esc_attr( self::$user_group_slug ); ?>-filter"><span></span> <?php echo esc_html( sprintf( __( 'Show all users in "%s"', 'rtlib' ), $current->name ) ); ?>
 						</a>
 					<?php } ?>
 				</p>
@@ -719,36 +726,36 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			}
 			?>
 
-			<label for="<?php echo esc_attr( $this->user_group_slug ); ?>-select"><?php echo sanitize_title( $this->labels['name'] ); ?></label>
+			<label for="<?php echo esc_attr( self::$user_group_slug ); ?>-select"><?php echo sanitize_title( $this->labels['name'] ); ?></label>
 
 			<form method="get"
-			      action="<?php echo esc_url( preg_replace( '/(.*?)\/users/ism', 'users', add_query_arg( $args, remove_query_arg( $this->user_group_slug ) ) ) ); ?>"
+			      action="<?php echo esc_url( preg_replace( '/(.*?)\/users/ism', 'users', add_query_arg( $args, remove_query_arg( self::$user_group_slug ) ) ) ); ?>"
 			      style="display:inline;">
 				<?php echo balanceTags( $select ); ?>
 			</form>
 			<style type="text/css">
-				.subsubsub li. <?php echo esc_attr( $this->user_group_slug ); ?> {
+				.subsubsub li. <?php echo esc_attr( self::$user_group_slug ); ?> {
 					display: inline-block !important;
 				}
 			</style>
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
-					<?php if ( isset( $_GET[ $this->user_group_slug ] ) ) { ?>
+					<?php if ( isset( $_GET[ self::$user_group_slug ] ) ) { ?>
 					$('ul.subsubsub li a').each(function () {
 						var $that = $(this);
 						$(this).attr('href', function () {
 							var sep = $that.attr('href').match(/\?/i) ? '&' : '?';
-							return $(this).attr('href') + sep + '<?php echo esc_attr( $this->user_group_slug ); ?>=<?php echo esc_attr( $_GET[ $this->user_group_slug ] ); ?>';
+							return $(this).attr('href') + sep + '<?php echo esc_attr( self::$user_group_slug ); ?>=<?php echo esc_attr( $_GET[ self::$user_group_slug ] ); ?>';
 						});
 					});
 					<?php }
 				?>
-					$("#<?php echo esc_attr( $this->user_group_slug ); ?>-select").change(function () {
+					$("#<?php echo esc_attr( self::$user_group_slug ); ?>-select").change(function () {
 						var action = $(this).parents("form").attr('action');
 						if (action.match(/\?/i)) {
-							action = action + '&<?php echo esc_attr( $this->user_group_slug ); ?>=' + $(this).val();
+							action = action + '&<?php echo esc_attr( self::$user_group_slug ); ?>=' + $(this).val();
 						} else {
-							action = action + '?<?php echo esc_attr( $this->user_group_slug ); ?>=' + $(this).val();
+							action = action + '?<?php echo esc_attr( self::$user_group_slug ); ?>=' + $(this).val();
 						}
 
 						window.location = action;
@@ -757,7 +764,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			</script> <?php
 			$form = ob_get_clean();
 
-			$views[ $this->user_group_slug ] = $form;
+			$views[ self::$user_group_slug ] = $form;
 
 			return $views;
 		}
@@ -769,9 +776,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $user_id
 		 */
 		function delete_term_relationships( $user_id ) {
-			global $rtlib_user_group_model;
+			//			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
-			wp_delete_object_term_relationships( $user_id, $this->user_group_slug );
+			wp_delete_object_term_relationships( $user_id, self::$user_group_slug );
 			$this->remove_all_user_groups( $user_id );
 		}
 
@@ -783,7 +790,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return string
 		 */
 		function disable_username( $username ) {
-			if ( $this->user_group_slug === $username ) {
+			if ( self::$user_group_slug === $username ) {
 				$username = '';
 			}
 
@@ -863,7 +870,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				<th scope="row" valign="top"><label><?php _e( 'Color for the User Group', 'genesis' ); ?></label></th>
 				<td id="group-color-row">
 					<p>
-						<input type="text" name="<?php echo esc_attr( $this->user_group_slug ); ?>[group-color]" id="group-color"
+						<input type="text" name="<?php echo esc_attr( self::$user_group_slug ); ?>[group-color]" id="group-color"
 						       value="<?php echo esc_html( $this->get_group_meta( 'group-color' ) ); ?>"/>
                         <span
 	                        class="description hide-if-js">If you want to hide header text, add <strong>#blank</strong> as text color.</span>
@@ -883,8 +890,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			?>
 			<div class="form-field">
 				<label for="term_meta[email_address]"><?php _e( 'Email Address', 'rtcamp' ); ?></label>
-				<input type="text" name="<?php echo esc_attr( $this->user_group_slug ); ?>[email_address]"
-				       id="<?php echo esc_attr( $this->user_group_slug ); ?>[email_address]" value="">
+				<input type="text" name="<?php echo esc_attr( self::$user_group_slug ); ?>[email_address]"
+				       id="<?php echo esc_attr( self::$user_group_slug ); ?>[email_address]" value="">
 
 				<p class="description"><?php _e( 'Enter a Email address for this field', 'rtcamp' ); ?></p>
 			</div> <?php
@@ -899,17 +906,17 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$t_id      = $term->term_id;
 			$term_meta = '';
 			if ( is_multisite() ) {
-				$term_meta = get_site_option( $this->user_group_slug . '-meta' );
+				$term_meta = get_site_option( self::$user_group_slug . '-meta' );
 			} else {
-				$term_meta = get_option( $this->user_group_slug . '-meta' );
+				$term_meta = get_option( self::$user_group_slug . '-meta' );
 			}
 			?>
 			<tr class="form-field">
 				<th scope="row" valign="top"><label
 						for="term_meta[email_address]"><?php _e( 'Email Address', 'rtCamp' ); ?></label></th>
 				<td>
-					<input type="text" name="<?php echo esc_attr( $this->user_group_slug ); ?>[email_address]"
-					       id="<?php echo esc_attr( $this->user_group_slug ); ?>[email_address]"
+					<input type="text" name="<?php echo esc_attr( self::$user_group_slug ); ?>[email_address]"
+					       id="<?php echo esc_attr( self::$user_group_slug ); ?>[email_address]"
 					       value="<?php echo esc_attr( $term_meta[ $t_id ]['email_address'] ) ? esc_attr( $term_meta[ $t_id ]['email_address'] ) : ''; ?>"/>
 
 					<p class="description"><?php _e( 'Enter a email address for this field', 'rtcamp' ); ?></p>
@@ -940,7 +947,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 						</th>
 						<td id="group-color-row">
 							<p>
-								<input type="text" name="<?php echo esc_attr( $this->user_group_slug ); ?>[group-color]"
+								<input type="text" name="<?php echo esc_attr( self::$user_group_slug ); ?>[group-color]"
 								       id="group-color"
 								       value="<?php echo esc_html( $this->get_group_meta( 'group-color' ) ); ?>"/>
 								<input type="button" class="button hide-if-no-js" value="Select a Color"
@@ -957,7 +964,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			<?php } else { ?>
 				<div class="form-field">
 					<p>
-						<input type="text" style="width:40%" name="<?php echo esc_attr( $this->user_group_slug ); ?>[group-color]"
+						<input type="text" style="width:40%" name="<?php echo esc_attr( self::$user_group_slug ); ?>[group-color]"
 						       id="group-color"
 						       value="<?php echo esc_html( $this->get_group_meta( 'group-color' ) ); ?>"/>
 						<input type="button" style="margin-left:.5em;width:auto!important;" class="button hide-if-no-js"
@@ -986,7 +993,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				return false;
 			}
 
-			$term_meta = (array) get_option( $this->user_group_slug . '-meta' );
+			$term_meta = (array) get_option( self::$user_group_slug . '-meta' );
 
 			if ( ! isset( $term_meta[ $term_id ] ) ) {
 				return false;
@@ -1009,11 +1016,11 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		function is_edit_user_group( $page = false ) {
 			global $pagenow;
 
-			if ( ( ! $page || 'edit' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug ) {
+			if ( ( ! $page || 'edit' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === self::$user_group_slug ) {
 				return true;
 			}
 
-			if ( ( ! $page || 'all' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $this->user_group_slug && ( ! isset( $_GET['action'] ) || 'edit' !== $_GET['action'] ) ) {
+			if ( ( ! $page || 'all' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === self::$user_group_slug && ( ! isset( $_GET['action'] ) || 'edit' !== $_GET['action'] ) ) {
 				return true;
 			}
 
@@ -1041,9 +1048,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function set_user_group( $user_id, $group_name ) {
 
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
-			$term = get_term_by( 'slug', $group_name, $this->user_group_slug );
+			$term = get_term_by( 'slug', $group_name, self::$user_group_slug );
 
 			$data = array( 'term_taxonomy_id' => $term->term_taxonomy_id, 'term_order' => 0, );
 
@@ -1076,8 +1083,8 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $group_name
 		 */
 		function remove_user_group( $user_id, $group_name ) {
-			global $rtlib_user_group_model;
-			$term = get_term_by( 'slug', esc_attr( $group_name ), $this->user_group_slug );
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			$term = get_term_by( 'slug', esc_attr( $group_name ), self::$user_group_slug );
 
 			$where = array( 'user_id' => $user_id, 'term_taxonomy_id' => $term->term_taxonomy_id, );
 
@@ -1091,7 +1098,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @param type                                $user_id
 		 */
 		function remove_all_user_groups( $user_id ) {
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$where = array( 'user_id' => $user_id, );
 
@@ -1108,7 +1115,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 * @return boolean
 		 */
 		function is_user_has_group( $user_id, $term_taxonomy_id ) {
-			global $rtlib_user_group_model;
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$columns         = array( 'user_id' => $user_id, 'term_taxonomy_id' => $term_taxonomy_id, );
 			$all_users_group = $rtlib_user_group_model->get( $columns );
@@ -1128,8 +1135,9 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 *
 		 * @return type
 		 */
-		function get_user_groups( $user_id ) {
-			global $rtlib_user_group_model;
+		static function get_user_groups( $user_id ) {
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 
 			$columns = array( 'user_id' => $user_id, );
 
@@ -1137,7 +1145,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$terms  = array();
 			if ( isset( $groups ) && ! empty( $groups ) ) {
 				foreach ( $groups as $group ) {
-					$temp_term = get_term_by( 'term_taxonomy_id', esc_attr( $group->term_taxonomy_id ), $this->user_group_slug );
+					$temp_term = get_term_by( 'term_taxonomy_id', esc_attr( $group->term_taxonomy_id ), self::$user_group_slug );
 					if ( isset( $temp_term ) && ! empty( $temp_term ) ) {
 						$terms[] = $temp_term;
 					}
@@ -1155,12 +1163,34 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 *
 		 * @return type
 		 */
-		function get_user_by_group_slug( $slug ) {
-
-			global $rtlib_user_group_model;
+		static function get_user_by_group_slug( $slug ) {
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
 			$user_ids = array();
 
-			$term = get_term_by( 'slug', esc_attr( $slug ), $this->user_group_slug );
+			$term = get_term_by( 'slug', esc_attr( $slug ), self::$user_group_slug );
+			if ( isset( $term ) && ! empty( $term ) ) {
+				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
+				$users   = $rtlib_user_group_model->get( $columns );
+				foreach ( $users as $user ) {
+					$user_ids[] = $user->user_id;
+				}
+			}
+
+			return $user_ids;
+		}
+		/**
+		 * Get list of user for given group id
+		 * @param $group_id
+		 *
+		 * @return array
+		 */
+		static function get_user_by_group_id( $group_id ) {
+			self::auto_loader();
+			$rtlib_user_group_model = new RT_User_Groups_Relationships_Model();
+			$user_ids = array();
+
+			$term = get_term_by( 'id', $group_id, self::$user_group_slug );
 			if ( isset( $term ) && ! empty( $term ) ) {
 				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
 				$users   = $rtlib_user_group_model->get( $columns );
