@@ -134,7 +134,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		 */
 		function register_user_group() {
 
-			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $this->caps, );
+			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $this->caps, 'hierarchical' => true, );
 			$tmp_posttype = array( 'user' );
 			if ( ! empty( $this->to_register_posttype ) ) {
 				$tmp_posttype = $this->to_register_posttype;
