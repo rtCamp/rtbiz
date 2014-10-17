@@ -120,7 +120,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		public function register_product_taxonomy(){
 			$arg = array(
-				'hierarchical' 				=> false,
+				'hierarchical' 				=> true,
 				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
 				'labels' => $this->labels,
 				'show_ui' 					=> true,
