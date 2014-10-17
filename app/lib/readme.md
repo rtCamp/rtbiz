@@ -67,6 +67,11 @@ Great! There are several ways you can get involved to help make Stream better:
 
 ## Changelog ##
 
+### 0.8 ###
+RT Product Sync Library Added
+Travis Config updated for WordPress Coding Standards
+User Group Bug Fixes & additional method added to get users by term id.
+
 ### 0.7 ###
 A Few bug fixes for RT_LIB_FILE constant
 DB Update Key changed for User Groups
