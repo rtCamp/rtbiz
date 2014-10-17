@@ -1201,29 +1201,6 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 
 			return $user_ids;
 		}
-
-
-		/**
-		 * Get list of user for given group id
-		 * @param $group_id
-		 *
-		 * @return array
-		 */
-		function get_user_by_group_id( $group_id ) {
-			global $rtlib_user_group_model;
-			$user_ids = array();
-
-			$term = get_term_by( 'id', $group_id, $this->user_group_slug );
-			if ( isset( $term ) && ! empty( $term ) ) {
-				$columns = array( 'term_taxonomy_id' => $term->term_taxonomy_id, );
-				$users   = $rtlib_user_group_model->get( $columns );
-				foreach ( $users as $user ) {
-					$user_ids[] = $user->user_id;
-				}
-			}
-
-			return $user_ids;
-		}
 	}
 
 }
