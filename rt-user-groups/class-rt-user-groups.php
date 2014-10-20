@@ -536,7 +536,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$terms = get_terms( self::$user_group_slug, array( 'hide_empty' => false ) );
 			?>
 
-			<h3 id="<?php echo esc_attr( self::$user_group_slug ); ?>"><?php echo printf( $this->labels['name'] ); ?></h3>
+			<h3 id="<?php echo esc_attr( self::$user_group_slug ); ?>"><?php printf( $this->labels['name'] ); ?></h3>
 			<table class="form-table">
 				<tr>
 					<th>
@@ -566,7 +566,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 				}
 				echo '</ul>';
 			} /* If there are no user group terms, display a message. */ else {
-				_e( 'There are no user groups defined. <a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . sanitize_title( __( 'Add a User Group', 'rtlib' ) ) . '</a>' );
+				_e( '<a href="' . esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::$user_group_slug ) ) . '">' . ( __( 'Add', 'rtlib' ) ) . '</a>' );
 			}
 						?>
 					</td>
