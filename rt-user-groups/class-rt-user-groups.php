@@ -43,19 +43,19 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 		/**
 		 * Constructor
 		 *
-		 * @param      $slug
-		 * @param      $label
-		 * @param      $caps
-		 * @param      $require_support add post_types on which you want support for user group
-		 * @param bool $sel_multi
+		 * @param       $slug
+		 * @param       $label
+		 * @param       $caps
+		 * @param array $post_types add post_types on which you want support for user group
+		 * @param bool  $allow_multiple_select
 		 */
-		public function __construct( $slug, $label, $caps, $require_support = array(), $sel_multi = true ) {
+		public function __construct( $slug, $label, $caps, $post_types = array(), $allow_multiple_select = true ) {
 
-			$this->to_register_posttype = $require_support;
+			$this->to_register_posttype = $post_types;
 			self::$user_group_slug = $slug;
 			$this->labels          = $label;
 			$this->caps            = $caps;
-			$this->multiple        = $sel_multi;
+			$this->multiple        = $allow_multiple_select;
 
 			self::auto_loader();
 
