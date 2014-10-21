@@ -28,11 +28,13 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		var $labels = array();
 
+		var $post_types;
+
 		/**
 		 * Product taxonomy Sync enable
 		 * @var array
 		 */
-		var $isSync = true;
+		var $isSync;
 
 		/**
 		 * @var $caps - Capability for taxonomy
@@ -41,24 +43,26 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		var $pluginName;
 
 		function is_woocommerce_active(){
-			if ( 'woocommerce' === $this->pluginName ) {
+			if ( 'woocommerce' === $this->pluginName && is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 				return true;
 			}
 			return false;
 		}
+
 		function is_edd_active(){
-			if ( 'edd' === $this->pluginName ) {
+			if ( 'edd' === $this->pluginName && is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' ) ) {
 				return true;
 			}
 			return false;
 		}
+
 		function get_post_type(){
 			if ( $this->is_woocommerce_active( ) ) {
 				return 'product';
-			}
-			else if ( $this->is_edd_active( ) ) {
+			} else if ( $this->is_edd_active( ) ) {
 				return 'download';
 			}
+			return '';
 		}
 
 		/**
@@ -67,8 +71,12 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @param array $cap
 		 * @param       $plugin_name
 		 */
-		public function __construct( $cap = array(), $plugin_name ) {
+		public function __construct( $plugin_name, $cap = array(), $post_types = array() ) {
 			$this->pluginName = $plugin_name;
+
+			$this->post_types = $post_types;
+
+			$this->isSync = ( $this->is_woocommerce_active() ) ? true : ( $this->is_edd_active() ) ? true : false;
 
 			$this->caps = $cap;
 
@@ -122,16 +130,16 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			$arg = array(
 				'hierarchical' 				=> true,
 				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
-				'labels' => $this->labels,
+				'labels'                    => $this->labels,
 				'show_ui' 					=> true,
 				'query_var' 				=> true,
 				'capabilities'				=> $this->caps,
 				'show_in_nav_menus' 		=> true,
 				'show_admin_column'			=> true,
-				//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
-				'rewrite' => true,
+				//'rewrite' 				=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
+				'rewrite'                   => true,
 			);
-			$supports = apply_filters( 'rtlib_product_support', array() );
+			$supports = apply_filters( 'rtlib_product_support', $this->post_types );
 			register_taxonomy( $this->product_slug, $supports, $arg );
 		}
 
@@ -182,10 +190,14 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		public function hooks() {
 			if ( true === $this->isSync ) {
-				add_action( 'init', array( $this, 'old_product_synchronization_enabled' ) );
+				add_action( 'init', array( $this, 'existing_product_sync' ) );
 				add_action( 'save_post', array( $this, 'insert_products' ) );
-				add_action( 'wp_untrash_post', array( $this, 'insert_products' ) );
 			}
+			add_action( 'delete_term', array( $this, 'cleanup_meta_after_term_deletion' ), 10, 4 );
+		}
+
+		function cleanup_meta_after_term_deletion( $term, $tt_id, $taxonomy, $deleted_term ) {
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term, '_product_id' );
 		}
 
 		/**
@@ -194,10 +206,9 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		public function old_product_synchronization_enabled() {
-			if ( true === $this->isSync ) {
+		public function existing_product_sync() {
+			if ( true === $this->isSync && ( $this->is_edd_active() || $this->is_woocommerce_active() ) ) {
 				$this->bulk_insert_products();
-				$this->delete_products();
 			}
 		}
 
@@ -210,7 +221,7 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		public function get_taxonomy( $post_id ){
 			global $wpdb;
-			$taxonomymeta = $wpdb->get_row( "SELECT * FROM $wpdb->taxonomymeta WHERE meta_key ='_product_id' AND meta_value = $post_id " );
+			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='_product_id' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
 				return get_term_by( 'id', $taxonomymeta->taxonomy_id, $this->product_slug );
 			}
@@ -220,21 +231,22 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		/**
 		 * insert_products function.
 		 *
+		 * @param $post_id
+		 *
 		 * @access public
 		 * @return void
 		 */
 		public function insert_products( $post_id ) {
-			global $wpdb;
+
 			$key    = '_product_id';
-			$single = 'true';
 
 			// If this is just a revision, don't.
-			if ( (wp_is_post_revision( $post_id ) && wp_is_post_autosave( $post_id ) ) || empty( $_POST['post_type'] ) ) {
+			if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) || empty( $_POST['post_type'] ) ) {
 				return;
 			}
 
 			// If this isn't a 'product' or 'download' post, don't update it.
-			if ( 'product' != $_POST['post_type'] && 'download' != $_POST['post_type'] ) {
+			if ( ! ( ( $this->is_woocommerce_active() && 'product' === $_POST['post_type'] ) || ( $this->is_edd_active() && 'download' === $_POST['post_type'] ) ) ) {
 				return;
 			}
 
@@ -242,36 +254,29 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 				return;
 			}
 
-			/*// Rt_Lib_Taxonomy_Metadata\get_term_meta($term_id, $key, $single);
-			$taxonomymeta = $wpdb->get_row( "SELECT * FROM $wpdb->taxonomymeta WHERE meta_key ='_product_id' AND meta_value = $post_id " );
-			//print_r($taxonomymeta); die();
-
-			// If this isn't a 'product' post, don't update it.
-			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
-				return;
-			}*/
-
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), );
-			$products_array = get_posts( $args ); // Get Woo Commerce post object
-			$product_names  = wp_list_pluck( $products_array, 'post_title' ); // Get Woo Commerce post_title
-			$product_ids    = wp_list_pluck( $products_array, 'ID' ); // Get Woo Commerce Post ID
-
-			$termname     = sanitize_title( $_POST['post_title'] );
+			$termname     = $_POST['post_title'];
 			$termid = $this->check_postid_term_exist( $_POST['post_ID'] );
 
 			if ( ! empty( $post_id ) ) {
 				$post = get_post( $post_id );
-				$slug = $post->post_name;
+				$slug = sanitize_title( $termname );
 				if ( false == $termid ) {
-					$term = wp_insert_term(
-						$termname, // the term
-						$this->product_slug, // the taxonomy
-						array(
-							'slug' => $slug,
-						)
-					);
-				}
-				else {
+
+					$i = '';
+					do {
+						$term = wp_insert_term(
+							$termname, // the term
+							$this->product_slug, // the taxonomy
+							array(
+								'slug' => $slug.$i,
+							)
+						);
+						if ( $term instanceof WP_Error ) {
+							$i = rand( 1, 1000 );
+							$i = '-'.$i;
+						}
+					} while ( $term instanceof WP_Error );
+				} else {
 					$term = wp_update_term(
 						$termid, // the term
 						$this->product_slug, // the taxonomy
@@ -306,88 +311,26 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 		 */
 		public function bulk_insert_products() {
 
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), );
+			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'any' );
 			$products_array = get_posts( $args ); // Get Woo Commerce post object
-			$product_names  = wp_list_pluck( $products_array, 'post_title' ); // Get Woo Commerce post_title
-			$product_ids    = wp_list_pluck( $products_array, 'ID' ); // Get Woo Commerce Post ID
 
-			$taxonomies = array(
-				'product'    => $product_names,
-				'product_id' => $product_ids,
+			foreach ( $products_array as $product ) {
+				$term = $this->get_taxonomy( $product->ID );
 
-			);
-
-			$count            = 0;
-			$i                = 0;
-			$product_array    = array();
-			$product_id_array = array();
-
-			foreach ( $taxonomies as $taxonomy => $terms ) {
-				$count ++;
-				foreach ( $terms as $term ) {
-					if ( 1 === $count ) {
-						$product_array[] = $term;
-
-					}
-					if ( 2 === $count ) {
-						$product_id_array[] = $term;
-					}
-				}
-				if ( 1 === $count ) {
-					$i = count( $product_array );
-				}
-			}
-
-			while ( $i > 0 ) {
-				$i --;
-
-				$term = sanitize_title( $product_array[ $i ] );
-
-				if ( ! empty( $product_id_array[ $i ] ) ) {
-					$post = get_post( $product_id_array[ $i ] );
-					$slug = $post->post_name;
-					$term = wp_insert_term(
-						$term, // the term
-						$this->product_slug, // the taxonomy
-						array(
-							'slug' => $slug,
-						)
-					);
-					if ( is_array( $term ) ) {
-						$term_id = $term['term_id'];
-						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, '_product_id', $product_id_array[ $i ], true ); // todo: need to fetch product_id
+				if ( empty( $term ) ) {
+					$new_term = wp_insert_term( $product->post_title, $this->product_slug, array( 'slug' => $product->post_name ) );
+					if ( ! $new_term instanceof WP_Error ) {
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], '_product_id', $product->ID, true ); // todo: need to fetch product_id
 					}
 				}
 			}
-
 		}
 
 		/**
-		 * delete_products function.
 		 *
-		 * @access public
-		 * @return void
-		 */
-		public function delete_products() {
-			$args           = array(
-				'posts_per_page' => - 1,
-				'post_type'      => $this->get_post_type(),
-			); // get all woo commerce product
-			$products_array = get_posts( $args );
-			$product_names  = wp_list_pluck( $products_array, 'post_name' );
-			$product_taxonomies     = get_terms( $this->product_slug, 'hide_empty=0' ); // Get all the product list from product taxonomy under Ideas
-			$product_taxonomy_names = wp_list_pluck( $product_taxonomies, 'slug' );
-			$product_taxonomies_to_delete = array_diff( $product_taxonomy_names, $product_names ); // Do a array diff
-
-			foreach ( $product_taxonomies_to_delete as $product_taxonomy_to_delete ) {
-				$product_taxonomies_obj = get_term_by( 'slug', $product_taxonomy_to_delete, $this->product_slug );
-				wp_delete_term( $product_taxonomies_obj->term_id, $this->product_slug ); // Now Delete those products which are not present in woo-commerce product section.
-				Rt_Lib_Taxonomy_Metadata\delete_term_meta( $product_taxonomies_obj->term_id, '_product_id' );
-			}
-		}
-
-		/**
 		 * delete_products_meta function.
+		 *
+		 * @param $term_id
 		 *
 		 * @access public
 		 * @return void

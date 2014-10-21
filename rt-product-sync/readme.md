@@ -12,10 +12,14 @@ So that we can assign these products to any custom post types that are registere
 ## How to use
 
     $terms_caps = array(
- 				'manage_terms' => true,//$editor_cap,
- 				'edit_terms'   => true,//$editor_cap,
- 				'delete_terms' => true,//$editor_cap,
- 				'assign_terms' => true,//$editor_cap,
- 				);
-    $product_plugin= 'download'; /* post_type of woocommerce('product') or edd('download') */
-    $rtbiz_product_sync = new RT_Product_Sync( $terms_caps, $product_plugin );
+        'manage_terms' => true,//$editor_cap,
+        'edit_terms'   => true,//$editor_cap,
+        'delete_terms' => true,//$editor_cap,
+        'assign_terms' => true,//$editor_cap,
+    );
+
+    $product_plugin = 'woocommerce'; /* For WooCommerce Product Sync or $product_plugin = 'edd' For EasyDigitalDownloads */
+
+    $post_types = array( 'ticket', 'lead' ); /* Post Types to provide Product Sync Support to */
+
+    $rtbiz_product_sync = new RT_Product_Sync( $product_plugin, $terms_caps, $post_types );
