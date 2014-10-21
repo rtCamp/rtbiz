@@ -34,7 +34,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 		 */
 		public static $settings;
 
-		public static $options;
+		public static $store_options;
 
 		/**
 		 *
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			if ( ! $this->embedd_titan_framework() ) {
 				return;
 			}
-			self::$options = array( 'none'=> 'None' ,'woocommerce' => 'Woocommerce', 'edd' => 'Easy Digital Download',);
+			self::$store_options = array( 'none'=> 'None' ,'woocommerce' => 'Woocommerce', 'edd' => 'Easy Digital Download',);
 
 			// Init Titan Instance
 			self::$titan_obj = $this->get_settings_instance();
@@ -108,13 +108,13 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
 			) );
 			$general_tab->createOption( array(
-				                            'name' => __( 'Product Sync Option' ), // Name of the option
-				                            'desc' => 'Select the plugin you want to use for product sync', // Description of the option
-				                            'id' => 'product_plugin', // Unique ID of the option
-				                            'type' => 'radio',
-				                            'options' => self::$options,
-				                            'default' => 'none',
-			                            ) );
+                'name' => __( 'Product Sync Option' ), // Name of the option
+                'desc' => 'Select the plugin you want to use for product sync', // Description of the option
+                'id' => 'product_plugin', // Unique ID of the option
+                'type' => 'radio',
+                'options' => self::$store_options,
+                'default' => 'none',
+            ) );
 			$general_tab->createOption( array(
 				'type' => 'save'
 			) );

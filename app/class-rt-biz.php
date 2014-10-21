@@ -110,7 +110,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			do_action( 'rt_biz_init' );
 
 			add_action( 'after_setup_theme', array( $this, 'init_wc_product_taxonomy' ),20 );
-//			$this->init_wc_product_taxonomy();
 		}
 
 		function update_database() {
@@ -180,7 +179,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$to_register_posttype = array();
 			foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-				if ( isset( $value['require_support'] ) ) {
+				if ( isset( $value['require_user_groups'] ) ) {
 					if ( isset( $value['post_types'] ) ) {
 						foreach( $value['post_types'] as $posttype ) {
 							array_push( $to_register_posttype, $posttype );
@@ -216,10 +215,23 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'delete_terms' => true,//$editor_cap,
 				'assign_terms' => true,//$editor_cap,
 			);
-			//			error_log( "\n ".var_exsport(Rt_Biz_Settings::$options[Rt_Biz_Settings::$settings['product_plugin']], true )." ::: something", 3, "/var/tmp/my-errors.log");
-			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$options ) && is_array( Rt_Biz_Settings::$options ) && 'none' != Rt_Biz_Settings::$settings['product_plugin'] ) {
+			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$store_options ) && is_array( Rt_Biz_Settings::$store_options ) && 'none' != Rt_Biz_Settings::$settings['product_plugin'] ) {
+
 				$product_plugin   = rt_biz_get_settings('product_plugin');
-				$rtbiz_product_sync = new RT_Product_Sync( $terms_caps, $product_plugin );
+
+				$to_register_posttype = array();
+				foreach ( Rt_Access_Control::$modules as $key => $value ){
+
+					if ( isset( $value['require_product_sync'] ) ) {
+						if ( isset( $value['post_types'] ) ) {
+							foreach( $value['post_types'] as $posttype ) {
+								array_push( $to_register_posttype, $posttype );
+							}
+						}
+					}
+				}
+
+				$rtbiz_product_sync = new RT_Product_Sync( $product_plugin, $terms_caps, $to_register_posttype );
 			}
 		}
 
@@ -599,7 +611,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
 				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
-				'require_support' => true,
+				'require_user_groups' => true,
 			);
 
 			return $modules;
