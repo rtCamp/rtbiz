@@ -89,16 +89,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->init_notification_queue();
 
-//			$this->init_department();
-
 			$this->init_access_control();
 			$this->init_modules();
 
 			add_action( 'plugins_loaded', array($this, 'init_department'), 30 );
-//			add_action( 'after_setup_theme', array($this, 'init_department'),20 );
 
 			$this->init_settings();
-			//			$this->init_menu_order();
 
 			$this->init_dashboard();
 
@@ -188,7 +184,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-//			error_log( var_export( $to_register_posttype, true) . " : -> system", 3, "/var/tmp/my-errors.log");
 			$rtbiz_user_groups = new RT_User_Groups( 'user-group', array(
 					'name'                       => __( 'Departments' ),
 					'singular_name'              => __( 'Department' ),
@@ -246,7 +241,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function hooks() {
 			if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
-//				add_filter( 'custom_menu_order', array( $this, 'biz_pages_order' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_styles_scripts' ) );
 			}
 		}
@@ -329,35 +323,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_submenu_page( self::$dashboard_slug, __( 'Client' ), __( 'Client' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Contacts' ), __( '--- Contacts' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( '--- Companies' ), __( '--- Companies' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . $rt_organization->post_type );
-		}
-
-		/**
-		 *  Tempers with the global $submenu array.
-		 *  It arranges all the menus according to $menu_order that is defined in init_menu_order()
-		 *
-		 * @param $menu_order
-		 *
-		 * @return mixed
-		 */
-		function biz_pages_order( $menu_order ) {
-			global $submenu;
-
-			if ( isset( $submenu[ self::$dashboard_slug ] ) && ! empty( $submenu[ self::$dashboard_slug ] ) ) {
-				$menu     = $submenu[ self::$dashboard_slug ];
-				$new_menu = array();
-
-				foreach ( $menu as $p_key => $item ) {
-					foreach ( $this->menu_order as $slug => $order ) {
-						if ( false !== array_search( $slug, $item ) ) {
-							$new_menu[ $order ] = $item;
-						}
-					}
-				}
-				ksort( $new_menu );
-				$submenu[ self::$dashboard_slug ] = $new_menu;
-			}
-
-			return $menu_order;
 		}
 
 		/**
@@ -506,11 +471,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'rt_biz' ), $api->get_error_message() ) );
 			}
 
-			$upgrader = new Plugin_Upgrader( new rtbiz_Plugin_Upgrader_Skin( array(
-				                                                                 'nonce'  => 'install-plugin_' . $plugin_slug,
-				                                                                 'plugin' => $plugin_slug,
-				                                                                 'api'    => $api,
-			                                                                 ) ) );
+			if ( ! class_exists( 'Plugin_Upgrader' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+			}
+
+			$upgrader = new Plugin_Upgrader( new Rt_Biz_Plugin_Upgrader_Skin( array(
+                 'nonce'  => 'install-plugin_' . $plugin_slug,
+                 'plugin' => $plugin_slug,
+                 'api'    => $api,
+             ) ) );
 
 			$install_result = $upgrader->install( $api->download_link );
 
@@ -682,41 +651,4 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 	}
 
-}
-
-if ( ! class_exists( 'rtbiz_Plugin_Upgrader_Skin' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-	require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
-	/**
-	 * Class rtbiz_Plugin_Upgrader_Skin
-	 * this class is used to upgrade or download plugins check function rtBiz_install_plugin in class-rt-biz
-	 */
-	class rtbiz_Plugin_Upgrader_Skin extends WP_Upgrader_Skin {
-		function __construct( $args = array() ) {
-			$defaults = array( 'type' => 'web', 'url' => '', 'plugin' => '', 'nonce' => '', 'title' => '' );
-			$args     = wp_parse_args( $args, $defaults );
-
-			$this->type = $args['type'];
-			$this->api  = isset( $args['api'] ) ? $args['api'] : array();
-			parent::__construct( $args );
-		}
-
-		public function request_filesystem_credentials( $error = false ) {
-			return true;
-		}
-
-		public function error( $errors ) {
-			die( $errors );
-		}
-
-		public function header() {
-		}
-
-		public function footer() {
-		}
-
-		public function feedback( $string ) {
-		}
-	}
 }

@@ -45,7 +45,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 *
 		 */
 		public function __construct() {
-			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 25 );
+			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
 			add_filter( 'rtbiz_department_support', array( $this, 'add_department_support' ) );
                         
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
@@ -386,9 +386,11 @@ if( ! class_exists('Rt_Access_Control') ) {
 			$user_groups = rt_biz_get_user_groups();
 			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
 			// $ug - user_group single
-			foreach ( $user_groups as $ug ) {
-				if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
-					$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
+			if ( ! $user_groups instanceof WP_Error ) {
+				foreach ( $user_groups as $ug ) {
+					if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
+						$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
+					}
 				}
 			}
 
