@@ -123,6 +123,16 @@ function rt_biz_get_post_for_organization_connection( $post_id, $post_type, $fet
 	return $rt_organization->get_posts_for_entity( $post_id, $post_type, $fetch_organization );
 }
 
+function rt_biz_get_person_labels() {
+	global $rt_person;
+	return $rt_person->labels;
+}
+
+function rt_biz_get_organization_labels() {
+	global $rt_organization;
+	return $rt_organization->labels;
+}
+
 /**
  * Returns person post type
  *
@@ -226,16 +236,25 @@ function rt_biz_add_person( $name, $description = '' ) {
 	return $rt_person->add_person( $name, $description );
 }
 
+function rt_biz_clear_post_connections_to_person( $post_type, $from ) {
+	global $rt_person;
+	$rt_person->clear_post_connections_to_entity( $post_type, $from );
+}
+
+function rt_biz_clear_post_connections_to_organization( $post_type, $from ) {
+	global $rt_organization;
+	$rt_organization->clear_post_connections_to_entity( $post_type, $from );
+}
+
 /**
  *
  * @param $post_type
  * @param string $from
  * @param string $to
- * @param bool $clear_old
  */
-function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '', $clear_old = false ) {
+function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '' ) {
 	global $rt_person;
-	$rt_person->connect_post_to_entity( $post_type, $from, $to, $clear_old );
+	$rt_person->connect_post_to_entity( $post_type, $from, $to );
 }
 
 /**
@@ -349,7 +368,7 @@ function rt_biz_get_user_groups() {
 }
 
 function rt_biz_get_group_users( $group_term_id ) {
-	$user_ids = get_objects_in_term( $group_term_id, 'user-group' );
+	$user_ids = RT_User_Groups::get_user_by_group_id( $group_term_id );
 	if ( ! $user_ids instanceof WP_Error ) {
 		return $user_ids;
 	}
@@ -384,6 +403,16 @@ function rt_biz_get_employees() {
 	return $rt_person->get_employees();
 }
 
+function rt_biz_get_clients() {
+    global $rt_person;
+    return $rt_person->get_clients();
+}
+
+function rt_biz_get_organizations() {
+    global $rt_organization;
+    return $rt_organization->get_organizations();
+}
+
 function rt_biz_search_employees( $query ) {
 	$args = array(
 		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,
@@ -405,4 +434,25 @@ function rt_biz_get_person_for_wp_user( $user_id ) {
 function rt_biz_get_wp_user_for_person( $person_id ) {
 	global $rt_person;
 	return $rt_person->get_wp_user_for_person( $person_id );
+}
+
+function rt_biz_get_user_department( $user_ID ) {
+	return RT_User_Groups::get_user_groups( $user_ID );
+}
+
+function rt_biz_get_user_department_section( $user ) {
+	global $rtbiz_user_groups;
+	return $rtbiz_user_groups->edit_user_user_group_section( $user );
+}
+
+function rt_biz_save_user_user_group( $user_id  ) {
+	global $rtbiz_user_groups;
+	return $rtbiz_user_groups->save_user_user_group( $user_id );
+}
+
+function rt_biz_get_settings ( $key = null) {
+	if ( isset( $key ) ) {
+		return Rt_Biz_Settings::$settings[ $key ];
+	}
+	return Rt_Biz_Settings::$settings;
 }

@@ -30,7 +30,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		/**
 		 * @var string
 		 */
-		public $plugin_path = '/../wp-helpers.php';
+		public $plugin_path = '/../rt-lib.php';
 		/**
 		 * @var string
 		 */
@@ -61,7 +61,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		public function __construct( $plugin_path = false, $schema_path = false, $mu_single_table = false, $current_version = false )
 		{
 			$this->debugMode = defined( 'WP_DEBUG' ) && WP_DEBUG;
-			if ( $schema_path != false ){
+			if ( false != $schema_path ){
 				$this->schema_path = $schema_path;
 			} else {
 				$this->schema_path = realpath( dirname( __FILE__ ) . $this->schema_path );
@@ -74,7 +74,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 				}
 			}
 
-			if ( $plugin_path != false ){
+			if ( false != $plugin_path ){
 				$this->plugin_path = $plugin_path;
 			} else {
 				$this->plugin_path = realpath( dirname( __FILE__ ) . $this->plugin_path );
@@ -89,8 +89,12 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 
 			$this->mu_single_table = $mu_single_table;
 
-			$this->rt_plugin_info = new RT_Plugin_Info( $this->plugin_path );
-			if ( $current_version == false ){
+			if ( false !== strpos( $this->plugin_path, '/themes' ) ) {
+				$this->rt_plugin_info = new RT_Theme_Info( $this->plugin_path );
+			} else {
+				$this->rt_plugin_info = new RT_Plugin_Info( $this->plugin_path );
+			}
+			if ( false == $current_version ){
 				$current_version = $this->rt_plugin_info->version;
 			}
 			$this->db_version             = $current_version;
@@ -141,7 +145,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 				if ( $handle = opendir( $path ) ){
 					while ( false !== ( $file_name = readdir( $handle ) ) ) {
 						if ( $file_name != '.' && $file_name != '..' ){
-							if ( strpos( $file_name, '.schema' ) !== false && file_exists( $path . '/' . $file_name ) ){
+							if ( false !== strpos( $file_name, '.schema' )&& file_exists( $path . '/' . $file_name ) ){
 								do_action( 'rt_db_update_before_create_table', $file_name );
 								$this->create_table( $this->genrate_sql( $file_name, file_get_contents( $path . '/' . $file_name ) ) );
 								do_action( 'rt_db_update_after_create_table', $file_name );

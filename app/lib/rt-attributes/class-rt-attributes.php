@@ -98,7 +98,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 *
 		 */
 		function db_upgrade() {
-			$updateDB = new  RT_DB_Update( WP_HELPER_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
+			$updateDB = new  RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
 			$updateDB->db_version_option_name .= '_ATTRIBUTES';
 			$updateDB->install_db_version = $updateDB->get_install_db_version();
 			$updateDB->do_upgrade();
@@ -116,7 +116,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if ( $attr->attribute_store_as == 'taxonomy' && $attr->module_name == $this->module_name ) {
+				if ( 'taxonomy' === $attr->attribute_store_as && $attr->module_name == $this->module_name ) {
 					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $this->attr_cap );
 				}
 			}
@@ -126,6 +126,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$tax = $this->attributes_db_model->get_attribute( $attr_id );
 			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
+			$show_admin_column = true;
 			if ( $name ) {
 				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
 				$show_in_nav_menus = apply_filters( 'rt_wp_attributes_show_in_nav_menus', false, $name );
@@ -141,19 +142,20 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 						'labels' => array(
 								'name' 						=> $label,
 								'singular_name' 			=> $label,
-								'search_items' 				=> __( 'Search' ) . ' ' . $label,
-								'all_items' 				=> __( 'All' ) . ' ' . $label,
-								'parent_item' 				=> __( 'Parent' ) . ' ' . $label,
-								'parent_item_colon' 		=> __( 'Parent' ) . ' ' . $label . ':',
-								'edit_item' 				=> __( 'Edit' ) . ' ' . $label,
-								'update_item' 				=> __( 'Update' ) . ' ' . $label,
-								'add_new_item' 				=> __( 'Add New' ) . ' ' . $label,
-								'new_item_name' 			=> __( 'New' ) . ' ' . $label,
+								'search_items' 				=> __( 'Search' ) . ' ' . sanitize_title( $label ),
+								'all_items' 				=> __( 'All' ) . ' ' . sanitize_title( $label ),
+								'parent_item' 				=> __( 'Parent' ) . ' ' . sanitize_title( $label ),
+								'parent_item_colon' 		=> __( 'Parent' ) . ' ' . sanitize_title( $label ) . ':',
+								'edit_item' 				=> __( 'Edit' ) . ' ' . sanitize_title( $label ),
+								'update_item' 				=> __( 'Update' ) . ' ' . sanitize_title( $label ),
+								'add_new_item' 				=> __( 'Add New' ) . ' ' . sanitize_title( $label ),
+								'new_item_name' 			=> __( 'New' ) . ' ' . sanitize_title( $label ),
 							),
 						'show_ui' 					=> true,
 						'query_var' 				=> true,
 						'capabilities'				=> $caps,
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
+						'show_admin_column'			=> $show_admin_column,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 						'rewrite' => true,
 						)
@@ -201,12 +203,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		}
 
 		/**
-		 * @param string $page_slug
+		 * @param        $page_slug
+		 * @param string $parent_page_slug
 		 * @param string $post_type
-		 * @param string $cap
-		 * @param bool $render_type_required
-		 * @param bool $storage_type_required
-		 * @param bool $orderby_required
+		 * @param string $page_cap
+		 * @param array  $attr_cap
+		 * @param bool   $render_type_required
+		 * @param bool   $storage_type_required
+		 * @param bool   $orderby_required
 		 */
 		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
 
@@ -248,7 +252,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			}
 
 			// Show admin interface
-			if ( ! empty( $_GET[ 'edit' ] ) ){
+			if ( ! empty( $_GET['edit'] ) ){
 				$this->edit_attribute_ui();
 			} else {
 				$this->add_attribute_ui();
@@ -367,10 +371,12 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		function delete_attribute_relations( $attribute_id ) {
 			$relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
+			$post_types = array();
 			foreach ( $relations as $r ) {
+				$post_types[] = $r->post_type;
 				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $r->attr_id, 'post_type' => $r->post_type ) );
 			}
-			do_action( 'rt_attributes_relations_deleted', $attribute_id );
+			do_action( 'rt_attributes_relations_deleted', $attribute_id, $post_types );
 		}
 
 		/**
@@ -429,11 +435,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// Action to perform: add, edit, delete or none
 			$action = '';
-			if ( ! empty( $_POST[ 'add_new_attribute' ] ) ) {
+			if ( ! empty( $_POST['add_new_attribute'] ) ) {
 				$action = 'add';
-			} elseif ( ! empty( $_POST[ 'save_attribute' ] ) && ! empty( $_GET[ 'edit' ] ) ) {
+			} elseif ( ! empty( $_POST['save_attribute'] ) && ! empty( $_GET['edit'] ) ) {
 				$action = 'edit';
-			} elseif ( ! empty( $_GET[ 'delete' ] ) ) {
+			} elseif ( ! empty( $_GET['delete'] ) ) {
 				$action = 'delete';
 			}
 
@@ -442,16 +448,16 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 				$attribute_id = '';
 				if ( 'edit' === $action ) {
-					$attribute_id = absint( $_GET[ 'edit' ] );
+					$attribute_id = absint( $_GET['edit'] );
 				}
 
 				// Grab the submitted data
-				$attribute_label       = ( isset( $_POST[ 'attribute_label' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_label' ] ) : '';
-				$attribute_name        = ( isset( $_POST[ 'attribute_name' ] ) ) ? $this->sanitize_taxonomy( stripslashes( (string)$_POST[ 'attribute_name' ] ) ) : '';
-				$attribute_store_as    = ( $this->storage_type_required && isset( $_POST[ 'attribute_store_as' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_store_as' ] ) : 'taxonomy';
-				$attribute_render_type = ( $this->render_type_required && isset( $_POST[ 'attribute_render_type' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_render_type' ] ) : '';
-				$attribute_orderby     = ( $this->orderby_required && isset( $_POST[ 'attribute_orderby' ] ) ) ? (string)stripslashes( $_POST[ 'attribute_orderby' ] ) : '';
-				$attribute_post_types  = ( isset( $_POST[ 'attribute_post_types' ] ) ) ? (array) $_POST[ 'attribute_post_types' ] : array();
+				$attribute_label       = ( isset( $_POST['attribute_label'] ) ) ? (string) stripslashes( $_POST['attribute_label'] ) : '';
+				$attribute_name        = ( isset( $_POST['attribute_name'] ) ) ? $this->sanitize_taxonomy( stripslashes( (string) $_POST['attribute_name'] ) ) : '';
+				$attribute_store_as    = ( $this->storage_type_required && isset( $_POST['attribute_store_as'] ) ) ? (string) stripslashes( $_POST['attribute_store_as'] ) : 'taxonomy';
+				$attribute_render_type = ( $this->render_type_required && isset( $_POST['attribute_render_type'] ) ) ? (string) stripslashes( $_POST['attribute_render_type'] ) : '';
+				$attribute_orderby     = ( $this->orderby_required && isset( $_POST['attribute_orderby'] ) ) ? (string) stripslashes( $_POST['attribute_orderby'] ) : '';
+				$attribute_post_types  = ( isset( $_POST['attribute_post_types'] ) ) ? (array) $_POST['attribute_post_types'] : array();
 
 				// Auto-generate the label or slug if only one of both was provided
 				if ( ! $attribute_label ) {
@@ -465,7 +471,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 				// Show the error message if any
 				if ( ! empty( $error ) ) {
-					echo '<div id="rt_wp_attributes_errors" class="error fade"><p>' . $error . '</p></div>';
+					echo '<div id="rt_wp_attributes_errors" class="error fade"><p>' . esc_html( $error ) . '</p></div>';
 				} else {
 
 					// Add new attribute
@@ -499,7 +505,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 			// Delete an attribute
 			if ( 'delete' === $action ) {
-				$attribute_id = absint( $_GET[ 'delete' ] );
+				$attribute_id = absint( $_GET['delete'] );
 
 				$attribute_name = $this->attributes_db_model->get_attribute_name( $attribute_id );
 

@@ -99,7 +99,7 @@ if ( $attribute_taxonomies ) {
 			?>
 							</td>
 							<?php } ?>
-							<?php if ( ! empty( $this->post_type ) && $tax->attribute_store_as == 'taxonomy' ) { ?>
+							<?php if ( ! empty( $this->post_type ) && 'taxonomy' === $tax->attribute_store_as ) { ?>
 							<td>
 								<a href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->get_taxonomy_name( $tax->attribute_name ).'&post_type='.$this->post_type ) ); ?>" class="button alignright configure-terms"><?php _e( 'Terms' ); ?></a>
 							</td>
@@ -109,7 +109,7 @@ if ( $attribute_taxonomies ) {
 	}
 } else {
 	?>
-						<tr><td colspan="6"><?php _e( 'No attributes currently exist.' ); ?></td></tr>
+						<tr><td><?php _e( 'No attributes currently exist.' ); ?></td></tr>
 					<?php } ?>
 					</tbody>
 				</table>
