@@ -52,7 +52,7 @@ if ( ! class_exists( 'RT_Theme_Update_Info' ) ):
 			$update = array( 'new_version' => $this->version, 'url' => $this->details_url, );
 
 			if ( ! empty( $this->download_url ) ) {
-				$update[ 'package' ] = $this->download_url;
+				$update['package'] = $this->download_url;
 			}
 
 			return $update;

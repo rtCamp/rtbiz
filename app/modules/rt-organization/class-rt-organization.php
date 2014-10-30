@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Don't load this file directly!
  */
@@ -11,17 +12,19 @@ if ( ! defined( 'ABSPATH' ) )
  * @author udit
  */
 if ( ! class_exists( 'Rt_Organization' ) ) {
+
 	/**
 	 * Class Rt_Organization
 	 */
 	class Rt_Organization extends Rt_Entity {
+
 		/**
 		 *
 		 */
 		public function __construct() {
 			parent::__construct( 'rt_account' );
 			$this->labels = array(
-				'name' => __( 'Organization' ),
+				'name' => __( 'Organizations' ),
 				'singular_name' => __( 'Organization' ),
 				'menu_name' => __( 'Organizations' ),
 				'all_items' => __( 'All Organizations' ),
@@ -65,16 +68,6 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'description' => __( 'Organization country.' ),
 				),
 				array(
-					'key' => 'account_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Enter Email Address' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_email][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Valid email address.' ),
-				),
-				array(
 					'key' => 'account_phone',
 					'text' => __( 'Phone' ),
 					'label' => __( 'Enter Phone Number' ),
@@ -93,6 +86,26 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
+				),
+				array(
+					'key' => 'account_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Enter Email Address' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'account_meta[account_email][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Valid email address.' ),
+				),
+				array(
+					'key' => 'account_website',
+					'text' => __( 'Website' ),
+					'label' => __( 'Enter Website URL' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'account_meta[account_website][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Website URL.' ),
 				),
 				array(
 					'key' => 'account_skype_id',
@@ -134,16 +147,6 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
 				),
-				array(
-					'key' => 'account_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Enter Website URL' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_website][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Website URL.' ),
-				),
 			);
 
 			$this->meta_fields = apply_filters( 'rt_biz_organization_meta_fields', $this->meta_fields );
@@ -152,44 +155,47 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		/**
 		 *  Print JS for Additional Info MetaBox
 		 */
-		function print_metabox_js() { ?>
+		function print_metabox_js() {
+			?>
 			<script>
 
-				function IsEmail(email) {
+				function IsEmail( email ) {
 					var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-					if (!regex.test(email)) {
+					if ( ! regex.test( email ) ) {
 						return false;
 					} else {
 						return true;
 					}
 				}
 
-				jQuery(document).ready(function($) {
+				jQuery( document ).ready( function( $ ) {
 
-					jQuery(document).on('click', ".delete-multiple", function(e) {
-						$(this).prev().remove();
-						$(this).remove();
-					});
-					jQuery(document).on('click', ".add-multiple", function(e) {
-						var tempVal = $(this).prev().val();
-						var name = $(this).prev().attr("name")
-						if (tempVal == '')
+					jQuery( document ).on( 'click', ".delete-multiple", function( e ) {
+						$( this ).prev().remove();
+						$( this ).remove();
+					} );
+					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
+						var tempVal = $( this ).prev().val();
+						var name = $( this ).prev().attr( "name" )
+						if ( tempVal == '' )
 							return;
-						if ($(this).data("type") != undefined) {
-							if ($(this).data("type") == 'email') {
-								if (!IsEmail(tempVal))
+						if ( $( this ).data( "type" ) != undefined ) {
+							if ( $( this ).data( "type" ) == 'email' ) {
+								if ( ! IsEmail( tempVal ) )
 									return;
 							}
 						}
 
-						$(this).prev().val('');
+						$( this ).prev().val( '' );
 
-						$(this).after("<button type='button' class='button delete-multiple'> - </button>");
-						$(this).after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
-					});
-				});
+						$( this ).after( "<button type='button' class='button delete-multiple'> - </button>" );
+						$( this ).after( "<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />" );
+					} );
+				} );
 			</script>
-		<?php }
+			<?php
+
+		}
 
 		/**
 		 *
@@ -197,32 +203,69 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		 *
 		 * @param $post_id
 		 */
-		function save_meta_values($post_id) {
+		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST['account_meta'][$field['key']] ) && !empty( $_POST['account_meta'][$field['key']] ) ) {
-					$account_meta[$field['key']] = $_POST['account_meta'][$field['key']];
-					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-						$oldmeta = self::get_meta( $post_id, $field['key'] );
+				if ( isset( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) ) {
+					$account_meta[ $field[ 'key' ] ] = $_POST[ 'account_meta' ][ $field[ 'key' ] ];
+					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
+						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
 						foreach ( $oldmeta as $ometa ) {
-							self::delete_meta( $post_id, $field['key'], $ometa );
+							self::delete_meta( $post_id, $field[ 'key' ], $ometa );
 						}
-						foreach ( $account_meta[$field['key']] as $nmeta ) {
+						foreach ( $account_meta[ $field[ 'key' ] ] as $nmeta ) {
 							if ( $nmeta == '' )
 								continue;
-							self::add_meta( $post_id, $field['key'], $nmeta );
+							self::add_meta( $post_id, $field[ 'key' ], $nmeta );
 						}
 					} else {
-						self::update_meta( $post_id, $field['key'], $_POST['account_meta'][$field['key']] );
+						self::update_meta( $post_id, $field[ 'key' ], $_POST[ 'account_meta' ][ $field[ 'key' ] ] );
 					}
 				} else {
-					$oldmeta = self::get_meta( $post_id, $field['key'] );
+					$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
 					foreach ( $oldmeta as $ometa ) {
-						self::delete_meta( $post_id, $field['key'], $ometa );
+						self::delete_meta( $post_id, $field[ 'key' ], $ometa );
 					}
 				}
 			}
 
 			parent::save_meta_values( $post_id );
+		}
+
+		/**
+		 *
+		 * Columns in List View
+		 *
+		 * @param $columns
+		 * @return mixed|void
+		 */
+		function post_table_columns( $columns ) {
+
+			$columns[ 'country' ] = __( 'Country' );
+
+			$columns = parent::post_table_columns( $columns );
+
+			return $columns;
+		}
+
+		/**
+		 *
+		 * Manage Columns for List View
+		 *
+		 * @param $column
+		 * @param $post_id
+		 */
+		function manage_post_table_columns( $column, $post_id ) {
+
+			switch ( $column ) {
+				case 'country':
+					$val = self::get_meta( $post_id, 'account_country' );
+					if ( ! empty( $val ) ) {
+						echo implode( ' , ', $val );
+					}
+					break;
+			}
+
+			parent::manage_post_table_columns( $column, $post_id );
 		}
 
 		/**
@@ -235,23 +278,23 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		 */
 		function add_organization( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 			$org_id = wp_insert_post(
-				array(
-					'post_title' => $name,
-					'post_content' => $note,
-					'post_type' => $this->post_type,
-					'post_status' => 'publish',
-				)
+					array(
+						'post_title' => $name,
+						'post_content' => $note,
+						'post_type' => $this->post_type,
+						'post_status' => 'publish',
+					)
 			);
 
-			if ( !empty( $address ) ) {
+			if ( ! empty( $address ) ) {
 				self::update_meta( $org_id, 'account_address', $address );
 			}
 
-			if ( !empty( $country ) ) {
+			if ( ! empty( $country ) ) {
 				self::update_meta( $org_id, 'account_country', $country );
 			}
 
-			if ( !empty( $meta ) && is_array( $meta ) ) {
+			if ( ! empty( $meta ) && is_array( $meta ) ) {
 				foreach ( $meta as $key => $value ) {
 					foreach ( $value as $data ) {
 						self::update_meta( $org_id, $key, $data );
@@ -261,5 +304,17 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 
 			return $org_id;
 		}
+
+		function get_organizations() {
+			return get_posts(
+					array(
+						'post_type' => $this->post_type,
+						'post_status' => 'any',
+						'nopaging' => true,
+					)
+			);
+		}
+
 	}
+
 }

@@ -2,14 +2,13 @@
 <?php
 /**
  * Look for WordPress readme in current directory or above and convert into markdown readme in same directory
- * @version 1.0.1
- * @author Weston Ruter <weston@x-team.com> (@westonruter)
- * @copyright Copyright (c) 2013, X-Team <http://x-team.com/wordpress/>
+ * @version 0.0.1
+ * @author Udit Desai <desaiuditd@gmail.com> (@desaiuditd)
  * @license GPLv2+
  */
 
 try {
-	if ( php_sapi_name() !== 'cli' ) {
+	if ( 'cli' !== php_sapi_name() ) {
 		throw new Exception( 'Only allowed in CLI mode.' );
 	}
 
@@ -41,6 +40,7 @@ try {
 	$md_args = array();
 	if ( file_exists( $readme_root . '/.travis.yml' ) ) {
 		$md_args['travis_ci_url'] = preg_replace( '/^.+?:(.+)\.git$/', 'https://travis-ci.org/$1', trim( `git config --get remote.origin.url` ) );
+		fwrite( STDERR, $md_args['travis_ci_url'] . PHP_EOL );
 	}
 	$markdown = $readme->to_markdown( $md_args );
 

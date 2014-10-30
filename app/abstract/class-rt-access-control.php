@@ -46,6 +46,8 @@ if( ! class_exists('Rt_Access_Control') ) {
 		 */
 		public function __construct() {
 			add_action( 'plugins_loaded', array( $this, 'init_acl' ), 15 );
+			add_filter( 'rtbiz_department_support', array( $this, 'add_department_support' ) );
+                        
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
 			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
@@ -58,17 +60,19 @@ if( ! class_exists('Rt_Access_Control') ) {
 			$rt_biz_caps = array();
 			// $m - module
 			// $mkey - module_key
-			foreach ( self::$modules as $mkey => $m ) {
-				// $p - permission
-				// $pkey - permission_key
-				foreach ( self::$permissions as $pkey => $p ) {
-					$rt_biz_caps[] = $mkey . '_' . $pkey;
-				}
-				$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
-				// $pt - post_type
-				foreach ( $post_types as $pt ) {
-					$post_caps = self::get_admin_post_caps( $pt );
-					$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
+			if ( ! empty( self::$modules ) ) {
+				foreach ( self::$modules as $mkey => $m ) {
+					// $p - permission
+					// $pkey - permission_key
+					foreach ( self::$permissions as $pkey => $p ) {
+						$rt_biz_caps[] = $mkey . '_' . $pkey;
+					}
+					$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
+					// $pt - post_type
+					foreach ( $post_types as $pt ) {
+						$post_caps   = self::get_admin_post_caps( $pt );
+						$rt_biz_caps = array_merge( $rt_biz_caps, array_keys( $post_caps ) );
+					}
 				}
 			}
 
@@ -125,9 +129,8 @@ if( ! class_exists('Rt_Access_Control') ) {
 					continue;
 				}
 
-				global $KWS_User_Groups;
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-				$ug_terms = $KWS_User_Groups->get_user_user_groups( $user );
+				$ug_terms = rt_biz_get_user_department( $user->ID );
 				$user_groups = array();
 				if ( ! $ug_terms instanceof WP_Error ) {
 					// $ug - user_group
@@ -171,6 +174,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 								continue;
 							}
 							$valid_caps[ $role_cap ] = true;
+						}
+						if ( empty( $valid_role_key ) ) {
+							continue;
 						}
 						$post_types = ( isset( self::$modules[$mkey]['post_types'] ) && is_array( self::$modules[$mkey]['post_types'] ) ) ? self::$modules[$mkey]['post_types'] : array();
 						foreach ( $post_types as $pt ) {
@@ -277,6 +283,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => false,
 				"edit_private_{$post_type}s" => false,
 				"edit_published_{$post_type}s" => false,
+				'manage_terms' => false,
+				'edit_terms' => false,
+				'delete_terms' => false,
+				'assign_terms' => false,
 			);
 		}
 
@@ -295,6 +305,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => false,
 				"edit_private_{$post_type}s" => false,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => false,
+				'edit_terms' => false,
+				'delete_terms' => false,
+				'assign_terms' => false,
 			);
 		}
 
@@ -313,6 +327,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => true,
 				"edit_private_{$post_type}s" => true,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => true,
+				'edit_terms' => true,
+				'delete_terms' => true,
+				'assign_terms' => true,
 			);
 		}
 
@@ -331,6 +349,10 @@ if( ! class_exists('Rt_Access_Control') ) {
 				"delete_others_{$post_type}s" => true,
 				"edit_private_{$post_type}s" => true,
 				"edit_published_{$post_type}s" => true,
+				'manage_terms' => true,
+				'edit_terms' => true,
+				'delete_terms' => true,
+				'assign_terms' => true,
 			);
 		}
 
@@ -364,9 +386,11 @@ if( ! class_exists('Rt_Access_Control') ) {
 			$user_groups = rt_biz_get_user_groups();
 			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
 			// $ug - user_group single
-			foreach ( $user_groups as $ug ) {
-				if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
-					$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
+			if ( ! $user_groups instanceof WP_Error ) {
+				foreach ( $user_groups as $ug ) {
+					if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
+						$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
+					}
 				}
 			}
 
@@ -408,8 +432,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_user_meta( $user->ID, 'rt_biz_profile_permissions', true );
+				$menu_label = Rt_Biz_Settings::$settings['menu_label'];
 				?>
-				<h3><?php _e( 'rtBiz Profile Access' ); ?></h3>
+				<h3><?php echo $menu_label . __( ' Profile Access' ); ?></h3>
 				<table class="form-table">
 					<tbody>
 						<?php foreach ( $modules as $mkey => $m ) { ?>
@@ -443,5 +468,18 @@ if( ! class_exists('Rt_Access_Control') ) {
 				}
 			}
 		}
+                
+                function add_department_support( $supports ){
+                    
+                    foreach ( self::$modules as $module ) {
+                        
+                        foreach ( $module['post_types'] as $post_type ) {
+                            
+                           $supports[] = $post_type;
+                        }
+                    }
+                    
+                    return $supports;
+                }
 	}
 }

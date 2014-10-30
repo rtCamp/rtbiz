@@ -13,7 +13,7 @@ class RT_WP_TestCase extends WP_UnitTestCase
 	 */
 	function test_plugin_activated()
 	{
-		$this->assertTrue( is_plugin_active( 'wp-helpers/wp-helpers.php' ) );
+		$this->assertTrue( is_plugin_active( 'rt-lib/rt-lib.php' ) );
 	}
 
 }
