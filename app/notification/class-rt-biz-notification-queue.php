@@ -25,12 +25,20 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 		public function __construct() {
 			add_action( 'init', array( $this, 'activate' ) );
 			add_filter( 'cron_schedules', array( $this, 'notification_queue_cron_interval' ) );
+
+			register_deactivation_hook( trailingslashit( RT_BIZ_PATH ) . 'index.php', array( $this, 'disable_cron_ondeactivation' ) );
+
+			add_action( 'rtbiz_notification_queue_cron_hook', array( $this, 'execute_notification_queue_cron' ) );
 		}
 
 		function activate() {
-			if ( ! wp_next_scheduled( 'rtpm_notification_queue_cron_hook' ) ) {
-				wp_schedule_event( time(), 'every5minute', 'rtpm_notification_queue_cron_hook' );
+			if ( ! wp_next_scheduled( 'rtbiz_notification_queue_cron_hook' ) ) {
+				wp_schedule_event( time(), 'every5minute', 'rtbiz_notification_queue_cron_hook' );
 			}
+		}
+
+		function disable_cron_on_deactivation() {
+			wp_clear_scheduled_hook( 'rtbiz_notification_queue_cron_hook' );
 		}
 
 		// add cron time interval

@@ -52,17 +52,3 @@ function rt_biz_init() {
 }
 
 add_action( 'plugins_loaded', 'rt_biz_init' );
-
-function rt_biz_deactivate() {
-	wp_clear_scheduled_hook( 'rtpm_notification_queue_cron_hook' );
-}
-
-register_deactivation_hook( __FILE__, 'rt_biz_deactivate' );
-
-function rt_biz_notification_init_hook() {
-	// Notification Queue Execute Function
-	global $rt_biz_notification_queue;
-	add_action( 'rtpm_notification_queue_cron_hook', array( $rt_biz_notification_queue, 'execute_notification_queue_cron' ) );
-}
-
-add_action( 'init', 'rt_biz_notification_init_hook' );
