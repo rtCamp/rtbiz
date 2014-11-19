@@ -175,8 +175,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$to_register_posttype = array();
 			foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-				if ( isset( $value['require_user_groups'] ) ) {
-					if ( isset( $value['post_types'] ) ) {
+				if ( ! empty( $value['require_user_groups'] ) ) {
+					if ( ! empty( $value['post_types'] ) && is_array( $value['post_types'] ) ) {
 						foreach( $value['post_types'] as $posttype ) {
 							array_push( $to_register_posttype, $posttype );
 						}
