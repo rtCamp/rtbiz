@@ -89,42 +89,9 @@ if ( ! class_exists( 'RT_Product_Sync' ) ) {
 			//Register Product taxonomy
 			add_action( 'init', array( $this, 'register_product_taxonomy' ), 5 );
 
-			// Add respective column of product in Post Type List Table
-			foreach ( $this->post_types as $post_type ) {
-				add_filter( 'manage_edit-' . $post_type . '_columns', array( $this, 'edit_custom_columns' ) );
-				add_action( 'manage_' . $post_type . '_posts_custom_column', array( $this, 'manage_custom_columns' ), 2, 2 );
-				add_filter( 'manage_edit-' . $post_type . '_sortable_columns', array( $this, 'sortable_column' ) );
-			}
-
 			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 			$taxonomy_metadata->activate();
 			$this->hooks();
-		}
-
-		function edit_custom_columns( $columns ) {
-			$columns[ $this->product_slug ] = __( 'Products' );
-			return $columns;
-		}
-
-		function sortable_column( $columns ) {
-			$columns[ $this->product_slug ] = __( 'Products' );
-			return $columns;
-		}
-
-		function manage_custom_columns( $column, $post_id ) {
-			if ( $this->product_slug == $column ) {
-				$terms = wp_get_post_terms( $post_id, $this->product_slug );
-				$links = array();
-				$post_type = get_post_type( $post_id );
-				if ( ! $terms instanceof WP_Error ) {
-					$base_url = add_query_arg( array( 'post_type' => $post_type ), admin_url( 'edit.php' ) );
-					foreach ( $terms as $t ) {
-						$url = add_query_arg( 'product_id', $t->term_id, $base_url );
-						$links[] = '<a href="' . $url . '">' . $t->name . '</a>';
-					}
-					echo implode( ',',$links );
-				}
-			}
 		}
 
 		/**
