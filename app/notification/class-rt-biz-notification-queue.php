@@ -26,7 +26,7 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 			add_action( 'init', array( $this, 'activate' ) );
 			add_filter( 'cron_schedules', array( $this, 'notification_queue_cron_interval' ) );
 
-			register_deactivation_hook( trailingslashit( RT_BIZ_PATH ) . 'index.php', array( $this, 'disable_cron_ondeactivation' ) );
+			register_deactivation_hook( trailingslashit( RT_BIZ_PATH ) . 'index.php', array( $this, 'disable_cron_on_deactivation' ) );
 
 			add_action( 'rtbiz_notification_queue_cron_hook', array( $this, 'execute_notification_queue_cron' ) );
 		}
