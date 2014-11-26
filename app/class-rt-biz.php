@@ -58,21 +58,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Provides useful actions/filters for other rtBiz addons to hook.
 		 */
 
+		public $plugins_dependency = array();
+
 		public function __construct() {
 
-			global $rtbiz_plugins;
-			$rtbiz_plugins = array(
+			$this->plugins_dependency = array(
 				'posts-to-posts' => array(
 					'project_type' => 'all', 'name' => esc_html__( 'Create many-to-many relationships between all types of posts.', 'posts-to-posts' ), 'active' => class_exists( 'posts-to-posts' ), 'filename' => 'posts-to-posts.php',),
 			);
-
-			function rtbiz_plugins_enque_js() {
-				wp_enqueue_script( 'rtbiz-plugins', RT_BIZ_URL . "app/assets/javascripts/post2post_plugin_check.js", '', false, true );
-				wp_localize_script( 'rtbiz-plugins', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
-			}
-			add_action( 'admin_enqueue_scripts', 'rtbiz_plugins_enque_js' );
-			add_action( 'wp_ajax_rtBiz_install_plugin', array( $this, 'rtBiz_install_plugin_ajax' ), 10 );
-			add_action( 'wp_ajax_rtBiz_activate_plugin', array( $this,'rtBiz_activate_plugin_ajax' ), 10 );
 
 			if ( ! $this->check_p2p_dependency() ) {
 				return false;
@@ -353,33 +346,43 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			if ( ! $flag ) {
-				add_action( 'admin_notices', array( $this, 'admin_notice_post2post_not_installed' ) );
+
+				add_action( 'admin_enqueue_scripts', array( $this, 'plugins_dependency_enque_js' ) );
+				add_action( 'wp_ajax_rtbiz_install_plugin', array( $this, 'rtbiz_install_plugin_ajax' ), 10 );
+				add_action( 'wp_ajax_rtbiz_activate_plugin', array( $this,'rtbiz_activate_plugin_ajax' ), 10 );
+
+				add_action( 'admin_notices', array( $this, 'admin_notice_rtbiz_plugin_not_installed' ) );
 			}
 
 			return $flag;
 		}
 
+		function plugins_dependency_enque_js() {
+			wp_enqueue_script( 'rtbiz-plugins-dependency', RT_BIZ_URL . "app/assets/javascripts/rtbiz_plugin_check.js", '', false, true );
+			wp_localize_script( 'rtbiz-plugins-dependency', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
+		}
+
 		/**
 		 * hook for admin notices that checks if post to post is installed if not it let it download and install
 		 */
-		function admin_notice_post2post_not_installed() {
+		function admin_notice_rtbiz_plugin_not_installed() {
 			?>
-			<div class="error post2post-not-installed-error">
+			<div class="error rtbiz-plugin-not-installed-error">
 				<?php
-				if ( ! $this->is_post2post_plugin_installed( 'posts-to-posts' ) ) {
-					$nonce = wp_create_nonce( 'rtBiz_install_plugin_posts-to-posts' );
+				if ( ! $this->is_rtbiz_plugin_installed( 'posts-to-posts' ) ) {
+					$nonce = wp_create_nonce( 'rtbiz_install_plugin_posts-to-posts' );
 					?>
 					<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
-					                                                            onclick="install_post2post_plugin('posts-to-posts','rtBiz_install_plugin','<?php echo $nonce ?>')">here</a> <?php _e( 'to install posts-to-posts.', 'posts-to-posts' ) ?>
+					                                                            onclick="install_rtbiz_plugin('posts-to-posts','rtbiz_install_plugin','<?php echo $nonce ?>')">here</a> <?php _e( 'to install posts-to-posts.', 'posts-to-posts' ) ?>
 					</p>
 				<?php
 				} else {
-					if ( $this->is_post2post_plugin_installed( 'posts-to-posts' ) && ! $this->is_post2post_plugin_active( 'posts-to-posts' ) ) {
-						$path  = $this->get_path_for_post2post_plugins( 'posts-to-posts' );
-						$nonce = wp_create_nonce( 'rtBiz_activate_plugin_' . $path );
+					if ( $this->is_rtbiz_plugin_installed( 'posts-to-posts' ) && ! $this->is_rtbiz_plugin_active( 'posts-to-posts' ) ) {
+						$path  = $this->get_path_for_rtbiz_plugin( 'posts-to-posts' );
+						$nonce = wp_create_nonce( 'rtbiz_activate_plugin_' . $path );
 						?>
 						<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
-						                                                            onclick="activate_post2post_plugins('<?php echo $path ?>','rtBiz_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate posts-to-posts.', 'posts-to-posts' ) ?>
+						                                                            onclick="activate_rtbiz_plugin('<?php echo $path ?>','rtbiz_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate posts-to-posts.', 'posts-to-posts' ) ?>
 						</p>
 					<?php
 					}
@@ -395,9 +398,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_path_for_post2post_plugins( $slug ) {
-			global $rtbiz_plugins;
-			$filename = ( ! empty( $rtbiz_plugins[ $slug ]['filename'] ) ) ? $rtbiz_plugins[ $slug ]['filename'] : $slug . '.php';
+		function get_path_for_rtbiz_plugin( $slug ) {
+
+			$filename = ( ! empty( $this->plugins_dependency[ $slug ]['filename'] ) ) ? $this->plugins_dependency[ $slug ]['filename'] : $slug . '.php';
 
 			return $slug . '/' . $filename;
 		}
@@ -408,13 +411,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_post2post_plugin_active( $slug ) {
-			global $rtbiz_plugins;
-			if ( empty( $rtbiz_plugins[ $slug ] ) ) {
+		function is_rtbiz_plugin_active( $slug ) {
+
+			if ( empty( $this->plugins_dependency[ $slug ] ) ) {
 				return false;
 			}
 
-			return $rtbiz_plugins[ $slug ]['active'];
+			return $this->plugins_dependency[ $slug ]['active'];
 		}
 
 
@@ -424,13 +427,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_post2post_plugin_installed( $slug ) {
-			global $rtbiz_plugins;
-			if ( empty( $rtbiz_plugins[ $slug ] ) ) {
+		function is_rtbiz_plugin_installed( $slug ) {
+
+			if ( empty( $this->plugins_dependency[ $slug ] ) ) {
 				return false;
 			}
 
-			if ( $this->is_post2post_plugin_active( $slug ) || file_exists( WP_PLUGIN_DIR . '/' . $this->get_path_for_post2post_plugins( $slug ) ) ) {
+			if ( $this->is_rtbiz_plugin_active( $slug ) || file_exists( WP_PLUGIN_DIR . '/' . $this->get_path_for_rtbiz_plugin( $slug ) ) ) {
 				return true;
 			}
 
@@ -440,17 +443,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * ajax call for installing plugin
 		 */
-		function rtBiz_install_plugin_ajax() {
+		function rtbiz_install_plugin_ajax() {
 
 			if ( empty( $_POST['plugin_slug'] ) ) {
 				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rt_biz' ) );
 			}
-			check_ajax_referer( 'rtBiz_install_plugin_' . $_POST['plugin_slug'] );
+			check_ajax_referer( 'rtbiz_install_plugin_' . $_POST['plugin_slug'] );
 
 			if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
 				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', 'rt_biz' ) );
 			}
-			$this->rtBiz_install_plugin( $_POST['plugin_slug'] );
+			$this->rtbiz_install_plugin( $_POST['plugin_slug'] );
 
 			echo 'true';
 			die();
@@ -460,7 +463,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 * @param $plugin_slug
 		 * ajax call calls uses this function to install plugin
 		 */
-		function rtBiz_install_plugin( $plugin_slug ) {
+		function rtbiz_install_plugin( $plugin_slug ) {
 			include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
 			$api = plugins_api( 'plugin_information', array( 'slug'   => $plugin_slug,
@@ -503,17 +506,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * ajax call for active plugin
 		 */
-		function rtBiz_activate_plugin_ajax() {
+		function rtbiz_activate_plugin_ajax() {
 			if ( empty( $_POST['path'] ) ) {
 				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rt_biz' ) );
 			}
-			check_ajax_referer( 'rtBiz_activate_plugin_' . $_POST['path'] );
+			check_ajax_referer( 'rtbiz_activate_plugin_' . $_POST['path'] );
 
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				die( __( 'ERROR: You lack permissions to activate plugins.', 'rt_biz' ) );
 			}
 
-			$this->rtBiz_activate_plugin( $_POST['path'] );
+			$this->rtbiz_activate_plugin( $_POST['path'] );
 
 			echo 'true';
 			die();
@@ -523,24 +526,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 * @param $plugin_path
 		 * ajax call for active plugin calls this function to active plugin
 		 */
-		function rtBiz_activate_plugin( $plugin_path ) {
+		function rtbiz_activate_plugin( $plugin_path ) {
 
 			$activate_result = activate_plugin( $plugin_path );
 			if ( is_wp_error( $activate_result ) ) {
 				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'rt_biz' ), $activate_result->get_error_message() ) );
 			}
-		}
-
-
-		/**
-		 *  Posts 2 Posts Plugin Admin Notice
-		 */
-		function p2p_admin_notice() {
-			?>
-			<div class="updated">
-				<p><?php _e( sprintf( 'rtBiz : It seems that Posts 2 Posts plugin is not installed or activated. Please %s / %s it.', '<a href="' . admin_url( 'plugin-install.php?tab=search&s=posts-2-posts' ) . '">' . __( 'install' ) . '</a>', '<a href="' . admin_url( 'plugins.php' ) . '">' . __( 'activate' ) . '</a>' ) ); ?></p>
-			</div>
-		<?php
 		}
 
 		/**
