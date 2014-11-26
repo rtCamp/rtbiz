@@ -51,7 +51,7 @@ if ( ! class_exists( 'Rt_Biz_Settings' ) ) {
 			self::$titan_obj = $this->get_settings_instance();
 
 			// Init Titan Settings
-			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 20 );
+			add_action( 'plugins_loaded', array( $this, 'init_settings' ), 21 );
 			// Load Saved Settings Values
 			add_action( 'after_setup_theme', array( $this, 'load_settings' ),10 );
 		}

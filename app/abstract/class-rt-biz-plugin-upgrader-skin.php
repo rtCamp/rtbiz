@@ -40,7 +40,7 @@ if ( ! class_exists( 'Rt_Biz_Plugin_Upgrader_Skin' ) ) {
 		}
 
 		public function error( $errors ) {
-			die( $errors );
+			die( var_export( $errors, true ) );
 		}
 
 		public function header() {
