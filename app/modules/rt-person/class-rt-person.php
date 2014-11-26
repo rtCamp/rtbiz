@@ -200,6 +200,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_dob]',
 					'id' => 'contact_meta_contact_dob',
 					'description' => __( 'Date of Birth.' ),
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_address',
@@ -211,6 +212,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'class' => '',
 					'description' => __( 'Address.' ),
 					'hide_for_client' => true,
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_postal_address',
@@ -222,6 +224,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'class' => '',
 					'description' => __( 'Postal Address.' ),
 					'hide_for_client' => true,
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_tfn',
@@ -233,6 +236,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_tfn',
 					'description' => __( 'Tax File Number.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_phone',
@@ -243,6 +247,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_phone][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Phone number.' ),
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_fax',
@@ -253,6 +258,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_email',
@@ -263,6 +269,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_email][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_website',
@@ -273,6 +280,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_website][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Website URL.' ),
+					'category' => 'contact',
 				),
 				array(
 					'key' => 'contact_skype_id',
@@ -283,6 +291,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_skype_id][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
+					'category' => 'social',
 				),
 				array(
 					'key' => 'contact_twitter',
@@ -293,6 +302,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_twitter][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
+					'category' => 'social',
 				),
 				array(
 					'key' => 'contact_facebook',
@@ -303,6 +313,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_facebook][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
+					'category' => 'social',
+
 				),
 				array(
 					'key' => 'contact_linkedin',
@@ -313,6 +325,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'name' => 'contact_meta[contact_linkedin][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
+					'category' => 'social',
+
 				),
 				array(
 					'key' => 'contact_kin_name',
@@ -324,6 +338,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_kin_name',
 					'description' => __( 'Next of Kin Name.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_kin_address',
@@ -335,6 +350,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_kin_address',
 					'description' => __( 'Next of Kin Address.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_kin_number',
@@ -346,6 +362,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_kin_number',
 					'description' => __( 'Next of Kin Number.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_kin_relation',
@@ -357,6 +374,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_kin_relation',
 					'description' => __( 'Next of Kin Relation.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_commence_date',
@@ -369,6 +387,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_commence_date',
 					'description' => __( 'Date of Commencement.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 				array(
 					'key' => 'contact_terminate_date',
@@ -381,6 +400,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					'id' => 'contact_meta_contact_terminate_date',
 					'description' => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
+					'category' => 'hr',
 				),
 			);
 
