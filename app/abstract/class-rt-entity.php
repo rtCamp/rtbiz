@@ -2,8 +2,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ){
 	exit;
+}
 
 /**
  * Description of class-rt-entity
@@ -96,9 +97,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @return string
 		 */
 		function change_publish_button( $translation, $text ) {
-			if ( $this->post_type == get_post_type() && $text == 'Publish' )
+			if ( $this->post_type == get_post_type() && 'Publish' == $text ){
 				return 'Add';
-
+			}
 			return $translation;
 		}
 
@@ -117,7 +118,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
-			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );			
+			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
 
 
@@ -130,15 +131,38 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function render_additional_details_meta_box( $post ) {
 			do_action( 'rt_biz_before_render_meta_fields', $post, $this );
+			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
+			?>
+			<style type="text/css">
+
+				.form-input input, .form-input textarea{
+					width: 60%;
+				}
+				.form-label label{
+					width: 30%;
+				}
+			</style>
+			<div class="pure-g">
+
+			<?php
+
+			$category = array_unique( wp_list_pluck( $this->meta_fields, 'category' ) );
+			$cathtml = array();
+			foreach ( $category as $key => $value ){
+				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.ucfirst( $value ).' information </h3> </div>';
+			}
+			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> Other information </h3> </div>';
+			$other_flag = false;
 			foreach ( $this->meta_fields as $field ) {
+				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
 				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
-				if( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
+				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
 
-				if ( isset( $field[ 'is_datepicker' ] ) && $field[ 'is_datepicker' ] ) {
-					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+				if ( isset( $field['is_datepicker'] ) && $field['is_datepicker'] ) {
+					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
 					<script>
 						jQuery( document ).ready( function( $ ) {
@@ -149,56 +173,106 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 							} );
 						} );
 					</script>
-					<div class="form-field">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<input type="text" <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="datepicker ' . $field[ 'class' ] . '"' : 'class="datepicker"'; ?>>
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
-					</div>
+			<?php if ( isset( $field['label'] ) ) { ?>
+						<div class="pure-u-1-4 form-label ">
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
+						</div>
+						<div class="pure-u-3-4 form-input">
+						<input type="text" <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="datepicker ' . $field['class'] . '"' : 'class="datepicker"'; ?>>
+					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+						</div>
 					<?php
-				} else if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
-					$values = self::get_meta( $post->ID, $field[ 'key' ] );
+				} else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
+					$values = self::get_meta( $post->ID, $field['key'] );
 					?>
-					<div class="form-field">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>><button data-type='<?php echo ( stristr( $field[ 'key' ], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
+
+						<?php if ( isset( $field['label'] ) ) { ?>
+						<div class="pure-u-1-4 form-label ">
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
+					</div>
+					<div class="pure-u-3-4 form-input">
+						<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><button data-type='<?php echo ( stristr( $field['key'], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
 						<?php foreach ( $values as $value ) { ?>
-							<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>>
+							<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>>
 							<button type='button' class='button delete-multiple'> - </button>
 						<?php } ?>
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
-				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'textarea' ) {
-					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+				} else if ( isset( $field['type'] ) && 'textarea' == $field['type'] ) {
+					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
-					<div class="form-field">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<textarea <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>><?php echo $values; ?></textarea>
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+						<?php if ( isset( $field['label'] ) ) { ?>
+						<div class="pure-u-1-4 form-label ">
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
+						</div>
+					<div class="pure-u-3-4 form-input ">
+					<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><?php echo $values; ?></textarea>
+					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
-				} else if ( isset( $field[ 'type' ] ) && $field[ 'type' ] == 'user_group' ) {
-					$user_id = self::get_meta( $post->ID, $field[ 'key' ], true );
+				} else if ( isset( $field['type'] ) && $field['type'] == 'user_group' ) {
+					$user_id = self::get_meta( $post->ID, $field['key'], true );
 					if ( empty( $user_id ) ) {
 						continue;
 					}
 					?>
 					<div class="">
-						<?php call_user_func( $field[ 'data_source' ], new WP_User( $user_id ) ); ?>
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+						<?php call_user_func( $field['data_source'], new WP_User( $user_id ) ); ?>
+<!--						--><?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
 				} else {
-					$values = self::get_meta( $post->ID, $field[ 'key' ], true );
+					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
-					<div class="form-field">
-						<?php if ( isset( $field[ 'label' ] ) ) { ?><label><?php echo $field[ 'label' ]; ?></label><?php } ?>
-						<input <?php echo ( isset( $field[ 'type' ] ) ) ? 'type="' . $field[ 'type' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'name' ] ) ) ? 'name="' . $field[ 'name' ] . '"' : ''; ?> <?php echo ( isset( $field[ 'id' ] ) ) ? 'id="' . $field[ 'id' ] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field[ 'class' ] ) ) ? 'class="' . $field[ 'class' ] . '"' : ''; ?>>
-						<?php echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+<!--					<div class="form-field pure-control-group">-->
+						<?php if ( isset( $field['label'] ) ) { ?>
+						<div class="pure-u-1-4 form-label ">
+
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
+					</div>
+					<div class="pure-u-3-4 form-input ">
+
+					<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>>
+<!--						--><?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
 				}
+				$tmphtml = ob_get_clean();
+				if (isset($field['category'])){
+					$cathtml[$field['category']].=$tmphtml;
+				}
+				else{
+					$cathtml['other'].=$tmphtml;
+					$other_flag= true;
+				}
+
 			}
+			if (isset($cathtml['contact'])){
+				echo $cathtml['contact'];
+				unset ($cathtml['contact']);
+			}
+			if (isset($cathtml['social'])){
+				echo $cathtml['social'];
+				unset ($cathtml['social']);
+			}
+			if (isset($cathtml['hr'])){
+				echo $cathtml['hr'];
+				unset ($cathtml['hr']);
+			}
+
+			foreach ($cathtml as $key=>$value){
+				if ($key=='other'){
+					if($other_flag==true){
+						echo $value;
+					}
+				}
+				else{
+					echo $value;
+				}
+			}
+
+			?> </div> <?php
 			do_action( 'rt_biz_after_render_meta_fields', $post, $this );
 			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
 			$this->print_metabox_js();
