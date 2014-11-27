@@ -1,0 +1,11 @@
+.rthd-remove-server {
+	color: red;
+}
+
+.rthd-hide-row {
+	display: none;
+}
+
+.rthd-show-row {
+	display: block;
+}

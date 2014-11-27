@@ -1,0 +1,18 @@
+CREATE TABLE %s (
+	id BIGINT(11) NOT NULL AUTO_INCREMENT,
+	user_id BIGINT(11) NOT NULL,
+	email VARCHAR(200) NOT NULL DEFAULT '',
+	type VARCHAR(20) DEFAULT NULL,
+	imap_server BIGINT(11) DEFAULT NULL,
+	outh_token VARCHAR(2000) DEFAULT NULL,
+	email_data VARCHAR(2000) DEFAULT NULL,
+	flag CHAR(1) DEFAULT NULL,
+	signature MEDIUMTEXT,
+	lastMailCount BIGINT(11) DEFAULT '0',
+	sync_status VARCHAR(45) DEFAULT 'synced',
+	last_sync_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+	last_mail_time TIMESTAMP NULL DEFAULT NULL,
+	last_mail_uid TEXT,
+	PRIMARY KEY  (id),
+	UNIQUE KEY email (email)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
