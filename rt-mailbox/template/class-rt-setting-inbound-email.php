@@ -93,7 +93,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 * @param $field
 		 * @param $value
 		 */
-		public function rthd_reply_by_email_view( $field, $value ) {
+		public function rthd_reply_by_email_view( $field, $value,$newflag =true) {
 			global $rt_mail_settings, $rt_imap_server_model;
 
 			$responce = $this->goole_oauth();
@@ -202,13 +202,14 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 												class='button remove-google-ac right'
 												href='<?php echo esc_url( admin_url( 'admin.php?page=Rt-MailBox&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
 												A/C</a>
+											<a class="button right rtMailbox-hide-mail-folders" href="#">Show</a>
 											<?php if ( 'goauth' == $ac->type ) { ?>
 												<a class='button button-primary right'
 												   href='<?php echo esc_url( $authUrl ); ?>'>ReConnect Google Now</a>
 											<?php } ?>
 										</td>
 									</tr>
-									<tr valign="top">
+									<tr valign="top" class="rthd-hide-row">
 										<?php if ( $login_successful ) { ?>
 										<td class="long">
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
@@ -258,7 +259,9 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					</script>
 				<?php
 				}
-			} else {
+			}
+
+			if ($newflag ){
 				?>
 				<p class="submit"><a class="button" id="rthd_add_personal_email"
 				                     href="#"><?php _e( 'Add Email' ); ?></a></p>

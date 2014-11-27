@@ -56,4 +56,9 @@ jQuery( document ).ready(function(){
 		}
 	} );
 
+	jQuery('.rtMailbox-hide-mail-folders' ).click( function ( e ) {
+		e.preventDefault();
+		jQuery(this ).parent().parent().next('tr').toggleClass( "rthd-hide-row" );
+	});
+
 });
