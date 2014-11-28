@@ -247,8 +247,6 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'flag'       => 'Y',
 			);
 
-			error_log(var_export( $module ,true ). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
-
 			if ( ! empty( $module ) ){
 				$args['module']=$module;
 			}

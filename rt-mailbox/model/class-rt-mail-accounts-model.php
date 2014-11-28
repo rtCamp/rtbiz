@@ -26,7 +26,7 @@ if ( ! class_exists( 'Rt_Mail_Accounts_Model' ) ) {
 	 */
 	class Rt_Mail_Accounts_Model extends RT_DB_Model {
 		public function __construct() {
-			parent::__construct( 'rt_wp_mail_accounts' );
+			parent::__construct( 'wp_mail_accounts' );
 		}
 
 		/**

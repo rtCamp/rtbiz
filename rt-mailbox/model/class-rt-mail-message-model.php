@@ -26,7 +26,7 @@ if ( ! class_exists( 'Rt_Mail_Message_Model' ) ) {
 	 */
 	class Rt_Mail_Message_Model extends RT_DB_Model {
 		public function __construct() {
-			parent::__construct( 'rt_wp_mail_messageids' );
+			parent::__construct( 'wp_mail_messageids' );
 		}
 
 		/**

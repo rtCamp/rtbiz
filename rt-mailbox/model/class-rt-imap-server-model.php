@@ -26,7 +26,7 @@ if ( ! class_exists( 'Rt_IMAP_Server_Model' ) ) {
 	 */
 	class Rt_IMAP_Server_Model extends RT_DB_Model {
 		public function __construct() {
-			parent::__construct( 'rt_wp_imap_server' );
+			parent::__construct( 'wp_imap_server' );
 		}
 
 		/**

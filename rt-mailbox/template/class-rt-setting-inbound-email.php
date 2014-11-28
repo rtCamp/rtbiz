@@ -272,14 +272,15 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				<p class="submit rthd-hide-row" id="rthd_email_acc_type_container">
 					<?php
 					if (!empty($modules)){ ?>
+						<label for="module_to_register">Select module to register: </label>
 						<select id="module_to_register" name="module_to_register" required>
-							<option value=""><?php _e( "Select module to register" ); ?></option>
 							<?php
 							foreach ( Rt_Access_Control::$modules as $key => $value ){
 								echo '<option value="'.$key.'">'.$key.'</option>';
 							}
 							?>
 						</select>
+						<br />
 
 					<?php } ?>
 

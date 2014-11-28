@@ -26,7 +26,7 @@ if ( ! class_exists( 'Rt_Mail_Thread_Importer_Model' ) ) {
 	 */
 	class Rt_Mail_Thread_Importer_Model extends RT_DB_Model {
 		public function __construct() {
-			parent::__construct( 'rt_wp_mail_thread_importer' );
+			parent::__construct( 'wp_mail_thread_importer' );
 		}
 
 		/**
