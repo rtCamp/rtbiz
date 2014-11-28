@@ -273,7 +273,7 @@ function rt_biz_connect_post_to_organization( $post_type, $from = '', $to = '', 
  * @param string $to
  */
 function rt_biz_connect_organization_to_person( $from = '', $to = '' ) {
-	global $rt_biz;
+	$rt_biz = rtbiz();
 	$rt_biz->connect_organization_to_person( $from, $to );
 }
 
@@ -302,7 +302,7 @@ function rt_biz_organization_connection_to_string( $post_id, $term_seperator = '
  * @return mixed
  */
 function rt_biz_get_organization_to_person_connection( $connected_items ) {
-	global $rt_biz;
+	$rt_biz = rtbiz();
 	return $rt_biz->get_organization_to_person_connection( $connected_items );
 }
 
