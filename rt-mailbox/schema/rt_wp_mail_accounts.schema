@@ -7,6 +7,7 @@ CREATE TABLE %s (
 	outh_token VARCHAR(2000) DEFAULT NULL,
 	email_data VARCHAR(2000) DEFAULT NULL,
 	flag CHAR(1) DEFAULT NULL,
+	module VARCHAR(100) DEFAULT NULL,
 	signature MEDIUMTEXT,
 	lastMailCount BIGINT(11) DEFAULT '0',
 	sync_status VARCHAR(45) DEFAULT 'synced',

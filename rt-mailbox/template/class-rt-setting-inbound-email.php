@@ -93,7 +93,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 * @param $field
 		 * @param $value
 		 */
-		public function rthd_reply_by_email_view( $field, $value,$newflag =true) {
+		public function rthd_reply_by_email_view( $field, $value,$modules = array(),$newflag =true) {
 			global $rt_mail_settings, $rt_imap_server_model;
 
 			$responce = $this->goole_oauth();
@@ -212,6 +212,10 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<tr valign="top" class="rthd-hide-row">
 										<?php if ( $login_successful ) { ?>
 										<td class="long">
+											<?php if (!empty($ac->module)){
+												?>
+												<b> Mailbox Registered with <?php echo $ac->module ?></b> <br/>
+											<?php } ?>
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
@@ -261,11 +265,24 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				}
 			}
 
-			if ($newflag ){
+			if ( $newflag ){
 				?>
 				<p class="submit"><a class="button" id="rthd_add_personal_email"
 				                     href="#"><?php _e( 'Add Email' ); ?></a></p>
 				<p class="submit rthd-hide-row" id="rthd_email_acc_type_container">
+					<?php
+					if (!empty($modules)){ ?>
+						<select id="module_to_register" name="module_to_register" required>
+							<option value=""><?php _e( "Select module to register" ); ?></option>
+							<?php
+							foreach ( Rt_Access_Control::$modules as $key => $value ){
+								echo '<option value="'.$key.'">'.$key.'</option>';
+							}
+							?>
+						</select>
+
+					<?php } ?>
+
 					<select id="rthd_select_email_acc_type">
 						<option value=""><?php _e( 'Select Type' ); ?></option>
 					<?php if ( false != $responce ){ ?>
@@ -300,9 +317,11 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		}
 
 		public function save_replay_by_email() {
-
-			global $rt_mail_settings, $redux_helpdesk_settings;
-
+			global $rt_mail_settings;
+			$module="";
+			if(isset($_POST['module_to_register']) && !empty($_POST['module_to_register'])){
+				$module= $_POST['module_to_register'];
+			}
 			if ( ( isset( $_REQUEST['rthd_submit_enable_reply_by_email'] ) && 'save' == $_REQUEST['rthd_submit_enable_reply_by_email'] ) || ( isset( $_REQUEST['rthd_add_imap_email'] ) && $_REQUEST['rthd_add_imap_email'] ) ) {
 				if ( isset( $_POST['mail_ac'] ) && is_email( $_POST['mail_ac'] ) ) {
 					if ( isset( $_POST['imap_password'] ) ) {
@@ -348,7 +367,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							'email' => $email,
 						);
 						$imap_server = $_POST['rthd_imap_server'];
-						$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server );
+						$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
 					}
 				}
 			}

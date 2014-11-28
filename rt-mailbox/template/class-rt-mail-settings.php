@@ -232,7 +232,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function add_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null ) {
+		public function add_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null, $module = null ) {
 			global $rt_mail_accounts_model;
 			if ( $user_id == - 1 ) {
 				$user_id = get_current_user_id();
@@ -246,6 +246,12 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'type'       => $type,
 				'flag'       => 'Y',
 			);
+
+			error_log(var_export( $module ,true ). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
+
+			if ( ! empty( $module ) ){
+				$args['module']=$module;
+			}
 
 			if ( $imap_server != null ) {
 				$args['imap_server'] = $imap_server;

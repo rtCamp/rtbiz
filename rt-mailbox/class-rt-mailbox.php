@@ -33,10 +33,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
 		 */
 		var $page_cap;
+		public $modules= array();
 
-		function __construct() {
+		function __construct($module = array()) {
 			$this->auto_loader();
 			$this->db_upgrade();
+			$this->modules = $module;
 		}
 
 		/**
@@ -145,12 +147,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function mailbox_view(){
 			global $rt_setting_inbound_email;
 			if (isset($_POST) && !empty($_POST)){
-				$rt_setting_inbound_email->save_replay_by_email();
+				$rt_setting_inbound_email->save_replay_by_email( );
 			}
 			?>
 			<form method="post" action="">
 			<?php
-			$rt_setting_inbound_email->rthd_reply_by_email_view( null, null );
+			$rt_setting_inbound_email->rthd_reply_by_email_view( null, null, $this->modules );
 			?>				<input class="button button-primary" type="submit" value="Save">
 			</form> <?php
 		}
