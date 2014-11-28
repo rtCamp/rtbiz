@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/
   Description: WordPress for Business
-  Version: 0.0.5
+  Version: 0.0.6
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -144,9 +144,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			if ( ! self::$instance->check_p2p_dependency() ) {
 				return false;
 			}
-			self::$instance->init_rt_mailbox();
 
-			self::$instance->init_rt_mail_models();
 
 			self::$instance->includes();
 
@@ -181,9 +179,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			add_action( 'after_setup_theme', array( self::$instance, 'init_wc_product_taxonomy' ),20 );
 
-			self::$instance->init_mail_functions();
+			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
 
-			self::$instance->init_rt_wp_mail_cron();
 		}
 
 		function includes() {
@@ -231,7 +228,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox();
+//			foreach ( Rt_Access_Control::$modules as $key => $value ){
+//			error_log(var_export(Rt_Access_Control::$modules,true). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
+			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules);
+			self::$instance->init_rt_mail_models();
+			self::$instance->init_mail_functions();
+			self::$instance->init_rt_wp_mail_cron();
 			$rt_MailBox ->add_mailbox_page('Rt-MailBox', Rt_Biz::$dashboard_slug);
 		}
 
