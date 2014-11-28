@@ -40,7 +40,7 @@ function rt_biz_get_template( $template_name, $args = array(), $template_path = 
  */
 function rt_biz_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 
-	global $rt_biz;
+	$rt_biz = rtbiz();
 	if ( ! $template_path ) $template_path = $rt_biz->templateURL;
 	if ( ! $default_path ) $default_path = RT_BIZ_PATH_TEMPLATES;
 
