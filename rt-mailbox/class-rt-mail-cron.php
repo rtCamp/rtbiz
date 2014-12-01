@@ -19,13 +19,13 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 		function __construct() {
 
-			add_filter( 'cron_schedules', array($this, 'register_custom_schedule') );
+			add_filter( 'cron_schedules', array( $this, 'register_custom_schedule' ) );
 
 			add_action( 'init', array( $this, 'setup_schedule' ) );
-			register_deactivation_hook( trailingslashit( RT_HD_PATH ) . 'rtbiz-helpdesk.php', array( $this, 'disable_cron_on_deactivation' ) );
+			register_deactivation_hook( trailingslashit( RT_HD_PATH ) . 'rtbiz-helpdesk.php', array( $this, 'disable_cron_on_deactivation' ) ); //todo: change this path to something else
 
-			add_action( 'rt_hd_parse_email_cron', array( $this, 'rt_hd_parse_email' ) );
-			add_action( 'rt_hd_send_email_cron', array( $this, 'rt_hd_send_email' ) );
+			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
+			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 
 		function register_custom_schedule( $schedules ) {
@@ -33,37 +33,38 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			// add schedule to the existing set
 			$schedules['every_minute'] = array(
 				'interval' => 60,
-				'display' => __('Every Minute'),
+				'display' => __( 'Every Minute' ),
 			);
 			$schedules['every_5_minutes'] = array(
 				'interval' => 300,
-				'display' => __('Every 5 Minutes'),
+				'display' => __( 'Every 5 Minutes' ),
 			);
 			return $schedules;
 		}
 
 		function disable_cron_on_deactivation() {
-			wp_clear_scheduled_hook( 'rt_hd_parse_email_cron' );
-			wp_clear_scheduled_hook( 'rt_hd_send_email_cron' );
+			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
+			wp_clear_scheduled_hook( 'rt_send_email_cron' );
 		}
 
 		function setup_schedule() {
-			if ( ! wp_next_scheduled( 'rt_hd_parse_email_cron' ) ) {
-				wp_schedule_event( time(), 'every_5_minutes', 'rt_hd_parse_email_cron');
+			if ( ! wp_next_scheduled( 'rt_parse_email_cron' ) ) {
+				wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron' );
 			}
 
-			if ( ! wp_next_scheduled( 'rt_hd_send_email_cron' ) ) {
-				wp_schedule_event( time(), 'every_minute', 'rt_hd_send_email_cron');
+			if ( ! wp_next_scheduled( 'rt_send_email_cron' ) ) {
+				wp_schedule_event( time(), 'every_minute', 'rt_send_email_cron' );
 			}
 		}
 
-		function rt_hd_parse_email() {
+		function rt_parse_email() {
 
-			global $rt_mail_settings, $redux_helpdesk_settings;
+			global $rt_mail_settings ;
+			//			, $redux_helpdesk_settings;
 
-			if ( empty( $redux_helpdesk_settings['rthd_enable_reply_by_email'] ) || $redux_helpdesk_settings['rthd_enable_reply_by_email'] != 1 ) {
-				return;
-			}
+			//			if ( empty( $redux_helpdesk_settings['rthd_enable_reply_by_email'] ) || $redux_helpdesk_settings['rthd_enable_reply_by_email'] != 1 ) {
+			//				return;
+			//			}
 
 			$emailRow = $rt_mail_settings->get_email_for_sync();
 			if ( ! $emailRow ) {
@@ -96,34 +97,33 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			$imap_server  = '';
 			$access_token = $rt_mail_settings->get_accesstoken_from_email( $email, $signature, $email_type, $imap_server );
 
-			$hdZendEmail = new Rt_Zend_Mail();
+			$rtZendEmail = new Rt_Zend_Mail();
 			//System Mail
 			$isSystemMail = false;
-			if ( rthd_is_system_email( $email ) ) {
+			if ( rt_is_system_email( $email ) ) {
 				$isSystemMail = true;
 			}
-			$hdZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
+			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
 
 			$rt_mail_settings->update_sync_status( $email, true );
 			//thread Importer
-			$hdZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature, true );
+			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature, true );
 			$rt_mail_settings->update_sync_status( $email, false );
 		}
 
-		function rt_hd_send_email() {
+		function rt_send_email() {
 			global $rt_mail_settings;
 
-//			$settings = rthd_get_redux_settings();
-
-//			if ( empty( $settings['rthd_outgoing_email_delivery'] ) || $settings['rthd_outgoing_email_delivery'] != 'user_mail_login' ) {
-//				return;
-//			}
+			//			$settings = rthd_get_redux_settings();
+			//			if ( empty( $settings['rthd_outgoing_email_delivery'] ) || $settings['rthd_outgoing_email_delivery'] != 'user_mail_login' ) {
+			//				return;
+			//			}
 
 			$emailRow = $rt_mail_settings->get_new_sent_mail();
 			if ( empty( $emailRow ) ) {
 				return;
 			}
-			$hdZendEmail      = new Rt_Zend_Mail();
+			$rtZendEmail      = new Rt_Zend_Mail();
 			$accessTokenArray = array();
 			$signature        = '';
 			foreach ( $emailRow as $email ) {
@@ -142,7 +142,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 					$updateFlag = false;
 					try {
 						$fromname = ( ! empty( $email->fromname ) ) ? $email->fromname : get_bloginfo();
-						$result = $hdZendEmail->sendemail( $fromname, $email->fromemail, $accessTokenArray[ $email->fromemail ]['token'], $accessTokenArray[ $email->fromemail ]['email_type'], $accessTokenArray[ $email->fromemail ]['imap_server'], $email->subject, $email->body, unserialize( $email->toemail ), unserialize( $email->ccemail ), unserialize( $email->bccemail ), unserialize( $email->attachement ) );
+						$result = $rtZendEmail->sendemail( $fromname, $email->fromemail, $accessTokenArray[ $email->fromemail ]['token'], $accessTokenArray[ $email->fromemail ]['email_type'], $accessTokenArray[ $email->fromemail ]['imap_server'], $email->subject, $email->body, unserialize( $email->toemail ), unserialize( $email->ccemail ), unserialize( $email->bccemail ), unserialize( $email->attachement ) );
 						error_log( var_export( $result, true ) );
 						if ( $result ) {
 							$updateFlag = true;

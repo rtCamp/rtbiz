@@ -151,7 +151,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 
 			$access_token = $ac->outh_token;
 
-			if ( $ac->type == 'goauth' ) {
+			if ( 'goauth' == $ac->type ) {
 
 				$google_client_id           = get_site_option( 'rthd_googleapi_clientid', '' );
 				$google_client_secret       = get_site_option( 'rthd_googleapi_clientsecret', '' );
@@ -248,7 +248,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			);
 
 			if ( ! empty( $module ) ){
-				$args['module']=$module;
+				$args['module'] = $module;
 			}
 
 			if ( $imap_server != null ) {
@@ -495,4 +495,23 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 
 	}
 
+}
+
+/**
+ * returns all system emails
+ * @return array
+ */
+function rt_get_all_system_emails() {
+	global $rt_mail_settings;
+
+	$emails   = array();
+	$google_acs = $rt_mail_settings->get_user_google_ac();
+
+	foreach ( $google_acs as $ac ) {
+		$ac->email_data = unserialize( $ac->email_data );
+		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+		$emails[] = $ac_email;
+	}
+
+	return $emails;
 }

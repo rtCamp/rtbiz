@@ -41,7 +41,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 */
 		public function goole_oauth() {
 			global $rt_mail_settings;
-			$auth = Rt_Mailbox::get_Google_auth();
+			$auth = Rt_Mailbox::get_google_auth();
 			$rt_mail_settings->update_gmail_ac_count();
 
 			//Google Client
@@ -93,7 +93,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 * @param $field
 		 * @param $value
 		 */
-		public function rthd_reply_by_email_view( $field, $value,$modules = array(),$newflag =true) {
+		public function rt_reply_by_email_view( $field, $value, $modules = array(), $newflag = true ) {
 			global $rt_mail_settings, $rt_imap_server_model;
 
 			$responce = $this->goole_oauth();
@@ -120,18 +120,17 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				$authUrl    = $this->client->createAuthUrl();
 			}
 
-//			$results           = Rt_HD_Utils::get_hd_rtcamp_user();
-//			$arrSubscriberUser = array();
-//			foreach ( $results as $author ) {
-//				$arrSubscriberUser[] = array(
-//					'id'      => $author->ID,
-//					'label'   => $author->display_name,
-//					'imghtml' => get_avatar( $author->user_email, 25 ),
-//				);
-//			}
+			//			$results           = Rt_HD_Utils::get_hd_rtcamp_user();
+			//			$arrSubscriberUser = array();
+			//			foreach ( $results as $author ) {
+			//				$arrSubscriberUser[] = array(
+			//					'id'      => $author->ID,
+			//					'label'   => $author->display_name,
+			//					'imghtml' => get_avatar( $author->user_email, 25 ),
+			//				);
+			//			}
 
-
-//			echo '<script> var arr_rtcamper=' . json_encode( $arrSubscriberUser ) . '; </script>';
+			//			echo '<script> var arr_rtcamper=' . json_encode( $arrSubscriberUser ) . '; </script>';
 			$rCount = 0;
 
 			if ( isset( $google_acs ) && ! empty( $google_acs ) ) {
@@ -195,7 +194,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					?>
 									<tr valign="top">
 										<td>
-<!--											<label>--><?php //echo balanceTags( $personMarkup ); ?><!--</label>-->
+					<!--											<label>--><?php //echo balanceTags( $personMarkup ); ?><!--</label>-->
 											<strong><?php if ( isset( $ac->email_data['name'] ) ) { echo $ac->email_data['name']; } ?> <br/><a href='mailto:<?php echo $email ?>'><?php echo $email ?></a></strong>
 											<input type="hidden" name="rthd_submit_enable_reply_by_email" value="save"/>
 											<a
@@ -212,7 +211,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<tr valign="top" class="rthd-hide-row">
 										<?php if ( $login_successful ) { ?>
 										<td class="long">
-											<?php if (!empty($ac->module)){
+											<?php if ( ! empty( $ac->module ) ){
 												?>
 												<b> Mailbox Registered with <?php echo $ac->module ?></b> <br/>
 											<?php } ?>
@@ -235,9 +234,9 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						echo '<div id="mail_folder_container">';
 						$hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder );
 						echo '</div>';
-					} else { ?>
-						<p class="description"><?php _e( 'No Folders found.' ); ?></p>
-					<?php } ?>
+						} else { ?>
+							<p class="description"><?php _e( 'No Folders found.' ); ?></p>
+						<?php } ?>
 										</td>
 										<?php } ?>
 									</tr>
@@ -271,14 +270,14 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				                     href="#"><?php _e( 'Add Email' ); ?></a></p>
 				<p class="submit rthd-hide-row" id="rthd_email_acc_type_container">
 					<?php
-					if (!empty($modules)){ ?>
-						<label for="module_to_register">Select module to register: </label>
-						<select id="module_to_register" name="module_to_register" required>
-							<?php
-							foreach ( Rt_Access_Control::$modules as $key => $value ){
-								echo '<option value="'.$key.'">'.$key.'</option>';
-							}
-							?>
+				if ( ! empty( $modules ) ){ ?>
+					<label for="module_to_register">Select module to register: </label>
+					<select id="module_to_register" name="module_to_register" required>
+					<?php
+					foreach ( Rt_Access_Control::$modules as $key => $value ){
+						echo '<option value="'.$key.'">'.$key.'</option>';
+					}
+					?>
 						</select>
 						<br />
 
@@ -319,9 +318,9 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 
 		public function save_replay_by_email() {
 			global $rt_mail_settings;
-			$module="";
-			if(isset($_POST['module_to_register']) && !empty($_POST['module_to_register'])){
-				$module= $_POST['module_to_register'];
+			$module = '';
+			if ( isset( $_POST['module_to_register'] ) && ! empty( $_POST['module_to_register'] ) ){
+				$module = $_POST['module_to_register'];
 			}
 			if ( ( isset( $_REQUEST['rthd_submit_enable_reply_by_email'] ) && 'save' == $_REQUEST['rthd_submit_enable_reply_by_email'] ) || ( isset( $_REQUEST['rthd_add_imap_email'] ) && $_REQUEST['rthd_add_imap_email'] ) ) {
 				if ( isset( $_POST['mail_ac'] ) && is_email( $_POST['mail_ac'] ) ) {

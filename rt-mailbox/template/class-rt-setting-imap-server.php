@@ -17,7 +17,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 
 		function __construct() {
 			add_action( 'init', array( $this, 'save_imap_servers' ) );
-			$updateDB = new RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/');
+			$updateDB = new RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) ) . 'schema/' );
 			add_action( 'rt_db_update_finished_' . str_replace( '-', '_', sanitize_title( $updateDB->rt_plugin_info->name ) ), array( $this, 'default_imap_servers' ) );
 		}
 
@@ -53,15 +53,15 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 				),
 			);
 
-			foreach( $default_imap_servers as $server ) {
+			foreach ( $default_imap_servers as $server ) {
 				$existing_server = $rt_imap_server_model->get_servers( array( 'incoming_imap_server' => $server['incoming_imap_server'] ) );
-				if( empty( $existing_server ) ) {
+				if ( empty( $existing_server ) ) {
 					$rt_imap_server_model->add_server( $server );
 				}
 			}
 		}
 
-		function rthd_imap_servers( $field, $value ) {
+		function rt_imap_servers( $field, $value ) {
 			global $rt_imap_server_model;
 			$servers = $rt_imap_server_model->get_all_servers();
 			?>
