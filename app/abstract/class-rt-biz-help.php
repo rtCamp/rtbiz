@@ -283,40 +283,36 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'edit_organization_overview':
 					?>
 					<p>
-						<?php _e( 'From this screen you can add new Organization into the system.' ); ?>
-						<?php _e( 'You can fill up optional additional details related to organization such as Email, Phone Number, Address etc.' ); ?>
-						<?php _e( 'Those can be updated later on from the Edit Organization screen as well.' ); ?>
+						<?php _e( 'From this screen you can add new company into the system.' ); ?>
+						<?php _e( 'You can fill up optional additional details related to company such as Email, Phone Number, Address etc.' ); ?>
+						<?php _e( 'Those can be updated later on from the Edit Company screen as well.' ); ?>
 					</p>
 					<?php
 					break;
 				case 'create_organization_screen_content':
 				case 'edit_organization_screen_content':
 					?>
-					<p><?php _e( 'There are a few sections where you can save essential information about an Organization : ' ); ?></p>
+					<p><?php _e( 'There are a few sections where you can save essential information about a company : ' ); ?></p>
 					<ul>
-						<li><?php _e( 'There is a textbox for the title of a organization.' ); ?></li>
-						<li><?php _e( 'You can also put any description/comments related to the organization in to the rich text editor provided.' ); ?></li>
+						<li><?php _e( 'There is a textbox for the title of a company.' ); ?></li>
+						<li><?php _e( 'You can also put any description/comments related to the company in to the rich text editor provided.' ); ?></li>
 						<li>
 							<?php _e( 'There might be other extra attributes metaboxes depending upon how you add an attribute from the attributes page' ); ?>
 							<a href="<?php echo add_query_arg( array( 'page' => Rt_Biz_Attributes::$attributes_page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
 						</li>
 						<li>
 							<?php _e( 'You will see a "Connected X" metaboxes in the side colum.' ); ?>
-							<?php _e( 'They are the supportive modules of the system which are connected to the Organization.' ); ?>
-							<?php _e( 'E.g., An Organization is connected to a person since a person can be a part of an organization.' ); ?>
-							<?php _e( 'You can select any entity from the metabox to connect it to the organization.' ); ?>
+							<?php _e( 'They are the supportive modules of the system which are connected to the company.' ); ?>
+							<?php _e( 'E.g., A company is connected to a person since a person can be a part of a company.' ); ?>
+							<?php _e( 'You can select any entity from the metabox to connect it to the company.' ); ?>
 						</li>
 					</ul>
 					<?php
 					break;
 				case 'person_list_overview':
-					$title = __( 'Contacts' );
-					if ( isset( $_GET[ 'rt-biz-my-team' ] ) && $_GET[ 'rt-biz-my-team' ] ) {
-						$title = __( 'Employees' );
-					}
 					?>
 					<p>
-						<?php echo __( 'This screen provides access to all' ) . ' ' . $title . __( '. You can customize the display of this screen to suit your workflow.' ); ?>
+						<?php echo __( 'This screen provides access to all people You can customize the display of this screen to suit your workflow.' ); ?>
 					</p>
 					<?php
 					break;
@@ -345,7 +341,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'organization_list_overview':
 					?>
 					<p>
-						<?php _e( 'This screen provides access to all Organizations. You can customize the display of this screen to suit your workflow.' ); ?>
+						<?php _e( 'This screen provides access to all companies. You can customize the display of this screen to suit your workflow.' ); ?>
 					</p>
 					<?php
 					break;
@@ -353,19 +349,19 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					?>
 					<p><?php _e( 'You can customize the display of this screen’s contents in a number of ways :' ); ?></p>
 					<ul>
-						<li><?php _e( 'You can hide/display columns based on your needs and decide how many organizations to list per screen using the Screen Options tab.' ); ?></li>
+						<li><?php _e( 'You can hide/display columns based on your needs and decide how many companies to list per screen using the Screen Options tab.' ); ?></li>
 						<li>
-							<?php _e( 'You can filter the list of organizations by status using the text links in the upper left to show All, Published, Draft, or Trashed organizations.' ); ?>
-							<?php _e( 'The default view is to show all organizations.' ); ?>
+							<?php _e( 'You can filter the list of companies by status using the text links in the upper left to show All, Published, Draft, or Trashed companies.' ); ?>
+							<?php _e( 'The default view is to show all companies.' ); ?>
 						</li>
 						<li>
-							<?php _e( 'You can view organizations in a simple title list or with an excerpt.' ); ?>
+							<?php _e( 'You can view companies in a simple title list or with an excerpt.' ); ?>
 							<?php _e( 'Choose the view you prefer by clicking on the icons at the top of the list on the right.' ); ?>
 						</li>
 						<li>
-							<?php _e( 'You can refine the list to show only organizations in a specific category or from a specific month by using the dropdown menus above the organizations list.' ); ?>
+							<?php _e( 'You can refine the list to show only companies in a specific category or from a specific month by using the dropdown menus above the companies list.' ); ?>
 							<?php _e( 'Click the Filter button after making your selection.' ); ?>
-							<?php _e( 'You also can refine the list by clicking on the author, country or attribute in the organizations list.' ); ?>
+							<?php _e( 'You also can refine the list by clicking on the author, country or attribute in the companies list.' ); ?>
 						</li>
 						<li><?php _e( 'You can also see the entity counts for respective modules, if activated, such as Lead Count, Ticket Count etc.' ) ?></li>
 					</ul>

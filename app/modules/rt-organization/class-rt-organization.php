@@ -25,19 +25,19 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		public function __construct() {
 			parent::__construct( 'rt_account' );
 			$this->labels = array(
-				'name' => __( 'Organizations' ),
-				'singular_name' => __( 'Organization' ),
-				'menu_name' => __( 'Organizations' ),
-				'all_items' => __( 'All Organizations' ),
+				'name' => __( 'Companies' ),
+				'singular_name' => __( 'Company' ),
+				'menu_name' => __( 'Companies' ),
+				'all_items' => __( 'All Companies' ),
 				'add_new' => __( 'Add New' ),
-				'add_new_item' => __( 'Add Organization' ),
-				'edit_item' => __( 'Edit Organization' ),
-				'new_item' => __( 'New Organization' ),
-				'view_item' => __( 'View Organization' ),
-				'search_items' => __( 'Search Organization' ),
-				'not_found' => __( 'No Organizations found' ),
-				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
-				'not_found_in_trash' => __( 'No Organizations found in Trash' ),
+				'add_new_item' => __( 'Add Company' ),
+				'edit_item' => __( 'Edit Company' ),
+				'new_item' => __( 'New Company' ),
+				'view_item' => __( 'View Company' ),
+				'search_items' => __( 'Search Company' ),
+				'not_found' => __( 'No Companies found' ),
+				'not_found_in_trash' => __( 'No Companies found in Trash' ),
+				'not_found_in_trash' => __( 'No Companies found in Trash' ),
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
