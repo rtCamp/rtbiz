@@ -49,6 +49,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			add_action( 'init', array( $this, 'init_entity' ) );
 			add_action( 'init', array( $this, 'check_filters' ) );
 
+			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
+
 			/**
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
@@ -75,7 +77,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * Query Filter of WP_Query
 		 * Filter Persons on Our Team Page - List View
 		 *
-		 * @param $where
 		 * @param $query_obj
 		 * @return string
 		 */
@@ -675,6 +676,23 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			$person_id = $this->add_person( $user->display_name );
 			Rt_Person::add_meta( $person_id, $this->email_key, $user->user_email );
 			Rt_Person::add_meta( $person_id, $this->website_url_key, $user->user_url );
+		}
+
+		function get_user_from_name() {
+			if ( ! isset( $_POST[ 'query' ] ) ) {
+				wp_die( 'Invalid request Data' );
+			}
+			$query = $_POST[ 'query' ];
+			global $wpdb;
+
+			$results = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
+			$arrReturn = array();
+			foreach ( $results as $author ) {
+				$arrReturn[] = array( "id" => $author->ID, "label" => $author->display_name, "imghtml" => get_avatar( $author->user_email, 25 ) );
+			}
+			header( 'Content-Type: application/json' );
+			echo json_encode( $arrReturn );
+			die( 0 );
 		}
 
 	}
