@@ -882,7 +882,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$subject      = rt_force_utf_8( $subject );
 					$txtBody      = rt_force_utf_8( $txtBody );
 
-					$visibleText = substr( $htmlBody, 0 ,strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' ) );
+					$offset = strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' );
+					$visibleText = substr( $htmlBody, 0, ( $offset === false ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
 
