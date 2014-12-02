@@ -17,12 +17,12 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 	class Rt_Mail_Cron {
 
-		function __construct() {
+		function __construct( $plugin_path_for_deactivate_cron ) {
 
 			add_filter( 'cron_schedules', array( $this, 'register_custom_schedule' ) );
 
 			add_action( 'init', array( $this, 'setup_schedule' ) );
-			register_deactivation_hook( trailingslashit( RT_HD_PATH ) . 'rtbiz-helpdesk.php', array( $this, 'disable_cron_on_deactivation' ) ); //todo: change this path to something else
+			register_deactivation_hook( $plugin_path_for_deactivate_cron, array( $this, 'disable_cron_on_deactivation' ) );
 
 			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
 			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
@@ -42,6 +42,9 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			return $schedules;
 		}
 
+		/**
+		 * disable the cron
+		 */
 		function disable_cron_on_deactivation() {
 			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
 			wp_clear_scheduled_hook( 'rt_send_email_cron' );
@@ -57,6 +60,9 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			}
 		}
 
+		/**
+		 * Parse email
+		 */
 		function rt_parse_email() {
 
 			global $rt_mail_settings ;

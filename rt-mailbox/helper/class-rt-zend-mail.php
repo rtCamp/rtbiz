@@ -680,7 +680,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					$from       = array();
 					$allEmails  = array();
-					global $rthd_all_emails;
+					//global $rthd_all_emails;
 					$rthd_all_emails = array();
 					if ( isset( $message->from ) ) { // or $message->headerExists('cc');
 						$arrFrom = $message->getHeader( 'from' )->getAddressList();
