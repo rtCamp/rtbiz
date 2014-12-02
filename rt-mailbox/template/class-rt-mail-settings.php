@@ -443,7 +443,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		public function insert_new_send_email( $fromemail, $subject, $body, $toemail = array(), $ccemail = array(), $bccemail = array(), $attachement = array(), $refrence_id = 0, $refrence_type = 'notification' ) {
 
 			$user_id = get_current_user_id();
-			global $rt_outbound_model_model;
+			global $rt_outbound_model;
 			$args = array(
 				'user_id'       => $user_id,
 				'fromemail'     => $fromemail,
@@ -457,7 +457,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'refrence_type' => $refrence_type,
 			);
 
-			return $rt_outbound_model_model->add_outbound_mail( $args );
+			return $rt_outbound_model->add_outbound_mail( $args );
 		}
 
 		/**
@@ -468,9 +468,9 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 * @since rt-Helpdesk 0.1
 		 */
 		public function get_new_sent_mail() {
-			global $rt_outbound_model_model;
+			global $rt_outbound_model;
 
-			return $rt_outbound_model_model->get_outbound_mail( array( 'sent' => 'no' ) );
+			return $rt_outbound_model->get_outbound_mail( array( 'sent' => 'no' ) );
 		}
 
 		/**
@@ -485,8 +485,8 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 * @since rt-Helpdesk 0.1
 		 */
 		public function update_sent_email( $sentEmailID, $status = 'yes', $oldStatus = 'no' ) {
-			global $rt_outbound_model_model;
-			$rows_affected = $rt_outbound_model_model->update_outbound_mail( array( 'sent' => $status ), array(
+			global $rt_outbound_model;
+			$rows_affected = $rt_outbound_model->update_outbound_mail( array( 'sent' => $status ), array(
 				'id'   => $sentEmailID,
 				'sent' => $oldStatus,
 			) );

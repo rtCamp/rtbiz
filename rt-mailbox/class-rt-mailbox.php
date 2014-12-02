@@ -63,14 +63,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $page_cap;
 		public $modules = array();
 
-		function __construct( $module = array(), $setting_page_parent_slug = '' ) {
+		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
 			$this->add_mailbox_page( 'Rt-MailBox', $setting_page_parent_slug );
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->modules = $module;
 			$this->init_mail_functions();
 			$this->init_rt_mail_models();
-			$this->init_rt_wp_mail_cron();
+			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 		}
 
 		function init_mail_functions(){
@@ -81,17 +81,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		}
 
 		function init_rt_mail_models() {
-			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model_model, $rt_mail_thread_importer_model;
+			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model, $rt_mail_thread_importer_model;
 			$rt_imap_server_model           = new Rt_IMAP_Server_Model();
 			$rt_mail_accounts_model         = new Rt_Mail_Accounts_Model();
 			$rt_mail_message_model          = new Rt_Mail_Message_Model();
-			$rt_outbound_model_model        = new Rt_Mail_Outbound_Model();
+			$rt_outbound_model        = new Rt_Mail_Outbound_Model();
 			$rt_mail_thread_importer_model  = new Rt_Mail_Thread_Importer_Model();
 		}
 
-		function init_rt_wp_mail_cron(){
+		function init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron ){
 			global $rt_mail_crons;
-			$rt_mail_crons = new Rt_Mail_Cron();
+			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_deactivate_cron );
 		}
 
 		/**
