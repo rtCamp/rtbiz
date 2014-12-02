@@ -105,9 +105,9 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function get_user_google_ac() {
+		public function get_user_google_ac( $args = array() ) {
 			global $rt_mail_accounts_model;
-			return $rt_mail_accounts_model->get_mail_account( array() );
+			return $rt_mail_accounts_model->get_mail_account( $args );
 		}
 
 		/**
@@ -501,11 +501,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
  * returns all system emails
  * @return array
  */
-function rt_get_all_system_emails() {
+function rt_get_all_system_emails( $args = array() ) {
 	global $rt_mail_settings;
 
 	$emails   = array();
-	$google_acs = $rt_mail_settings->get_user_google_ac();
+	$google_acs = $rt_mail_settings->get_user_google_ac( $args );
 
 	foreach ( $google_acs as $ac ) {
 		$ac->email_data = unserialize( $ac->email_data );
