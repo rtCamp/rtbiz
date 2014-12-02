@@ -1,0 +1,15 @@
+.rthd-remove-server {
+	color: red;
+}
+
+.rthd-hide-row {
+	display: none;
+}
+
+.rthd-show-row {
+	display: block;
+}
+
+.mailbox_reply_by_email_label{
+	font-weight: bold;
+}
