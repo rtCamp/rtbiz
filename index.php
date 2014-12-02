@@ -178,6 +178,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			add_action( 'after_setup_theme', array( self::$instance, 'init_wc_product_taxonomy' ),20 );
 
+			//after_setup_theme hook because before that we do not have ACL module registered
 			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
 
 			do_action( 'rt_biz_init' );
@@ -228,28 +229,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug );
-		}
-
-		function init_mail_functions(){
-			global $rt_setting_inbound_email, $rt_setting_imap_server, $rt_mail_settings;
-			$rt_setting_inbound_email = new RT_Setting_Inbound_Email();
-			$rt_setting_imap_server =  new RT_Setting_Imap_Server();
-			$rt_mail_settings = new Rt_Mail_Settings();
-		}
-
-		function init_rt_mail_models() {
-			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model_model, $rt_mail_thread_importer_model;
-			$rt_imap_server_model    = new Rt_IMAP_Server_Model();
-			$rt_mail_accounts_model  = new Rt_Mail_Accounts_Model();
-			$rt_mail_message_model   = new Rt_Mail_Message_Model();
-			$rt_outbound_model_model = new Rt_Mail_Outbound_Model();
-			$rt_mail_thread_importer_model = new Rt_Mail_Thread_Importer_Model();
-		}
-
-		function init_rt_wp_mail_cron(){
-			global $rt_mail_crons;
-			$rt_mail_crons = new Rt_Mail_Cron();
+			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, trailingslashit( RT_BIZ_PATH ) . 'index.php' );
 		}
 
 		function update_database() {
