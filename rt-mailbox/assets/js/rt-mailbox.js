@@ -2,7 +2,7 @@
 jQuery( document ).ready(function(){
 	jQuery( document ).on( 'click', '.rthd-edit-server', function ( e ) {
 		e.preventDefault();
-		server_id = jQuery( this ).data( 'server-id' );
+		var server_id = jQuery( this ).data( 'server-id' );
 		jQuery( '#rthd_imap_server_' + server_id ).toggleClass( 'rthd-hide-row' ).toggleClass( 'rthd-show-row' );
 	} );
 	jQuery( document ).on( 'click', '#rthd_add_imap_server', function ( e ) {
@@ -11,8 +11,8 @@ jQuery( document ).ready(function(){
 	} );
 	jQuery( document ).on( 'click', '.rthd-remove-server', function ( e ) {
 		e.preventDefault();
-		flag = confirm( 'Are you sure you want to remove this server ?' );
-		server_id = jQuery( this ).data( 'server-id' );
+		var flag = confirm( 'Are you sure you want to remove this server ?' );
+		var server_id = jQuery( this ).data( 'server-id' );
 		if ( flag ) {
 			jQuery( '#rthd_imap_server_' + server_id ).remove();
 			jQuery( this ).parent().parent().remove();
@@ -27,13 +27,13 @@ jQuery( document ).ready(function(){
 			jQuery( '#rthd_select_email_acc_type' ).val( '' ).change();
 		}
 	} );
-	jQuery( document ).on( 'change', '#rthd_select_email_acc_type', function ( e ) {
-		if ( jQuery( this ).val() == 'goauth' ) {
+	jQuery( document ).on( 'change', '#rthd_select_email_acc_type', function () {
+		if ( jQuery( this ).val() === 'goauth' ) {
 			jQuery( '#rthd_goauth_container' ).removeClass( 'rthd-hide-row' ).addClass( 'rthd-show-row' );
 			jQuery( '#rthd_add_imap_acc_form' ).removeClass( 'rthd-show-row' ).addClass( 'rthd-hide-row' );
 			jQuery( '#rthd_add_imap_acc_form input[type=email]' ).remove();
 			jQuery( '#rthd_add_imap_acc_form input[type=password]' ).remove();
-		} else if ( jQuery( this ).val() == 'imap' ) {
+		} else if ( jQuery( this ).val() === 'imap' ) {
 			jQuery( '#rthd_add_imap_acc_form' ).removeClass( 'rthd-hide-row' ).addClass( 'rthd-show-row' );
 			jQuery( '#rthd_goauth_container' ).removeClass( 'rthd-show-row' ).addClass( 'rthd-hide-row' );
 			jQuery( '#rthd_add_imap_acc_form' ).append( '<input type="email" autocomplete="off" name="rthd_imap_user_email" placeholder="Email"/>' );
@@ -46,9 +46,9 @@ jQuery( document ).ready(function(){
 		}
 	});
 
-	jQuery( ".remove-google-ac" ).click( function ( e ) {
-		var r = confirm( "Are you sure you want to remove this email A/C ?" );
-		if ( r == true ) {
+	jQuery( '.remove-google-ac' ).click( function ( e ) {
+		var r = confirm( 'Are you sure you want to remove this email A/C ?' );
+		if ( r === true ) {
 
 		} else {
 			e.preventDefault();
@@ -58,7 +58,7 @@ jQuery( document ).ready(function(){
 
 	jQuery('.rtMailbox-hide-mail-folders' ).click( function ( e ) {
 		e.preventDefault();
-		jQuery(this ).parent().parent().next('tr').toggleClass( "rthd-hide-row" );
+		jQuery(this ).parent().parent().next('tr').toggleClass( 'rthd-hide-row' );
 	});
 
 });
