@@ -8,7 +8,9 @@ handles  all inbound and outbound emails
 $rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, $plugin_path_for_deactivate_cron );
 ```
 Rt_Access_Control::$modules (array of modules that needed the email functionality.)
+
 Rt_Biz::$dashboard_slug (parent slug for registering email setting page)
+
 $plugin_path_for_deactivate_cron (path of plugin's main file which is used to deactivate cron when plugin is disabled)
 
 
