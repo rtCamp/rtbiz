@@ -175,16 +175,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->register_organization_person_connection();
 
 			self::$instance->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
-			do_action( 'rt_biz_init' );
 
 			add_action( 'after_setup_theme', array( self::$instance, 'init_wc_product_taxonomy' ),20 );
 
 			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
-			Rt_Mailbox::auto_loader();
-			self::$instance->init_rt_mail_models();
-			self::$instance->init_mail_functions();
-			self::$instance->init_rt_wp_mail_cron();
 
+			do_action( 'rt_biz_init' );
 		}
 
 		function includes() {
@@ -232,10 +228,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-//			foreach ( Rt_Access_Control::$modules as $key => $value ){
-//			error_log(var_export(Rt_Access_Control::$modules,true). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
-			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules);
-			$rt_MailBox ->add_mailbox_page('Rt-MailBox', Rt_Biz::$dashboard_slug);
+			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug );
 		}
 
 		function init_mail_functions(){
