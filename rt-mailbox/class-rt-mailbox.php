@@ -63,16 +63,41 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $page_cap;
 		public $modules = array();
 
-		function __construct( $module = array() ) {
-			//			$this->auto_loader();
+		function __construct( $module = array(), $setting_page_parent_slug = '' ) {
+			$this->add_mailbox_page( 'Rt-MailBox', $setting_page_parent_slug );
+			$this->auto_loader();
 			$this->db_upgrade();
 			$this->modules = $module;
+			$this->init_mail_functions();
+			$this->init_rt_mail_models();
+			$this->init_rt_wp_mail_cron();
+		}
+
+		function init_mail_functions(){
+			global $rt_setting_inbound_email, $rt_setting_imap_server, $rt_mail_settings;
+			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email();
+			$rt_setting_imap_server     = new RT_Setting_Imap_Server();
+			$rt_mail_settings           = new Rt_Mail_Settings();
+		}
+
+		function init_rt_mail_models() {
+			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model_model, $rt_mail_thread_importer_model;
+			$rt_imap_server_model           = new Rt_IMAP_Server_Model();
+			$rt_mail_accounts_model         = new Rt_Mail_Accounts_Model();
+			$rt_mail_message_model          = new Rt_Mail_Message_Model();
+			$rt_outbound_model_model        = new Rt_Mail_Outbound_Model();
+			$rt_mail_thread_importer_model  = new Rt_Mail_Thread_Importer_Model();
+		}
+
+		function init_rt_wp_mail_cron(){
+			global $rt_mail_crons;
+			$rt_mail_crons = new Rt_Mail_Cron();
 		}
 
 		/**
 		 * Register AutoLoader for MailBox
 		 */
-		static public function auto_loader() {
+		function auto_loader() {
 			include_once  plugin_dir_path( __FILE__ ) . 'vendor/'  . 'MailLib/zendAutoload.php';
 			self::$auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'helper/' );
@@ -114,7 +139,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		}
 
 		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
-
 			$this->page_slug             = $page_slug;
 			$this->parent_page_slug      = $parent_page_slug;
 			$this->page_cap              = $page_cap;
@@ -175,10 +199,27 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function mailbox_view(){
 			global $rt_setting_inbound_email;
 			if ( isset( $_POST ) && ! empty( $_POST ) ){
+				update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
 				$rt_setting_inbound_email->save_replay_by_email( );
 			}
 			?>
 			<form method="post" action="">
+				<div class="redux_field_th">
+					<span class="mailbox_reply_by_email_label">Enable Reply by Email:</span>
+			<?php $val = self::get_enable_by_reply_email();
+			$yes    = '';
+			$noflag = '';
+			if ( 'yes' == $val ){
+				$yes    = 'checked';
+			}
+			else {
+				$noflag = 'checked';
+			}
+			?>
+					<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo $yes; ?> >Enable
+					<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo $noflag; ?>>Disable
+				</div>
+
 			<?php
 			$rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules );
 			?>				<input class="button button-primary" type="submit" value="Save">
@@ -257,6 +298,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		public static function get_google_auth() {
 			$google_auth = get_option( 'mailbox-google-auth' );
+			if ( ! empty( $google_auth ) ) {
+				return $google_auth;
+			}
+			return null;
+		}
+
+		public static function get_enable_by_reply_email(){
+			$google_auth = get_option( 'mailbox_reply_by_email' );
 			if ( ! empty( $google_auth ) ) {
 				return $google_auth;
 			}

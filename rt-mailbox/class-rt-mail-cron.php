@@ -60,12 +60,10 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function rt_parse_email() {
 
 			global $rt_mail_settings ;
-			//			, $redux_helpdesk_settings;
-
-			//			if ( empty( $redux_helpdesk_settings['rthd_enable_reply_by_email'] ) || $redux_helpdesk_settings['rthd_enable_reply_by_email'] != 1 ) {
-			//				return;
-			//			}
-
+			$val = Rt_Mailbox::get_enable_by_reply_email();
+			if ( empty( $val ) || 'yes' != $val ) {
+				return;
+			}
 			$emailRow = $rt_mail_settings->get_email_for_sync();
 			if ( ! $emailRow ) {
 				return;
