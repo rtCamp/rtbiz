@@ -13,6 +13,7 @@ $plugin_path_for_deactivate_cron (path of plugin's main file which is used to de
 
 
 To get the parsed email use below snipet in individual plugin.
+
 `add_action( 'read_rt_mailbox_email_'.$modules_name, array( $this, 'process_email_to_output' ), 10, 14 );`
 
 
