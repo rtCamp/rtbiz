@@ -2,9 +2,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-
+}
 /**
  * Description of class-rt-person
  *
@@ -20,10 +20,16 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		/**
 		 * @var string
 		 */
-		public $email_key = 'contact_email';
-		public $website_url_key = 'contact_website';
-		public $user_id_key = 'contact_user_id';
-		static $our_team_mate_key = 'is_our_team_mate';
+		public $email_key           = 'contact_email';
+		public $website_url_key     = 'contact_website';
+		public $user_id_key         = 'contact_user_id';
+//		static $our_team_mate_key   = 'is_our_team_mate';
+
+		static $user_category_taxonomy = 'rt_user_category';
+		static $employees_category_slug = 'employees';
+		static $clients_category_slug = 'customers';
+		static $suppliers_category_slug = 'vendors';
+
 
 		/**
 		 *
@@ -47,29 +53,119 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
-			add_action( 'init', array( $this, 'check_filters' ) );
+//			add_action( 'init', array( $this, 'check_filters' ) );
 
 			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
 
 			/**
 			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
 			 */
-			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 27 );
+			//			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 27 );
 
 			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
 			 */
 			add_action( 'user_register', array( $this, 'person_create_for_wp_user' ) );
+
+			add_action( 'init', array( $this, 'register_tax' ), 9 );
+
+			add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );
+			add_filter( 'views_edit-rt_contact', array( $this, 'edit_view_filters' ) );
 		}
+
+
+		function edit_view_filters($views){
+
+			$terms      = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ));
+			$subsubsub  = array();
+			$checkreq   = false;
+			$allflag    = false;
+			if ( isset( $_REQUEST[ self::$user_category_taxonomy ] ) ){
+				$checkreq = true;
+			}
+			else{
+				$allflag = true;
+			}
+			foreach ($terms as $term){
+				$current='';
+				if( $checkreq && $_REQUEST[ self::$user_category_taxonomy ] == $term->slug ){
+					$current ='current';
+					$checkreq =false;
+				}
+				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".$term->name."<span class='count'> (".$term->count.")</span></a></li>";
+			}
+			$current='';
+			if( $allflag ){
+				$current ='current';
+			}
+			$something = wp_count_posts('rt_contact');
+			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>All <span class='count'> (".$something->publish.")</span></a>" );
+//			echo '<div>';
+			echo '<ul class="subsubsub">';
+			echo implode(" | ",$top  + $subsubsub);
+			echo '</ul>';
+//			var_dump($terms);
+//			var_dump($views);
+//			echo '</div>';
+//			return $views;
+		}
+
+
+
+
+
+		function register_tax(){
+			register_taxonomy(
+				self::$user_category_taxonomy,
+				'rt_contact',
+				array(
+					'label' => __( 'User Category' ),
+					'rewrite' => array( 'slug' => 'rt-user-category' ),
+					'hierarchical' => true,
+					'show_admin_column' => true,
+				)
+			);
+		}
+
+		function add_defualt_categories_on_activate(){
+
+			$default_categories = array(
+				array(
+					'name' => 'Employees',
+					'slug' => self::$employees_category_slug
+				),
+				array(
+					'name' => 'Customers',
+					'slug' => self::$clients_category_slug
+				),
+				array(
+					'name' => 'Vendors',
+					'slug' =>  self::$suppliers_category_slug
+				),
+			);
+
+			foreach ( $default_categories as $category ) {
+
+				wp_insert_term(
+					$category['name'], // the term
+					self::$user_category_taxonomy, // the taxonomy
+					array(
+						'slug' => $category['slug'],
+					)
+				);
+			}
+
+		}
+
 
 		/**
 		 * Filters Persons on My Team Page - List View
 		 * Only When it's My Team Page.
 		 */
 		function check_filters() {
-			if ( isset( $_REQUEST[ 'post_type' ] ) && $_REQUEST[ 'post_type' ] == $this->post_type ) {
-				add_action( 'parse_query', array( $this, 'filter_our_team' ) );
-			}
+//			if ( isset( $_REQUEST[ 'post_type' ] ) && $_REQUEST[ 'post_type' ] == $this->post_type ) {
+//				add_action( 'parse_query', array( $this, 'filter_our_team' ) );
+//			}
 		}
 
 		/**
@@ -80,29 +176,29 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * @param $query_obj
 		 * @return string
 		 */
-		function filter_our_team( $query_obj ) {
-			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
-				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
-					$qv = &$query_obj->query_vars;
-					$qv[ 'meta_query' ][] = array(
-						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-						'value' => '1',
-					);
-				} else {
-					$qv = &$query_obj->query_vars;
-					$qv[ 'meta_query' ][ 'relation' ] = 'OR';
-					$qv[ 'meta_query' ][] = array(
-						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-						'value' => '0',
-					);
-					$qv[ 'meta_query' ][] = array(
-						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-						'value' => '0',
-						'compare' => 'NOT EXISTS',
-					);
-				}
-			}
-		}
+//		function filter_our_team( $query_obj ) {
+//			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
+//				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
+//					$qv = &$query_obj->query_vars;
+//					$qv[ 'meta_query' ][] = array(
+//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+//						'value' => '1',
+//					);
+//				} else {
+//					$qv = &$query_obj->query_vars;
+//					$qv[ 'meta_query' ][ 'relation' ] = 'OR';
+//					$qv[ 'meta_query' ][] = array(
+//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+//						'value' => '0',
+//					);
+//					$qv[ 'meta_query' ][] = array(
+//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
+//						'value' => '0',
+//						'compare' => 'NOT EXISTS',
+//					);
+//				}
+//			}
+//		}
 
 		/**
 		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity
@@ -151,40 +247,40 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		/**
 		 *  Init Settings for Team Mate MetaBox. Titan
 		 */
-		function person_meta_box() {
-
-			if ( ! isset( Rt_Biz_Settings::$titan_obj ) || empty( Rt_Biz_Settings::$titan_obj ) ) {
-				return;
-			}
-
-			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			if ( ! current_user_can( $editor_cap ) ) {
-				return;
-			}
-
-			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox( array(
-				'name' => __( 'Our Team-mate' ), // Name of the menu item
-				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
-				'id' => 'rt-biz-person-our-team-mate', // Unique ID of the menu item
-				// 'capability' => 'manage_options', // User role
-				// 'icon' => 'dashicons-admin-generic', // Menu icon for top level menus only
-				// 'position' => 100.01 // Menu position for top level menus only
-				'post_type' => $this->post_type, // Post type, can be an array of post types
-				'context' => 'side', // normal, advanced, or side
-				'hide_custom_fields' => true, // If true, the custom fields box will not be shown
-					) );
-			$our_team_mate->createOption( array(
-				'name' => __( 'Is our team mate ?' ), // Name of the option
-				'desc' => 'This is a checkbox which decides this contact is part of our team or not. If this box is ticked it will allow employees to upload/edit their documents from their profile page', // Description of the option
-				'id' => self::$our_team_mate_key, // Unique ID of the option
-				'type' => 'checkbox', //
-				'default' => 0, // Menu icon for top level menus only
-				'example' => '', // An example value for this field, will be displayed in a <code>
-				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
-			) );
-
-			do_action( 'rt_biz_person_meta_box' );
-		}
+//		function person_meta_box() {
+//
+//			if ( ! isset( Rt_Biz_Settings::$titan_obj ) || empty( Rt_Biz_Settings::$titan_obj ) ) {
+//				return;
+//			}
+//
+//			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+//			if ( ! current_user_can( $editor_cap ) ) {
+//				return;
+//			}
+//
+//			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox( array(
+//				'name' => __( 'Our Team-mate' ), // Name of the menu item
+//				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
+//				'id' => 'rt-biz-person-our-team-mate', // Unique ID of the menu item
+//				// 'capability' => 'manage_options', // User role
+//				// 'icon' => 'dashicons-admin-generic', // Menu icon for top level menus only
+//				// 'position' => 100.01 // Menu position for top level menus only
+//				'post_type' => $this->post_type, // Post type, can be an array of post types
+//				'context' => 'side', // normal, advanced, or side
+//				'hide_custom_fields' => true, // If true, the custom fields box will not be shown
+//					) );
+//			$our_team_mate->createOption( array(
+//				'name' => __( 'Is our team mate ?' ), // Name of the option
+//				'desc' => 'This is a checkbox which decides this contact is part of our team or not. If this box is ticked it will allow employees to upload/edit their documents from their profile page', // Description of the option
+//				'id' => self::$our_team_mate_key, // Unique ID of the option
+//				'type' => 'checkbox', //
+//				'default' => 0, // Menu icon for top level menus only
+//				'example' => '', // An example value for this field, will be displayed in a <code>
+//				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
+//			) );
+//
+//			do_action( 'rt_biz_person_meta_box' );
+//		}
 
 		/**
 		 *  Init Meta Fields
@@ -632,14 +728,19 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			return get_posts(
 					array(
 						'meta_query' => array(
-							array(
+							/*array(
 								'key' => self::$meta_key_prefix . self::$our_team_mate_key,
 								'value' => '1',
-							),
+							),*/
 							array(
 								'key' => self::$meta_key_prefix . $this->user_id_key,
 								'value' => $user_id,
 							),
+						),
+						'tax_query' => array(
+							'taxonomy' => self::$user_category_taxonomy,
+							'field'    => 'slug',
+							'terms'    => self::$employees_category_slug,
 						),
 						'post_type' => $this->post_type,
 						'post_status' => 'any',
@@ -656,8 +757,13 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		function get_employees() {
 			return get_posts(
 					array(
-						'meta_key' => self::$meta_key_prefix . self::$our_team_mate_key,
-						'meta_value' => '1',
+						/*'meta_key' => self::$meta_key_prefix . self::$our_team_mate_key,
+						'meta_value' => '1',*/
+						'tax_query' => array(
+							'taxonomy' => self::$user_category_taxonomy,
+							'field'    => 'slug',
+							'terms'    => self::$employees_category_slug,
+						),
 						'post_type' => $this->post_type,
 						'post_status' => 'any',
 						'nopaging' => true,
@@ -666,9 +772,19 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		}
 
 		function get_clients() {
-			global $wpdb;
-			$clients = $wpdb->get_results( "SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )" );
-			return $clients;
+//			global $wpdb;
+//			$clients = $wpdb->get_results( "SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )" );
+			$posts = get_posts (
+				array(
+					'post_type' => $this->post_type,
+					'tax_query' => array(
+						array(
+							'taxonomy' => self::$user_category_taxonomy,
+							'field' => 'slug',
+							'terms' => self::$clients_category_slug,
+						),
+				) ) );
+			return $posts;
 		}
 
 		function person_create_for_wp_user( $user_id ) {

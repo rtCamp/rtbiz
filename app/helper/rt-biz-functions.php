@@ -415,8 +415,13 @@ function rt_biz_get_organizations() {
 
 function rt_biz_search_employees( $query ) {
 	$args = array(
-		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,
-		'meta_value' => '1',
+//		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,
+//		'meta_value' => '1',
+		'tax_query' => array(
+			'taxonomy' => Rt_Person::$user_category_taxonomy,
+			'field'    => 'slug',
+			'terms'    => Rt_Person::$employees_category_slug,
+		),what
 	);
 	return rt_biz_search_person($query, $args);
 }

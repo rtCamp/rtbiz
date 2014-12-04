@@ -154,7 +154,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
+//				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
+				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Person::$employees_category_slug);
 				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
