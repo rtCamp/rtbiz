@@ -71,6 +71,17 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 
 			add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );
 			add_filter( 'views_edit-rt_contact', array( $this, 'edit_view_filters' ) );
+			add_action( 'p2p_init', array( $this, 'contact_user_p2p' ) );
+
+		}
+
+
+		function contact_user_p2p(){
+			p2p_register_connection_type( array(
+				                              'name' => 'rt_contact_to_user',
+				                              'from' => 'rt_contact',
+				                              'to' => 'user',
+										) );
 		}
 
 
