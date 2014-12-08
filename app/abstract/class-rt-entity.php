@@ -92,14 +92,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 
 		function save_old_data( $post_id ){
-//			error_log(var_export(array_filter($_POST['tax_input'][Rt_person::$user_category_taxonomy]),true). ": -> POST terms", 3, "/var/www/dummytest.com/logs/my-errors.log");
 			$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy);
 			$postterms = array_filter($_POST['tax_input'][Rt_person::$user_category_taxonomy]);
-//			error_log(var_export($post_terms ,true). ": -> post id terms", 3, "/var/www/dummytest.com/logs/my-errors.log");
 			$termids = wp_list_pluck($post_terms,'term_id');
 			$diff      = array_diff( $postterms, $termids);
 			$diff2 = array_diff( $termids, $postterms );
-			//todo: get name from array diff and user imploade
 			$diff_tax1 = array();
 			$flag = false;
 			$body ='';
@@ -113,9 +110,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$tmp  = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
 				$diff_tax2[] = $tmp->name;
 			}
-			error_log( var_export( $diff_tax1, true ). ": -> tax diff 1", 3, "/var/www/dummytest.com/logs/my-errors.log");
-			error_log( var_export( $diff_tax2, true ). ": -> tax diff 2", 3, "/var/www/dummytest.com/logs/my-errors.log");
-
 
 			$difftxt = rtbiz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
 
@@ -123,13 +117,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$body= "<strong>User Category</strong> : ".$difftxt;
 				$flag = true;
 			}
-			foreach ($_POST['tax_input'][Rt_person::$user_category_taxonomy] as $tax_term){
-				$tax = get_term( $tax_term,Rt_person::$user_category_taxonomy );
-//				error_log( var_export( $tax, true ). ": -> single post term", 3, "/var/www/dummytest.com/logs/my-errors.log");
-			}
-//			die();
 			foreach ( $this->meta_fields as $field ){
-
 				if( !isset($_POST[ 'contact_meta' ][ $field[ 'key' ] ])){
 					continue;
 				}
