@@ -92,6 +92,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 
 		function save_old_data( $post_id ){
+
+			if( $_POST['post_type'] !='rt_contact' && $_POST['post_type'] !='rt_account' ){
+				return;
+			}
 			$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy);
 			$postterms = array_filter($_POST['tax_input'][Rt_person::$user_category_taxonomy]);
 			$termids = wp_list_pluck($post_terms,'term_id');
