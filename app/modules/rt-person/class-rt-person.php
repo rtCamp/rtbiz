@@ -111,14 +111,10 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			}
 			$something = wp_count_posts('rt_contact');
 			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>All <span class='count'> (".$something->publish.")</span></a>" );
-//			echo '<div>';
 			echo '<ul class="subsubsub">';
 			echo implode(" | ",$top  + $subsubsub);
 			echo '</ul>';
-//			var_dump($terms);
-//			var_dump($views);
-//			echo '</div>';
-//			return $views;
+			//			return $views;
 		}
 
 
@@ -178,38 +174,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 //				add_action( 'parse_query', array( $this, 'filter_our_team' ) );
 //			}
 		}
-
-		/**
-		 *
-		 * Query Filter of WP_Query
-		 * Filter Persons on Our Team Page - List View
-		 *
-		 * @param $query_obj
-		 * @return string
-		 */
-//		function filter_our_team( $query_obj ) {
-//			if ( isset( $query_obj->query[ 'post_type' ] ) && $query_obj->query[ 'post_type' ] == $this->post_type ) {
-//				if ( isset( $_REQUEST[ 'rt-biz-my-team' ] ) && $_REQUEST[ 'rt-biz-my-team' ] ) {
-//					$qv = &$query_obj->query_vars;
-//					$qv[ 'meta_query' ][] = array(
-//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-//						'value' => '1',
-//					);
-//				} else {
-//					$qv = &$query_obj->query_vars;
-//					$qv[ 'meta_query' ][ 'relation' ] = 'OR';
-//					$qv[ 'meta_query' ][] = array(
-//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-//						'value' => '0',
-//					);
-//					$qv[ 'meta_query' ][] = array(
-//						'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-//						'value' => '0',
-//						'compare' => 'NOT EXISTS',
-//					);
-//				}
-//			}
-//		}
 
 		/**
 		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity

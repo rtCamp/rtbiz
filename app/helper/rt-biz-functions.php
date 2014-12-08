@@ -461,3 +461,54 @@ function rt_biz_get_settings ( $key = null) {
 	}
 	return Rt_Biz_Settings::$settings;
 }
+
+/**
+ * wp1_text_diff
+ *
+ * @param      $left_string
+ * @param      $right_string
+ * @param null $args
+ *
+ * @return string
+ * @since rt-BIZ
+ */
+function rtbiz_text_diff( $left_string, $right_string, $args = null ) {
+	$defaults = array( 'title' => '', 'title_left' => '', 'title_right' => '' );
+	$args     = wp_parse_args( $args, $defaults );
+
+	$left_string  = normalize_whitespace( $left_string );
+	$right_string = normalize_whitespace( $right_string );
+	$left_lines   = explode( "\n", $left_string );
+	$right_lines  = explode( "\n", $right_string );
+
+	$renderer  = new Rt_Biz_Text_Diff();
+	$text_diff = new Text_Diff( $left_lines, $right_lines );
+	$diff      = $renderer->render( $text_diff );
+
+	if ( ! $diff ) {
+		return '';
+	}
+
+	$r = "<table class='diff' style='width: 100%;background: white;margin-bottom: 1.25em;border: solid 1px #dddddd;border-radius: 3px;margin: 0 0 18px;'>\n";
+	$r .= "<col class='ltype' /><col class='content' /><col class='ltype' /><col class='content' />";
+
+	if ( $args['title'] || $args['title_left'] || $args['title_right'] ) {
+		$r .= '<thead>';
+	}
+	if ( $args['title'] ) {
+		$r .= "<tr class='diff-title'><th colspan='4'>" . $args['title'] . '</th></tr>\n';
+	}
+	if ( $args['title_left'] || $args['title_right'] ) {
+		$r .= "<tr class='diff-sub-title'>\n";
+		$r .= "\t<td></td><th>{$args['title_left']}</th>\n";
+		$r .= "\t<td></td><th>{$args['title_right']}</th>\n";
+		$r .= "</tr>\n";
+	}
+	if ( $args['title'] || $args['title_left'] || $args['title_right'] ) {
+		$r .= "</thead>\n";
+	}
+	$r .= "<tbody>\n$diff\n</tbody>\n";
+	$r .= '</table>';
+
+	return $r;
+}

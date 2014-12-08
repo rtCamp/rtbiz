@@ -185,7 +185,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function includes() {
-			global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_notification_autoload, $rtb_reports_autoload;
+			global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_notification_autoload, $rtb_reports_autoload, $rtb_helper_autoload;
 			$rtb_app_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/' );
 			$rtb_models_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/models/' );
 			$rtb_abstract_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/abstract/' );
@@ -193,6 +193,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rtb_notification_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/notification/' );
 			$rtb_settings_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/settings/' );
 			$rtb_reports_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/lib/rtreports/' );
+			$rtb_helper_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/helper/' );
 		}
 
 		/**
