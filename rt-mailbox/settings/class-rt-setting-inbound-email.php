@@ -47,7 +47,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			//Google Client
 			$redirect_url = get_site_option( 'googleapi_redirecturl' );
 			if ( ! $redirect_url ) {
-				$redirect_url = admin_url( 'admin.php?page=Rt-MailBox' );
+				$redirect_url = admin_url( 'admin.php?page='.Rt_Mailbox::$page_name );
 				update_site_option( 'googleapi_redirecturl', $redirect_url );
 			}
 
@@ -111,7 +111,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			}
 
 			if ( false == $responce && ( empty( $google_acs ) && empty( $imap_servers )  ) ){
-				echo '<div id="error_handle" class=""><p>Please set google api detail OR Imap Servers detail on <a href="' . esc_url( admin_url( 'admin.php?page=Rt-MailBox&tab=auth' ) ) . '">Google Auth</a> or <a href="' . esc_url( admin_url( 'admin.php?page=Rt-MailBox&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
+				echo '<div id="error_handle" class=""><p>Please set google api detail OR Imap Servers detail on <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=auth' ) ) . '">Google Auth</a> or <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
 				return;
 			}
 
@@ -199,7 +199,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<input type="hidden" name="rthd_submit_enable_reply_by_email" value="save"/>
 											<a
 												class='button remove-google-ac right'
-												href='<?php echo esc_url( admin_url( 'admin.php?page=Rt-MailBox&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
+												href='<?php echo esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
 												A/C</a>
 											<a class="button right rtMailbox-hide-mail-folders" href="#">Show</a>
 											<?php if ( 'goauth' == $ac->type ) { ?>
@@ -356,7 +356,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					//								'post_type' => Rt_HD_Module::$post_type,
 					//								'page'      => 'rthd-settings',
 					//							), admin_url( 'admin.php' ) ) ) . '";</script>';
-						echo 'window.location="'. admin_url( 'admin.php' ) .'?page=Rt-MailBox"; </script>';
+						echo 'window.location="'. admin_url( 'admin.php' ) .'?page='.Rt_Mailbox::$page_name.'"; </script>';
 					die();
 				}
 				if ( isset( $_REQUEST['rthd_add_imap_email'] ) ) {

@@ -8,6 +8,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
+		static $page_name = 'Mailbox';
+
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
 			'exe'  => 'application/octet-stream',
@@ -64,13 +66,19 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		public $modules = array();
 
 		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( 'Rt-MailBox', $setting_page_parent_slug );
+			$this->add_mailbox_page( 'MailBox', $setting_page_parent_slug );
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->modules = $module;
 			$this->init_mail_functions();
 			$this->init_rt_mail_models();
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
+		}
+
+		function enqueue_styles_scripts(){
+			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'/assets/css/rt-mailbox.css' );
+			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', '', false, true );
 		}
 
 		function init_mail_functions(){
@@ -101,9 +109,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			include_once  plugin_dir_path( __FILE__ ) . 'vendor/'  . 'MailLib/zendAutoload.php';
 			self::$auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'helper/' );
-			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'template/' );
+			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'settings/' );
 			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'vendor/' );
 			self::$auto_loader  = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) );
+			include_once trailingslashit( dirname( __FILE__ ) ) . 'helper/'.'rt-mailbox-functions.php';
 		}
 
 		function register_attribute_menu() {
@@ -115,10 +124,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		}
 
 		function render_mailbox_setting_page(){
+			do_action( 'rt_mailbox_randed_view' );
 			?>
 			<h1> Mailbox Setting </h1>
 		<?php
-			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'/assets/css/rt-mailbox.css' );
 
 			$this->mailbox_tabs();
 			if ( isset( $_REQUEST['tab'] ) && 'auth' == $_REQUEST['tab'] ){
@@ -129,12 +138,11 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			else if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
 				?> <h1> IMAP Settings  </h1><?php echo $this->imap_view();
 
-			} else if ( isset( $_REQUEST['page'] ) && 'Rt-MailBox' == $_REQUEST['page'] ){
+			} else if ( isset( $_REQUEST['page'] ) && 'MailBox' == $_REQUEST['page'] ){
 				?>			<h1> Mailbox Settings </h1>
 			<?php
 				$this->mailbox_view();
 			}
-			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', '', false, true );
 
 		}
 
@@ -155,22 +163,22 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			// Setup core admin tabs
 			$tabs = array(
 				array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => 'Rt-MailBox' ), 'admin.php' ) ),
-					'name' => __( 'Mailbox', 'Rt-MailBox' ),
-					'slug' => 'Rt-MailBox',
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name ), 'admin.php' ) ),
+					'name' => __( 'Mailbox', self::$page_name ),
+					'slug' => self::$page_name,
 				), array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => 'Rt-MailBox&tab=auth' ), 'admin.php' ) ),
-					'name' => __( 'Google Auth', 'mailbox' ),
-					'slug' => 'Rt-MailBox&tab=auth',
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=auth' ), 'admin.php' ) ),
+					'name' => __( 'Google Auth', self::$page_name ),
+					'slug' => self::$page_name.'&tab=auth',
 				), array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => 'Rt-MailBox&tab=imap' ), 'admin.php' ) ),
-					'name' => __( 'IMAP', 'mailbox' ),
-					'slug' => 'Rt-MailBox&tab=imap',
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=imap' ), 'admin.php' ) ),
+					'name' => __( 'IMAP', self::$page_name ),
+					'slug' => self::$page_name.'&tab=imap',
 				),
 			);
-
+			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
 			// Loop through tabs and build navigation
-			foreach ( array_values( $tabs ) as $tab_data ) {
+			foreach ( array_values( $filterd_tab ) as $tab_data ) {
 				$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
 				$tab_class  = $is_current ? $active_class : $idle_class;
 
@@ -246,7 +254,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			$redirect_url = get_option( 'googleapi_redirecturl' );
 			if ( ! $redirect_url ) {
-				$redirect_url = admin_url( 'admin.php?page=Rt-MailBox' );
+				$redirect_url = admin_url( 'admin.php?page='.self::$page_name );
 				update_option( 'googleapi_redirecturl', $redirect_url );
 			}
 			if ( isset( $_POST ) && ! empty( $_POST ) ){
@@ -312,156 +320,5 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			return null;
 		}
 
-	}
-}
-
-function rt_encrypt_decrypt( $string ) {
-
-	$string_length    = strlen( $string );
-	$encrypted_string = '';
-
-	/**
-	 * For each character of the given string generate the code
-	 */
-	for ( $position = 0; $position < $string_length; $position ++ ) {
-		$key                      = ( ( $string_length + $position ) + 1 );
-		$key                      = ( 255 + $key ) % 255;
-		$get_char_to_be_encrypted = substr( $string, $position, 1 );
-		$ascii_char               = ord( $get_char_to_be_encrypted );
-		$xored_char               = $ascii_char ^ $key; //xor operation
-		$encrypted_char           = chr( $xored_char );
-		$encrypted_string .= $encrypted_char;
-	}
-
-	/**
-	 * Return the encrypted/decrypted string
-	 */
-
-	return $encrypted_string;
-}
-
-
-/**
- * Check duplicate message from message ID
- *
- * @param $messageid
- *
- * @return bool
- *
- * @since rt-Helpdesk 0.1
- */
-function rt_check_duplicate_from_message_id( $messageid ) {
-	global $wpdb;
-	if ( $messageid && trim( $messageid ) == '' ) {
-		return false;
-	}
-
-	$sql    = $wpdb->prepare( "select meta_value from $wpdb->commentmeta where $wpdb->commentmeta.meta_key = '_messageid' and $wpdb->commentmeta.meta_value = %s", $messageid );
-	$result = $wpdb->get_results( $sql );
-	if ( empty( $result ) ) {
-
-		$sql    = $wpdb->prepare( "select meta_value from $wpdb->postmeta where $wpdb->postmeta.meta_key = '_messageid' and $wpdb->postmeta.meta_value = %s", $messageid );
-		$result = $wpdb->get_results( $sql );
-
-		return ! empty( $result );
-	} else {
-		return ! empty( $result );
-	}
-}
-
-/**
- * check if given email is system email or not
- *
- * @param $email
- *
- * @return bool
- */
-function rt_is_system_email( $email ) {
-	global $rt_mail_settings;
-	$google_acs = $rt_mail_settings->get_user_google_ac();
-
-	foreach ( $google_acs as $ac ) {
-		$ac->email_data = unserialize( $ac->email_data );
-		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-		if ( $ac_email == $email ) {
-			return true;
-		}
-	}
-	return false;
-}
-
-function rt_force_utf_8( $string ) {
-	//			return preg_replace('/[^(\x20-\x7F)]*/','', $string);
-	//			$string = preg_replace( '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
-	//									'|(?<=^|[\x00-\x7F])[\x80-\xBF]+' .
-	//									'|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
-	//									'|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
-	//									'|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/' ,
-	//			                      '?', $string );
-
-	//			$string = preg_replace( '/\xE0[\x80-\x9F][\x80-\xBF]' . '|\xED[\xA0-\xBF][\x80-\xBF]/S','?', $string );
-
-	return $string;
-}
-
-
-/**
- * Logging errors
- *
- * @param        $msg
- * @param string $filename
- *
- * @since rt-Helpdesk 0.1
- */
-function rt_log( $msg, $filename = 'error_log.txt' ) {
-	$log_file = '/tmp/mailbox' . $filename;
-	if ( $fp = fopen( $log_file, 'a+' ) ) {
-		fwrite( $fp, "\n" . '[' . date( DATE_RSS ) . '] ' . $msg . "\n" );
-		fclose( $fp );
-	}
-}
-
-
-
-
-/**
- * Get extension of file
- *
- * @param $file
- *
- * @return int|string
- *
- * @since rt-Helpdesk 0.1
- */
-function rt_get_extention( $file ) {
-
-	foreach ( Rt_Mailbox::$rt_mime_types as $key => $mime ) {
-		if ( $mime == $file ) {
-			return $key;
-		}
-	}
-
-	return 'tmp';
-}
-
-
-/**
- * Get mime type of file
- *
- * @param $file
- *
- * @return string
- *
- * @since rt-Helpdesk 0.1
- */
-function rt_get_mime_type( $file ) {
-
-	// our list of mime types
-
-	$extension = strtolower( end( explode( '.', $file ) ) );
-	if ( isset( Rt_Mailbox::$rt_mime_types[ $extension ] ) ) {
-		return Rt_Mailbox::$rt_mime_types[ $extension ];
-	} else {
-		return 'application/octet-stream';
 	}
 }
