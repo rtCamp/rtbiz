@@ -536,5 +536,6 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function auto_loader() {
 			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'model/' );
 		}
-	} //end class
+	}
+	//end class
 }
