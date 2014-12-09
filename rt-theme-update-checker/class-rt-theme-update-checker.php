@@ -5,7 +5,7 @@
  * Date: 20/02/14
  * Time: 12:10 PM
  */
-if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
+if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 
 	class RT_Theme_Update_Checker {
 		public $theme = ''; //The theme associated with this update checker instance.
@@ -128,7 +128,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 			 */
 
 			/**
-			 * 
+			 *
 			 * foreach ( get_themes() as $theme ) {
 			 *  if ( $theme[ 'Stylesheet' ] === $this->theme ) {
 			 *      return $theme[ 'Version' ];
@@ -257,4 +257,4 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		}
 	}
 
-endif;
+}
