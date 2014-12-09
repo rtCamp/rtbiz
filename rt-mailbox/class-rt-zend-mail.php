@@ -45,10 +45,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 */
 		public $authString;
 
-		//put your code here
-		function __construct() {
-			// set_include_path(get_include_path() . PATH_SEPARATOR . RT_HD_PATH_LIB);
-		}
+		function __construct() { }
 
 		/**
 		 * UI for folders dropdown
