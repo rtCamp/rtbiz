@@ -923,7 +923,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", 'error-mail-sync.txt' );
 					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", $email . 'error-mail-sync.txt' );
-					wp_mail( 'udit.desai@rtcamp.com', 'Error in Mail Sync ' . $email . ' ' . $message->subject, $data . '<br/><hr>' . $e->getMessage() . '<hr>' . $e->getTraceAsString() );
 				}
 			}
 		}
