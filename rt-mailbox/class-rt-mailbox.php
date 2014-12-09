@@ -8,7 +8,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
-		static $page_name = 'Mailbox';
+		static $page_name = 'MailBox';
 
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
@@ -130,12 +130,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		<?php
 
 			$this->mailbox_tabs();
-			if ( isset( $_REQUEST['tab'] ) && 'auth' == $_REQUEST['tab'] ){
-				?> <h1> Google-Auth Settings </h1><?php
-				$this->google_auth_view();
-
-			}
-			else if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
+			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
 				?> <h1> IMAP Settings  </h1><?php echo $this->imap_view();
 
 			} else if ( isset( $_REQUEST['page'] ) && 'MailBox' == $_REQUEST['page'] ){
@@ -166,10 +161,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name ), 'admin.php' ) ),
 					'name' => __( 'Mailbox', self::$page_name ),
 					'slug' => self::$page_name,
-				), array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=auth' ), 'admin.php' ) ),
-					'name' => __( 'Google Auth', self::$page_name ),
-					'slug' => self::$page_name.'&tab=auth',
 				), array(
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=imap' ), 'admin.php' ) ),
 					'name' => __( 'IMAP', self::$page_name ),
@@ -248,56 +239,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
 				<?php
-		}
-
-		function google_auth_view(){
-
-			$redirect_url = get_option( 'googleapi_redirecturl' );
-			if ( ! $redirect_url ) {
-				$redirect_url = admin_url( 'admin.php?page='.self::$page_name );
-				update_option( 'googleapi_redirecturl', $redirect_url );
-			}
-			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				self::save_google_auth();
-			}
-
-			$auth        = self::get_google_auth();
-			$auth_key    = '' ;
-			$auth_secret = '';
-			if ( ! empty( $auth ) ){
-				$auth_key = $auth['googleapi_clientid'] ;
-				$auth_secret = $auth['googleapi_clientsecret'];
-			}
-			?>
-			<form method="post" action="">
-			<table class="form-table">
-				<tbody>
-				<tr>
-					<th scope="row">
-						<div class="redux_field_th">Google API Client ID</div>
-					</th>
-					<td>
-						<fieldset id="mailbox_settings-googleapi_clientid" class="redux-field-container redux-field redux-field-init redux-container-text " data-id="googleapi_clientid" data-type="text">
-							<input type="text" id="googleapi_clientid-text" name="mailbox_settings[googleapi_clientid]" value="<?php echo $auth_key; ?>" class="regular-text ">
-							<div class="description field-desc">
-								<p class="description"><?php echo sprintf( '<p class="description">%s <a href="https://console.developers.google.com">%s</a>, %s <b>%s</b></p>', __( 'Create an app on' ), __( 'Google API Console' ), __( 'set authorized redirect urls to' ), $redirect_url ) ?></p>
-							</div>
-						</fieldset>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">
-						<div class="redux_field_th">Google API Client Secret</div>
-					</th>
-					<td>
-						<fieldset id="mailbox_settings-googleapi_clientsecret" class="redux-field-container redux-field redux-field-init redux-container-text " data-id="googleapi_clientsecret" data-type="text"><input type="text" id="googleapi_clientsecret-text" name="mailbox_settings[googleapi_clientsecret]" value="<?php echo $auth_secret; ?>" class="regular-text "></fieldset>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-			<input type="submit" class="button button-primary" value="Save Changes">
-			</form>
-			<?php
 		}
 
 		public static function save_google_auth(){
