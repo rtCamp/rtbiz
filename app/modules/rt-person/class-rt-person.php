@@ -102,14 +102,14 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					$current ='current';
 					$checkreq =false;
 				}
-				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".$term->name."<span class='count'> (".$term->count.")</span></a></li>";
+				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".$term->count.")</span></a></li>";
 			}
 			$current='';
 			if( $allflag ){
 				$current ='current';
 			}
 			$something = wp_count_posts('rt_contact');
-			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>All <span class='count'> (".$something->publish.")</span></a>" );
+			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__('All')." <span class='count'> (".$something->publish.")</span></a>" );
 			echo '<ul class="subsubsub">';
 			echo implode(" | ",$top  + $subsubsub);
 			echo '</ul>';
