@@ -96,6 +96,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if( $_POST['post_type'] !='rt_contact' && $_POST['post_type'] !='rt_account' ){
 				return;
 			}
+			error_log(var_export($_POST,true). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
 
 			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_person::$user_category_taxonomy ] ) ) {
 				$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy );
@@ -124,15 +125,26 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$flag = true;
 				}
 			}
+
+			$meta_key= '';
+			switch ( $_POST['post_type'] ){
+				case 'rt_contact':
+					$meta_key = 'contact_meta';
+					break;
+				case 'rt_account':
+					$meta_key = 'account_meta';
+					break;
+			}
+
 			foreach ( $this->meta_fields as $field ){
-				if( !isset($_POST[ 'contact_meta' ][ $field[ 'key' ] ])){
+				if( !isset($_POST[ $meta_key ][ $field[ 'key' ] ])){
 					continue;
 				}
 
 				if ($field['is_multiple'] == 'true' ) {
 					$val=  self::get_meta( $post_id, $field['key'] );
 					$filerval  = array_filter( $val );
-					$filerpost = array_filter( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] );
+					$filerpost = array_filter( $_POST[ $meta_key ][ $field[ 'key' ] ] );
 					$diff      = array_diff( $filerval, $filerpost );
 					$diff2 = array_diff( $filerpost, $filerval );
 					$difftxt = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
@@ -144,7 +156,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				}
 				else{
 					$val=  self::get_meta( $post_id, $field['key'],true );
-					$newval =  $_POST[ 'contact_meta' ][ $field[ 'key' ] ];
+					$newval =  $_POST[ $meta_key ][ $field[ 'key' ] ];
 					if ($val != $newval){
 						$difftxt = rtbiz_text_diff($val, $newval );
 						$skip_enter= str_replace('Enter','',$field['label']);
