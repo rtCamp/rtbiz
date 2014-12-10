@@ -45,10 +45,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 */
 		public $authString;
 
-		//put your code here
-		function __construct() {
-			// set_include_path(get_include_path() . PATH_SEPARATOR . RT_HD_PATH_LIB);
-		}
+		function __construct() { }
 
 		/**
 		 * UI for folders dropdown
@@ -352,38 +349,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		}
 
 		/**
-		 * get import thread request
-		 *
-		 * @param $email
-		 *
-		 * @return mixed
-		 *
-		 * @since rt-Helpdesk 0.1
-		 */
-		public function get_import_thread_request( $email ) {
-			global $rt_mail_thread_importer_model;
-			$where = array( 'email' => $email, 'status' => 'r', );
-
-			return $rt_mail_thread_importer_model->get_thread( $where );
-		}
-
-		/**
-		 * update thread import status
-		 *
-		 * @param $id
-		 *
-		 * @return bool
-		 *
-		 * @since rt-Helpdesk 0.1
-		 */
-		public function update_thread_import_status( $id ) {
-			global $rt_mail_thread_importer_model;
-			$rows_affected = $rt_mail_thread_importer_model->update_thread( array( 'status' => 'c' ), array( 'id' => $id ) );
-
-			return ( ! empty( $rows_affected ) );
-		}
-
-		/**
 		 * Read Email
 		 *
 		 * @param        $email
@@ -394,13 +359,12 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @param        $user_id
 		 * @param bool   $isSystemEmail
 		 * @param string $signature
-		 * @param bool   $isThreadImporter
 		 *
 		 * @return bool
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function reademail( $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $isSystemEmail = false, $signature = '', $isThreadImporter = false ) {
+		public function reademail( $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $isSystemEmail = false, $signature = '' ) {
 			set_time_limit( 0 );
 			global $signature, $rt_mail_settings;
 			if ( ! $this->try_imap_login( $email, $accessToken, $email_type, $imap_server ) ) {
@@ -433,77 +397,33 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$mail_folders = explode( ',', ( isset( $email_data['mail_folders'] ) ) ? $email_data['mail_folders'] : '' );
 			$inbox_folder = $email_data['inbox_folder'];
 			array_unshift( $mail_folders, $inbox_folder );
-			if ( $isThreadImporter ) {
-
-				if ( $isSystemEmail ) {
-					$mail_folders = array( $inbox_folder );
-				}
-				foreach ( $mail_folders as $folder ) {
-					$storage->selectFolder( $folder );
-					$result = $this->get_import_thread_request( $email );
-					if ( ! $result ) {
-						return;
-					}
-					if ( empty( $result ) ) {
-						return;
-					}
-					foreach ( $result as $rs ) {
-						$threadId    = $rs->threadid;
-						$decThreadId = $this->bchexdec( $threadId );
-						$allMail     = $storage->protocol->requestAndResponse( 'UID SEARCH X-GM-THRID', array( $storage->protocol->escapeString( $decThreadId ) ) );
-
-						$allMailArray = array();
-						foreach ( $allMail as $ids ) {
-							if ( 'SEARCH' == $ids[0] ) {
-								array_shift( $ids );
-								$allMailArray = $ids;
-							}
-						}
-						if ( ! empty( $allMailArray ) ) {
-							global $threadPostId;
-							$threadPostId = $rs->post_id;
-							$this->rt_parse_email( $email, $storage, $allMailArray, $user_id, $isSystemEmail );
-							//							global $rt_hd_import_operation;
-							//
-							//							$title = rthd_create_new_ticket_title( 'rthd_new_followup_email_title', $threadId );
-							//							$body  = 'New ' . count( $allMailArray ) . ' Follwup Imported From Gmail threads';
-							//							$body .= '<br/><b>Email Ac : </b>' . $email;
-							//							$body .= '<br/><b>Thread ID: </b>' . $threadId;
-							//							$body .= '<br/> ';
-							//							$rt_hd_import_operation->notify_subscriber_via_email( $threadPostId, $title, $body, 0 );
-							$this->update_thread_import_status( $rs->id );
-						}
-					}
-				}
-			} else {
-				global $sync_inbox_type;
-				global $rt_mail_uid;
-				if ( $isSystemEmail ) {
-					$mail_folders = array( $inbox_folder );
-				}
-				foreach ( $mail_folders as $folder ) {
-					$storage->selectFolder( $folder );
-					error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
-					$sync_inbox_type = $folder;
-					if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
-						$rt_mail_uid[ $sync_inbox_type ] = 0;
-					}
-
-					global $rt_mail_uid;
-					if ( $rt_mail_uid[ $sync_inbox_type ] > 0 ) {
-						$allMail = $storage->protocol->requestAndResponse( "UID FETCH {$rt_mail_uid[$sync_inbox_type]}:* (UID)", array() );
-						foreach ( $allMail as $tempEmail ) {
-							$arrayMailIds[] = array( 'uid' => $tempEmail[2][1], 'msgid' => $tempEmail[0] );
-						}
-					} else {
-						$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
-					}
-					error_log( sanitize_email( $email ) . ' : Found ' . esc_attr( count( $arrayMailIds ) ) . ' Mails \r\n' );
-					$this->rt_parse_email( $email, $storage, $arrayMailIds, $user_id, $isSystemEmail );
-				}
-				$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
-				$rt_mail_settings->update_sync_status( $email, false );
+			global $sync_inbox_type;
+			global $rt_mail_uid;
+			if ( $isSystemEmail ) {
+				$mail_folders = array( $inbox_folder );
 			}
+			foreach ( $mail_folders as $folder ) {
+				$storage->selectFolder( $folder );
+				error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
+				$sync_inbox_type = $folder;
+				if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
+					$rt_mail_uid[ $sync_inbox_type ] = 0;
+				}
+
+				global $rt_mail_uid;
+				if ( $rt_mail_uid[ $sync_inbox_type ] > 0 ) {
+					$allMail = $storage->protocol->requestAndResponse( "UID FETCH {$rt_mail_uid[$sync_inbox_type]}:* (UID)", array() );
+					foreach ( $allMail as $tempEmail ) {
+						$arrayMailIds[] = array( 'uid' => $tempEmail[2][1], 'msgid' => $tempEmail[0] );
+					}
+				} else {
+					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
+				}
+				error_log( sanitize_email( $email ) . ' : Found ' . esc_attr( count( $arrayMailIds ) ) . ' Mails \r\n' );
+				$this->rt_parse_email( $email, $storage, $arrayMailIds, $user_id, $isSystemEmail );
+			}
+			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
+			$rt_mail_settings->update_sync_status( $email, false );
 		}
 
 		/**
@@ -923,7 +843,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", 'error-mail-sync.txt' );
 					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", $email . 'error-mail-sync.txt' );
-					wp_mail( 'udit.desai@rtcamp.com', 'Error in Mail Sync ' . $email . ' ' . $message->subject, $data . '<br/><hr>' . $e->getMessage() . '<hr>' . $e->getTraceAsString() );
 				}
 			}
 		}

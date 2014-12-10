@@ -38,3 +38,27 @@ $args = array(
 $rt_outbound_model->add_outbound_mail( $args );
 
 ```
+
+Adding tabs to settings page use:
+```
+add_filter( 'rt_mailbox_add_tab', 'add_cols', 10, 1 );
+function add_cols($tabs){
+    $tabs[]=array(
+                    'href' => get_admin_url( null, add_query_arg( array( 'page' => Rt_Mailbox::$page_name.'&tab=mypage'  ), 'admin.php' ) ),
+                    'name' => __( 'My page', Rt_Mailbox::$page_name ),
+                    'slug' => Rt_Mailbox::$page_name.'&tab=mypage',
+                  ),
+    return $tabs;
+}
+```
+
+
+Adding view to setting tab:
+```
+add_filter( 'rt_mailbox_add_tab', 'add_temp_cols', 10, 1 );
+function add_temp_cols(){
+        if ( isset( $_REQUEST['tab'] ) && 'mypage' == $_REQUEST['tab'] ){
+            echo '<h1> My page </h1>';
+        }
+}
+```

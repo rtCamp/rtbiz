@@ -1,4 +1,3 @@
-
 jQuery( document ).ready(function(){
 	jQuery( document ).on( 'click', '.rthd-edit-server', function ( e ) {
 		e.preventDefault();

@@ -448,8 +448,13 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 		public function get_update()
 		{
 			$state = $this->get_update_state();
-			/** @var StdClass $state */
-			//Is there an update available insert?
+			/**
+			 * @var StdClass $state
+			 */
+
+			/**
+			 * Is there an update available insert?
+			 */
 			if ( ! empty( $state ) && isset( $state->update ) && ! empty( $state->update ) ){
 				$update = $state->update;
 				//Check if the update is actually newer than the currently installed version.

@@ -89,7 +89,9 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 
 		public static function from_json( $json, $triggerErrors = false )
 		{
-			/** @var StdClass $apiResponse */
+			/**
+			 * @var StdClass $apiResponse
+			 */
 			$apiResponse = json_decode( $json );
 			if ( empty( $apiResponse ) || ! is_object( $apiResponse ) ){
 				if ( $triggerErrors ){
@@ -99,7 +101,9 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 				return null;
 			}
 
-			//Very, very basic validation.
+			/**
+			 * Very, very basic validation.
+			 */
 			$valid = isset( $apiResponse->name ) && ! empty( $apiResponse->name ) && isset( $apiResponse->version ) && ! empty( $apiResponse->version );
 			if ( ! $valid ){
 				if ( $triggerErrors ){

@@ -37,67 +37,12 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 
 
 		/**
-		 *
-		 */
-		public function goole_oauth() {
-			global $rt_mail_settings;
-			$auth = Rt_Mailbox::get_google_auth();
-			$rt_mail_settings->update_gmail_ac_count();
-
-			//Google Client
-			$redirect_url = get_site_option( 'googleapi_redirecturl' );
-			if ( ! $redirect_url ) {
-				$redirect_url = admin_url( 'admin.php?page=Rt-MailBox' );
-				update_site_option( 'googleapi_redirecturl', $redirect_url );
-			}
-
-			$google_client_id           = $auth['googleapi_clientid'];
-			$google_client_secret       = $auth['googleapi_clientsecret'];
-			$google_client_redirect_url = get_site_option( 'googleapi_redirecturl', '' );
-
-			if ( ( $google_client_id == '' || $google_client_secret == '' ) ) {
-				return false;
-			}
-
-			include_once trailingslashit( dirname( __FILE__ ) ) . '../vendor/google-api-php-client/Google_Client.php';
-			include_once trailingslashit( dirname( __FILE__ ) ) . '../vendor/google-api-php-client/contrib/Google_Oauth2Service.php';
-
-			$this->client = new Google_Client();
-			$this->client->setApplicationName( 'Helpdesk Studio' );
-			$this->client->setClientId( $google_client_id );
-			$this->client->setClientSecret( $google_client_secret );
-			$this->client->setRedirectUri( $google_client_redirect_url );
-			$this->client->setScopes(
-				array(
-					'https://mail.google.com/',
-					'https://www.googleapis.com/auth/userinfo.email',
-					'https://www.googleapis.com/auth/userinfo.profile',
-				) );
-			$this->client->setAccessType( 'offline' );
-			$this->oauth2  = new Google_Oauth2Service( $this->client );
-			$this->user_id = get_current_user_id();
-
-			//Google Oauth redirection
-			if ( isset( $_GET['code'] ) ) {
-				$this->client->authenticate();
-				$user  = $this->oauth2->userinfo_v2_me->get();
-				$email = filter_var( $user['email'], FILTER_SANITIZE_EMAIL );
-				$rt_mail_settings->add_user_google_ac( $this->client->getAccessToken(), $email, serialize( $user ), $this->user_id );
-				wp_redirect( $google_client_redirect_url );
-			}
-
-			return true;
-		}
-
-		/**
 		 * @param $field
 		 * @param $value
 		 */
 		public function rt_reply_by_email_view( $field, $value, $modules = array(), $newflag = true ) {
 			global $rt_mail_settings, $rt_imap_server_model;
-
-			$responce = $this->goole_oauth();
-
+			$responce = false;
 			$google_acs = $rt_mail_settings->get_user_google_ac();
 
 			$imap_servers = $rt_imap_server_model->get_all_servers();
@@ -111,7 +56,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			}
 
 			if ( false == $responce && ( empty( $google_acs ) && empty( $imap_servers )  ) ){
-				echo '<div id="error_handle" class=""><p>Please set google api detail OR Imap Servers detail on <a href="' . esc_url( admin_url( 'admin.php?page=Rt-MailBox&tab=auth' ) ) . '">Google Auth</a> or <a href="' . esc_url( admin_url( 'admin.php?page=Rt-MailBox&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
+				echo '<div id="error_handle" class=""><p>Please set google api detail OR Imap Servers detail on <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=auth' ) ) . '">Google Auth</a> or <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
 				return;
 			}
 
@@ -199,7 +144,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<input type="hidden" name="rthd_submit_enable_reply_by_email" value="save"/>
 											<a
 												class='button remove-google-ac right'
-												href='<?php echo esc_url( admin_url( 'admin.php?page=Rt-MailBox&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
+												href='<?php echo esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
 												A/C</a>
 											<a class="button right rtMailbox-hide-mail-folders" href="#">Show</a>
 											<?php if ( 'goauth' == $ac->type ) { ?>
@@ -356,7 +301,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					//								'post_type' => Rt_HD_Module::$post_type,
 					//								'page'      => 'rthd-settings',
 					//							), admin_url( 'admin.php' ) ) ) . '";</script>';
-						echo 'window.location="'. admin_url( 'admin.php' ) .'?page=Rt-MailBox"; </script>';
+						echo 'window.location="'. admin_url( 'admin.php' ) .'?page='.Rt_Mailbox::$page_name.'"; </script>';
 					die();
 				}
 				if ( isset( $_REQUEST['rthd_add_imap_email'] ) ) {
