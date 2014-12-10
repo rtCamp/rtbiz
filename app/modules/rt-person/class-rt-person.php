@@ -53,7 +53,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
-//			add_action( 'init', array( $this, 'check_filters' ) );
 
 			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
 
@@ -163,100 +162,6 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			}
 
 		}
-
-
-		/**
-		 * Filters Persons on My Team Page - List View
-		 * Only When it's My Team Page.
-		 */
-		function check_filters() {
-//			if ( isset( $_REQUEST[ 'post_type' ] ) && $_REQUEST[ 'post_type' ] == $this->post_type ) {
-//				add_action( 'parse_query', array( $this, 'filter_our_team' ) );
-//			}
-		}
-
-		/**
-		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity
-		 */
-		function entity_meta_boxes() {
-			parent::entity_meta_boxes();
-			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			if ( ! current_user_can( $editor_cap ) ) {
-				return;
-			}
-			add_meta_box( 'rt-biz-wp-user-details', __( 'WordPress User Details' ), array( $this, 'render_wp_user_details_meta_box' ), $this->post_type, 'side', 'high' );
-		}
-
-		function render_wp_user_details_meta_box( $post ) {
-
-			$user_id = self::get_meta( $post->ID, $this->user_id_key, true );
-			?>
-			<div class="form-field-2">
-				<label><?php _e( 'Select user for contact' ) ?></label>
-				<input type="text" class="user-autocomplete" />
-				<div id="selected-user-contact">
-					<?php if ( $user_id ) { ?>
-						<div id='<?php echo 'subscribe-auth-' . $user_id; ?>'>
-							<?php
-							$acuser = new WP_User( intval( $user_id ) );
-							echo get_avatar( $acuser->user_email, 32 );
-							echo $acuser->display_name;
-							?>
-							&nbsp;<a href='#deleteContactUser'>X</a>
-						</div>
-					<?php } ?>
-				</div>
-				<input type='hidden' name="contact_meta[<?php echo $this->user_id_key ?>]" id="contact_meta_userid"  value='<?php echo ( isset( $user_id ) ) ? $user_id : ''; ?>' class="" />
-				<?php echo '<p class="description">' . __( 'User to which this contact belongs.' ) . '</p>' ?>
-			</div>
-			<?php
-			if ( empty( $user_id ) ) {
-				return;
-			} ?>
-			<div class="">
-				<?php rt_biz_get_user_department_section( new WP_User( $user_id ) ); ?>
-			</div>
-			<?php
-		}
-
-		/**
-		 *  Init Settings for Team Mate MetaBox. Titan
-		 */
-//		function person_meta_box() {
-//
-//			if ( ! isset( Rt_Biz_Settings::$titan_obj ) || empty( Rt_Biz_Settings::$titan_obj ) ) {
-//				return;
-//			}
-//
-//			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-//			if ( ! current_user_can( $editor_cap ) ) {
-//				return;
-//			}
-//
-//			$our_team_mate = Rt_Biz_Settings::$titan_obj->createMetaBox( array(
-//				'name' => __( 'Our Team-mate' ), // Name of the menu item
-//				// 'parent' => null, // slug of parent, if blank, then this is a top level menu
-//				'id' => 'rt-biz-person-our-team-mate', // Unique ID of the menu item
-//				// 'capability' => 'manage_options', // User role
-//				// 'icon' => 'dashicons-admin-generic', // Menu icon for top level menus only
-//				// 'position' => 100.01 // Menu position for top level menus only
-//				'post_type' => $this->post_type, // Post type, can be an array of post types
-//				'context' => 'side', // normal, advanced, or side
-//				'hide_custom_fields' => true, // If true, the custom fields box will not be shown
-//					) );
-//			$our_team_mate->createOption( array(
-//				'name' => __( 'Is our team mate ?' ), // Name of the option
-//				'desc' => 'This is a checkbox which decides this contact is part of our team or not. If this box is ticked it will allow employees to upload/edit their documents from their profile page', // Description of the option
-//				'id' => self::$our_team_mate_key, // Unique ID of the option
-//				'type' => 'checkbox', //
-//				'default' => 0, // Menu icon for top level menus only
-//				'example' => '', // An example value for this field, will be displayed in a <code>
-//				'livepreview' => '', // jQuery script to update something in the site. For theme customizer only
-//			) );
-//
-//			do_action( 'rt_biz_person_meta_box' );
-//		}
-
 		/**
 		 *  Init Meta Fields
 		 */
