@@ -66,7 +66,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		public $modules = array();
 
 		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( 'MailBox', $setting_page_parent_slug );
+			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->modules = $module;
