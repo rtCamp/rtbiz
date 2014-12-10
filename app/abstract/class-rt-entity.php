@@ -96,8 +96,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if( $_POST['post_type'] !='rt_contact' && $_POST['post_type'] !='rt_account' ){
 				return;
 			}
-			error_log(var_export($_POST,true). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
-
+			$flag       = false;
 			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_person::$user_category_taxonomy ] ) ) {
 				$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy );
 				$postterms  = array_filter( $_POST[ 'tax_input' ][ Rt_person::$user_category_taxonomy ] );
@@ -105,7 +104,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$diff       = array_diff( $postterms, $termids );
 				$diff2      = array_diff( $termids, $postterms );
 				$diff_tax1  = array();
-				$flag       = false;
 				$body       = '';
 				$diff_tax2  = array();
 				foreach ( $diff as $tax_id ) {
