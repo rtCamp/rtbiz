@@ -10,7 +10,8 @@ $user_groups = rt_biz_get_user_groups();
 $modules     = rt_biz_get_modules();
 $permissions = rt_biz_get_acl_permissions();
 $module_permissions = get_site_option( 'rt_biz_module_permissions' );
-$menu_label = Rt_Biz_Settings::$settings['menu_label'];
+$settings  = biz_get_redux_settings();
+$menu_label = $settings['menu_label'];
 ?>
 <div class="wrap">
 	<div id="icon-options-general" class="icon32"><br></div><h2><?php echo $menu_label . __( ' Access Control' ); ?></h2>

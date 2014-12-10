@@ -185,6 +185,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function includes() {
+			require_once plugin_dir_path( __FILE__ ) . 'app/vendor/' . 'redux/ReduxCore/framework.php';
 			global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_notification_autoload, $rtb_reports_autoload, $rtb_helper_autoload;
 			$rtb_app_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/' );
 			$rtb_models_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/models/' );
@@ -365,10 +366,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'delete_terms' => $editor_cap,
 				'assign_terms' => $editor_cap,
 			);
-			if( isset( Rt_Biz_Settings::$settings['product_plugin'] ) && isset( Rt_Biz_Settings::$store_options ) && is_array( Rt_Biz_Settings::$store_options ) && 'none' != Rt_Biz_Settings::$settings['product_plugin'] ) {
 
-				$product_plugin   = rt_biz_get_settings('product_plugin');
+			$settings = biz_get_redux_settings();
+			if( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
 
+				$product_plugin   = $settings['product_plugin'];
 				$to_register_posttype = array();
 				foreach ( Rt_Access_Control::$modules as $key => $value ){
 
@@ -452,8 +454,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function register_menu() {
 			global $rt_person, $rt_organization, $rt_access_control, $rt_biz_dashboard, $rtbiz_product_sync;
-			$logo_url               = Rt_Biz_Settings::$settings['logo_url'];
-			$menu_label             = Rt_Biz_Settings::$settings['menu_label'];
+			$settings  = biz_get_redux_settings();
+			$logo_url               = $settings['logo_url']['url'];
+			$menu_label             = $settings['menu_label'];
 			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array(
 				$this,
 				'dashboard_ui'
@@ -465,6 +468,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=user-group' );
+			add_submenu_page( self::$dashboard_slug, __( 'Settings' ), __( 'Settings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), 'admin.php?page='.self::$settings_slug );;
+
 		}
 
 		/**
@@ -699,7 +704,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function init_settings() {
 			global $rt_biz_setttings;
-			$rt_biz_setttings = new Rt_Biz_Settings();
+//			$rt_biz_setttings = new Rt_Biz_Settings();
+			$rt_biz_setttings = new Rt_Biz_Setting();
 		}
 
 		/**

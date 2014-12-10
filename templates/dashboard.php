@@ -11,7 +11,7 @@
 
 	<?php screen_icon(); ?>
 
-	<h2><?php $menu_label = Rt_Biz_Settings::$settings['menu_label']; echo $menu_label . ' ' . __( 'Dashboard' ); ?></h2>
+	<h2><?php $settings  = biz_get_redux_settings(); $menu_label = $settings['menu_label']; echo $menu_label . ' ' . __( 'Dashboard' ); ?></h2>
 
 		<div id="poststuff">
 
