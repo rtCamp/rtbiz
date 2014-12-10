@@ -512,3 +512,14 @@ function rtbiz_text_diff( $left_string, $right_string, $args = null ) {
 
 	return $r;
 }
+
+// Setting ApI
+function biz_get_redux_settings() {
+	if ( ! isset( $GLOBALS[Rt_Biz_Setting::$biz_opt] ) ) {
+		$GLOBALS[Rt_Biz_Setting::$biz_opt] = get_option( Rt_Biz_Setting::$biz_opt, array() );
+	}
+
+	error_log(var_export($GLOBALS[Rt_Biz_Setting::$biz_opt],true). ": -> asddddd ", 3, "/var/www/dummytest.com/logs/my-errors.log");
+
+	return $GLOBALS[Rt_Biz_Setting::$biz_opt];
+}

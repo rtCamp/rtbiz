@@ -368,7 +368,8 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'dashboard_overview':
-					$menu_label = Rt_Biz_Settings::$settings[ 'menu_label' ];
+					$settings  = biz_get_redux_settings();
+					$menu_label = $settings['menu_label'];
 					?>
 					<p>
 						<?php echo sprintf( __( 'Welcome to your %s Dashboard!' ), $menu_label ); ?>
@@ -414,7 +415,8 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'acl_screen_content':
-					$menu_label = Rt_Biz_Settings::$settings[ 'menu_label' ];
+					$settings  = biz_get_redux_settings();
+					$menu_label = $settings['menu_label'];
 					?>
 					<ul>
 						<li>
@@ -443,7 +445,8 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'settings_overview':
-					$menu_label = Rt_Biz_Settings::$settings[ 'menu_label' ];
+					$settings  = biz_get_redux_settings();
+					$menu_label = $settings['menu_label'];
 					?>
 					<p>
 						<?php echo sprintf ( __( 'This screen consists of all the %s settings.' ), $menu_label ); ?>
