@@ -119,7 +119,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$difftxt = rtbiz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
 
 				if ( !empty( $difftxt ) || $difftxt != '' ) {
-					$body = "<strong>User Category</strong> : " . $difftxt;
+					$body = "<strong>".__('User Category')."</strong> : " . $difftxt;
 					$flag = true;
 				}
 			}
@@ -166,12 +166,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ($flag){
 				$user=  wp_get_current_user();
 				$body = "Updated by <strong>".$user->display_name. "</strong> <br/>" .$body;
+				$settings  = biz_get_redux_settings();
+				$label             = $settings['menu_label'];
 				$data = array(
 					'comment_post_ID' => $post_id,
 					'comment_content' => $body,
 					'comment_type' => 'rt_bot',
 					'comment_approved' => 1,
-				    'comment_author' => 'rtBiz Bot'
+				    'comment_author' => $label. ' Bot',
 				);
 				wp_insert_comment( $data );
 			}
@@ -235,14 +237,13 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$category = array_unique( wp_list_pluck( $this->meta_fields, 'category' ) );
 			$cathtml = array();
 			foreach ( $category as $key => $value ){
-				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.ucfirst( $value ).' information </h3> </div>';
+				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value )). __('information').' </h3> </div>';
 			}
-			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> Other information </h3> </div>';
+			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> '.__('Other information').'</h3> </div>';
 			$other_flag = false;
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-//				$is_our_team_mate = get_post_meta( $post->ID, Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key, true );
 				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Person::$employees_category_slug);
 				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
