@@ -96,30 +96,33 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if( $_POST['post_type'] !='rt_contact' && $_POST['post_type'] !='rt_account' ){
 				return;
 			}
-			$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy);
-			$postterms = array_filter($_POST['tax_input'][Rt_person::$user_category_taxonomy]);
-			$termids = wp_list_pluck($post_terms,'term_id');
-			$diff      = array_diff( $postterms, $termids);
-			$diff2 = array_diff( $termids, $postterms );
-			$diff_tax1 = array();
-			$flag = false;
-			$body ='';
-			$diff_tax2 = array();
-			foreach ( $diff as $tax_id ){
-				$tmp  = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
-				$diff_tax1[] = $tmp->name;
-			}
 
-			foreach ( $diff2 as $tax_id ){
-				$tmp  = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
-				$diff_tax2[] = $tmp->name;
-			}
+			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_person::$user_category_taxonomy ] ) ) {
+				$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy );
+				$postterms  = array_filter( $_POST[ 'tax_input' ][ Rt_person::$user_category_taxonomy ] );
+				$termids    = wp_list_pluck( $post_terms, 'term_id' );
+				$diff       = array_diff( $postterms, $termids );
+				$diff2      = array_diff( $termids, $postterms );
+				$diff_tax1  = array();
+				$flag       = false;
+				$body       = '';
+				$diff_tax2  = array();
+				foreach ( $diff as $tax_id ) {
+					$tmp          = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
+					$diff_tax1[ ] = $tmp->name;
+				}
 
-			$difftxt = rtbiz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
+				foreach ( $diff2 as $tax_id ) {
+					$tmp          = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
+					$diff_tax2[ ] = $tmp->name;
+				}
 
-			if ( !empty( $difftxt ) || $difftxt != '' ) {
-				$body= "<strong>User Category</strong> : ".$difftxt;
-				$flag = true;
+				$difftxt = rtbiz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
+
+				if ( !empty( $difftxt ) || $difftxt != '' ) {
+					$body = "<strong>User Category</strong> : " . $difftxt;
+					$flag = true;
+				}
 			}
 			foreach ( $this->meta_fields as $field ){
 				if( !isset($_POST[ 'contact_meta' ][ $field[ 'key' ] ])){
@@ -151,7 +154,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				}
 			}
 			if ($flag){
-				//todo add new comment with type rt_bot
 				$user=  wp_get_current_user();
 				$body = "Updated by <strong>".$user->display_name. "</strong> <br/>" .$body;
 				$data = array(
