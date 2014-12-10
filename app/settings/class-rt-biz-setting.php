@@ -219,7 +219,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// OPTIONAL -> Give you extra features
 				'page_priority'      => null,
 				// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
-				//				'page_parent'        => 'edit.php?post_type=' . esc_attr( 'rt_contact' ),
+				'page_parent'        => Rt_Biz::$dashboard_slug,
 				// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters
 				'page_permissions'   => $author_cap,
 				// Permissions needed to access the options panel.
