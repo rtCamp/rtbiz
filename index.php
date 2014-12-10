@@ -272,6 +272,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			    self::$access_control_slug,
 			    'edit-tags.php?taxonomy=user-group',
 			    Rt_Biz_Attributes::$attributes_page_slug,
+			    'Rt-MailBox',
 			    self::$settings_slug,
 			);
 		}
@@ -468,8 +469,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_person->post_type );
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'Settings' ), __( 'Settings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), 'admin.php?page='.self::$settings_slug );;
-
 		}
 
 		/**
