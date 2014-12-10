@@ -279,7 +279,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				self::$access_control_slug,
 				'edit-tags.php?taxonomy=user-group',
 				Rt_Biz_Attributes::$attributes_page_slug,
-				'MailBox',
+				Rt_Mailbox::$page_name,
 				self::$settings_slug,
 			) );
 		}
