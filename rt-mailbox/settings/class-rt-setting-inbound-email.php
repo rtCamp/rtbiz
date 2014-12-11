@@ -163,25 +163,24 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
-												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>"
-												        name="inbox_folder"
-												        data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
+												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
 													<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
-													<?php if ( ! is_null( $all_folders ) ) {
-														$hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder );
-													} ?>
-												</select> </label>
-												<p class="description"><?php _e( 'Choosing an Inbox Folder is mandatory in order to parse the emails from Mailbox.' ) ?></p>
+													<?php if ( ! is_null( $all_folders ) ) { ?>
+													<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
+													<?php } ?>
+												</select>
+											</label>
+											<p class="description"><?php _e( 'Choosing an Inbox Folder is mandatory in order to parse the emails from Mailbox.' ) ?></p>
 											<?php if ( in_array( $email, rt_get_all_system_emails() ) ) { ?>
 												<p class="description"><?php _e( 'This is linked as a system mail. Hence it will only read the Inbox Folder; no matter what folder you choose over here. These will be ignored.' ); ?></p>
 											<?php } ?>
-					<?php if ( ! is_null( $all_folders ) ) {
-						echo '<div id="mail_folder_container">';
-						$hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder );
-						echo '</div>';
-						} else { ?>
-							<p class="description"><?php _e( 'No Folders found.' ); ?></p>
-						<?php } ?>
+											<?php if ( ! is_null( $all_folders ) ) { ?>
+												<div id="mail_folder_container">
+													<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder ); ?>
+												</div>
+											<?php } else { ?>
+												<p class="description"><?php _e( 'No Folders found.' ); ?></p>
+											<?php } ?>
 										</td>
 										<?php } ?>
 									</tr>
@@ -209,24 +208,18 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				}
 			}
 
-			if ( $newflag ){
-				?>
-				<p class="submit"><a class="button" id="rthd_add_personal_email"
-				                     href="#"><?php _e( 'Add Email' ); ?></a></p>
+			if ( $newflag ) { ?>
+				<p class="submit"><a class="button" id="rthd_add_personal_email" href="#"><?php _e( 'Add Email' ); ?></a></p>
 				<p class="submit rthd-hide-row" id="rthd_email_acc_type_container">
-					<?php
-				if ( ! empty( $modules ) ){ ?>
+				<?php if ( ! empty( $modules ) ) { ?>
 					<label for="module_to_register">Select module to register: </label>
 					<select id="module_to_register" name="module_to_register" required>
-					<?php
-					foreach ( Rt_Access_Control::$modules as $key => $value ){
-						echo '<option value="'.$key.'">'.$key.'</option>';
-					}
-					?>
-						</select>
-						<br />
-
+					<?php foreach ( Rt_Access_Control::$modules as $key => $value ) { ?>
+						<option value="<?php echo $key; ?>"><?php echo $key; ?></option>
 					<?php } ?>
+					</select>
+					<br />
+				<?php } ?>
 
 					<select id="rthd_select_email_acc_type">
 						<option value=""><?php _e( 'Select Type' ); ?></option>
@@ -239,8 +232,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				</p>
 				<?php if ( false != $responce ) { ?>
 				<p class="submit rthd-hide-row" id="rthd_goauth_container">
-					<a class='button button-primary'
-					   href='<?php echo esc_url( $authUrl ); ?>'><?php _e( 'Connect New Google A/C' ); ?></a>
+					<a class='button button-primary' href='<?php echo esc_url( $authUrl ); ?>'><?php _e( 'Connect New Google A/C' ); ?></a>
 				</p>
 				<?php } ?>
 				<?php if ( $imap_servers ) { ?>
@@ -248,16 +240,12 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					<input type="hidden" name="rthd_add_imap_email" value="1"/>
 					<select  name="rthd_imap_server">
 						<option value=""><?php _e( 'Select Mail Server' ); ?></option>
-				<?php
-					foreach ( $imap_servers as $server ) {
-						?>
-						<option
-							value="<?php echo esc_attr( $server->id ); ?>"><?php echo esc_html( $server->server_name ); ?></option>
-					<?php } ?>
+						<?php foreach ( $imap_servers as $server ) { ?>
+						<option value="<?php echo esc_attr( $server->id ); ?>"><?php echo esc_html( $server->server_name ); ?></option>
+						<?php } ?>
 					</select>
 				</p>
-			<?php
-				}
+				<?php }
 			}
 		}
 
