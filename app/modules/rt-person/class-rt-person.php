@@ -25,7 +25,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		public $user_id_key         = 'contact_user_id';
 //		static $our_team_mate_key   = 'is_our_team_mate';
 
-		static $user_category_taxonomy = 'rt_user_category';
+		static $user_category_taxonomy = 'rt_contact_category';
 		static $employees_category_slug = 'employees';
 		static $clients_category_slug = 'customers';
 		static $suppliers_category_slug = 'vendors';
