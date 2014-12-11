@@ -455,13 +455,6 @@ function rt_biz_save_user_user_group( $user_id  ) {
 	return $rtbiz_user_groups->save_user_user_group( $user_id );
 }
 
-function rt_biz_get_settings ( $key = null) {
-	if ( isset( $key ) ) {
-		return Rt_Biz_Settings::$settings[ $key ];
-	}
-	return Rt_Biz_Settings::$settings;
-}
-
 /**
  * wp1_text_diff
  *
