@@ -182,7 +182,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 												<p class="description"><?php _e( 'No Folders found.' ); ?></p>
 											<?php } ?>
 										</td>
-										<?php } ?>
+										<?php } else {
+											echo '<td class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></td>'; }?>
 									</tr>
 								</table>
 							</td>
