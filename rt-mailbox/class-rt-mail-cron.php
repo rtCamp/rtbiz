@@ -155,10 +155,10 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 						$rt_mail_settings->update_sent_email( $email->id, 'yes', 'p' );
 					} else {
 						$rt_mail_settings->update_sent_email( $email->id, 'error', 'p' );
-						echo 'Error: ' . esc_attr( $email->id  ). '<br />';
+						echo 'Error: ' . esc_attr( $email->id ). '<br />';
 					}
 				} else {
-					echo 'Error: ' . esc_attr( $email->id  ). '<br />';
+					echo 'Error: ' . esc_attr( $email->id ). '<br />';
 				}
 			}
 		}

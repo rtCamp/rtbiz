@@ -126,20 +126,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			do_action( 'rt_mailbox_randed_view' );
 			?>
 			<h1> <?php echo __( 'Mailbox Setting' ); ?></h1>
-		<?php
-
+			<?php
 			$this->mailbox_tabs();
 			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
-				?>
-
-				<?php echo $this->imap_view();
-
+				echo $this->imap_view();
 			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
-				?>
-			<?php
 				$this->mailbox_view();
 			}
-
 		}
 
 		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
