@@ -518,10 +518,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @since rt-Helpdesk 0.1
 		 */
 		public function update_last_mail_uid( $email, $uid ) {
-			global $threadPostId;
-			if ( $threadPostId ) {
-				return true;
-			}
+			//			global $threadPostId;
+			//			if ( $threadPostId ) {
+			//				return true;
+			//			}
 			global $rt_mail_uid;
 			global $sync_inbox_type;
 			global $rt_mail_accounts_model;
@@ -552,7 +552,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$message   = null;
 
 			$systemEmails = rt_get_all_system_emails();
-			global $threadPostId;
+			//			global $threadPostId;
 
 			foreach ( $arrayMailIds as $UmailId ) {
 				try {
@@ -587,7 +587,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						continue;
 					}
 
-					if ( $lastMessageId && ! isset( $threadPostId ) ) {
+					if ( $lastMessageId ) {
 						if ( ! $this->insert_mail_message_id( $lastMessageId ) ) {
 							$this->update_last_mail_uid( $email, $UmailId );
 							continue;
@@ -820,16 +820,16 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 					}
 
-					global $threadPostId;
-					if ( ! isset( $threadPostId ) ) {
-						$this->update_last_mail_uid( $email, $UmailId );
-						try {
-							$dt = new DateTime( $message->date );
-							$this->update_sync_meta( $email, $dt->format( 'Y-m-d H:i:s' ) );
-						} catch ( Exception $e ) {
-							$this->update_sync_meta( $email, $dt->format( 'Y-m-d H:i:s' ) );
-						}
+					//					global $threadPostId;
+					//					if ( ! isset( $threadPostId ) ) {
+					$this->update_last_mail_uid( $email, $UmailId );
+					try {
+						$dt = new DateTime( $message->date );
+						$this->update_sync_meta( $email, $dt->format( 'Y-m-d H:i:s' ) );
+					} catch ( Exception $e ) {
+						$this->update_sync_meta( $email, $dt->format( 'Y-m-d H:i:s' ) );
 					}
+					//					}
 				} catch ( Exception $e ) {
 					ob_start();
 					echo esc_attr( $e->getMessage() );
