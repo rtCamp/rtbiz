@@ -810,7 +810,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( array( 'email' => $email ) );
 					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail );
-					// $success_flag = $rt_hd_import_operation->process_email_to_ticket( $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $isSystemEmail, $subscriber );
+
 					$success_flag = false;
 					error_log( 'Mail Parse Status : ' . var_export( $success_flag, true ) . "\n\r" );
 
