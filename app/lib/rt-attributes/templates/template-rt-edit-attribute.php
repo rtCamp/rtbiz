@@ -36,7 +36,7 @@ foreach ( $att_relations as $relation ) {
 }
 
 ?>
-<div class="wrap">
+<div class="wrap form-wrap">
 	<h2><i class="icon-tag"></i> <?php _e( 'Edit Attribute' ) ?></h2>
 	<form method="post">
 		<table class="form-table">
@@ -135,6 +135,18 @@ foreach ( $att_relations as $relation ) {
 					<?php } ?>
 
 					<p class="description"><?php _e( 'Determines the mapping between post types and attribute.' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label><?php _e( 'Configure Terms' ); ?></label>
+				</th>
+				<td>
+					<?php foreach ( $att_post_types as $pt ) { ?>
+						<?php $labels = get_post_type_labels( get_post_type_object( $pt ) ); ?>
+						<a target="_blank" href="<?php echo esc_html( admin_url( 'edit-tags.php?taxonomy='.$this->get_taxonomy_name( $att_name ).'&post_type='.$pt ) ); ?>" class="button configure-terms"><?php echo $labels->name . ' '; _e( 'Terms' ); ?></a>
+					<?php } ?>
+					<p class="description"><?php _e( 'Perform CRUD operations on Terms for this attribute.' ); ?></p>
 				</td>
 			</tr>
 			<?php } ?>
