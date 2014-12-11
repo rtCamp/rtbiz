@@ -110,9 +110,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
 
 			$rt_mail_settings->update_sync_status( $email, true );
-			//thread Importer
-			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature, true );
-			$rt_mail_settings->update_sync_status( $email, false );
 		}
 
 		function rt_send_email() {

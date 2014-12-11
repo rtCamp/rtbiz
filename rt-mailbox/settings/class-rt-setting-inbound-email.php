@@ -56,7 +56,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			}
 
 			if ( false == $responce && ( empty( $google_acs ) && empty( $imap_servers )  ) ){
-				echo '<div id="error_handle" class=""><p>Please set google api detail OR Imap Servers detail on <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=auth' ) ) . '">Google Auth</a> or <a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
+				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
 				return;
 			}
 
@@ -144,13 +144,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<input type="hidden" name="rthd_submit_enable_reply_by_email" value="save"/>
 											<a
 												class='button remove-google-ac right'
-												href='<?php echo esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'>Remove
+												href='<?php echo esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'><?php echo __( 'Remove' ); ?>
 												A/C</a>
-											<a class="button right rtMailbox-hide-mail-folders" href="#">Show</a>
-											<?php if ( 'goauth' == $ac->type ) { ?>
-												<a class='button button-primary right'
-												   href='<?php echo esc_url( $authUrl ); ?>'>ReConnect Google Now</a>
-											<?php } ?>
+											<a class="button right rtMailbox-hide-mail-folders" href="#"><?php echo __( 'Show' ); ?></a>
+					<!--											--><?php //if ( 'goauth' == $ac->type ) { ?>
+					<!--												<a class='button button-primary right'-->
+					<!--												   href='--><?php //echo esc_url( $authUrl ); ?><!--'>ReConnect Google Now</a>-->
+					<!--											--><?php //} ?>
 										</td>
 									</tr>
 									<tr valign="top" class="rthd-hide-row">
@@ -158,7 +158,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 										<td class="long">
 											<?php if ( ! empty( $ac->module ) ){
 												?>
-												<b> Mailbox Registered with <?php echo $ac->module ?></b> <br/>
+												<b> <?php echo __( 'Mailbox Registered with ' ); ?><?php echo $ac->module ?></b> <br/>
 											<?php } ?>
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
