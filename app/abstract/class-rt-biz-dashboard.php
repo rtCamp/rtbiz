@@ -84,7 +84,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function add_dashboard_widgets() {
 			$rt_biz_attributes_model = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
-			$relations = $rt_biz_attributes_relationship_model->get_relations_by_post_type( rt_biz_get_person_post_type() );
+			$relations = $rt_biz_attributes_relationship_model->get_relations_by_post_type( rt_biz_get_contact_post_type() );
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 				if ( $attr->attribute_store_as == 'taxonomy' ) {
@@ -99,7 +99,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$attribute_id = $args[ 'args' ][ 'attribute_id' ];
 			$attr = $rt_biz_attributes_model->get_attribute( $attribute_id );
 			$taxonomy = $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
-			$post_type = rt_biz_get_person_post_type();
+			$post_type = rt_biz_get_contact_post_type();
 			$terms = get_terms( $taxonomy );
 
 			$data_source = array();

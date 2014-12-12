@@ -172,7 +172,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			self::$instance->init_help();
 
-			self::$instance->register_organization_person_connection();
+			self::$instance->register_company_contact_connection();
 
 			self::$instance->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
 
@@ -266,16 +266,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$this->menu_order = array(
 				self::$dashboard_slug,
-				'edit.php?post_type=' . rt_biz_get_person_post_type(),
-				'edit-tags.php?taxonomy='.Rt_Person::$user_category_taxonomy,
+				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
+				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
 			);
 
 			if ( !empty( $rtbiz_product_sync->product_sync ) ) {
-				$this->menu_order[] = 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . rt_biz_get_person_post_type();
+				$this->menu_order[] = 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . rt_biz_get_contact_post_type();
 			}
 
 			$this->menu_order = array_merge( $this->menu_order, array(
-				'edit.php?post_type=' . rt_biz_get_organization_post_type(),
+				'edit.php?post_type=' . rt_biz_get_company_post_type(),
 				self::$access_control_slug,
 				'edit-tags.php?taxonomy=user-group',
 				Rt_Biz_Attributes::$attributes_page_slug,
@@ -417,13 +417,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Admin side as of now. Slipt up in case of front end.
 		 */
 		function load_styles_scripts() {
-			global $rt_person, $rt_organization, $rtbiz_product_sync;
+			global $rt_contact, $rt_company, $rtbiz_product_sync;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 
 			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
 
 				$post_type = get_post_type( $_REQUEST['post'] );
-				if ( in_array( $post_type, array( $rt_person->post_type, $rt_organization->post_type ) ) ) {
+				if ( in_array( $post_type, array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
 					if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 						wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 					}
@@ -434,8 +434,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
-					$rt_person->post_type,
-					$rt_organization->post_type
+					$rt_contact->post_type,
+					$rt_company->post_type
 				) )
 			) {
 				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
@@ -454,7 +454,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			if ( ! empty( $rtbiz_product_sync->product_slug ) ) {
 				if ( isset( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == $rtbiz_product_sync->product_slug ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_person->post_type ) );
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_contact->post_type ) );
 				}
 			}
 		}
@@ -463,7 +463,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Registers all the menus/submenus for rtBiz
 		 */
 		function register_menu() {
-			global $rt_person, $rt_organization, $rt_access_control, $rt_biz_dashboard, $rtbiz_product_sync;
+			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_product_sync;
 			$settings  = biz_get_redux_settings();
 			$logo_url               = $settings['logo_url']['url'];
 			$menu_label             = $settings['menu_label'];
@@ -475,11 +475,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
 			if ( ! empty( $rtbiz_product_sync->product_slug ) ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_person->post_type );
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_product_sync->product_slug . '&post_type=' . $rt_contact->post_type );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- User Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy='.Rt_Person::$user_category_taxonomy );
+			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- User Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy );
 		}
 
 		/**
@@ -692,12 +692,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		/**
-		 *  Initialize Rt_Person & Rt_Organization
+		 *  Initialize Rt_Contact & Rt_Company
 		 */
 		function init_modules() {
-			global $rt_person, $rt_organization;
-			$rt_person       = new Rt_Person();
-			$rt_organization = new Rt_Organization();
+			global $rt_contact, $rt_company;
+			$rt_contact = new Rt_Contact();
+			$rt_company = new Rt_Company();
 		}
 
 		/**
@@ -723,12 +723,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Accordingly Rt_Access_Control will provide user permissions to the groups
 		 */
 		function register_rt_biz_module( $modules ) {
-			global $rt_person, $rt_organization;
+			global $rt_contact, $rt_company;
 			$rt_biz_options                                              = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN . '_options' ) );
 			$menu_label                                                  = $rt_biz_options['menu_label'];
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
-				'post_types' => array( $rt_person->post_type, $rt_organization->post_type ),
+				'post_types' => array( $rt_contact->post_type, $rt_company->post_type ),
 				'require_user_groups' => true,
 			    'require_product_sync' => true,
 			);
@@ -739,37 +739,37 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 *  Registers Posts 2 Posts relation for Organization - Person
 		 */
-		function register_organization_person_connection() {
-			add_action( 'p2p_init', array( $this, 'organization_person_connection' ) );
+		function register_company_contact_connection() {
+			add_action( 'p2p_init', array( $this, 'company_contact_connection' ) );
 		}
 
 		/**
 		 *  Organization - Person Connection for Posts 2 Posts
 		 */
-		function organization_person_connection() {
-			global $rt_organization, $rt_person;
+		function company_contact_connection() {
+			global $rt_company, $rt_contact;
 			p2p_register_connection_type( array(
-				                              'name' => $rt_organization->post_type . '_to_' . $rt_person->post_type,
-				                              'from' => $rt_organization->post_type,
-				                              'to'   => $rt_person->post_type,
+				                              'name' => $rt_company->post_type . '_to_' . $rt_contact->post_type,
+				                              'from' => $rt_company->post_type,
+				                              'to'   => $rt_contact->post_type,
 			                              ) );
 		}
 
 		/**
-		 *  This establishes a connection between any entiy ( either organization - from / person - to )
+		 *  This establishes a connection between any entiy ( either company - from / contact - to )
 		 *  acording to the parameters passed.
 		 *
 		 * @param string $from - Organization
 		 * @param string $to   - Person
 		 */
-		function connect_organization_to_person( $from = '', $to = '' ) {
-			global $rt_organization, $rt_person;
-			if ( ! p2p_connection_exists( $rt_organization->post_type . '_to_' . $rt_person->post_type, array(
+		function connect_company_to_contact( $from = '', $to = '' ) {
+			global $rt_company, $rt_contact;
+			if ( ! p2p_connection_exists( $rt_company->post_type . '_to_' . $rt_contact->post_type, array(
 				'from' => $from,
 				'to'   => $to
 			) )
 			) {
-				p2p_create_connection( $rt_organization->post_type . '_to_' . $rt_person->post_type, array(
+				p2p_create_connection( $rt_company->post_type . '_to_' . $rt_contact->post_type, array(
 					'from' => $from,
 					'to'   => $to
 				) );
@@ -778,7 +778,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		/**
 		 *  Returns all the connected posts to the passed parameter entity object.
-		 *  It can be either an organization object or a person object.
+		 *  It can be either an company object or a contact object.
 		 *
 		 *  It will return the other half objects of the connection.
 		 *
@@ -786,12 +786,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_organization_to_person_connection( $connected_items ) {
-			global $rt_organization, $rt_person;
+		function get_company_to_contact_connection( $connected_items ) {
+			global $rt_company, $rt_contact;
 
 			return get_posts(
 				array(
-					'connected_type'   => $rt_organization->post_type . '_to_' . $rt_person->post_type,
+					'connected_type'   => $rt_company->post_type . '_to_' . $rt_contact->post_type,
 					'connected_items'  => $connected_items,
 					'nopaging'         => true,
 					'suppress_filters' => false,

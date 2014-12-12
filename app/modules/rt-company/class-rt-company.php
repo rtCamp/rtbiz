@@ -8,16 +8,16 @@ if ( ! defined('ABSPATH') ) {
 }
 
 /**
- * Description of class-rt-organization
+ * Description of class-rt-company
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Organization' ) ) {
+if ( ! class_exists( 'Rt_Company' ) ) {
 
 	/**
-	 * Class Rt_Organization
+	 * Class Rt_Company
 	 */
-	class Rt_Organization extends Rt_Entity {
+	class Rt_Company extends Rt_Entity {
 
 		/**
 		 *
@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 		 * @param array $meta
 		 * @return int|WP_Error
 		 */
-		function add_organization( $name, $note = '', $address = '', $country = '', $meta = array() ) {
+		function add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 			$org_id = wp_insert_post(
 					array(
 						'post_title' => $name,
@@ -316,7 +316,7 @@ if ( ! class_exists( 'Rt_Organization' ) ) {
 			return $org_id;
 		}
 
-		function get_organizations() {
+		function get_company() {
 			return get_posts(
 					array(
 						'post_type' => $this->post_type,
