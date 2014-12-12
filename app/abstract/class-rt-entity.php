@@ -16,7 +16,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 	/**
 	 * Class Rt_Entity
 	 *
-	 * An abstract class for Rt_Person & Rt_Organization - Core Modules of rtBiz.
+	 * An abstract class for Rt_Contact & Rt_Company - Core Modules of rtBiz.
 	 * This will handle most of the functionalities of these two entities.
 	 *
 	 * If at all any individual entity wants to change the behavior for itself
@@ -97,9 +97,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				return;
 			}
 			$flag       = false;
-			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_person::$user_category_taxonomy ] ) ) {
-				$post_terms = wp_get_post_terms( $post_id, Rt_person::$user_category_taxonomy );
-				$postterms  = array_filter( $_POST[ 'tax_input' ][ Rt_person::$user_category_taxonomy ] );
+			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_Contact::$user_category_taxonomy ] ) ) {
+				$post_terms = wp_get_post_terms( $post_id, Rt_Contact::$user_category_taxonomy );
+				$postterms  = array_filter( $_POST[ 'tax_input' ][ Rt_Contact::$user_category_taxonomy ] );
 				$termids    = wp_list_pluck( $post_terms, 'term_id' );
 				$diff       = array_diff( $postterms, $termids );
 				$diff2      = array_diff( $termids, $postterms );
@@ -107,12 +107,12 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$body       = '';
 				$diff_tax2  = array();
 				foreach ( $diff as $tax_id ) {
-					$tmp          = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
+					$tmp          = get_term_by( 'id', $tax_id, Rt_Contact::$user_category_taxonomy );
 					$diff_tax1[ ] = $tmp->name;
 				}
 
 				foreach ( $diff2 as $tax_id ) {
-					$tmp          = get_term_by( 'id', $tax_id, Rt_person::$user_category_taxonomy );
+					$tmp          = get_term_by( 'id', $tax_id, Rt_Contact::$user_category_taxonomy );
 					$diff_tax2[ ] = $tmp->name;
 				}
 
@@ -244,7 +244,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Person::$employees_category_slug);
+				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Contact::$employees_category_slug);
 				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
@@ -366,9 +366,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$this->print_metabox_js();
 			do_action( 'rt_biz_print_metabox_js', $post, $this );
 		}
-                
+
 		/**
-		 *  MetaBox JS - Overridden in Child Classes - Rt_Organization & Rt_Person
+		 *  MetaBox JS - Overridden in Child Classes - Rt_Company & Rt_Contact
 		 */
 		function print_metabox_js() {
 

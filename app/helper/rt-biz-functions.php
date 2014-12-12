@@ -76,25 +76,25 @@ function rt_biz_sanitize_module_key( $key ) {
 }
 
 /**
- * Register the person conection with a post type
+ * Register the contact connection with a post type
  *
  * @param $post_type
  * @param $label
  */
-function rt_biz_register_person_connection( $post_type, $label ) {
-	global $rt_person;
-	$rt_person->init_connection( $post_type, $label );
+function rt_biz_register_contact_connection( $post_type, $label ) {
+	global $rt_contact;
+	$rt_contact->init_connection( $post_type, $label );
 }
 
 /**
- * Register a organization connection with a post type
+ * Register a company connection with a post type
  *
  * @param $post_type
  * @param $label
  */
-function rt_biz_register_organization_connection( $post_type, $label ) {
-	global $rt_organization;
-	$rt_organization->init_connection( $post_type, $label );
+function rt_biz_register_company_connection( $post_type, $label ) {
+	global $rt_company;
+	$rt_company->init_connection( $post_type, $label );
 }
 
 /**
@@ -102,66 +102,68 @@ function rt_biz_register_organization_connection( $post_type, $label ) {
  *
  * @param $post_id
  * @param $post_type
- * @param bool $fetch_person
- * @return mixed
+ * @param bool $fetch_contact
+ *
+*@return mixed
  */
-function rt_biz_get_post_for_person_connection( $post_id, $post_type, $fetch_person = false ) {
-	global $rt_person;
-	return $rt_person->get_posts_for_entity( $post_id, $post_type, $fetch_person );
+function rt_biz_get_post_for_contact_connection( $post_id, $post_type, $fetch_contact = false ) {
+	global $rt_contact;
+	return $rt_contact->get_posts_for_entity( $post_id, $post_type, $fetch_contact );
 }
 
 /**
- * Get posts for organization connection
+ * Get posts for company connection
  *
  * @param $post_id
  * @param $post_type
- * @param bool $fetch_organization
- * @return mixed
+ * @param bool $fetch_company
+ *
+*@return mixed
  */
-function rt_biz_get_post_for_organization_connection( $post_id, $post_type, $fetch_organization = false ) {
-	global $rt_organization;
-	return $rt_organization->get_posts_for_entity( $post_id, $post_type, $fetch_organization );
+function rt_biz_get_post_for_company_connection( $post_id, $post_type, $fetch_company = false ) {
+	global $rt_company;
+	return $rt_company->get_posts_for_entity( $post_id, $post_type, $fetch_company );
 }
 
-function rt_biz_get_person_labels() {
-	global $rt_person;
-	return $rt_person->labels;
+function rt_biz_get_contact_labels() {
+	global $rt_contact;
+	return $rt_contact->labels;
 }
 
-function rt_biz_get_organization_labels() {
-	global $rt_organization;
-	return $rt_organization->labels;
+function rt_biz_get_company_labels() {
+	global $rt_company;
+	return $rt_company->labels;
 }
 
 /**
- * Returns person post type
+ * Returns contact post type
  *
  * @return mixed
  */
-function rt_biz_get_person_post_type() {
-	global $rt_person;
-	return $rt_person->post_type;
+function rt_biz_get_contact_post_type() {
+	global $rt_contact;
+	return $rt_contact->post_type;
 }
 
 /**
- * Returns organization post type
+ * Returns company post type
  *
  * @return mixed
  */
-function rt_biz_get_organization_post_type() {
-	global $rt_organization;
-	return $rt_organization->post_type;
+function rt_biz_get_company_post_type() {
+	global $rt_company;
+	return $rt_company->post_type;
 }
 
 /**
- * get person by email
+ * get contact by email
  *
  * @param $email
  * @return mixed
  */
-function rt_biz_get_person_by_email( $email ) {
-	global $rt_person;
-	return $rt_person->get_by_email( $email );
+function rt_biz_get_contact_by_email( $email ) {
+	global $rt_contact;
+	return $rt_contact->get_by_email( $email );
 }
 
 /**
@@ -210,7 +212,7 @@ function rt_biz_delete_entity_meta( $id, $key, $value ) {
 }
 
 /**
- * adds an organization
+ * adds an company
  *
  * @param $name
  * @param string $note
@@ -219,31 +221,31 @@ function rt_biz_delete_entity_meta( $id, $key, $value ) {
  * @param array $meta
  * @return mixed
  */
-function rt_biz_add_organization( $name, $note = '', $address = '', $country = '', $meta = array() ) {
-	global $rt_organization;
-	return $rt_organization->add_organization( $name, $note, $address, $country, $meta );
+function rt_biz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
+	global $rt_company;
+	return $rt_company->add_company( $name, $note, $address, $country, $meta );
 }
 
 /**
- * add a person
+ * add a contact
  *
  * @param $name
  * @param string $description
  * @return mixed
  */
-function rt_biz_add_person( $name, $description = '' ) {
-	global $rt_person;
-	return $rt_person->add_person( $name, $description );
+function rt_biz_add_contact( $name, $description = '' ) {
+	global $rt_contact;
+	return $rt_contact->add_contact( $name, $description );
 }
 
-function rt_biz_clear_post_connections_to_person( $post_type, $from ) {
-	global $rt_person;
-	$rt_person->clear_post_connections_to_entity( $post_type, $from );
+function rt_biz_clear_post_connections_to_contact( $post_type, $from ) {
+	global $rt_contact;
+	$rt_contact->clear_post_connections_to_entity( $post_type, $from );
 }
 
-function rt_biz_clear_post_connections_to_organization( $post_type, $from ) {
-	global $rt_organization;
-	$rt_organization->clear_post_connections_to_entity( $post_type, $from );
+function rt_biz_clear_post_connections_to_company( $post_type, $from ) {
+	global $rt_company;
+	$rt_company->clear_post_connections_to_entity( $post_type, $from );
 }
 
 /**
@@ -252,9 +254,9 @@ function rt_biz_clear_post_connections_to_organization( $post_type, $from ) {
  * @param string $from
  * @param string $to
  */
-function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '' ) {
-	global $rt_person;
-	$rt_person->connect_post_to_entity( $post_type, $from, $to );
+function rt_biz_connect_post_to_contact( $post_type, $from = '', $to = '' ) {
+	global $rt_contact;
+	$rt_contact->connect_post_to_entity( $post_type, $from, $to );
 }
 
 /**
@@ -263,18 +265,18 @@ function rt_biz_connect_post_to_person( $post_type, $from = '', $to = '' ) {
  * @param string $to
  * @param bool $clear_old
  */
-function rt_biz_connect_post_to_organization( $post_type, $from = '', $to = '', $clear_old = false ) {
-	global $rt_organization;
-	$rt_organization->connect_post_to_entity( $post_type, $from, $to, $clear_old );
+function rt_biz_connect_post_to_company( $post_type, $from = '', $to = '', $clear_old = false ) {
+	global $rt_company;
+	$rt_company->connect_post_to_entity( $post_type, $from, $to, $clear_old );
 }
 
 /**
  * @param string $from
  * @param string $to
  */
-function rt_biz_connect_organization_to_person( $from = '', $to = '' ) {
+function rt_biz_connect_company_to_contact( $from = '', $to = '' ) {
 	$rt_biz = rtbiz();
-	$rt_biz->connect_organization_to_person( $from, $to );
+	$rt_biz->connect_company_to_contact( $from, $to );
 }
 
 /**
@@ -282,9 +284,9 @@ function rt_biz_connect_organization_to_person( $from = '', $to = '' ) {
  * @param string $term_seperator
  * @return string
  */
-function rt_biz_person_connection_to_string( $post_id, $term_seperator = ' , ' ) {
-	global $rt_person;
-	return Rt_Entity::connection_to_string( $post_id, $rt_person->post_type, $term_seperator );
+function rt_biz_contact_connection_to_string( $post_id, $term_seperator = ' , ' ) {
+	global $rt_contact;
+	return Rt_Entity::connection_to_string( $post_id, $rt_contact->post_type, $term_seperator );
 }
 
 /**
@@ -292,45 +294,45 @@ function rt_biz_person_connection_to_string( $post_id, $term_seperator = ' , ' )
  * @param string $term_seperator
  * @return string
  */
-function rt_biz_organization_connection_to_string( $post_id, $term_seperator = ' , ' ) {
-	global $rt_organization;
-	return Rt_Entity::connection_to_string( $post_id, $rt_organization->post_type, $term_seperator );
+function rt_biz_company_connection_to_string( $post_id, $term_seperator = ' , ' ) {
+	global $rt_company;
+	return Rt_Entity::connection_to_string( $post_id, $rt_company->post_type, $term_seperator );
 }
 
 /**
  * @param $connected_items
  * @return mixed
  */
-function rt_biz_get_organization_to_person_connection( $connected_items ) {
+function rt_biz_get_company_to_contact_connection( $connected_items ) {
 	$rt_biz = rtbiz();
-	return $rt_biz->get_organization_to_person_connection( $connected_items );
+	return $rt_biz->get_company_to_contact_connection( $connected_items );
 }
 
 /**
  * @return mixed
  */
-function rt_biz_get_person_capabilities() {
-	global $rt_person;
-	return $rt_person->get_post_type_capabilities();
+function rt_biz_get_contact_capabilities() {
+	global $rt_contact;
+	return $rt_contact->get_post_type_capabilities();
 }
 
 /**
  * @return mixed
  */
-function rt_biz_get_organization_capabilities() {
-	global $rt_organization;
-	return $rt_organization->get_post_type_capabilities();
+function rt_biz_get_company_capabilities() {
+	global $rt_company;
+	return $rt_company->get_post_type_capabilities();
 }
 
 /**
- * Search person
+ * Search contact
  *
  * @param $query
  * @return mixed
  */
-function rt_biz_search_person( $query, $args = array() ) {
-	global $rt_person;
-	return $rt_person->search( $query, $args );
+function rt_biz_search_contact( $query, $args = array() ) {
+	global $rt_contact;
+	return $rt_contact->search( $query, $args );
 }
 
 /**
@@ -338,25 +340,25 @@ function rt_biz_search_person( $query, $args = array() ) {
  * @param $query
  * @return mixed
  */
-function rt_biz_search_organization( $query, $args = array() ) {
-	global $rt_organization;
-	return $rt_organization->search( $query, $args );
+function rt_biz_search_company( $query, $args = array() ) {
+	global $rt_company;
+	return $rt_company->search( $query, $args );
 }
 
 /**
  * @return mixed
  */
-function rt_biz_get_person_meta_fields() {
-	global $rt_person;
-	return $rt_person->meta_fields;
+function rt_biz_get_contact_meta_fields() {
+	global $rt_contact;
+	return $rt_contact->meta_fields;
 }
 
 /**
  * @return mixed
  */
-function rt_biz_get_organization_meta_fields() {
-	global $rt_organization;
-	return $rt_organization->meta_fields;
+function rt_biz_get_company_meta_fields() {
+	global $rt_company;
+	return $rt_company->meta_fields;
 }
 
 /**
@@ -399,31 +401,31 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 }
 
 function rt_biz_get_employees() {
-	global $rt_person;
-	return $rt_person->get_employees();
+	global $rt_contact;
+	return $rt_contact->get_employees();
 }
 
 function rt_biz_get_clients() {
-    global $rt_person;
-    return $rt_person->get_clients();
+    global $rt_contact;
+    return $rt_contact->get_clients();
 }
 
-function rt_biz_get_organizations() {
-    global $rt_organization;
-    return $rt_organization->get_organizations();
+function rt_biz_get_companies() {
+    global $rt_company;
+    return $rt_company->get_company();
 }
 
 function rt_biz_search_employees( $query ) {
 	$args = array(
-//		'meta_key' => Rt_Person::$meta_key_prefix.Rt_Person::$our_team_mate_key,
+//		'meta_key' => Rt_Contact::$meta_key_prefix.Rt_Contact::$our_team_mate_key,
 //		'meta_value' => '1',
 		'tax_query' => array(
-			'taxonomy' => Rt_Person::$user_category_taxonomy,
+			'taxonomy' => Rt_Contact::$user_category_taxonomy,
 			'field'    => 'slug',
-			'terms'    => Rt_Person::$employees_category_slug,
-		),what
+			'terms'    => Rt_Contact::$employees_category_slug,
+		),
 	);
-	return rt_biz_search_person($query, $args);
+	return rt_biz_search_contact($query, $args);
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -431,14 +433,14 @@ function rt_biz_get_module_users( $module_key ) {
 	return $rt_access_control->get_module_users( $module_key );
 }
 
-function rt_biz_get_person_for_wp_user( $user_id ) {
-	global $rt_person;
-	return $rt_person->get_contact_for_wp_user( $user_id );
+function rt_biz_get_contact_for_wp_user( $user_id ) {
+	global $rt_contact;
+	return $rt_contact->get_contact_for_wp_user( $user_id );
 }
 
-function rt_biz_get_wp_user_for_person( $person_id ) {
-	global $rt_person;
-	return $rt_person->get_wp_user_for_person( $person_id );
+function rt_biz_get_wp_user_for_contact( $contact_id ) {
+	global $rt_contact;
+	return $rt_contact->get_wp_user_for_contact( $contact_id );
 }
 
 function rt_biz_get_user_department( $user_ID ) {

@@ -50,7 +50,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 			global $pagenow, $typenow, $rt_biz_rt_attributes;
 			$qv = &$query->query_vars;
 
-			$post_types = array( rt_biz_get_person_post_type(), rt_biz_get_organization_post_type() );
+			$post_types = array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() );
 			if ( $pagenow != 'edit.php' || ! in_array( $typenow, $post_types ) ) {
 				return;
 			}
@@ -80,7 +80,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 		function restrict_entity_by_attributes() {
 			global $typenow, $wp_query, $rt_biz_rt_attributes;
 
-			$post_types = array( rt_biz_get_person_post_type(), rt_biz_get_organization_post_type() );
+			$post_types = array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() );
 
 			if ( in_array( $typenow, $post_types ) ) {
 				$rt_biz_attributes_model = new RT_Attributes_Model();

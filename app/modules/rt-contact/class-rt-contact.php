@@ -6,16 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * Description of class-rt-person
+ * Description of class-rt-contact
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Person' ) ) {
+if ( ! class_exists( 'Rt_Contact' ) ) {
 
 	/**
-	 * Class Rt_Person
+	 * Class Rt_Contact
 	 */
-	class Rt_Person extends Rt_Entity {
+	class Rt_Contact extends Rt_Entity {
 
 		/**
 		 * @var string
@@ -37,19 +37,18 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
 			$this->labels = array(
-				'name' => __( 'People' ),
-				'singular_name' => __( 'Person' ),
-				'menu_name' => __( 'People' ),
-				'all_items' => __( 'All People' ),
+				'name' => __( 'Contact' ),
+				'singular_name' => __( 'Contact' ),
+				'menu_name' => __( 'Contact' ),
+				'all_items' => __( 'All Contact' ),
 				'add_new' => __( 'Add New' ),
-				'add_new_item' => __( 'Add Person' ),
-				'edit_item' => __( 'Edit Person' ),
-				'new_item' => __( 'New Person' ),
-				'view_item' => __( 'View Person' ),
-				'search_items' => __( 'Search Person' ),
-				'not_found' => __( 'No people found' ),
-				'not_found_in_trash' => __( 'No people found in Trash' ),
-				'not_found_in_trash' => __( 'No people found in Trash' ),
+				'add_new_item' => __( 'Add Contact' ),
+				'edit_item' => __( 'Edit Contact' ),
+				'new_item' => __( 'New Contact' ),
+				'view_item' => __( 'View Contact' ),
+				'search_items' => __( 'Search Contact' ),
+				'not_found' => __( 'No Contact found' ),
+				'not_found_in_trash' => __( 'No Contact found in Trash' ),
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
@@ -64,7 +63,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
 			 */
-			add_action( 'user_register', array( $this, 'person_create_for_wp_user' ) );
+			add_action( 'user_register', array( $this, 'contact_create_for_wp_user' ) );
 
 			add_action( 'init', array( $this, 'register_tax' ), 9 );
 
@@ -554,7 +553,7 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					break;
 
 				case 'contact_organization':
-					$val = rt_biz_get_organization_to_person_connection( $post_id );
+					$val = rt_biz_get_company_to_contact_connection( $post_id );
 					if ( ! empty( $val ) ) {
 						$organizations = array();
 						foreach ( $val as $o ) {
@@ -573,8 +572,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 		 * @param string $description
 		 * @return int|WP_Error
 		 */
-		function add_person( $name, $description = '' ) {
-			$person_id = wp_insert_post(
+		function add_contact( $name, $description = '' ) {
+			$contact_id = wp_insert_post(
 					array(
 						'post_title' => $name,
 						'post_content' => $description,
@@ -583,11 +582,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 					)
 			);
 
-			return $person_id;
+			return $contact_id;
 		}
 
 		/**
-		 * Returns a person if found with passed email.
+		 * Returns a contact if found with passed email.
 		 *
 		 * @param $email
 		 * @return array
@@ -629,8 +628,8 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			);
 		}
 
-		function get_wp_user_for_person( $person_id ) {
-			$user_id = self::get_meta( $person_id, $this->user_id_key, true );
+		function get_wp_user_for_contact( $contact_id ) {
+			$user_id = self::get_meta( $contact_id, $this->user_id_key, true );
 			return $user_id;
 		}
 
@@ -667,11 +666,11 @@ if ( ! class_exists( 'Rt_Person' ) ) {
 			return $posts;
 		}
 
-		function person_create_for_wp_user( $user_id ) {
+		function contact_create_for_wp_user( $user_id ) {
 			$user = get_user_by( 'id', $user_id );
-			$person_id = $this->add_person( $user->display_name );
-			Rt_Person::add_meta( $person_id, $this->email_key, $user->user_email );
-			Rt_Person::add_meta( $person_id, $this->website_url_key, $user->user_url );
+			$contact_id = $this->add_contact( $user->display_name );
+			Rt_Contact::add_meta( $contact_id, $this->email_key, $user->user_email );
+			Rt_Contact::add_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
 		function get_user_from_name() {
