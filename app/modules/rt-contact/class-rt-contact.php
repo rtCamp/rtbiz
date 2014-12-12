@@ -37,10 +37,10 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
 			$this->labels = array(
-				'name' => __( 'Contact' ),
+				'name' => __( 'Contacts' ),
 				'singular_name' => __( 'Contact' ),
 				'menu_name' => __( 'Contact' ),
-				'all_items' => __( 'All Contact' ),
+				'all_items' => __( 'All Contacts' ),
 				'add_new' => __( 'Add New' ),
 				'add_new_item' => __( 'Add Contact' ),
 				'edit_item' => __( 'Edit Contact' ),
