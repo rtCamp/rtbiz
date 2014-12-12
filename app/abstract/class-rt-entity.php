@@ -139,6 +139,13 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					continue;
 				}
 
+
+				if( $field['key'] == 'contact_primary_email'){
+					if (! biz_is_primary_email_unique($_POST[ 'contact_meta' ][ $field[ 'key' ]])){
+						continue;
+					}
+				}
+
 				if ($field['is_multiple'] == 'true' ) {
 					$val=  self::get_meta( $post_id, $field['key'] );
 					$filerval  = array_filter( $val );

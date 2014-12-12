@@ -515,3 +515,19 @@ function biz_get_redux_settings() {
 	}
 	return $GLOBALS[Rt_Biz_Setting::$biz_opt];
 }
+
+function biz_is_primary_email_unique( $email ) {
+	global $rt_contact;
+	$meta_query_args = array(
+		array(
+			'key'     => Rt_Entity::$meta_key_prefix.$rt_contact->primary_email_key,
+			'value'   => $email,
+		)
+	);
+	$posts = get_posts( array( 'post_type' => 'rt_contact', 'meta_query'=> $meta_query_args ) );
+	$count = count( $posts );
+	if ( $count == 0 ){
+		return true;
+	}
+	return false;
+}

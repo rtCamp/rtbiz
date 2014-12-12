@@ -21,9 +21,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @var string
 		 */
 		public $email_key           = 'contact_email';
+		public $primary_email_key   = 'contact_primary_email';
 		public $website_url_key     = 'contact_website';
 		public $user_id_key         = 'contact_user_id';
-//		static $our_team_mate_key   = 'is_our_team_mate';
 
 		static $user_category_taxonomy = 'rt_contact_category';
 		static $employees_category_slug = 'employees';
@@ -234,6 +234,16 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'name' => 'contact_meta[contact_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
+					'category' => 'contact',
+				),
+				array(
+					'key' => 'contact_primary_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Enter Primary Email Address' ),
+					'is_multiple' => false,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_primary_email]',
+					'description' => __( 'Valid email address.' ),
 					'category' => 'contact',
 				),
 				array(
@@ -472,6 +482,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) ) {
+					if( $field['key'] == $this->primary_email_key ){
+						if (! biz_is_primary_email_unique($_POST[ 'contact_meta' ][ $field[ 'key' ]])){
+							continue;
+						}
+					}
 					$contact_meta[ $field[ 'key' ] ] = $_POST[ 'contact_meta' ][ $field[ 'key' ] ];
 					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
 						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
@@ -594,7 +609,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function get_by_email( $email ) {
 			return ( ! empty( $email ) ) ? get_posts(
 							array(
-								'meta_key' => self::$meta_key_prefix . $this->email_key,
+								'meta_key' => self::$meta_key_prefix . $this->primary_email_key, // primary email
 								'meta_value' => $email,
 								'post_type' => $this->post_type,
 								'post_status' => 'any',
