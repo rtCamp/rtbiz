@@ -146,6 +146,12 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					}
 				}
 
+				if ( $field['key'] == Rt_Company::$primary_email ){
+					if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field[ 'key' ] ] )){
+						continue;
+					}
+				}
+
 				if ($field['is_multiple'] == 'true' ) {
 					$val=  self::get_meta( $post_id, $field['key'] );
 					$filerval  = array_filter( $val );

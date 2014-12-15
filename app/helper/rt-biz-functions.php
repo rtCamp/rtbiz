@@ -531,3 +531,18 @@ function biz_is_primary_email_unique( $email ) {
 	}
 	return false;
 }
+
+function biz_is_primary_email_unique_company( $email ) {
+	$meta_query_args = array(
+		array(
+			'key'     => Rt_Entity::$meta_key_prefix.Rt_Company::$primary_email,
+			'value'   => $email,
+		)
+	);
+	$posts = get_posts( array( 'post_type' => 'rt_account', 'meta_query'=> $meta_query_args ) );
+	$count = count( $posts );
+	if ( $count == 0 ){
+		return true;
+	}
+	return false;
+}
