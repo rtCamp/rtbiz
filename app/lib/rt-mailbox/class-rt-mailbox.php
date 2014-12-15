@@ -66,7 +66,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		public $modules = array();
 
 		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( 'MailBox', $setting_page_parent_slug );
+			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->modules = $module;
@@ -125,19 +125,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function render_mailbox_setting_page(){
 			do_action( 'rt_mailbox_randed_view' );
 			?>
-			<h1> Mailbox Setting </h1>
-		<?php
-
+			<h1> <?php echo __( 'Mailbox Setting' ); ?></h1>
+			<?php
 			$this->mailbox_tabs();
 			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
-				?> <h1> IMAP Settings  </h1><?php echo $this->imap_view();
-
-			} else if ( isset( $_REQUEST['page'] ) && 'MailBox' == $_REQUEST['page'] ){
-				?>			<h1> Mailbox Settings </h1>
-			<?php
+				echo $this->imap_view();
+			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
 				$this->mailbox_view();
 			}
-
 		}
 
 		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
@@ -203,7 +198,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			?>
 			<form method="post" action="">
 				<div class="redux_field_th">
-					<span class="mailbox_reply_by_email_label">Enable Reply by Email:</span>
+					<span class="mailbox_reply_by_email_label"><?php echo __( 'Enable Reply by Email: ' ); ?></span>
 			<?php $val = self::get_enable_by_reply_email();
 			$yes    = '';
 			$noflag = '';
@@ -214,8 +209,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$noflag = 'checked';
 			}
 			?>
-					<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo $yes; ?> >Enable
-					<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo $noflag; ?>>Disable
+					<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo $yes; ?> ><?php echo __( 'Enable' ); ?>
+					<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo $noflag; ?>><?php echo __( 'Disable' );?>
 				</div>
 
 			<?php
@@ -239,19 +234,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			</form>
 				<?php
 		}
-
-		public static function save_google_auth(){
-			update_option( 'mailbox-google-auth', $_POST['mailbox_settings'] );
-		}
-
-		public static function get_google_auth() {
-			$google_auth = get_option( 'mailbox-google-auth' );
-			if ( ! empty( $google_auth ) ) {
-				return $google_auth;
-			}
-			return null;
-		}
-
 		public static function get_enable_by_reply_email(){
 			$google_auth = get_option( 'mailbox_reply_by_email' );
 			if ( ! empty( $google_auth ) ) {
