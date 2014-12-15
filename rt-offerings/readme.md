@@ -22,4 +22,4 @@ So that we can assign these products to any custom post types that are registere
 
     $post_types = array( 'ticket', 'lead' ); /* Post Types to provide Product Sync Support to */
 
-    $rtbiz_product_sync = new RT_Product_Sync( $product_plugin, $terms_caps, $post_types );
+    $rtbiz_product_sync = new Rt_Offerings( $product_plugin, $terms_caps, $post_types );
