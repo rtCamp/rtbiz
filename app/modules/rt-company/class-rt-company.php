@@ -19,6 +19,8 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 	 */
 	class Rt_Company extends Rt_Entity {
 
+		static $primary_email = 'account_primary_email';
+
 		/**
 		 *
 		 */
@@ -90,6 +92,16 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
+					'category' => 'contact',
+				),
+				array(
+					'key' => 'account_primary_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Enter Primary Email Address' ),
+					'is_multiple' => false,
+					'type' => 'text',
+					'name' => 'account_meta[account_primary_email]',
+					'description' => __( 'Valid email address.' ),
 					'category' => 'contact',
 				),
 				array(
@@ -217,6 +229,11 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) ) {
+					if( $field['key'] == self::$primary_email ){
+						if ( ! biz_is_primary_email_unique_company( $_POST[ 'account_meta' ][ $field[ 'key' ]] )){
+							continue;
+						}
+					}
 					$account_meta[ $field[ 'key' ] ] = $_POST[ 'account_meta' ][ $field[ 'key' ] ];
 					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
 						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
