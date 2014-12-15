@@ -64,7 +64,7 @@ Great! There are several ways you can get involved to help make Stream better:
 == Changelog ==
 
 = 0.9 =
-RT_Product_Sync Refactor & Bug Fixes
+Rt_Offerings Refactor & Bug Fixes
 
 = 0.8 =
 RT Product Sync Library Added

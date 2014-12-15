@@ -110,9 +110,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
 
 			$rt_mail_settings->update_sync_status( $email, true );
-			//thread Importer
-			$rtZendEmail->reademail( $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature, true );
-			$rt_mail_settings->update_sync_status( $email, false );
 		}
 
 		function rt_send_email() {
@@ -158,10 +155,10 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 						$rt_mail_settings->update_sent_email( $email->id, 'yes', 'p' );
 					} else {
 						$rt_mail_settings->update_sent_email( $email->id, 'error', 'p' );
-						echo 'Error: ' . esc_attr( $email->id  ). '<br />';
+						echo 'Error: ' . esc_attr( $email->id ). '<br />';
 					}
 				} else {
-					echo 'Error: ' . esc_attr( $email->id  ). '<br />';
+					echo 'Error: ' . esc_attr( $email->id ). '<br />';
 				}
 			}
 		}
