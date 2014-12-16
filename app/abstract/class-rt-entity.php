@@ -468,6 +468,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					'name' => $post_type . '_to_' . $this->post_type,
 					'from' => $post_type,
 					'to' => $this->post_type,
+					'admin_column' => 'from',
+					'from_labels' => array(
+						'column_title' => $this->labels['name'],
+					),
 				) );
 			}
 		}
