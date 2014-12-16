@@ -20,7 +20,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Offering taxonomy Slug
 		 * @var string
 		 */
-		var $offering_slug = 'rt_offering';
+		var $offering_slug = 'rt-offering';
 
 		static $term_meta_key = '_offering_id';
 
