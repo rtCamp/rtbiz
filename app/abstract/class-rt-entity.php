@@ -85,9 +85,16 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_action( 'pre_post_update', array( $this, 'save_old_data' ) );
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
+
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			}
 
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+
+		function enqueue_scripts(){
+			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
+			wp_enqueue_style( 'biz-admin-css', RT_BIZ_URL.'/app/assets/css/biz_admin.css' );
 		}
 
 
@@ -219,10 +226,57 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
+			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), array( $this, 'render_assign_to_meta_box' ), $this->post_type, 'side', 'default' );
 			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
 
 
+		function render_assign_to_meta_box( $post ){
+
+			$assigned = rt_biz_get_entity_meta( $post->ID,'assgin_to', true );
+			$assignedHTML='';
+			if($assigned && !empty($assigned)){
+				$author = get_user_by( 'id', $assigned );
+				$assignedHTML = "<li id='assign-auth-" . $author->ID . "' class='contact-list'>" .
+				                 get_avatar( $author->user_email, 24 ) .
+				                 "<a href='#removeAssign' class='delete_row'>×</a>" .
+				                 "<br/><a target='_blank' class='assign-title heading' title='" . $author->display_name . "' href='" . get_edit_user_link( $author->ID ) . "'>" . $author->display_name . '</a>' .
+				                 "<input type='hidden' name='assign_to' value='" . $author->ID . "' /></li>";
+			}
+			$emps = rt_biz_get_employees();
+
+			$arrSubscriberUser=array();
+			$ids = wp_list_pluck($emps,'ID');
+			global $rt_contact;
+			$authors               = $rt_contact->get_wp_user_for_contact($ids);
+			foreach ($authors as $author) {
+				$arrSubscriberUser[ ] = array(
+					'id'             => $author->ID,
+					'label'          => $author->display_name,
+					'imghtml'        => get_avatar( $author->user_email, 24 ),
+					'user_edit_link' => get_edit_user_link( $author->ID ),
+				);
+			}
+			?>
+			<div class="">
+			<span class="prefix"
+			      title="<?php __( 'Assign to'); ?>"><label><strong><?php __( 'Assign to'); ?></strong></label></span>
+				<script>
+					var arr_assign_user =<?php echo json_encode( $arrSubscriberUser ); ?>;
+				</script>
+				<input type="text" placeholder="Type assgin name to select" id="assign_user_ac"/>
+				<ul id="divAssignList" class="">
+					<?php echo balanceTags( $assignedHTML ); ?>
+				</ul>
+			</div>
+			<?php
+		}
+
+		function save_meta_assign_to( $post ){
+			if ( isset($_POST['assign_to'] ) && ! empty( $_POST['assign_to'] ) ){
+				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to']);
+			}
+		}
 
 		/**
 		 *
@@ -232,7 +286,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function render_additional_details_meta_box( $post ) {
 			do_action( 'rt_biz_before_render_meta_fields', $post, $this );
-			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
 			?>
 			<style type="text/css">
 
@@ -417,6 +470,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 
 			/* OK, its safe for us to save the data now. */
+			$this->save_meta_assign_to( $post_id );
 
 			$this->save_meta_values( $post_id );
 		}
