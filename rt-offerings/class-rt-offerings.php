@@ -100,7 +100,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Auto loader for model classes
 		 */
 		function auto_loader() {
-			include_once trailingslashit( dirname( __FILE__ ) ) . 'taxonomy-metadata.php';
+			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
+				include_once trailingslashit( dirname( __FILE__ ) ) . 'taxonomy-metadata.php';
+			}
 		}
 
 		/**
