@@ -593,13 +593,37 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @return mixed|void
 		 */
 		function post_table_columns( $columns ) {
-			$columns[ 'contact_phone' ] = __( 'Phone Number' );
-			$columns[ 'contact_email' ] = __( 'Email ID' );
-			$columns[ 'contact_organization' ] = __( 'Organization' );
 
-			$columns = parent::post_table_columns( $columns );
+			global $rt_company, $rt_contact, $rtbiz_offerings;
 
-			return $columns;
+			$cols = array();
+			$cols['cb'] = $columns['cb'];
+			$cols['title'] = __( 'Name' );
+			$cols['taxonomy-' . Rt_Contact::$user_category_taxonomy ] = $columns['taxonomy-' . Rt_Contact::$user_category_taxonomy ];
+			$cols['author'] = $columns['author'];
+			$cols['contact_Assignee'] = __( 'Assigned To' );
+			if ( $rtbiz_offerings ){
+				$cols['taxonomy-' . $rtbiz_offerings->offering_slug ] = $columns['taxonomy-' . $rtbiz_offerings->offering_slug ];
+			}
+			$cols['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] = $rt_company->labels['singular_name'];
+			$cols['date'] = $columns['date'];
+			$cols['p2p-to-' . $rt_contact->post_type . '_to_user'] = __( 'User' );
+			$cols[ 'contact_phone' ] = __( 'Phone Number' );
+			$cols[ 'contact_email' ] = __( 'Email ID' );
+
+			unset( $columns['title'] );
+			unset( $columns['taxonomy-' . Rt_Contact::$user_category_taxonomy ] );
+			unset( $columns['author'] );
+			unset( $columns['date'] );
+			unset( $columns['taxonomy-' . $rtbiz_offerings->offering_slug ] );
+			unset( $columns['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] );
+			unset( $columns['p2p-to-' . $rt_contact->post_type . '_to_user'] );
+			unset( $columns['comments'] );
+
+			$cols = array_merge( $cols, $columns );
+
+			$cols = parent::post_table_columns( $cols );
+			return $cols;
 		}
 
 		/**
@@ -629,15 +653,20 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 						echo implode( ' , ', $emails );
 					}
 					break;
-
-				case 'contact_organization':
-					$val = rt_biz_get_company_to_contact_connection( $post_id );
-					if ( ! empty( $val ) ) {
-						$organizations = array();
-						foreach ( $val as $o ) {
-							$organizations[] = '<a href="' . get_edit_post_link( $o->ID ) . '">' . $o->post_title . '</a>';
-						}
-						echo implode( ', ', $organizations );
+				case 'contact_Assignee':
+					$val = self::get_meta( $post_id, 'assgin_to' );
+					foreach ( $val as $e ) {
+						$user_id = $e;
+					}
+					if ( ! empty( $user_id ) ) {
+						$user_info = get_userdata( $user_id );
+						$url       = esc_url(
+							add_query_arg(
+								array(
+									'post_type'  => $this->post_type,
+									'created_by' => $user_id,
+								), 'edit.php' ) );
+						printf( "<a href='%s'>%s</a>", $url, $user_info->display_name );
 					}
 					break;
 			}
