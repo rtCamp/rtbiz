@@ -35,3 +35,7 @@
 .imap_table{
 	min-width: 40%;
 }
+
+.imap_table tr td,.imap_table tr th{
+	padding: 5px;
+}
