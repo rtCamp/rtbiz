@@ -23,6 +23,11 @@
 	width: 80%;
 }
 
-.imap_table{
+.imap_servers{
 	margin-top: 30px;
+}
+
+#rthd_add_imap_server{
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
