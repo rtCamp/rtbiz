@@ -1,4 +1,5 @@
 .rthd-remove-server {
+	margin-left: 5px;
 	color: red;
 }
 
@@ -12,4 +13,16 @@
 
 .mailbox_reply_by_email_label{
 	font-weight: bold;
+}
+
+.enable_reply_div{
+	margin-top: 30px;
+}
+
+.hd-google-profile-table{
+	width: 80%;
+}
+
+.imap_table{
+	margin-top: 30px;
 }

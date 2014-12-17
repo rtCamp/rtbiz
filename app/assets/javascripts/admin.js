@@ -36,4 +36,40 @@ jQuery(document).ready(function($) {
 		$(window).resize();
 	}
 
+	try {
+		if (arr_assign_user != undefined) {
+			jQuery("#assign_user_ac").autocomplete({
+				                                           source: function (request, response) {
+					                                           var term = jQuery.ui.autocomplete.escapeRegex(request.term), startsWithMatcher = new RegExp("^" + term, "i"), startsWith = jQuery.grep(arr_assign_user, function (value) {
+						                                           return startsWithMatcher.test(value.label || value.value || value);
+					                                           }), containsMatcher = new RegExp(term, "i"), contains = jQuery.grep(arr_assign_user, function (value) {
+						                                           return jQuery.inArray(value, startsWith) < 0 && containsMatcher.test(value.label || value.value || value);
+					                                           });
+
+					                                           response(startsWith.concat(contains));
+				                                           },
+				                                           focus: function (event, ui) {
+
+				                                           },
+				                                           select: function (event, ui) {
+					                                           if (jQuery("#assign-auth-" + ui.item.id).length < 1) {
+						                                           jQuery("#divAssignList").html("<li id='assign-auth-" + ui.item.id + "' class='contact-list' >" + ui.item.imghtml + "<a href='#removeAssign' class='delete_row'>×</a><br/><a class='assign-title heading' target='_blank' href='" + ui.item.user_edit_link + "'>" + ui.item.label + "</a><input type='hidden' name='assign_to' value='" + ui.item.id + "' /></li>")
+					                                           }
+					                                           jQuery("#assign_user_ac").val("");
+					                                           return false;
+				                                           }
+			                                           }).data("ui-autocomplete")._renderItem = function (ul, item) {
+				return jQuery("<li></li>").data("ui-autocomplete-item", item).append("<a class='ac-assign-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>").appendTo(ul);
+			};
+
+			jQuery(document).on('click', "a[href=#removeAssign]", function (e) {
+				e.preventDefault();
+				jQuery(this).parent().remove();
+			});
+
+		}
+	} catch (e) {
+
+	}
+
 });

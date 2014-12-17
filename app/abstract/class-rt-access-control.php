@@ -50,9 +50,9 @@ if( ! class_exists('Rt_Access_Control') ) {
 
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
-			add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
-			add_action( 'show_user_profile', array( $this, 'profile_level_permission' ), 1 );
-			add_action( 'profile_update', array( $this, 'save_profile_level_permission' ), 10, 2 );
+			//add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
+			//add_action( 'show_user_profile', array( $this, 'profile_level_permission' ), 1 );
+			//add_action( 'profile_update', array( $this, 'save_profile_level_permission' ), 10, 2 );
 		}
 
 		function filter_caps( $all_caps, $required_caps, $args, $user ) {
@@ -91,7 +91,13 @@ if( ! class_exists('Rt_Access_Control') ) {
 					continue;
 				}
 
-				$profile_permissions = get_user_meta($user->ID, 'rt_biz_profile_permissions', true );
+				$contact = rt_biz_get_contact_for_wp_user( $user->ID );
+				$profile_permissions = array();
+				if ( ! empty( $contact ) ){
+					$contact = $contact[0];
+					$profile_permissions = get_post_meta( $contact->ID, 'rt_biz_profile_permissions', true );
+				}
+
 				if ( ! empty( $profile_permissions ) && is_array( $profile_permissions ) ) {
 					$valid_caps = array();
 					// $mkey - module_key
@@ -131,11 +137,11 @@ if( ! class_exists('Rt_Access_Control') ) {
 
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
 				$ug_terms = rt_biz_get_user_department( $user->ID );
-				$user_groups = array();
+				$departments = array();
 				if ( ! $ug_terms instanceof WP_Error ) {
 					// $ug - user_group
 					foreach ( $ug_terms as $ug ) {
-						$user_groups[] = $ug->term_id;
+						$departments[] = $ug->term_id;
 					}
 				}
 				if ( ! empty( $module_permissions ) && is_array( $module_permissions ) ) {
@@ -148,7 +154,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 						// $ugkey - user_group_key
 						// $p - permission
 						foreach ( $m as $ugkey => $p ) {
-							if ( ! in_array( $ugkey, $user_groups ) ) {
+							if ( ! in_array( $ugkey, $departments ) ) {
 								continue;
 							}
 
@@ -380,24 +386,26 @@ if( ! class_exists('Rt_Access_Control') ) {
 				$users[] = $um->user_id;
 			}
 
-			/**
-			 *	Include All Group Access Level Users
-			 */
-			$user_groups = rt_biz_get_user_groups();
-			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-			// $ug - user_group single
-			if ( ! $user_groups instanceof WP_Error ) {
-				foreach ( $user_groups as $ug ) {
-					if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
-						$users = array_merge( $users, rt_biz_get_group_users( $ug->term_id ) );
-					}
-				}
-			}
-
 			$user_obj = array();
 			foreach ( array_unique( $users ) as $id ) {
 				$user_obj[] = new WP_User( $id );
 			}
+
+			/**
+			 *	Include All Group Access Level Users
+			 */
+			$department = rt_biz_get_department();
+			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+			// $ug - user_group single
+			if ( ! $department instanceof WP_Error ) {
+				foreach ( $department as $ug ) {
+					if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
+						$user_obj = array_merge( $user_obj, rt_biz_get_department_users( $ug->term_id ) );
+					}
+				}
+			}
+
+			$user_obj = array_unique($user_obj, SORT_REGULAR);
 
 			return $user_obj;
 		}
@@ -426,12 +434,13 @@ if( ! class_exists('Rt_Access_Control') ) {
 			rt_biz_get_template( 'acl-settings.php' );
 		}
 
-		function profile_level_permission( $user ) {
+		function profile_level_permission( $post ) {
+			global $rt_contact;
 			$current_user = new WP_User( get_current_user_id() );
-			if ( $current_user->has_cap( 'create_users' ) ) {
+			if ( $current_user->has_cap( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID) ) ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
-				$user_permissions = get_user_meta( $user->ID, 'rt_biz_profile_permissions', true );
+				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
 				$settings  = biz_get_redux_settings();
 				$menu_label = $settings['menu_label'];
 				?>
@@ -454,10 +463,13 @@ if( ! class_exists('Rt_Access_Control') ) {
 					</tbody>
 				</table>
 				<?php
+			}else{
+				?><div> Please Connect WpUser with contact to assign profile level access </div><?php
 			}
 		}
 
-		function save_profile_level_permission( $user_id, $old_data ) {
+		function save_profile_level_permission( $post_id ) {
+
 			if ( current_user_can( 'create_users' ) ) {
 				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
 					foreach ( $_REQUEST['rt_biz_profile_permissions'] as $mkey => $p ) {
@@ -465,22 +477,24 @@ if( ! class_exists('Rt_Access_Control') ) {
 							unset( $_REQUEST['rt_biz_profile_permissions'][$mkey] );
 						}
 					}
-					update_user_meta( $user_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
+					update_post_meta( $post_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
 				}
 			}
 		}
                 
-                function add_department_support( $supports ){
-                    
-                    foreach ( self::$modules as $module ) {
-                        
-                        foreach ( $module['post_types'] as $post_type ) {
-                            
-                           $supports[] = $post_type;
-                        }
-                    }
-                    
-                    return $supports;
-                }
+        function add_department_support( $supports ){
+
+	        foreach ( self::$modules as $key => $value ){
+
+		        if ( ! empty( $value['require_department'] ) ) {
+			        if ( ! empty( $value['post_types'] ) && is_array( $value['post_types'] ) ) {
+				        foreach( $value['post_types'] as $posttype ) {
+					        array_push( $supports, $posttype );
+				        }
+			        }
+		        }
+	        }
+            return $supports;
+        }
 	}
 }

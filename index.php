@@ -164,7 +164,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->init_access_control();
 			self::$instance->init_modules();
 
-			add_action( 'plugins_loaded', array( self::$instance, 'init_department' ), 30 );
+			self::$instance->init_department();
 
 			self::$instance->init_settings();
 
@@ -277,7 +277,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order = array_merge( $this->menu_order, array(
 				'edit.php?post_type=' . rt_biz_get_company_post_type(),
 				self::$access_control_slug,
-				'edit-tags.php?taxonomy=user-group',
+				'edit-tags.php?taxonomy='.RT_Departments::$slug,
 				Rt_Biz_Attributes::$attributes_page_slug,
 				Rt_Mailbox::$page_name,
 				self::$settings_slug,
@@ -323,46 +323,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function init_department() {
+			global $rtbiz_department;
+			$rtbiz_department = new RT_Departments();
 
-			global $rtbiz_user_groups;
-
-			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-
-			$terms_caps = array(
-				'manage_terms' => $editor_cap,
-				'edit_terms'   => $editor_cap,
-				'delete_terms' => $editor_cap,
-				'assign_terms' => $editor_cap,
-			);
-
-			$to_register_posttype = array();
-			foreach ( Rt_Access_Control::$modules as $key => $value ){
-
-				if ( ! empty( $value['require_user_groups'] ) ) {
-					if ( ! empty( $value['post_types'] ) && is_array( $value['post_types'] ) ) {
-						foreach( $value['post_types'] as $posttype ) {
-							array_push( $to_register_posttype, $posttype );
-						}
-					}
-				}
-			}
-
-			$rtbiz_user_groups = new RT_User_Groups( 'user-group', array(
-					'name'                       => __( 'Departments' ),
-					'singular_name'              => __( 'Department' ),
-					'menu_name'                  => __( 'Departments' ),
-					'search_items'               => __( 'Search Departments' ),
-					'popular_items'              => __( 'Popular Departments' ),
-					'all_items'                  => __( 'All User Departments' ),
-					'edit_item'                  => __( 'Edit Department' ),
-					'update_item'                => __( 'Update Department' ),
-					'add_new_item'               => __( 'Add New Department' ),
-					'new_item_name'              => __( 'New Department Name' ),
-					'separate_items_with_commas' => __( 'Separate departments with commas' ),
-					'add_or_remove_items'        => __( 'Add or remove departments' ),
-					'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
-				), $terms_caps , $to_register_posttype
-			);
+			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
+			$taxonomy_metadata->activate();
 		}
 
 		function init_wc_product_taxonomy() {
@@ -382,7 +347,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				$to_register_posttype = array();
 				foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-					if ( isset( $value['require_product_sync'] ) ) {
+					if ( ! empty( $value['require_product_sync'] ) ) {
 						if ( isset( $value['post_types'] ) ) {
 							foreach( $value['post_types'] as $posttype ) {
 								array_push( $to_register_posttype, $posttype );
@@ -446,9 +411,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == 'user-group' ) {
+			if ( isset( $_REQUEST['taxonomy'] ) && in_array( $_REQUEST['taxonomy'], array( RT_Departments::$slug, Rt_Contact::$user_category_taxonomy ) ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=user-group' ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] ) );
 			}
 
 			if ( ! empty( $rtbiz_offerings->product_slug ) ) {
@@ -465,8 +430,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function register_menu() {
 			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_offerings;
 			$settings  = biz_get_redux_settings();
-			$logo_url               = $settings['logo_url']['url'];
-			$menu_label             = $settings['menu_label'];
+			$logo_url               =  ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
+			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
 			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array(
 				$this,
 				'dashboard_ui'
@@ -478,8 +443,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . $rt_contact->post_type );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=user-group' );
-			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- User Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy );
+			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug );
+			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy );
 		}
 
 		/**
@@ -720,16 +685,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		/**
 		 *  Initialize rtBiz ACL. It will register the rtBiz module it self to Rt_Access_Control.
-		 *  Accordingly Rt_Access_Control will provide user permissions to the groups
+		 *  Accordingly Rt_Access_Control will provide user permissions to the Department
 		 */
 		function register_rt_biz_module( $modules ) {
 			global $rt_contact, $rt_company;
-			$rt_biz_options                                              = maybe_unserialize( get_option( RT_BIZ_TEXT_DOMAIN . '_options' ) );
-			$menu_label                                                  = $rt_biz_options['menu_label'];
+			$settings  = biz_get_redux_settings();
+			$menu_label = isset( $settings['menu_label'] ) ? $settings['menu_label'] : 'rtBiz';
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
 				'post_types' => array( $rt_contact->post_type, $rt_company->post_type ),
-				'require_user_groups' => true,
+				'require_department' => true,
 			    'require_product_sync' => true,
 			);
 
@@ -821,6 +786,7 @@ if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 
 include_once RT_BIZ_PATH . 'app/lib/rt-lib.php';
 include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
+include_once RT_BIZ_PATH . 'app/vendor/taxonomy-metadata.php';
 
 /**
  * The main function responsible for returning the one true Rt_Biz

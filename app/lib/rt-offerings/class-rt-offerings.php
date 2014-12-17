@@ -20,7 +20,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Offering taxonomy Slug
 		 * @var string
 		 */
-		var $offering_slug = 'rt_offering';
+		var $offering_slug = 'rt-offering';
 
 		static $term_meta_key = '_offering_id';
 
@@ -100,7 +100,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Auto loader for model classes
 		 */
 		function auto_loader() {
-			include_once trailingslashit( dirname( __FILE__ ) ) . 'taxonomy-metadata.php';
+			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
+				include_once trailingslashit( dirname( __FILE__ ) ) . 'taxonomy-metadata.php';
+			}
 		}
 
 		/**
