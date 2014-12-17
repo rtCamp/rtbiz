@@ -181,7 +181,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$something = wp_count_posts('rt_contact');
 			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__('All')." <span class='count'> (".$something->publish.")</span></a>" );
 			echo '<ul class="subsubsub">';
-			echo implode(" | ",$top  + $subsubsub);
+			echo implode(" | ", array_merge( $top, $subsubsub ) );
 			echo '</ul>';
 			//			return $views;
 		}
