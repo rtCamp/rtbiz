@@ -42,33 +42,9 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
-			add_filter( 'manage_edit-' . 'rt_account'. '_columns', array( $this, 'edit_custom_columns' ) , 20 );
 
 		}
 
-		function edit_custom_columns($columns){
-			$cols = array();
-			$cols['cb'] = $columns['cb'];
-			$cols['title'] = __( 'Name' );
-			global $rtbiz_offerings;
-			if (isset($rtbiz_offerings)){
-				$cols['taxonomy-'.$rtbiz_offerings->offering_slug] = $columns['taxonomy-'.$rtbiz_offerings->offering_slug];
-			}
-			$cols['author'] = $columns['author'];
-			$cols['date'] = $columns['date'];
-			$cols['country'] = $columns['country'];
-
-			unset( $columns['title'] );
-			unset( $columns['author'] );
-			unset( $columns['date'] );
-			unset( $columns['comments'] );
-			unset(  $columns['taxonomy-'.$rtbiz_offerings->offering_slug] );
-
-			$cols = array_merge( $cols, $columns );
-			$cols = parent::post_table_columns( $cols );
-
-			return $cols;
-		}
 
 		/**
 		 *  Init Meta Fields
@@ -293,34 +269,28 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		 */
 		function post_table_columns( $columns ) {
 
-			$columns[ 'country' ] = __( 'Country' );
-
-			$columns = parent::post_table_columns( $columns );
-
-			return $columns;
-		}
-
-		/**
-		 *
-		 * Manage Columns for List View
-		 *
-		 * @param $column
-		 * @param $post_id
-		 */
-		function manage_post_table_columns( $column, $post_id ) {
-
-			switch ( $column ) {
-				case 'country':
-					$val = self::get_meta( $post_id, 'account_country',true );
-					if ( ! empty( $val ) ) {
-						echo implode( ' , ', $val );
-					}
-					break;
+			$cols = array();
+			$cols['cb'] = $columns['cb'];
+			$cols['title'] = __( 'Name' );
+			global $rtbiz_offerings;
+			if ( isset( $rtbiz_offerings ) ){
+				$cols[ 'taxonomy-'.$rtbiz_offerings->offering_slug ] = $columns[ 'taxonomy-'.$rtbiz_offerings->offering_slug ];
 			}
+			$cols['author'] = $columns['author'];
+			$cols['country'] = __( 'Country' );
+			$cols['date'] = $columns['date'];
 
-			parent::manage_post_table_columns( $column, $post_id );
+			unset( $columns['title'] );
+			unset( $columns['author'] );
+			unset( $columns['date'] );
+			unset( $columns['comments'] );
+			unset( $columns[ 'taxonomy-'.$rtbiz_offerings->offering_slug ] );
+
+			$cols = array_merge( $cols, $columns );
+			$cols = parent::post_table_columns( $cols );
+			return $cols;
+
 		}
-
 		/**
 		 * @param $name
 		 * @param string $note
