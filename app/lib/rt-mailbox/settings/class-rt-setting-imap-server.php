@@ -65,7 +65,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 			global $rt_imap_server_model;
 			$servers = $rt_imap_server_model->get_all_servers();
 			?>
-			<table>
+			<table class="imap_table">
 				<tbody>
 				<?php foreach ( $servers as $server ) { ?>
 					<tr valign="top">

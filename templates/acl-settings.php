@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-$user_groups = rt_biz_get_user_groups();
+$department = rt_biz_get_department();
 $modules     = rt_biz_get_modules();
 $permissions = rt_biz_get_acl_permissions();
 $module_permissions = get_site_option( 'rt_biz_module_permissions' );
@@ -22,7 +22,7 @@ $menu_label = $settings['menu_label'];
 				<thead>
 					<tr>
 						<th scope="col" class="manage-column">&nbsp;</th>
-						<?php foreach ( $user_groups as $ug ) { ?>
+						<?php foreach ( $department as $ug ) { ?>
 						<th scope="col" class="manage-column"><strong><?php echo $ug->name; ?></strong></th>
 						<?php } ?>
 					</tr>
@@ -31,7 +31,7 @@ $menu_label = $settings['menu_label'];
 					<?php foreach ( $modules as $mkey => $m ) { ?>
 					<tr>
 						<td><strong><?php echo $m['label']; ?></strong></td>
-						<?php foreach ( $user_groups as $ug ) { ?>
+						<?php foreach ( $department as $ug ) { ?>
 							<td>
 								<select name="rt_biz_module_permissions[<?php echo $mkey ?>][<?php echo $ug->term_id; ?>]">
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
@@ -46,7 +46,7 @@ $menu_label = $settings['menu_label'];
 				<tfoot>
 					<tr>
 						<th scope="col" class="manage-column">&nbsp;</th>
-						<?php foreach ( $user_groups as $ug ) { ?>
+						<?php foreach ( $department as $ug ) { ?>
 						<th scope="col" class="manage-column"><strong><?php echo $ug->name; ?></strong></th>
 						<?php } ?>
 					</tr>

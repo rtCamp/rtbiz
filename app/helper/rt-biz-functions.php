@@ -361,18 +361,43 @@ function rt_biz_get_company_meta_fields() {
 	return $rt_company->meta_fields;
 }
 
+
+function rt_biz_connect_contact_to_user( $from = '', $to = '' ){
+	global $rt_contact;
+	$rt_contact->connect_contact_to_user( $from, $to );
+}
+
+function rt_biz_remove_contact_to_user( $from = '', $to = '' ){
+	global $rt_contact;
+	$rt_contact->remove_contact_to_user( $from, $to );
+}
+
 /**
  * @return array|WP_Error
  */
-function rt_biz_get_user_groups() {
-	$user_groups = get_terms( 'user-group', array( 'hide_empty' => false ) );
-	return $user_groups;
+function rt_biz_get_department() {
+	$Department = get_terms( RT_Departments::$slug, array( 'hide_empty' => false ) );
+	return $Department;
 }
 
-function rt_biz_get_group_users( $group_term_id ) {
-	$user_ids = RT_User_Groups::get_user_by_group_id( $group_term_id );
-	if ( ! $user_ids instanceof WP_Error ) {
-		return $user_ids;
+function rt_biz_get_department_users( $department_id ) {
+	global $rt_contact;
+	$department = get_term_by( 'id', $department_id, RT_Departments::$slug );
+	$contacts = get_posts(
+		array(
+			RT_Departments::$slug => $department->slug,
+			'post_type' => $rt_contact->post_type,
+			'post_status' => 'any',
+			'nopaging' => true,
+		)
+	);
+	$contact_ids = array();
+	foreach( $contacts as $contact ){
+		$contact_ids[] = $contact->ID;
+	}
+
+	if ( ! empty( $contact_ids ) ){
+		return rt_biz_get_wp_user_for_contact( $contact_ids );
 	}
 	return array();
 }
@@ -402,12 +427,12 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 
 function rt_biz_get_employees() {
 	global $rt_contact;
-	return $rt_contact->get_employees();
+	return $rt_contact->get_contact_by_category( Rt_Contact::$employees_category_slug );
 }
 
 function rt_biz_get_clients() {
     global $rt_contact;
-    return $rt_contact->get_clients();
+	return $rt_contact->get_contact_by_category( Rt_Contact::$clients_category_slug );
 }
 
 function rt_biz_get_companies() {
@@ -444,17 +469,16 @@ function rt_biz_get_wp_user_for_contact( $contact_id ) {
 }
 
 function rt_biz_get_user_department( $user_ID ) {
-	return RT_User_Groups::get_user_groups( $user_ID );
-}
+	$user_contacts = rt_biz_get_contact_for_wp_user( $user_ID );
+	$ug_terms = array();
+	if ( !empty( $user_contacts ) ){
+		foreach( $user_contacts as $contact ){
+			$temp_terms = wp_get_post_terms( $contact->ID, RT_Departments::$slug );
+			$ug_terms = array_merge( $ug_terms, $temp_terms );
+		}
+	}
+	return $ug_terms;
 
-function rt_biz_get_user_department_section( $user ) {
-	global $rtbiz_user_groups;
-	return $rtbiz_user_groups->edit_user_user_group_section( $user );
-}
-
-function rt_biz_save_user_user_group( $user_id  ) {
-	global $rtbiz_user_groups;
-	return $rtbiz_user_groups->save_user_user_group( $user_id );
 }
 
 /**

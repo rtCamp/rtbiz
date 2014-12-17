@@ -163,13 +163,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'user_group_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'taxonomy' => 'user-group',
+						'taxonomy' => RT_Departments::$slug,
 					),
 					array(
 						'id' => 'user_group_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'taxonomy' => 'user-group',
+						'taxonomy' => RT_Departments::$slug,
 					),
 				),
 					) );

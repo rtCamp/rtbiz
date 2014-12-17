@@ -21,13 +21,30 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @var string
 		 */
 		public $email_key           = 'contact_email';
+		/**
+		 * @var string
+		 */
 		public $primary_email_key   = 'contact_primary_email';
+		/**
+		 * @var string
+		 */
 		public $website_url_key     = 'contact_website';
-		public $user_id_key         = 'contact_user_id';
 
+		/**
+		 * @var string
+		 */
 		static $user_category_taxonomy = 'rt_contact_category';
+		/**
+		 * @var string
+		 */
 		static $employees_category_slug = 'employees';
+		/**
+		 * @var string
+		 */
 		static $clients_category_slug = 'customers';
+		/**
+		 * @var string
+		 */
 		static $suppliers_category_slug = 'vendors';
 
 
@@ -71,18 +88,72 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_filter( 'views_edit-rt_contact', array( $this, 'edit_view_filters' ) );
 			add_action( 'p2p_init', array( $this, 'contact_user_p2p' ) );
 
+			/**
+			 * Add ACL meta box
+			 */
+			global $rt_access_control;
+			$current_user = new WP_User( get_current_user_id() );
+			if ( $current_user->has_cap( 'create_users' ) ){
+				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_meta_boxes' ) );
+				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
+			}
+
 		}
 
+		/**
+		 * Registers Meta Box for Rt_contact Meta Fields
+		 */
+		function contact_meta_boxes( ) {
+			global $rt_access_control;
+			add_meta_box( 'rt-biz-acl-details', __( 'Profile-level Access' ), array( $rt_access_control, 'profile_level_permission' ), $this->post_type, 'side', 'default' );
+		}
 
+		/**
+		 * Create Contact user p2p connection defination
+		 */
 		function contact_user_p2p(){
 			p2p_register_connection_type( array(
-				                              'name' => 'rt_contact_to_user',
-				                              'from' => 'rt_contact',
+				                              'name' => $this->post_type . '_to_user',
+				                              'from' => $this->post_type,
 				                              'to' => 'user',
+				                              'cardinality' => 'one-to-one',
+				                              'admin_column' => 'any',
+				                              'from_labels' => array(
+					                                               'column_title' => 'User',
+															  ),
+				                              'to_labels' => array(
+				                                                    'column_title' => 'Contact',
+															  ),
 										) );
 		}
 
+		/**
+		 * Create connection contact and user
+		 * @param string $from
+		 * @param string $to
+		 */
+		function connect_contact_to_user( $from = '', $to = '' ) {
+			if ( ! p2p_connection_exists( $this->post_type . '_to_user', array( 'from' => $from, 'to' => $to ) ) ) {
+				p2p_type( $this->post_type . '_to_user' )->connect( $from, $to, array(
+					'date' => current_time('mysql')
+				) );
+			}
+		}
 
+		/**
+		 * remove connection of comtact and user
+		 * @param string $from
+		 * @param string $to
+		 */
+		function remove_contact_to_user( $from = '', $to = '' ) {
+			if ( p2p_connection_exists( $this->post_type . '_to_user', array( 'from' => $from, 'to' => $to ) ) ) {
+				p2p_type( $this->post_type . '_to_user' )->disconnect( $from, $to );
+			}
+		}
+
+		/**
+		 * @param $views
+		 */
 		function edit_view_filters($views){
 
 			$terms      = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ));
@@ -110,21 +181,21 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$something = wp_count_posts('rt_contact');
 			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__('All')." <span class='count'> (".$something->publish.")</span></a>" );
 			echo '<ul class="subsubsub">';
-			echo implode(" | ",$top  + $subsubsub);
+			echo implode(" | ", array_merge( $top, $subsubsub ) );
 			echo '</ul>';
 			//			return $views;
 		}
 
 
-
-
-
+		/**
+		 *
+		 */
 		function register_tax(){
 			register_taxonomy(
 				self::$user_category_taxonomy,
 				'rt_contact',
 				array(
-					'label' => __( 'User Category' ),
+					'label' => __( 'Contact Category' ),
 					'rewrite' => array( 'slug' => 'rt-user-category' ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
@@ -132,6 +203,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			);
 		}
 
+		/**
+		 *
+		 */
 		function add_defualt_categories_on_activate(){
 
 			$default_categories = array(
@@ -508,17 +582,6 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					}
 				}
 			}
-
-			if ( isset( $_POST[ 'contact_meta' ][ $this->user_id_key ] ) && ! empty( $_POST['contact_meta'] ) ) {
-				self::update_meta( $post_id, $this->user_id_key, $_POST[ 'contact_meta' ][ $this->user_id_key ] );
-			} else {
-				self::delete_meta( $post_id, $this->user_id_key, self::get_meta( $post_id, $this->user_id_key, true ) );
-			}
-
-			if ( isset( $_POST[ 'contact_meta' ][ $this->user_id_key ] ) && ! empty( $_POST['contact_meta'] ) ) {
-				rt_biz_save_user_user_group( $_POST[ 'contact_meta' ][ $this->user_id_key ] );
-			}
-
 			parent::save_meta_values( $post_id );
 		}
 
@@ -583,6 +646,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		/**
+		 * create contact
+		 *
 		 * @param $name
 		 * @param string $description
 		 * @return int|WP_Error
@@ -618,24 +683,18 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					) : array();
 		}
 
+		/**
+		 * get contact from wp_user ids
+		 *
+		 * @param $user_id
+		 *
+		 * @return mixed
+		 */
 		function get_contact_for_wp_user( $user_id ) {
 			return get_posts(
 					array(
-						'meta_query' => array(
-							/*array(
-								'key' => self::$meta_key_prefix . self::$our_team_mate_key,
-								'value' => '1',
-							),*/
-							array(
-								'key' => self::$meta_key_prefix . $this->user_id_key,
-								'value' => $user_id,
-							),
-						),
-						'tax_query' => array(
-							'taxonomy' => self::$user_category_taxonomy,
-							'field'    => 'slug',
-							'terms'    => self::$employees_category_slug,
-						),
+						'connected_type' => $this->post_type . '_to_user',
+						'connected_items' => $user_id,
 						'post_type' => $this->post_type,
 						'post_status' => 'any',
 						'nopaging' => true,
@@ -643,48 +702,55 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			);
 		}
 
+		/**
+		 * Get Wp_user from contact ids
+		 *
+		 * @param $contact_id
+		 *
+		 * @return mixed
+		 */
 		function get_wp_user_for_contact( $contact_id ) {
-			$user_id = self::get_meta( $contact_id, $this->user_id_key, true );
-			return $user_id;
-		}
-
-		function get_employees() {
-			return get_posts(
-					array(
-						/*'meta_key' => self::$meta_key_prefix . self::$our_team_mate_key,
-						'meta_value' => '1',*/
-						'tax_query' => array(
-							'taxonomy' => self::$user_category_taxonomy,
-							'field'    => 'slug',
-							'terms'    => self::$employees_category_slug,
-						),
-						'post_type' => $this->post_type,
-						'post_status' => 'any',
-						'nopaging' => true,
-					)
+			return get_users(
+				array(
+					'connected_type' => $this->post_type . '_to_user',
+					'connected_items' => $contact_id,
+					'connected_direction' => 'to',
+				)
 			);
 		}
 
-		function get_clients() {
-//			global $wpdb;
-//			$clients = $wpdb->get_results( "SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )" );
-			$posts = get_posts (
+		/**
+		 * Get list of contact by category
+		 *
+		 * @param $category_slug
+		 *
+		 * @return mixed
+		 */
+		function get_contact_by_category( $category_slug ) {
+			return get_posts(
 				array(
-					'post_type' => $this->post_type,
 					'tax_query' => array(
-						array(
-							'taxonomy' => self::$user_category_taxonomy,
-							'field' => 'slug',
-							'terms' => self::$clients_category_slug,
-						),
-				) ) );
-			return $posts;
+						'taxonomy' => self::$user_category_taxonomy,
+						'field'    => 'slug',
+						'terms'    => $category_slug,
+					),
+					'post_type' => $this->post_type,
+					'post_status' => 'any',
+					'nopaging' => true,
+				)
+			);
 		}
 
+		/**
+		 * Create Contact for given wp_user
+		 *
+		 * @param $user_id
+		 */
 		function contact_create_for_wp_user( $user_id ) {
 			$user = get_user_by( 'id', $user_id );
 			$contact_id = $this->add_contact( $user->display_name );
-			Rt_Contact::add_meta( $contact_id, $this->email_key, $user->user_email );
+			$this->connect_contact_to_user( $contact_id, $user_id );
+			Rt_Contact::add_meta( $contact_id, $this->primary_email_key, $user->user_email );
 			Rt_Contact::add_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
