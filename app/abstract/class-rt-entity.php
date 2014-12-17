@@ -243,13 +243,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				                 "<br/><a target='_blank' class='assign-title heading' title='" . $author->display_name . "' href='" . get_edit_user_link( $author->ID ) . "'>" . $author->display_name . '</a>' .
 				                 "<input type='hidden' name='assign_to' value='" . $author->ID . "' /></li>";
 			}
-			$emps = rt_biz_get_employees();
+			$emps = rt_biz_get_module_employee( RT_BIZ_TEXT_DOMAIN );
 
-			$arrSubscriberUser=array();
-			$ids = wp_list_pluck($emps,'ID');
-			global $rt_contact;
-			$authors               = $rt_contact->get_wp_user_for_contact($ids);
-			foreach ($authors as $author) {
+			$arrSubscriberUser = array();
+			foreach ( $emps as $author ) {
 				$arrSubscriberUser[ ] = array(
 					'id'             => $author->ID,
 					'label'          => $author->display_name,
@@ -273,9 +270,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		function save_meta_assign_to( $post ){
-			if ( isset($_POST['assign_to'] ) && ! empty( $_POST['assign_to'] ) ){
-				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to']);
-			}
+			rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to']);
 		}
 
 		/**
