@@ -303,7 +303,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$category = array_unique( wp_list_pluck( $this->meta_fields, 'category' ) );
 			$cathtml = array();
 			foreach ( $category as $key => $value ){
-				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value )). __('information').' </h3> </div>';
+				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value )). __(' information').' </h3> </div>';
 			}
 			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> '.__('Other information').'</h3> </div>';
 			$other_flag = false;
