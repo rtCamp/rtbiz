@@ -8,7 +8,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
-		static $page_name = 'MailBox';
+		static $page_name = 'mailbox';
 
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
@@ -116,16 +116,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		function register_attribute_menu() {
 			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( 'MailBox' ), __( 'MailBox' ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
+				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
 			} else {
-				add_menu_page( __( 'MailBox' ), __( 'MailBox' ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
+				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
 			}
 		}
 
 		function render_mailbox_setting_page(){
 			do_action( 'rt_mailbox_randed_view' );
 			?>
-			<h1> <?php echo __( 'Mailbox Setting' ); ?></h1>
+			<div class="wrap">
+			<h2> <?php echo __( 'Mailbox Setting' ); ?></h2>
 			<?php
 			$this->mailbox_tabs();
 			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
@@ -133,6 +134,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
 				$this->mailbox_view();
 			}
+			?> </div> <?php
 		}
 
 		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
@@ -153,7 +155,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$tabs = array(
 				array(
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name ), 'admin.php' ) ),
-					'name' => __( 'Mailbox', self::$page_name ),
+					'name' => __( ucfirst( self::$page_name ), self::$page_name ),
 					'slug' => self::$page_name,
 				), array(
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=imap' ), 'admin.php' ) ),
@@ -197,7 +199,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 			?>
 			<form method="post" action="">
-				<div class="redux_field_th">
+				<div class="enable_reply_div">
 					<span class="mailbox_reply_by_email_label"><?php echo __( 'Enable Reply by Email: ' ); ?></span>
 			<?php $val = self::get_enable_by_reply_email();
 			$yes    = '';
@@ -225,6 +227,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$rt_setting_imap_server->save_imap_servers();
 			}
 			?>
+			<div class="imap_servers">
+			<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
 			<form method="post" action="">
 			<?php
 			$rt_setting_imap_server->rt_imap_servers( null, null );
@@ -232,6 +236,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			?>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
+			</div>
 				<?php
 		}
 		public static function get_enable_by_reply_email(){

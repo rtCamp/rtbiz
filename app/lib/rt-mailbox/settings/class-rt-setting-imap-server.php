@@ -65,7 +65,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 			global $rt_imap_server_model;
 			$servers = $rt_imap_server_model->get_all_servers();
 			?>
-			<table>
+			<table class="imap_table">
 				<tbody>
 				<?php foreach ( $servers as $server ) { ?>
 					<tr valign="top">
@@ -78,7 +78,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 						</td>
 					</tr>
 					<tr valign="top" id="rthd_imap_server_<?php echo esc_attr( $server->id ); ?>" class="rthd-hide-row">
-						<td>
+						<td colspan="2">
 							<table>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'Server Name: ' ); ?></th>
@@ -142,11 +142,11 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 				<?php } ?>
 				<input type="hidden" name="rthd_imap_servers_changed" value="1"/>
 				<tr valign="top">
-					<th scope="row"><a href="#" class="button" id="rthd_add_imap_server"><?php _e( 'Add new server' ); ?></a>
+					<th scope="row" colspan="2"><a href="#" class="button" id="rthd_add_imap_server"><?php _e( 'Add new server' ); ?></a>
 					</th>
 				</tr>
 				<tr valign="top" id="rthd_new_imap_server" class="rthd-hide-row">
-					<td>
+					<td colspan="2">
 						<table>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'Server Name: ' ); ?></th>
