@@ -362,33 +362,38 @@ if( ! class_exists('Rt_Access_Control') ) {
 			);
 		}
 
-		function get_module_users( $module_key ) {
+		function get_module_users( $module_key, $category_slug = '' ) {
 
 			global $wpdb;
-			$users = array();
 			$module_key_length = strlen( $module_key );
 
 			/**
 			 *	Include All the admins
 			 */
-			$users = array_merge($users, get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) ) );
+			$users = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
+			$user_obj = array();
+			foreach ( array_unique( $users ) as $id ) {
+				$user_obj[] = new WP_User( $id );
+			}
 
 			/**
 			 *	Include All Profile Access Level Users
 			 */
-			$user_meta = $wpdb->get_results( "SELECT * from {$wpdb->usermeta} WHERE meta_key = 'rt_biz_profile_permissions' and meta_value REGEXP 's:{$module_key_length}:\"{$module_key}\";s:[0-9]*:\"[0-9]*\"'" );
-			// $um - user_meta single
-			foreach ( $user_meta as $um ) {
-				$pp = get_user_meta( $um->user_id, 'rt_biz_profile_permissions', true );
+			$contacts = array();
+			$contact_meta = $wpdb->get_results( "SELECT * from {$wpdb->postmeta} WHERE meta_key = 'rt_biz_profile_permissions' and meta_value REGEXP 's:{$module_key_length}:\"{$module_key}\";s:[0-9]*:\"[0-9]*\"'" );
+			// $cm - user_meta single
+			foreach ( $contact_meta as $cm ) {
+
+				$pp = get_post_meta( $cm->post_id, 'rt_biz_profile_permissions', true );
 				if ( isset( $pp[$module_key] ) && intval( $pp[$module_key] ) == 0 ) {
 					continue;
 				}
-				$users[] = $um->user_id;
+				if ( $category_slug == '' || has_term( $category_slug, Rt_Contact::$user_category_taxonomy, $cm->post_id ) ){
+					$contacts[] = $cm->post_id;
+				}
 			}
-
-			$user_obj = array();
-			foreach ( array_unique( $users ) as $id ) {
-				$user_obj[] = new WP_User( $id );
+			if ( !empty( $contacts ) ){
+				$user_obj = array_merge( $user_obj, rt_biz_get_wp_user_for_contact( $contacts ) );
 			}
 
 			/**
@@ -400,7 +405,7 @@ if( ! class_exists('Rt_Access_Control') ) {
 			if ( ! $department instanceof WP_Error ) {
 				foreach ( $department as $ug ) {
 					if ( isset( $module_permissions[$module_key][$ug->term_id] ) && intval( $module_permissions[$module_key][$ug->term_id] ) != 0 ) {
-						$user_obj = array_merge( $user_obj, rt_biz_get_department_users( $ug->term_id ) );
+						$user_obj = array_merge( $user_obj, rt_biz_get_module_department_users( $ug->term_id, $category_slug, $module_key ) );
 					}
 				}
 			}

@@ -380,6 +380,42 @@ function rt_biz_get_department() {
 	return $Department;
 }
 
+function rt_biz_get_module_department_users( $department_id, $category_slug = '', $module_key = '' ) {
+	global $rt_contact;
+
+	$department = get_term_by( 'id', $department_id, RT_Departments::$slug );
+
+	$args = array(
+		RT_Departments::$slug => $department->slug,
+		'post_type' => $rt_contact->post_type,
+		'post_status' => 'any',
+		'nopaging' => true,
+	);
+
+	if ( !empty( $category_slug ) ){
+		$args = array_merge( $args, array( Rt_Contact::$user_category_taxonomy  => $category_slug ) );
+	}
+
+	$contacts = get_posts( $args );
+
+	$contact_ids = array();
+	foreach( $contacts as $contact ){
+		// module filter
+		if ( ! empty( $module_key ) ){
+			$pp = get_post_meta( $contact->ID, 'rt_biz_profile_permissions', true );
+			if ( isset( $pp[$module_key] ) && intval( $pp[$module_key] ) == 0 ) {
+				continue;
+			}
+		}
+		$contact_ids[] = $contact->ID;
+	}
+
+	if ( ! empty( $contact_ids ) ){
+		return rt_biz_get_wp_user_for_contact( $contact_ids );
+	}
+	return array();
+}
+
 function rt_biz_get_department_users( $department_id ) {
 	global $rt_contact;
 	$department = get_term_by( 'id', $department_id, RT_Departments::$slug );
@@ -430,9 +466,14 @@ function rt_biz_get_employees() {
 	return $rt_contact->get_contact_by_category( Rt_Contact::$employees_category_slug );
 }
 
-function rt_biz_get_clients() {
+function rt_biz_get_customers() {
     global $rt_contact;
-	return $rt_contact->get_contact_by_category( Rt_Contact::$clients_category_slug );
+	return $rt_contact->get_contact_by_category( Rt_Contact::$customer_category_slug );
+}
+
+function rt_biz_get_vendors() {
+	global $rt_contact;
+	return $rt_contact->get_contact_by_category( Rt_Contact::$vendor_category_slug );
 }
 
 function rt_biz_get_companies() {
@@ -456,6 +497,21 @@ function rt_biz_search_employees( $query ) {
 function rt_biz_get_module_users( $module_key ) {
 	global $rt_access_control;
 	return $rt_access_control->get_module_users( $module_key );
+}
+
+function rt_biz_get_module_employee( $module_key ) {
+	global $rt_access_control;
+	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$employees_category_slug  );
+}
+
+function rt_biz_get_module_customer( $module_key  ) {
+	global $rt_access_control;
+	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$customer_category_slug );
+}
+
+function rt_biz_get_module_vendor( $module_key  ) {
+	global $rt_access_control;
+	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$vendor_category_slug );
 }
 
 function rt_biz_get_contact_for_wp_user( $user_id ) {
