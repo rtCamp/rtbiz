@@ -195,7 +195,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				self::$user_category_taxonomy,
 				'rt_contact',
 				array(
-					'label' => __( 'User Category' ),
+					'label' => __( 'Contact Category' ),
 					'rewrite' => array( 'slug' => 'rt-user-category' ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
@@ -714,6 +714,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				array(
 					'connected_type' => $this->post_type . '_to_user',
 					'connected_items' => $contact_id,
+					'connected_direction' => 'to',
 				)
 			);
 		}

@@ -411,9 +411,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == RT_Departments::$slug ) {
+			if ( isset( $_REQUEST['taxonomy'] ) && in_array( $_REQUEST['taxonomy'], array( RT_Departments::$slug, Rt_Contact::$user_category_taxonomy ) ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] ) );
 			}
 
 			if ( ! empty( $rtbiz_offerings->product_slug ) ) {
@@ -444,7 +444,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug );
-			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- User Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy );
+			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy );
 		}
 
 		/**
