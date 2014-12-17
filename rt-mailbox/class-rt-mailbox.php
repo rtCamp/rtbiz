@@ -125,6 +125,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function render_mailbox_setting_page(){
 			do_action( 'rt_mailbox_randed_view' );
 			?>
+			<div class="wrap">
 			<h2> <?php echo __( 'Mailbox Setting' ); ?></h2>
 			<?php
 			$this->mailbox_tabs();
@@ -133,6 +134,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
 				$this->mailbox_view();
 			}
+			?> </div> <?php
 		}
 
 		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
