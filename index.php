@@ -430,8 +430,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function register_menu() {
 			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_offerings;
 			$settings  = biz_get_redux_settings();
-			$logo_url               = $settings['logo_url']['url'];
-			$menu_label             = $settings['menu_label'];
+			$logo_url               =  ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
+			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
 			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array(
 				$this,
 				'dashboard_ui'
