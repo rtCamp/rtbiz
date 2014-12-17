@@ -146,7 +146,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 												class='button remove-google-ac right'
 												href='<?php echo esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&rthd_submit_enable_reply_by_email=save&email=' . $email ) ); ?>'><?php echo __( 'Remove' ); ?>
 												A/C</a>
-											<a class="button right rtMailbox-hide-mail-folders" href="#"><?php echo __( 'Show' ); ?></a>
+											<a class="button right rtMailbox-hide-mail-folders mailbox_show_hide" href="#"><?php echo __( 'Show' ); ?></a>
 					<!--											--><?php //if ( 'goauth' == $ac->type ) { ?>
 					<!--												<a class='button button-primary right'-->
 					<!--												   href='--><?php //echo esc_url( $authUrl ); ?><!--'>ReConnect Google Now</a>-->
