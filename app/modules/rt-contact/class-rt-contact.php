@@ -33,7 +33,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * @var string
 		 */
-		static $user_category_taxonomy = 'rt_contact_category';
+		static $user_category_taxonomy = 'rt-contact-group';
 		/**
 		 * @var string
 		 */
@@ -195,8 +195,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				self::$user_category_taxonomy,
 				'rt_contact',
 				array(
-					'label' => __( 'Contact Category' ),
-					'rewrite' => array( 'slug' => 'rt-user-category' ),
+					'label' => __( 'Contact Group' ),
+					'rewrite' => array( 'slug' => 'rt-user-group' ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
 				)
