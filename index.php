@@ -710,10 +710,18 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function company_contact_connection() {
 			global $rt_company, $rt_contact;
 			p2p_register_connection_type( array(
-				'name' => $rt_company->post_type . '_to_' . $rt_contact->post_type,
-				'from' => $rt_company->post_type,
-				'to'   => $rt_contact->post_type,
-			) );
+				                              'name' => $rt_company->post_type . '_to_' . $rt_contact->post_type,
+				                              'from' => $rt_company->post_type,
+				                              'to'   => $rt_contact->post_type,
+				                              'cardinality' => 'one-to-many',
+				                              'admin_column' => 'any',
+				                              'from_labels' => array(
+					                              'column_title' => $rt_contact->labels['name'],
+				                              ),
+				                              'to_labels' => array(
+					                              'column_title' => $rt_company->labels['singular_name'],
+				                              ),
+			                              ) );
 		}
 
 		/**
