@@ -137,14 +137,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'project_type' => 'all',
 					'name' => esc_html__( 'Create many-to-many relationships between all types of posts.', RT_BIZ_TEXT_DOMAIN ),
 					'active' => class_exists( 'P2P_Autoload' ),
-					'filename' => 'posts-to-posts.php'
+					'filename' => 'posts-to-posts.php',
 				),
 			);
 
 			if ( ! self::$instance->check_p2p_dependency() ) {
 				return false;
 			}
-
 
 			self::$instance->includes();
 
@@ -231,7 +230,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox(Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, trailingslashit( RT_BIZ_PATH ) . 'index.php' );
+			$rt_MailBox = new Rt_Mailbox( Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, trailingslashit( RT_BIZ_PATH ) . 'index.php' );
 		}
 
 		function update_database() {
@@ -270,7 +269,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
 			);
 
-			if ( !empty( $rtbiz_offerings->product_sync ) ) {
+			if ( ! empty( $rtbiz_offerings->product_sync ) ) {
 				$this->menu_order[] = 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . rt_biz_get_contact_post_type();
 			}
 
@@ -297,6 +296,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 						$out = array_filter( $menu_item, function( $in ) { return true !== $in; } );
 						if ( in_array( $item, $out ) ) {
 							$submenu[ self::$dashboard_slug ][ $new_index ] = $menu_item;
+
+							if ( $item === self::$dashboard_slug ) {
+								$submenu[ self::$dashboard_slug ][ $new_index ][0] = __( 'Dashboard', RT_BIZ_TEXT_DOMAIN );
+							}
+
 							unset( $module_menu[ $p_key ] );
 							$new_index += 5;
 							break;
@@ -341,7 +345,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
 
 				$product_plugin   = $settings['product_plugin'];
 				$to_register_posttype = array();
@@ -349,7 +353,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 					if ( ! empty( $value['require_product_sync'] ) ) {
 						if ( isset( $value['post_types'] ) ) {
-							foreach( $value['post_types'] as $posttype ) {
+							foreach ( $value['post_types'] as $posttype ) {
 								array_push( $to_register_posttype, $posttype );
 							}
 						}
@@ -385,7 +389,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			global $rt_contact, $rt_company, $rtbiz_offerings;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 
-			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
+			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && 'edit' == $_REQUEST['action'] ) {
 
 				$post_type = get_post_type( $_REQUEST['post'] );
 				if ( in_array( $post_type, array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
@@ -398,11 +402,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
-					$rt_contact->post_type,
-					$rt_company->post_type
-				) )
-			) {
+			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
 				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 					wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 				}
@@ -417,7 +417,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			if ( ! empty( $rtbiz_offerings->product_slug ) ) {
-				if ( isset( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == $rtbiz_offerings->product_slug ) {
+				if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == $rtbiz_offerings->product_slug ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . $rt_contact->post_type ) );
 				}
@@ -430,12 +430,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function register_menu() {
 			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_offerings;
 			$settings  = biz_get_redux_settings();
-			$logo_url               =  ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
+			$logo_url               = ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
-			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array(
-				$this,
-				'dashboard_ui'
-			), $logo_url, self::$menu_position );
+			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
 
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
@@ -469,7 +466,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				add_action( 'admin_enqueue_scripts', array( $this, 'plugins_dependency_enque_js' ) );
 				add_action( 'wp_ajax_rtbiz_install_plugin', array( $this, 'rtbiz_install_plugin_ajax' ), 10 );
-				add_action( 'wp_ajax_rtbiz_activate_plugin', array( $this,'rtbiz_activate_plugin_ajax' ), 10 );
+				add_action( 'wp_ajax_rtbiz_activate_plugin', array( $this, 'rtbiz_activate_plugin_ajax' ), 10 );
 
 				add_action( 'admin_notices', array( $this, 'admin_notice_rtbiz_plugin_not_installed' ) );
 			}
@@ -478,7 +475,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function plugins_dependency_enque_js() {
-			wp_enqueue_script( 'rtbiz-plugins-dependency', RT_BIZ_URL . "app/assets/javascripts/rtbiz_plugin_check.js", '', false, true );
+			wp_enqueue_script( 'rtbiz-plugins-dependency', RT_BIZ_URL . 'app/assets/javascripts/rtbiz_plugin_check.js', '', false, true );
 			wp_localize_script( 'rtbiz-plugins-dependency', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
 		}
 
@@ -586,7 +583,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function rtbiz_install_plugin( $plugin_slug ) {
 			include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
-			$api = plugins_api( 'plugin_information', array( 'slug'   => $plugin_slug, 'fields' => array( 'sections' => false ) ) );
+			$api = plugins_api( 'plugin_information', array( 'slug' => $plugin_slug, 'fields' => array( 'sections' => false ) ) );
 
 			if ( is_wp_error( $api ) ) {
 				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', RT_BIZ_TEXT_DOMAIN ), $api->get_error_message() ) );
@@ -679,7 +676,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function init_settings() {
 			global $rt_biz_setttings;
-//			$rt_biz_setttings = new Rt_Biz_Settings();
 			$rt_biz_setttings = new Rt_Biz_Setting();
 		}
 
@@ -714,10 +710,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function company_contact_connection() {
 			global $rt_company, $rt_contact;
 			p2p_register_connection_type( array(
-				                              'name' => $rt_company->post_type . '_to_' . $rt_contact->post_type,
-				                              'from' => $rt_company->post_type,
-				                              'to'   => $rt_contact->post_type,
-			                              ) );
+				'name' => $rt_company->post_type . '_to_' . $rt_contact->post_type,
+				'from' => $rt_company->post_type,
+				'to'   => $rt_contact->post_type,
+			) );
 		}
 
 		/**
@@ -729,15 +725,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function connect_company_to_contact( $from = '', $to = '' ) {
 			global $rt_company, $rt_contact;
-			if ( ! p2p_connection_exists( $rt_company->post_type . '_to_' . $rt_contact->post_type, array(
-				'from' => $from,
-				'to'   => $to
-			) )
-			) {
-				p2p_create_connection( $rt_company->post_type . '_to_' . $rt_contact->post_type, array(
-					'from' => $from,
-					'to'   => $to
-				) );
+			if ( ! p2p_connection_exists( $rt_company->post_type . '_to_' . $rt_contact->post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+				p2p_create_connection( $rt_company->post_type . '_to_' . $rt_contact->post_type, array( 'from' => $from, 'to' => $to ) );
 			}
 		}
 
