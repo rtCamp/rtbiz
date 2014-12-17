@@ -720,47 +720,25 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		/**
-		 * Get list of employee
+		 * Get list of contact by category
+		 *
+		 * @param $category_slug
 		 *
 		 * @return mixed
 		 */
-		function get_employees() {
+		function get_contact_by_category( $category_slug ) {
 			return get_posts(
-					array(
-						'tax_query' => array(
-							'taxonomy' => self::$user_category_taxonomy,
-							'field'    => 'slug',
-							'terms'    => self::$employees_category_slug,
-						),
-						'post_type' => $this->post_type,
-						'post_status' => 'any',
-						'nopaging' => true,
-					)
-			);
-		}
-
-		/**
-		 * Get list of client
-		 *
-		 * @return mixed
-		 */
-		function get_clients() {
-//			global $wpdb;
-//			$clients = $wpdb->get_results( "SELECT p.* FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as m ON p.ID = m.post_id AND m.meta_key = '" . self::$meta_key_prefix . self::$our_team_mate_key . "' WHERE p.post_type='$this->post_type' AND ( m.meta_value = '0' OR m.meta_value IS NULL )" );
-			$posts = get_posts (
 				array(
-					'post_type' => $this->post_type,
 					'tax_query' => array(
-						array(
-							'taxonomy' => self::$user_category_taxonomy,
-							'field' => 'slug',
-							'terms' => self::$clients_category_slug,
-						),
+						'taxonomy' => self::$user_category_taxonomy,
+						'field'    => 'slug',
+						'terms'    => $category_slug,
 					),
+					'post_type' => $this->post_type,
 					'post_status' => 'any',
 					'nopaging' => true,
-				) );
-			return $posts;
+				)
+			);
 		}
 
 		/**

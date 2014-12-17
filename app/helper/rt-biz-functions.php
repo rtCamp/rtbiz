@@ -427,12 +427,12 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 
 function rt_biz_get_employees() {
 	global $rt_contact;
-	return $rt_contact->get_employees();
+	return $rt_contact->get_contact_by_category( Rt_Contact::$employees_category_slug );
 }
 
 function rt_biz_get_clients() {
     global $rt_contact;
-    return $rt_contact->get_clients();
+	return $rt_contact->get_contact_by_category( Rt_Contact::$clients_category_slug );
 }
 
 function rt_biz_get_companies() {
