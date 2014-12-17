@@ -8,7 +8,7 @@
 }
 
 .rthd-show-row {
-	display: block;
+	visibility:visible ;
 }
 
 .mailbox_reply_by_email_label{
@@ -23,6 +23,15 @@
 	width: 80%;
 }
 
-.imap_table{
+.imap_servers{
 	margin-top: 30px;
+}
+
+#rthd_add_imap_server{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.imap_table{
+	min-width: 40%;
 }
