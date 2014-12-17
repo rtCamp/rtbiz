@@ -39,10 +39,35 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				'search_items' => __( 'Search Company' ),
 				'not_found' => __( 'No Companies found' ),
 				'not_found_in_trash' => __( 'No Companies found in Trash' ),
-				'not_found_in_trash' => __( 'No Companies found in Trash' ),
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
+			add_filter( 'manage_edit-' . 'rt_account'. '_columns', array( $this, 'edit_custom_columns' ) , 20 );
+
+		}
+
+		function edit_custom_columns($columns){
+			$cols = array();
+			$cols['cb'] = $columns['cb'];
+			$cols['title'] = __( 'Name' );
+			global $rtbiz_offerings;
+			if (isset($rtbiz_offerings)){
+				$cols['taxonomy-'.$rtbiz_offerings->offering_slug] = $columns['taxonomy-'.$rtbiz_offerings->offering_slug];
+			}
+			$cols['author'] = $columns['author'];
+			$cols['date'] = $columns['date'];
+			$cols['country'] = $columns['country'];
+
+			unset( $columns['title'] );
+			unset( $columns['author'] );
+			unset( $columns['date'] );
+			unset( $columns['comments'] );
+			unset(  $columns['taxonomy-'.$rtbiz_offerings->offering_slug] );
+
+			$cols = array_merge( $cols, $columns );
+			$cols = parent::post_table_columns( $cols );
+
+			return $cols;
 		}
 
 		/**
@@ -286,7 +311,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 
 			switch ( $column ) {
 				case 'country':
-					$val = self::get_meta( $post_id, 'account_country' );
+					$val = self::get_meta( $post_id, 'account_country',true );
 					if ( ! empty( $val ) ) {
 						echo implode( ' , ', $val );
 					}
