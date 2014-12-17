@@ -41,11 +41,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * @var string
 		 */
-		static $clients_category_slug = 'customers';
+		static $customer_category_slug = 'customers';
 		/**
 		 * @var string
 		 */
-		static $suppliers_category_slug = 'vendors';
+		static $vendor_category_slug = 'vendors';
 
 
 		/**
@@ -215,11 +215,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				),
 				array(
 					'name' => 'Customers',
-					'slug' => self::$clients_category_slug
+					'slug' => self::$customer_category_slug
 				),
 				array(
 					'name' => 'Vendors',
-					'slug' =>  self::$suppliers_category_slug
+					'slug' =>  self::$vendor_category_slug
 				),
 			);
 
@@ -714,7 +714,6 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				array(
 					'connected_type' => $this->post_type . '_to_user',
 					'connected_items' => $contact_id,
-					'connected_direction' => 'to',
 				)
 			);
 		}
