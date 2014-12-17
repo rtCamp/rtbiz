@@ -227,6 +227,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$rt_setting_imap_server->save_imap_servers();
 			}
 			?>
+			<div class="imap_servers">
+			<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
 			<form method="post" action="">
 			<?php
 			$rt_setting_imap_server->rt_imap_servers( null, null );
@@ -234,6 +236,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			?>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
+			</div>
 				<?php
 		}
 		public static function get_enable_by_reply_email(){
