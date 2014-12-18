@@ -82,15 +82,194 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		function add_dashboard_widgets() {
+			global $rt_biz_dashboard;
+			/* Pie Chart - Progress Indicator (Post status based) */
+			add_meta_box( 'rtbiz-department-by-contacts', __( 'Department wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
+				$this,
+				'department_by_contacts',
+			), $rt_biz_dashboard->screen_id, 'column1' );
+
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contact Type wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
+				$this,
+				'contact_type_wise_contacts',
+			), $rt_biz_dashboard->screen_id, 'column2' );
+
+			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Offering wise Contact', RT_BIZ_TEXT_DOMAIN ), array(
+				$this,
+				'offering_wise_contacts',
+			), $rt_biz_dashboard->screen_id, 'column3' );
+
+
 			$rt_biz_attributes_model = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
 			$relations = $rt_biz_attributes_relationship_model->get_relations_by_post_type( rt_biz_get_contact_post_type() );
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 				if ( $attr->attribute_store_as == 'taxonomy' ) {
-					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'Wise People' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column1', 'default', array( 'attribute_id' => $attr->id ) );
+					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'Wise People' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
+		}
+
+		function offering_wise_contacts( $obj, $args ){
+			global $rtbiz_offerings;
+			$taxonomy = $rtbiz_offerings->offering_slug;
+			$terms =  get_terms( $taxonomy );
+			$data_source = array();
+			$cols        = array( __( 'Offerings', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$rows        = array();
+			$post_type = rt_biz_get_contact_post_type();
+			$total = 0;
+
+
+			if ( ! $terms instanceof WP_Error ) {
+				foreach ( $terms as $t ) {
+					$posts = new WP_Query( array(
+						                       'post_type' => $post_type,
+						                       'post_status' => 'any',
+						                       'nopaging' => true,
+						                       $taxonomy => $t->slug,
+					                       ) );
+
+					$rows[] = array(
+						$t->name,
+						count( $posts->posts ),
+					);
+					$total += count( $posts->posts );
+				}
+			}
+			$posts = new WP_Query( array(
+				                       'post_type' => $post_type,
+				                       'post_status' => 'any',
+				                       'nopaging' => true,
+			                       ) );
+
+			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+
+			$data_source['cols'] = $cols;
+			$data_source['rows'] = $rows;
+
+			$this->charts[] = array(
+				'id' => $args['id'],
+				'chart_type' => 'pie',
+				'data_source' => $data_source,
+				'dom_element' => 'rtbiz_pie_'.$args['id'],
+				'options' => array(
+					'title' => $args['title'],
+				),
+			);
+			?>
+			<div id="<?php echo 'rtbiz_pie_'.$args['id']; ?>"></div>
+		<?php
+
+		}
+
+
+		function contact_type_wise_contacts( $obj, $args ){
+			$taxonomy = Rt_Contact::$user_category_taxonomy;
+			$terms =  get_terms( $taxonomy);
+			$data_source = array();
+			$cols        = array( __( 'Contact type', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$rows        = array();
+			$post_type = rt_biz_get_contact_post_type();
+			$total = 0;
+
+
+			if ( ! $terms instanceof WP_Error ) {
+				foreach ( $terms as $t ) {
+					$posts = new WP_Query( array(
+						                       'post_type' => $post_type,
+						                       'post_status' => 'any',
+						                       'nopaging' => true,
+						                       $taxonomy => $t->slug,
+					                       ) );
+
+					$rows[] = array(
+						$t->name,
+						count( $posts->posts ),
+					);
+					$total += count( $posts->posts );
+				}
+			}
+			$posts = new WP_Query( array(
+				                       'post_type' => $post_type,
+				                       'post_status' => 'any',
+				                       'nopaging' => true,
+			                       ) );
+
+			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+
+			$data_source['cols'] = $cols;
+			$data_source['rows'] = $rows;
+
+			$this->charts[] = array(
+				'id' => $args['id'],
+				'chart_type' => 'pie',
+				'data_source' => $data_source,
+				'dom_element' => 'rtbiz_pie_'.$args['id'],
+				'options' => array(
+					'title' => $args['title'],
+				),
+			);
+			?>
+			<div id="<?php echo 'rtbiz_pie_'.$args['id']; ?>"></div>
+		<?php
+
+		}
+
+
+		function department_by_contacts( $obj, $args ){
+			$taxonomy = RT_Departments::$slug;
+			$terms =  get_terms( $taxonomy);
+			$data_source = array();
+			$cols        = array( __( 'Department', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$rows        = array();
+			$post_type = rt_biz_get_contact_post_type();
+			$total = 0;
+
+
+			if ( ! $terms instanceof WP_Error ) {
+				foreach ( $terms as $t ) {
+					$posts = new WP_Query( array(
+						                       'post_type' => $post_type,
+						                       'post_status' => 'any',
+						                       'nopaging' => true,
+						                       $taxonomy => $t->slug,
+					                       ) );
+
+					$rows[] = array(
+						$t->name,
+						count( $posts->posts ),
+					);
+					$total += count( $posts->posts );
+				}
+			}
+			$posts = new WP_Query( array(
+				                       'post_type' => $post_type,
+				                       'post_status' => 'any',
+				                       'nopaging' => true,
+			                       ) );
+
+			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+
+			$data_source['cols'] = $cols;
+			$data_source['rows'] = $rows;
+
+			$this->charts[] = array(
+				'id' => $args['id'],
+				'chart_type' => 'pie',
+				'data_source' => $data_source,
+				'dom_element' => 'rtbiz_pie_'.$args['id'],
+				'options' => array(
+					'title' => $args['title'],
+				),
+			);
+			?>
+			<div id="<?php echo 'rtbiz_pie_'.$args['id']; ?>"></div>
+		<?php
+
+
+
 		}
 
 		function dashboard_widget_content( $obj, $args ) {
