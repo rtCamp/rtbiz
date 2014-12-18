@@ -610,7 +610,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$cols['author'] = $columns['author'];
 			$cols['contact_Assignee'] = __( 'Assigned To' );
 			if ( $rtbiz_offerings ){
-				$cols['taxonomy-' . $rtbiz_offerings->offering_slug ] = $columns['taxonomy-' . $rtbiz_offerings->offering_slug ];
+				$cols['taxonomy-' . Rt_Offerings::$offering_slug ] = $columns['taxonomy-' . Rt_Offerings::$offering_slug ];
 			}
 			$cols['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] = $rt_company->labels['singular_name'];
 			$cols['date'] = $columns['date'];
@@ -622,7 +622,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			unset( $columns['taxonomy-' . Rt_Contact::$user_category_taxonomy ] );
 			unset( $columns['author'] );
 			unset( $columns['date'] );
-			unset( $columns['taxonomy-' . $rtbiz_offerings->offering_slug ] );
+			unset( $columns['taxonomy-' . Rt_Offerings::$offering_slug ] );
 			unset( $columns['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] );
 			unset( $columns['p2p-to-' . $rt_contact->post_type . '_to_user'] );
 			unset( $columns['comments'] );

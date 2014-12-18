@@ -113,7 +113,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		function offering_wise_contacts( $obj, $args ){
 			global $rtbiz_offerings;
-			$taxonomy = $rtbiz_offerings->offering_slug;
+			$taxonomy = Rt_Offerings::$offering_slug;
 			$terms =  get_terms( $taxonomy );
 			$data_source = array();
 			$cols        = array( __( 'Offerings', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
