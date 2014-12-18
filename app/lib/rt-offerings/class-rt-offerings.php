@@ -20,7 +20,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Offering taxonomy Slug
 		 * @var string
 		 */
-		var $offering_slug = 'rt-offering';
+		static $offering_slug = 'rt-offering';
 
 		static $term_meta_key = '_offering_id';
 
@@ -144,7 +144,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				'rewrite'                   => true,
 			);
 			$supports = apply_filters( 'rtlib_product_support', $this->post_types );
-			register_taxonomy( $this->offering_slug, $supports, $arg );
+			register_taxonomy( self::$offering_slug, $supports, $arg );
 		}
 
 		public function update_post_term_count( $terms, $taxonomy ){
@@ -227,7 +227,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			global $wpdb;
 			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_meta_key."' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
-				return get_term_by( 'id', $taxonomymeta->taxonomy_id, $this->offering_slug );
+				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$offering_slug );
 			}
 			return false;
 		}
@@ -270,7 +270,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					do {
 						$term = wp_insert_term(
 							$termname, // the term
-							$this->offering_slug, // the taxonomy
+							self::$offering_slug, // the taxonomy
 							array(
 								'slug' => $slug.$i,
 							)
@@ -283,7 +283,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				} else {
 					$term = wp_update_term(
 						$termid, // the term
-						$this->offering_slug, // the taxonomy
+						self::$offering_slug, // the taxonomy
 						array(
 							'name' => $termname,
 							'slug' => $slug,
@@ -322,7 +322,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				$term = $this->get_taxonomy( $offering->ID );
 
 				if ( empty( $term ) ) {
-					$new_term = wp_insert_term( $offering->post_title, $this->offering_slug, array( 'slug' => $offering->post_name ) );
+					$new_term = wp_insert_term( $offering->post_title, self::$offering_slug, array( 'slug' => $offering->post_name ) );
 					if ( ! $new_term instanceof WP_Error ) {
 						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_meta_key, $offering->ID, true );
 					}
