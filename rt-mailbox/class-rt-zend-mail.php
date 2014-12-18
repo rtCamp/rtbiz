@@ -802,6 +802,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$subject      = rt_force_utf_8( $subject );
 					$txtBody      = rt_force_utf_8( $txtBody );
 
+					$htmlBody = balanceTags( $htmlBody, true );
+
+					preg_match_all( '/<body\s[^>]*>(.*?)<\/body>/s', $htmlBody, $output_array );
+					if ( count( $output_array ) > 0 && ! empty( $output_array[1] ) ) {
+						$htmlBody = $output_array[1][0];
+					}
+
 					$offset = strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' );
 					$visibleText = substr( $htmlBody, 0, ( $offset === false ) ? strlen( $htmlBody ) : $offset );
 
