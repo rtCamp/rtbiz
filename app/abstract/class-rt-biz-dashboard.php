@@ -89,12 +89,12 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				'department_by_contacts',
 			), $rt_biz_dashboard->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contact Type wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts Type wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
 				$this,
 				'contact_type_wise_contacts',
 			), $rt_biz_dashboard->screen_id, 'column2' );
 
-			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Offering wise Contact', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Offering wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
 				$this,
 				'offering_wise_contacts',
 			), $rt_biz_dashboard->screen_id, 'column3' );
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 				if ( $attr->attribute_store_as == 'taxonomy' ) {
-					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'Wise People' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
+					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'Wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
 		}
@@ -169,7 +169,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$taxonomy = Rt_Contact::$user_category_taxonomy;
 			$terms =  get_terms( $taxonomy);
 			$data_source = array();
-			$cols        = array( __( 'Contact type', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Contacts type', RT_BIZ_TEXT_DOMAIN), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
 			$rows        = array();
 			$post_type = rt_biz_get_contact_post_type();
 			$total = 0;
