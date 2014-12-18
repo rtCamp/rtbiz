@@ -89,7 +89,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				'department_by_contacts',
 			), $rt_biz_dashboard->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts Type wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contact Group wise Contacts', RT_BIZ_TEXT_DOMAIN ), array(
 				$this,
 				'contact_type_wise_contacts',
 			), $rt_biz_dashboard->screen_id, 'column2' );
