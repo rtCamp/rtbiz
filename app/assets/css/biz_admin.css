@@ -21,3 +21,61 @@
 	text-align: center;
 	margin-right: 10px;
 }
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+	position: absolute;
+	left: -18px;
+	margin-top: -2px;
+	-webkit-transition: all .1s ease-in-out;
+	transition: all .1s ease-in-out;
+}
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+	background: none;
+	color: #bbb;
+	content: '\f153';
+	display: block !important;
+	font: normal 16px/1 'dashicons';
+	speak: none;
+	height: 20px;
+	text-align: center;
+	width: 20px;
+	-webkit-font-smoothing: antialiased !important;
+}
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:hover:before {
+	color: #c00;
+}
+
+/* Smartphone */
+@media screen and (max-width: 600px) {
+	/* Make the close icon larger for tappability. */
+	#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+		font-size: 20px;
+		margin: 0;
+	}
+}
+
+.welcome-panel .welcome-networking:before {
+	content: "\f325";
+}
+
+.welcome-panel .welcome-groups:before {
+	content: "\f307";
+}
+
+.welcome-panel .welcome-admin-users:before {
+	content: "\f110";
+}
+
+.welcome-panel .welcome-admin-home:before {
+	content: "\f102";
+}
+
+.welcome-panel .welcome-lock:before {
+	content: "\f160";
+}
+
+.welcome-panel .welcome-universal-access-alt:before {
+	content: "\f507";
+}
