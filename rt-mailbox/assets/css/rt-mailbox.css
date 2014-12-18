@@ -1,0 +1,41 @@
+.rthd-remove-server {
+	margin-left: 5px;
+	color: red;
+}
+
+.rthd-hide-row {
+	display: none;
+}
+
+.rthd-show-row {
+	visibility:visible ;
+}
+
+.mailbox_reply_by_email_label{
+	font-weight: bold;
+}
+
+.enable_reply_div{
+	margin-top: 30px;
+}
+
+.hd-google-profile-table{
+	width: 80%;
+}
+
+.imap_servers{
+	margin-top: 30px;
+}
+
+#rthd_add_imap_server{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.imap_table{
+	min-width: 40%;
+}
+
+.imap_table tr td,.imap_table tr th{
+	padding: 5px;
+}

@@ -5,7 +5,7 @@
  * Date: 20/02/14
  * Time: 12:10 PM
  */
-if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
+if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 
 	class RT_Theme_Update_Checker {
 		public $theme = ''; //The theme associated with this update checker instance.
@@ -123,12 +123,19 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 				return $theme->get( 'Version' );
 			}
 
-			/** @noinspection PhpDeprecationInspection get_themes() used for compatibility with WP 3.3 and below. */
-			//foreach ( get_themes() as $theme ) {
-			//	if ( $theme[ 'Stylesheet' ] === $this->theme ){
-			//		return $theme[ 'Version' ];
-			//	}
-			//}
+			/**
+			 * @noinspection PhpDeprecationInspection get_themes() used for compatibility with WP 3.3 and below.
+			 */
+
+			/**
+			 *
+			 * foreach ( get_themes() as $theme ) {
+			 *  if ( $theme[ 'Stylesheet' ] === $this->theme ) {
+			 *      return $theme[ 'Version' ];
+			 *  }
+			 * }
+			 *
+			 */
 
 			return '';
 		}
@@ -250,4 +257,4 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ):
 		}
 	}
 
-endif;
+}
