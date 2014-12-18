@@ -67,6 +67,9 @@ Great! There are several ways you can get involved to help make Stream better:
 
 ## Changelog ##
 
+### 1.2 ###
+Mailbox Library
+
 ### 0.9 ###
 Rt_Offerings Refactor & Bug Fixes
 
