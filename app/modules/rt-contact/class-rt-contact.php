@@ -172,7 +172,14 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					$current ='current';
 					$checkreq =false;
 				}
-				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".$term->count.")</span></a></li>";
+				$posts = new WP_Query( array(
+					                       'post_type' => $this->post_type,
+					                       'post_status' => 'any',
+					                       'nopaging' => true,
+					                       self::$user_category_taxonomy => $term->slug,
+				                       ) );
+
+				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count($posts->posts).")</span></a></li>";
 			}
 			$current='';
 			if( $allflag ){
