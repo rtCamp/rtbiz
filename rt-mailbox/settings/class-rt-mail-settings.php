@@ -300,13 +300,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				$user_id = get_current_user_id();
 			}
 			global $rt_mail_accounts_model;
-			$result = $rt_mail_accounts_model->remove_mail_account(
-				array(
-					'email'   => $email,
-					//'user_id' => $user_id,
-				) );
+			$result = $rt_mail_accounts_model->remove_mail_account( array(
+				                                                        'email' => $email,
+				                                                        //'user_id' => $user_id,
+			                                                        ) );
 			$this->update_gmail_ac_count();
-
 			return $result;
 		}
 
