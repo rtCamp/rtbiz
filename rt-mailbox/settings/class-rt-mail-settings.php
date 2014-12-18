@@ -165,12 +165,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				$client->setClientId( $google_client_id );
 				$client->setClientSecret( $google_client_secret );
 				$client->setRedirectUri( $google_client_redirect_url );
-				$client->setScopes(
-					array(
-						'https://mail.google.com/',
-						'https://www.googleapis.com/auth/userinfo.email',
-						'https://www.googleapis.com/auth/userinfo.profile',
-					) );
+				$client->setScopes( array(
+					                    'https://mail.google.com/',
+					                    'https://www.googleapis.com/auth/userinfo.email',
+					                    'https://www.googleapis.com/auth/userinfo.profile',
+				                    ) );
 				$client->setAccessType( 'offline' );
 
 				$token = json_decode( $ac->outh_token );
