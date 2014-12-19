@@ -50,9 +50,9 @@ Please visit [rtBiz's FAQ page](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ 
 
 Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
-== Screenshots ==
+> Screenshots are soon to be come.
 
-> Soon to be come.
+== Screenshots ==
 
 ** License **
 

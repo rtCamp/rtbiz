@@ -53,6 +53,8 @@ Please visit [rtBiz's FAQ page](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ 
 
 Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
+> Screenshots are soon to be come.
+
 ## Screenshots ##
 
 
