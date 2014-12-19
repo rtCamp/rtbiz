@@ -168,7 +168,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Department' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug ) ); ?></li>
 							<?php } ?>
 
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', __( 'https://rtcamp.com/rtbiz/docs/' ) ); ?></li>
+							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', 'https://rtcamp.com/rtbiz/docs/' ); ?></li>
 						</ul>
 					</div>
 				</div>

@@ -2,9 +2,9 @@
 
 /*
   Plugin Name: rtBiz
-  Plugin URI: http://rtcamp.com/
+  Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 0.0.6
+  Version: 0.5
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -257,7 +257,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		/**
 		 *  Initialize Internal Menu Order.
-		 *  TODO - Not used as of now. Later on might be used if we have other sub-menus in rtBiz Menu.
 		 */
 		function init_menu_order() {
 
@@ -378,7 +377,25 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				add_filter( 'custom_menu_order', array( $this, 'custom_pages_order' ) );
 				add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_styles_scripts' ) );
+
+				add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, array( $this, 'plugin_action_links' ) );
+				add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
 			}
+		}
+
+		function plugin_action_links( $links ) {
+			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rt_Biz::$dashboard_slug ) . '">' . __( 'Get Started', RT_BIZ_TEXT_DOMAIN ) . '</a>';
+			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug ) . '">' . __( 'Settings', RT_BIZ_TEXT_DOMAIN ) . '</a>';
+			return $links;
+		}
+
+		function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+			if ( $plugin_file == RT_BIZ_BASE_NAME ) {
+				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/docs' . '">' . __( 'Documentation', RT_BIZ_TEXT_DOMAIN ) . '</a>';
+				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RT_BIZ_TEXT_DOMAIN ) . '</a>';
+				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/support' . '">' . __( 'Support', RT_BIZ_TEXT_DOMAIN ) . '</a>';
+			}
+			return $plugin_meta;
 		}
 
 		/**
@@ -766,13 +783,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '0.0.5' );
+	define( 'RT_BIZ_VERSION', '0.5' );
 }
 if ( ! defined( 'RT_BIZ_PATH' ) ) {
 	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
 }
 if ( ! defined( 'RT_BIZ_URL' ) ) {
 	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
+}
+if ( ! defined( 'RT_BIZ_BASE_NAME' ) ){
+	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
 }
 if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
 	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
