@@ -379,7 +379,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_styles_scripts' ) );
 
 				add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, array( $this, 'plugin_action_links' ) );
-				add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
+				//add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
 			}
 		}
 
