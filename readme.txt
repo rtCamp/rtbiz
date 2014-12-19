@@ -1,4 +1,4 @@
-=== rtBiz [![Build Status](https://travis-ci.org/rtcamp/rtbiz.svg?branch=master)](https://travis-ci.org/rtcamp/rtbiz) ===
+=== rtBiz ===
 Contributors:      rtCamp, desaiuditd
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
