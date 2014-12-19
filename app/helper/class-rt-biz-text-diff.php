@@ -42,7 +42,6 @@ if ( ! class_exists( 'Rt_Biz_Text_Diff' ) ) {
 		 */
 		function addedLine( $line ) {
 			return "<td style='padding: .5em;border: 0;width:25px;'>+</td><td style='padding: .5em;border: 0;background-color: #dfd; width: auto;'>{$line}</td>";
-//			return "++ {$line}";
 		}
 
 		/**
@@ -56,7 +55,6 @@ if ( ! class_exists( 'Rt_Biz_Text_Diff' ) ) {
 		 */
 		function deletedLine( $line ) {
 			return "<td style='padding: .5em;border: 0;width:25px;' >-</td><td style='padding: .5em;border: 0;background-color: #fdd; width: 40%;' >{$line}</td>";
-//			return "-- {$line}";
 		}
 
 		/**
@@ -70,7 +68,6 @@ if ( ! class_exists( 'Rt_Biz_Text_Diff' ) ) {
 		 */
 		function contextLine( $line ) {
 			return "<td style='padding: .5em;border: 0;' > </td><td style='padding: .5em;border: 0; width: auto;'>{$line}</td>";
-//			return "{$line}";
 
 		}
 	}

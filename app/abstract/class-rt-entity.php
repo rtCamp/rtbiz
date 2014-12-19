@@ -100,13 +100,13 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function save_old_data( $post_id ){
 
-			if( $_POST['post_type'] !='rt_contact' && $_POST['post_type'] !='rt_account' ){
+			if ( 'rt_contact' != $_POST['post_type'] && 'rt_account' != $_POST['post_type'] ) {
 				return;
 			}
 			$flag       = false;
 			if ( isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ Rt_Contact::$user_category_taxonomy ] ) ) {
 				$post_terms = wp_get_post_terms( $post_id, Rt_Contact::$user_category_taxonomy );
-				$postterms  = array_filter( $_POST[ 'tax_input' ][ Rt_Contact::$user_category_taxonomy ] );
+				$postterms  = array_filter( $_POST['tax_input'][ Rt_Contact::$user_category_taxonomy ] );
 				$termids    = wp_list_pluck( $post_terms, 'term_id' );
 				$diff       = array_diff( $postterms, $termids );
 				$diff2      = array_diff( $termids, $postterms );
@@ -115,23 +115,23 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$diff_tax2  = array();
 				foreach ( $diff as $tax_id ) {
 					$tmp          = get_term_by( 'id', $tax_id, Rt_Contact::$user_category_taxonomy );
-					$diff_tax1[ ] = $tmp->name;
+					$diff_tax1[] = $tmp->name;
 				}
 
 				foreach ( $diff2 as $tax_id ) {
 					$tmp          = get_term_by( 'id', $tax_id, Rt_Contact::$user_category_taxonomy );
-					$diff_tax2[ ] = $tmp->name;
+					$diff_tax2[] = $tmp->name;
 				}
 
 				$difftxt = rtbiz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
 
-				if ( !empty( $difftxt ) || $difftxt != '' ) {
-					$body = "<strong>".__('User Category')."</strong> : " . $difftxt;
+				if ( ! empty( $difftxt ) || $difftxt != '' ) {
+					$body = '<strong>'.__( 'User Category' ).'</strong> : ' . $difftxt;
 					$flag = true;
 				}
 			}
 
-			$meta_key= '';
+			$meta_key = '';
 			switch ( $_POST['post_type'] ){
 				case 'rt_contact':
 					$meta_key = 'contact_meta';
@@ -142,50 +142,49 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 
 			foreach ( $this->meta_fields as $field ){
-				if( !isset($_POST[ $meta_key ][ $field[ 'key' ] ])){
+				if ( ! isset( $_POST[ $meta_key ][ $field['key'] ] ) ) {
 					continue;
 				}
 
-
-				if( $field['key'] == 'contact_primary_email'){
-					if (! biz_is_primary_email_unique($_POST[ 'contact_meta' ][ $field[ 'key' ]])){
+				if ( 'contact_primary_email' == $field['key'] ) {
+					if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
 
 				if ( $field['key'] == Rt_Company::$primary_email ){
-					if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field[ 'key' ] ] )){
+					if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
 
-				if ($field['is_multiple'] == 'true' ) {
-					$val=  self::get_meta( $post_id, $field['key'] );
+				if ( 'true' == $field['is_multiple'] ) {
+					$val = self::get_meta( $post_id, $field['key'] );
 					$filerval  = array_filter( $val );
-					$filerpost = array_filter( $_POST[ $meta_key ][ $field[ 'key' ] ] );
+					$filerpost = array_filter( $_POST[ $meta_key ][ $field['key'] ] );
 					$diff      = array_diff( $filerval, $filerpost );
 					$diff2 = array_diff( $filerpost, $filerval );
 					$difftxt = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
-					if ( !empty( $difftxt ) || $difftxt != '' ) {
-						$skip_enter= str_replace('Enter','',$field['label']);
-						$body.= "<strong>{$skip_enter}</strong> : ".$difftxt;
+					if ( ! empty( $difftxt ) || $difftxt != '' ) {
+						$skip_enter = str_replace( 'Enter', '', $field['label'] );
+						$body .= "<strong>{ $skip_enter }</strong> : ".$difftxt;
 						$flag = true;
 					}
 				}
-				else{
-					$val=  self::get_meta( $post_id, $field['key'],true );
-					$newval =  $_POST[ $meta_key ][ $field[ 'key' ] ];
-					if ($val != $newval){
-						$difftxt = rtbiz_text_diff($val, $newval );
-						$skip_enter= str_replace('Enter','',$field['label']);
-						$body.= "<strong>{$skip_enter}</strong> : ".$difftxt;
+				else {
+					$val    = self::get_meta( $post_id, $field['key'], true );
+					$newval = $_POST[ $meta_key ][ $field['key'] ];
+					if ( $val != $newval ){
+						$difftxt = rtbiz_text_diff( $val, $newval );
+						$skip_enter = str_replace( 'Enter','',$field['label'] );
+						$body .= "<strong>{ $skip_enter }</strong> : ".$difftxt;
 						$flag = true;
 					}
 				}
 			}
-			if ($flag){
-				$user=  wp_get_current_user();
-				$body = "Updated by <strong>".$user->display_name. "</strong> <br/>" .$body;
+			if ( $flag ) {
+				$user = wp_get_current_user();
+				$body = 'Updated by <strong>'.$user->display_name. '</strong> <br/>' .$body;
 				$settings  = biz_get_redux_settings();
 				$label             = $settings['menu_label'];
 				$data = array(
@@ -234,8 +233,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		function render_assign_to_meta_box( $post ){
 
 			$assigned = rt_biz_get_entity_meta( $post->ID,'assgin_to', true );
-			$assignedHTML='';
-			if($assigned && !empty($assigned)){
+			$assignedHTML = '';
+			if ( $assigned && ! empty( $assigned ) ) {
 				$author = get_user_by( 'id', $assigned );
 				$assignedHTML = "<li id='assign-auth-" . $author->ID . "' class='contact-list'>" .
 				                 get_avatar( $author->user_email, 24 ) .
@@ -247,7 +246,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 			$arrSubscriberUser = array();
 			foreach ( $emps as $author ) {
-				$arrSubscriberUser[ ] = array(
+				$arrSubscriberUser[] = array(
 					'id'             => $author->ID,
 					'label'          => $author->display_name,
 					'imghtml'        => get_avatar( $author->user_email, 24 ),
@@ -257,7 +256,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			?>
 			<div class="">
 			<span class="prefix"
-			      title="<?php __( 'Assign to'); ?>"><label><strong><?php __( 'Assign to'); ?></strong></label></span>
+			      title="<?php __( 'Assign to' ); ?>"><label><strong><?php __( 'Assign to' ); ?></strong></label></span>
 				<script>
 					var arr_assign_user =<?php echo json_encode( $arrSubscriberUser ); ?>;
 				</script>
@@ -271,7 +270,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function save_meta_assign_to( $post ){
 			if ( isset( $_POST['assign_to'] ) ){
-				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to']);
+				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to'] );
 			}
 		}
 
@@ -300,14 +299,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$category = array_unique( wp_list_pluck( $this->meta_fields, 'category' ) );
 			$cathtml = array();
 			foreach ( $category as $key => $value ){
-				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value )). __(' information').' </h3> </div>';
+				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value ) ). __( ' information' ).' </h3> </div>';
 			}
-			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> '.__('Other information').'</h3> </div>';
+			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> '.__( 'Other information' ).'</h3> </div>';
 			$other_flag = false;
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Contact::$employees_category_slug);
+				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Contact::$employees_category_slug );
 				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
@@ -362,7 +361,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
-				} else if ( isset( $field['type'] ) && $field['type'] == 'user_group' ) {
+				} else if ( isset( $field['type'] ) && 'user_group' == $field['type'] ) {
 					$user_id = self::get_meta( $post->ID, $field['key'], true );
 					if ( empty( $user_id ) ) {
 						continue;
@@ -390,35 +389,34 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					<?php
 				}
 				$tmphtml = ob_get_clean();
-				if (isset($field['category'])){
-					$cathtml[$field['category']].=$tmphtml;
+				if ( isset( $field['category'] ) ) {
+					$cathtml[ $field['category'] ] .= $tmphtml;
 				}
-				else{
-					$cathtml['other'].=$tmphtml;
-					$other_flag= true;
+				else {
+					$cathtml['other'] .= $tmphtml;
+					$other_flag = true;
 				}
-
 			}
-			if (isset($cathtml['contact'])){
+			if ( isset( $cathtml['contact'] ) ) {
 				echo $cathtml['contact'];
-				unset ($cathtml['contact']);
+				unset ( $cathtml['contact'] );
 			}
-			if (isset($cathtml['social'])){
+			if ( isset( $cathtml['social'] ) ) {
 				echo $cathtml['social'];
-				unset ($cathtml['social']);
+				unset ( $cathtml['social'] );
 			}
-			if (isset($cathtml['hr'])){
+			if ( isset( $cathtml['hr'] ) ) {
 				echo $cathtml['hr'];
-				unset ($cathtml['hr']);
+				unset ( $cathtml['hr'] );
 			}
 
-			foreach ($cathtml as $key=>$value){
-				if ($key=='other'){
-					if($other_flag==true){
+			foreach ( $cathtml as $key => $value ){
+				if ( 'other' == $key ){
+					if ( true == $other_flag ) {
 						echo $value;
 					}
 				}
-				else{
+				else {
 					echo $value;
 				}
 			}
@@ -450,11 +448,11 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			 */
 
 			// Check if our nonce is set.
-			if ( ! isset( $_POST[ 'rt_biz_additional_details_metabox_nonce' ] ) ) {
+			if ( ! isset( $_POST['rt_biz_additional_details_metabox_nonce'] ) ) {
 				return;
 			}
 
-			$nonce = $_POST[ 'rt_biz_additional_details_metabox_nonce' ];
+			$nonce = $_POST['rt_biz_additional_details_metabox_nonce'];
 
 			// Verify that the nonce is valid.
 			if ( ! wp_verify_nonce( $nonce, 'rt_biz_additional_details_metabox' ) ) {
@@ -615,7 +613,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			);
 
 			if ( $fetch_entity ) {
-				$args[ 'post_type' ] = $this->post_type;
+				$args['post_type'] = $this->post_type;
 			}
 
 			return get_posts( $args );

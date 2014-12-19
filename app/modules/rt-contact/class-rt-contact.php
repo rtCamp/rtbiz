@@ -110,9 +110,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		function manage_contact_column_body( $display, $column, $term_id ){
-			switch ($column){
+			switch ( $column ){
 				case 'users':
-					$term  =get_term( $term_id, self::$user_category_taxonomy );
+					$term  = get_term( $term_id, self::$user_category_taxonomy );
 					$posts = new WP_Query( array(
 						                       'post_type' => $this->post_type,
 						                       'post_status' => 'any',
@@ -160,7 +160,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function connect_contact_to_user( $from = '', $to = '' ) {
 			if ( ! p2p_connection_exists( $this->post_type . '_to_user', array( 'from' => $from, 'to' => $to ) ) ) {
 				p2p_type( $this->post_type . '_to_user' )->connect( $from, $to, array(
-					'date' => current_time('mysql')
+					'date' => current_time( 'mysql' )
 				) );
 			}
 		}
@@ -181,21 +181,21 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function edit_view_filters($views){
 
-			$terms      = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ));
+			$terms      = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ) );
 			$subsubsub  = array();
 			$checkreq   = false;
 			$allflag    = false;
 			if ( isset( $_REQUEST[ self::$user_category_taxonomy ] ) ){
 				$checkreq = true;
 			}
-			else{
+			else {
 				$allflag = true;
 			}
-			foreach ($terms as $term){
-				$current='';
-				if( $checkreq && $_REQUEST[ self::$user_category_taxonomy ] == $term->slug ){
-					$current ='current';
-					$checkreq =false;
+			foreach ( $terms as $term ){
+				$current = '';
+				if ( $checkreq && $_REQUEST[ self::$user_category_taxonomy ] == $term->slug ){
+					$current  = 'current';
+					$checkreq = false;
 				}
 				$posts = new WP_Query( array(
 					                       'post_type' => $this->post_type,
@@ -204,16 +204,16 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					                       self::$user_category_taxonomy => $term->slug,
 				                       ) );
 
-				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy."=".$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count($posts->posts).")</span></a></li>";
+				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
 			}
-			$current='';
-			if( $allflag ){
-				$current ='current';
+			$current = '';
+			if ( $allflag ){
+				$current = 'current';
 			}
-			$something = wp_count_posts('rt_contact');
-			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__('All')." <span class='count'> (".$something->publish.")</span></a>" );
+			$something = wp_count_posts( 'rt_contact' );
+			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
 			echo '<ul class="subsubsub">';
-			echo implode(" | ", array_merge( $top, $subsubsub ) );
+			echo implode( ' | ', array_merge( $top, $subsubsub ) );
 			echo '</ul>';
 			//			return $views;
 		}
@@ -243,15 +243,15 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$default_categories = array(
 				array(
 					'name' => 'Employees',
-					'slug' => self::$employees_category_slug
+					'slug' => self::$employees_category_slug,
 				),
 				array(
 					'name' => 'Customers',
-					'slug' => self::$customer_category_slug
+					'slug' => self::$customer_category_slug,
 				),
 				array(
 					'name' => 'Vendors',
-					'slug' =>  self::$vendor_category_slug
+					'slug' => self::$vendor_category_slug,
 				),
 			);
 
@@ -587,30 +587,31 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'contact_meta' ][ $field[ 'key' ] ] ) ) {
-					if( $field['key'] == $this->primary_email_key ){
-						if (! biz_is_primary_email_unique($_POST[ 'contact_meta' ][ $field[ 'key' ]])){
+				if ( isset( $_POST['contact_meta'][ $field['key'] ] ) && ! empty( $_POST['contact_meta'][ $field['key'] ] ) ) {
+					if ( $field['key'] == $this->primary_email_key ) {
+						if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
 							continue;
 						}
 					}
-					$contact_meta[ $field[ 'key' ] ] = $_POST[ 'contact_meta' ][ $field[ 'key' ] ];
-					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
-						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
+					$contact_meta[ $field['key'] ] = $_POST['contact_meta'][ $field['key'] ];
+					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
+						$oldmeta = self::get_meta( $post_id, $field['key'] );
 						foreach ( $oldmeta as $ometa ) {
-							self::delete_meta( $post_id, $field[ 'key' ], $ometa );
+							self::delete_meta( $post_id, $field['key'], $ometa );
 						}
-						foreach ( $contact_meta[ $field[ 'key' ] ] as $nmeta ) {
-							if ( $nmeta == '' )
+						foreach ( $contact_meta[ $field['key'] ] as $nmeta ) {
+							if ( $nmeta == '' ){
 								continue;
-							self::add_meta( $post_id, $field[ 'key' ], $nmeta );
+							}
+							self::add_meta( $post_id, $field['key'], $nmeta );
 						}
 					} else {
-						self::update_meta( $post_id, $field[ 'key' ], $_POST[ 'contact_meta' ][ $field[ 'key' ] ] );
+						self::update_meta( $post_id, $field['key'], $_POST['contact_meta'][ $field['key'] ] );
 					}
 				} else {
-					$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
+					$oldmeta = self::get_meta( $post_id, $field['key'] );
 					foreach ( $oldmeta as $ometa ) {
-						self::delete_meta( $post_id, $field[ 'key' ], $ometa );
+						self::delete_meta( $post_id, $field['key'], $ometa );
 					}
 				}
 			}
@@ -631,25 +632,25 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$cols = array();
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
-			$cols['taxonomy-' . Rt_Contact::$user_category_taxonomy ] = $columns['taxonomy-' . Rt_Contact::$user_category_taxonomy ];
+			$cols[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] = $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ];
 			$cols['author'] = $columns['author'];
 			$cols['contact_Assignee'] = __( 'Assigned To' );
 			if ( $rtbiz_offerings ){
-				$cols['taxonomy-' . Rt_Offerings::$offering_slug ] = $columns['taxonomy-' . Rt_Offerings::$offering_slug ];
+				$cols[ 'taxonomy-' . Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-' . Rt_Offerings::$offering_slug ];
 			}
-			$cols['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] = $rt_company->labels['singular_name'];
+			$cols[ 'p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] = $rt_company->labels['singular_name'];
 			$cols['date'] = $columns['date'];
-			$cols['p2p-from-' . $rt_contact->post_type . '_to_user'] = __( 'User' );
-			$cols[ 'contact_phone' ] = __( 'Phone Number' );
-			$cols[ 'contact_email' ] = __( 'Email ID' );
+			$cols[ 'p2p-from-' . $rt_contact->post_type . '_to_user' ] = __( 'User' );
+			$cols['contact_phone'] = __( 'Phone Number' );
+			$cols['contact_email'] = __( 'Email ID' );
 
 			unset( $columns['title'] );
-			unset( $columns['taxonomy-' . Rt_Contact::$user_category_taxonomy ] );
+			unset( $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] );
 			unset( $columns['author'] );
 			unset( $columns['date'] );
-			unset( $columns['taxonomy-' . Rt_Offerings::$offering_slug ] );
-			unset( $columns['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] );
-			unset( $columns['p2p-from-' . $rt_contact->post_type . '_to_user'] );
+			unset( $columns[ 'taxonomy-' . Rt_Offerings::$offering_slug ] );
+			unset( $columns[ 'p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] );
+			unset( $columns[ 'p2p-from-' . $rt_contact->post_type . '_to_user' ] );
 			unset( $columns['comments'] );
 
 			$cols = array_merge( $cols, $columns );
@@ -698,7 +699,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 									'post_type'  => $this->post_type,
 									'created_by' => $user_id,
 								), 'edit.php' ) );
-						printf( "<a href='%s'>%s</a>", $url, $user_info->display_name );
+								printf( "<a href='%s'>%s</a>", $url, $user_info->display_name );
 					}
 					break;
 			}
@@ -714,14 +715,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @return int|WP_Error
 		 */
 		function add_contact( $name, $description = '' ) {
-			$contact_id = wp_insert_post(
-					array(
-						'post_title' => $name,
-						'post_content' => $description,
-						'post_type' => $this->post_type,
-						'post_status' => 'publish',
-					)
-			);
+			$contact_id = wp_insert_post( array(
+				                              'post_title'   => $name,
+				                              'post_content' => $description,
+				                              'post_type'    => $this->post_type,
+				                              'post_status'  => 'publish',
+			                              ) );
 
 			return $contact_id;
 		}
@@ -733,15 +732,14 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @return array
 		 */
 		function get_by_email( $email ) {
-			return ( ! empty( $email ) ) ? get_posts(
-							array(
-								'meta_key' => self::$meta_key_prefix . $this->primary_email_key, // primary email
-								'meta_value' => $email,
-								'post_type' => $this->post_type,
-								'post_status' => 'any',
-								'nopaging' => true,
-							)
-					) : array();
+			return ( ! empty( $email ) ) ? get_posts( array(
+				                                          'meta_key'    => self::$meta_key_prefix . $this->primary_email_key,
+				                                          // primary email
+				                                          'meta_value'  => $email,
+				                                          'post_type'   => $this->post_type,
+				                                          'post_status' => 'any',
+				                                          'nopaging'    => true,
+			                                          ) ) : array();
 		}
 
 		/**
@@ -752,15 +750,13 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @return mixed
 		 */
 		function get_contact_for_wp_user( $user_id ) {
-			return get_posts(
-					array(
-						'connected_type' => $this->post_type . '_to_user',
-						'connected_items' => $user_id,
-						'post_type' => $this->post_type,
-						'post_status' => 'any',
-						'nopaging' => true,
-					)
-			);
+			return get_posts( array(
+				                  'connected_type'  => $this->post_type . '_to_user',
+				                  'connected_items' => $user_id,
+				                  'post_type'       => $this->post_type,
+				                  'post_status'     => 'any',
+				                  'nopaging'        => true,
+			                  ) );
 		}
 
 		/**
@@ -815,16 +811,16 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		function get_user_from_name() {
-			if ( ! isset( $_POST[ 'query' ] ) ) {
+			if ( ! isset( $_POST['query'] ) ) {
 				wp_die( 'Invalid request Data' );
 			}
-			$query = $_POST[ 'query' ];
+			$query = $_POST['query'];
 			global $wpdb;
 
 			$results = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
 			$arrReturn = array();
 			foreach ( $results as $author ) {
-				$arrReturn[] = array( "id" => $author->ID, "label" => $author->display_name, "imghtml" => get_avatar( $author->user_email, 25 ) );
+				$arrReturn[] = array( 'id' => $author->ID, 'label' => $author->display_name, 'imghtml' => get_avatar( $author->user_email, 25 ) );
 			}
 			header( 'Content-Type: application/json' );
 			echo json_encode( $arrReturn );

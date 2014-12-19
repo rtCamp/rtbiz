@@ -2,8 +2,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ){
 	exit;
+}
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -51,7 +52,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 			$qv = &$query->query_vars;
 
 			$post_types = array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() );
-			if ( $pagenow != 'edit.php' || ! in_array( $typenow, $post_types ) ) {
+			if ( 'edit.php' != $pagenow || ! in_array( $typenow, $post_types ) ) {
 				return;
 			}
 
@@ -62,13 +63,13 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
-				if ( $attr->attribute_store_as == 'taxonomy' ) {
+				if ( 'taxonomy' == $attr->attribute_store_as ) {
 					$taxonomies[] = $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
 					if ( ! empty( $qv[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
-						$qv[ 'taxonomy' ] = $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
-						$qv[ 'term_id' ] = $qv[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
-						$term = get_term_by( 'id', $qv[ 'term_id' ], $qv[ 'taxonomy' ] );
-						$qv[ 'term' ] = $term->slug;
+						$qv['taxonomy'] = $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
+						$qv['term_id'] = $qv[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
+						$term = get_term_by( 'id', $qv['term_id'], $qv['taxonomy'] );
+						$qv['term'] = $term->slug;
 						unset( $qv[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] );
 					} else {
 						unset( $qv[ $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] );
@@ -88,7 +89,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 				$relations = $rt_biz_attributes_relationship_model->get_relations_by_post_type( $typenow );
 				foreach ( $relations as $r ) {
 					$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
-					if ( $attr->attribute_store_as == 'taxonomy' ) {
+					if ( 'taxonomy' == $attr->attribute_store_as ) {
 						$tax = get_taxonomy( $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) );
 						if ( ! empty( $tax ) ) {
 							$args = array(

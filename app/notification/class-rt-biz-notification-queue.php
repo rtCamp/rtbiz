@@ -3,8 +3,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ){
 	exit;
+}
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -43,14 +44,14 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 
 		// add cron time interval
 		function notification_queue_cron_interval( $interval ) {
-			$interval[ 'everyminute' ] = array( 'interval' => 60, 'display' => __( 'Every Minute' ) );
-			$interval[ 'every5minute' ] = array( 'interval' => 5*60, 'display' => __( 'Every 5 Minute' ) );
+			$interval['everyminute'] = array( 'interval' => 60, 'display' => __( 'Every Minute' ) );
+			$interval['every5minute'] = array( 'interval' => 5 * 60, 'display' => __( 'Every 5 Minute' ) );
 			return $interval;
 		}
 
 		function execute_notification_queue_cron() {
 			global $rt_biz_notification_queue_model;
-			$notifications = $rt_biz_notification_queue_model->get_by_sent('no');
+			$notifications = $rt_biz_notification_queue_model->get_by_sent( 'no' );
 
 			if ( $notifications['total'] && ! empty( $notifications['result'] ) ) {
 				foreach ( $notifications['result'] as $n ) {
@@ -81,7 +82,7 @@ if ( ! class_exists( 'RT_Biz_Notification_Queue' ) ) {
 			// as of now only email preference. later on user preference will be added for how he/she wants to get notified.
 			$user = get_user_by( 'id', $user_id );
 			$headers = 'Content-Type: text/html';
-			return wp_mail($user->user_email, $subject, $message, $headers, $attachment);
+			return wp_mail( $user->user_email, $subject, $message, $headers, $attachment );
 		}
 
 	}

@@ -2,8 +2,9 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ){
 	exit;
+}
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -139,12 +140,6 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'content' => '',
 						'page' => Rt_Biz::$settings_slug,
 					),
-//					array(
-//						'id' => 'settings_screen_content',
-//						'title' => __( 'Screen Content' ),
-//						'content' => '',
-//						'page' => Rt_Biz::$settings_slug,
-//					),
 					array(
 						'id' => 'attributes_overview',
 						'title' => __( 'Overview' ),
@@ -182,41 +177,41 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 		}
 
 		function check_tabs() {
-			if ( isset( $this->tabs[ $GLOBALS[ 'pagenow' ] ] ) ) {
-				switch ( $GLOBALS[ 'pagenow' ] ) {
+			if ( isset( $this->tabs[ $GLOBALS['pagenow'] ] ) ) {
+				switch ( $GLOBALS['pagenow'] ) {
 					case 'post-new.php':
 					case 'edit.php':
-						if ( isset( $_GET[ 'post_type' ] ) ) {
-							foreach ( $this->tabs[ $GLOBALS[ 'pagenow' ] ] as $args ) {
-								if ( $args[ 'post_type' ] == $_GET[ 'post_type' ] ) {
+						if ( isset( $_GET['post_type'] ) ) {
+							foreach ( $this->tabs[ $GLOBALS['pagenow'] ] as $args ) {
+								if ( $args['post_type'] == $_GET['post_type'] ) {
 									$this->add_tab( $args );
 								}
 							}
 						}
 						break;
 					case 'post.php':
-						if ( isset( $_GET[ 'post' ] ) ) {
-							$post_type = get_post_type( $_GET[ 'post' ] );
-							foreach ( $this->tabs[ $GLOBALS[ 'pagenow' ] ] as $args ) {
-								if ( $args[ 'post_type' ] == $post_type ) {
+						if ( isset( $_GET['post'] ) ) {
+							$post_type = get_post_type( $_GET['post'] );
+							foreach ( $this->tabs[ $GLOBALS['pagenow'] ] as $args ) {
+								if ( $args['post_type'] == $post_type ) {
 									$this->add_tab( $args );
 								}
 							}
 						}
 						break;
 					case 'admin.php':
-						if ( isset( $_GET[ 'page' ] ) ) {
-							foreach ( $this->tabs[ $GLOBALS[ 'pagenow' ] ] as $args ) {
-								if ( $args[ 'page' ] == $_GET[ 'page' ] ) {
+						if ( isset( $_GET['page'] ) ) {
+							foreach ( $this->tabs[ $GLOBALS['pagenow'] ] as $args ) {
+								if ( $args['page'] == $_GET['page'] ) {
 									$this->add_tab( $args );
 								}
 							}
 						}
 						break;
 					case 'edit-tags.php':
-						if ( isset( $_GET[ 'taxonomy' ] ) ) {
-							foreach ( $this->tabs[ $GLOBALS[ 'pagenow' ] ] as $args ) {
-								if ( $args[ 'taxonomy' ] == $_GET[ 'taxonomy' ] ) {
+						if ( isset( $_GET['taxonomy'] ) ) {
+							foreach ( $this->tabs[ $GLOBALS['pagenow'] ] as $args ) {
+								if ( $args['taxonomy'] == $_GET['taxonomy'] ) {
 									$this->add_tab( $args );
 								}
 							}
@@ -228,11 +223,8 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 
 		function add_tab( $args ) {
 			get_current_screen()->add_help_tab( array(
-				'id' => $args[ 'id' ],
-				'title' => $args[ 'title' ],
-				// You can directly set content as well.
-//				'content' => $args[ 'content' ],
-				// This is for some extra content & logic
+				'id' => $args['id'],
+				'title' => $args['title'],
 				'callback' => array( $this, 'tab_content' ),
 			) );
 			get_current_screen()->set_help_sidebar( $this->help_sidebar_content );
@@ -240,7 +232,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 
 		function tab_content( $screen, $tab ) {
 			// Some Extra content with logic
-			switch ( $tab[ 'id' ] ) {
+			switch ( $tab['id'] ) {
 				case 'create_person_overview':
 				case 'edit_person_overview':
 					?>
@@ -449,16 +441,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					$menu_label = $settings['menu_label'];
 					?>
 					<p>
-						<?php echo sprintf ( __( 'This screen consists of all the %s settings.' ), $menu_label ); ?>
+						<?php echo sprintf( __( 'This screen consists of all the %s settings.' ), $menu_label ); ?>
 						<?php _e( 'The settings are divided into different tabs depending upon their functionality.' ); ?>
 						<?php _e( 'You can configure & update them according to your choice from here.' ); ?>
 						<?php _e( 'There\'s also a buttom named "Reset to Default" which will put all settings to its default values.' ); ?>
 					</p>
 					<?php
 					break;
-//				case 'settings_screen_content':
-//					// Put Screen Content Option if required.
-//					break;
 				case 'attributes_overview':
 					?>
 					<p>

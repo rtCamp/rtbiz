@@ -157,10 +157,10 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					'subtitle' => __( 'Select the plugin you want to use for product sync.' ),
 					'desc'     => __( '' ),
 					'type'     => 'radio',
-					'options'  =>  array(
-						'none'         => __( 'None' ),
+					'options'  => array(
+						'none'        => __( 'None' ),
 						'woocommerce' => __( 'Woocommerce' ),
-						'edd' => __( 'Easy Digital Download' ),
+						'edd'         => __( 'Easy Digital Download' ),
 					),
 					'default'  => 'none',
 				),

@@ -3,7 +3,7 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined('ABSPATH') ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -229,30 +229,31 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		 */
 		function save_meta_values( $post_id ) {
 			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) && ! empty( $_POST[ 'account_meta' ][ $field[ 'key' ] ] ) ) {
-					if( $field['key'] == self::$primary_email ){
-						if ( ! biz_is_primary_email_unique_company( $_POST[ 'account_meta' ][ $field[ 'key' ]] )){
+				if ( isset( $_POST['account_meta'][ $field['key'] ] ) && ! empty( $_POST['account_meta'][ $field['key'] ] ) ) {
+					if ( $field['key'] == self::$primary_email ) {
+						if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
 							continue;
 						}
 					}
-					$account_meta[ $field[ 'key' ] ] = $_POST[ 'account_meta' ][ $field[ 'key' ] ];
-					if ( isset( $field[ 'is_multiple' ] ) && $field[ 'is_multiple' ] ) {
-						$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
+					$account_meta[ $field['key'] ] = $_POST['account_meta'][ $field['key'] ];
+					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
+						$oldmeta = self::get_meta( $post_id, $field['key'] );
 						foreach ( $oldmeta as $ometa ) {
-							self::delete_meta( $post_id, $field[ 'key' ], $ometa );
+							self::delete_meta( $post_id, $field['key'], $ometa );
 						}
-						foreach ( $account_meta[ $field[ 'key' ] ] as $nmeta ) {
-							if ( $nmeta == '' )
+						foreach ( $account_meta[ $field['key'] ] as $nmeta ) {
+							if ( $nmeta == '' ){
 								continue;
-							self::add_meta( $post_id, $field[ 'key' ], $nmeta );
+							}
+							self::add_meta( $post_id, $field['key'], $nmeta );
 						}
 					} else {
-						self::update_meta( $post_id, $field[ 'key' ], $_POST[ 'account_meta' ][ $field[ 'key' ] ] );
+						self::update_meta( $post_id, $field['key'], $_POST['account_meta'][ $field['key'] ] );
 					}
 				} else {
-					$oldmeta = self::get_meta( $post_id, $field[ 'key' ] );
+					$oldmeta = self::get_meta( $post_id, $field['key'] );
 					foreach ( $oldmeta as $ometa ) {
-						self::delete_meta( $post_id, $field[ 'key' ], $ometa );
+						self::delete_meta( $post_id, $field['key'], $ometa );
 					}
 				}
 			}
@@ -300,14 +301,12 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		 * @return int|WP_Error
 		 */
 		function add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
-			$org_id = wp_insert_post(
-					array(
-						'post_title' => $name,
-						'post_content' => $note,
-						'post_type' => $this->post_type,
-						'post_status' => 'publish',
-					)
-			);
+			$org_id = wp_insert_post( array(
+				                          'post_title'   => $name,
+				                          'post_content' => $note,
+				                          'post_type'    => $this->post_type,
+				                          'post_status'  => 'publish',
+			                          ) );
 
 			if ( ! empty( $address ) ) {
 				self::update_meta( $org_id, 'account_address', $address );
@@ -329,13 +328,11 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		}
 
 		function get_company() {
-			return get_posts(
-					array(
-						'post_type' => $this->post_type,
-						'post_status' => 'any',
-						'nopaging' => true,
-					)
-			);
+			return get_posts( array(
+				                  'post_type'   => $this->post_type,
+				                  'post_status' => 'any',
+				                  'nopaging'    => true,
+			                  ) );
 		}
 
 	}

@@ -77,7 +77,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			);
 
 			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, );
-			$supported_posttypes = array( );
+			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_department_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
 
@@ -358,7 +358,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			}
 
 			$term_meta = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '-meta', true );
-			if ( !empty( $term_meta ) ){
+			if ( ! empty( $term_meta ) ) {
 				if ( ! empty( $key ) ) {
 					return isset( $term_meta[ $key ] ) ? $term_meta[ $key ] : false;
 				} else {
@@ -438,8 +438,8 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 					</p>
 				</div>
 				<div id="color-picker"
-				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div> <?php
-			}
+				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+			<?php }
 		}
 	}
 }
