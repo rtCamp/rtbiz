@@ -164,16 +164,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
-			// Loop through tabs and build navigation
-			foreach ( array_values( $filterd_tab ) as $tab_data ) {
-				$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
-				$tab_class  = $is_current ? $active_class : $idle_class;
 
-				if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
-					$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+			if ( ! empty( $filterd_tab ) ){
+				$tabs_html .= '<div class="nav-tab-wrapper" >';
+				// Loop through tabs and build navigation
+				foreach ( array_values( $filterd_tab ) as $tab_data ) {
+					$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+					$tab_class  = $is_current ? $active_class : $idle_class;
+
+					if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
+						$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+					}
+
+					$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
 				}
-
-				$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
+				$tabs_html .= '</div>';
 			}
 
 			// Output the tabs
@@ -194,30 +199,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function mailbox_view(){
 			global $rt_setting_inbound_email;
 			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
-			}
-			?>
-			<form method="post" action="">
-				<div class="enable_reply_div">
-					<span class="mailbox_reply_by_email_label"><?php echo __( 'Enable Reply by Email: ' ); ?></span>
-			<?php $val = self::get_enable_by_reply_email();
-			$yes    = '';
-			$noflag = '';
-			if ( 'yes' == $val ){
-				$yes    = 'checked';
-			}
-			else {
-				$noflag = 'checked';
-			}
-			?>
-					<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo $yes; ?> ><?php echo __( 'Enable' ); ?>
-					<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo $noflag; ?>><?php echo __( 'Disable' );?>
-				</div>
+				if ( ! empty( $_POST['mailbox_reply_by_email'] ) ){
+					update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
+				}
 
-			<?php
-			$rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules );
-			?>				<input class="button button-primary" type="submit" value="Save">
-			</form> <?php
+				//$rt_setting_inbound_email->save_replay_by_email( );
+			}
+			?>
+			<div class="tab-body-wrapper">
+					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules ); ?>
+			</div>
+			 <?php
 		}
 
 		function imap_view(){
