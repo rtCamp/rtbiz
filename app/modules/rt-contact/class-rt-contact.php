@@ -614,7 +614,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			}
 			$cols['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] = $rt_company->labels['singular_name'];
 			$cols['date'] = $columns['date'];
-			$cols['p2p-to-' . $rt_contact->post_type . '_to_user'] = __( 'User' );
+			$cols['p2p-from-' . $rt_contact->post_type . '_to_user'] = __( 'User' );
 			$cols[ 'contact_phone' ] = __( 'Phone Number' );
 			$cols[ 'contact_email' ] = __( 'Email ID' );
 
@@ -624,7 +624,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			unset( $columns['date'] );
 			unset( $columns['taxonomy-' . Rt_Offerings::$offering_slug ] );
 			unset( $columns['p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type ] );
-			unset( $columns['p2p-to-' . $rt_contact->post_type . '_to_user'] );
+			unset( $columns['p2p-from-' . $rt_contact->post_type . '_to_user'] );
 			unset( $columns['comments'] );
 
 			$cols = array_merge( $cols, $columns );
