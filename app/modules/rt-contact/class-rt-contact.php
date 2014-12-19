@@ -651,7 +651,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					break;
 
 				case 'contact_email':
-					$val = self::get_meta( $post_id, 'contact_email' );
+					$val = self::get_meta( $post_id, $this->primary_email_key );
 					if ( ! empty( $val ) ) {
 						$emails = array();
 						foreach ( $val as $e ) {
