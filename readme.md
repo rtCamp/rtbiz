@@ -29,7 +29,7 @@ Following are some of the trivial features that rtBiz offers:
 * Custom Attributes
 * Mailbox Module
 
-**NOTE**: Development in progress
+**NOTE**: Development in progress. This is still a **BETA** Version.
 
 **Important Links ( Future Links - doesn't exist right now )**
 
@@ -57,6 +57,9 @@ Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 
 ## Changelog ##
+
+### 0.5 ###
+* Beta Version Release on WordPress.org
 
 ### 0.1 ###
 * Plugin Scaffolding
