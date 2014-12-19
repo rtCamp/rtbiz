@@ -88,6 +88,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_filter( 'views_edit-rt_contact', array( $this, 'edit_view_filters' ) );
 			add_action( 'p2p_init', array( $this, 'contact_user_p2p' ) );
 
+			add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
+			add_filter( 'manage_edit-' . self::$user_category_taxonomy . '_columns', array( $this, 'manage_contact_column_header' ) );
+
 			/**
 			 * Add ACL meta box
 			 */
@@ -96,6 +99,28 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( $current_user->has_cap( 'create_users' ) ){
 				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_meta_boxes' ) );
 				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
+			}
+
+		}
+
+		function manage_contact_column_header( $columns ){
+			unset( $columns['posts'] );
+			$columns['users']         = __( 'Users', RT_BIZ_TEXT_DOMAIN );
+			return $columns;
+		}
+
+		function manage_contact_column_body( $display, $column, $term_id ){
+			switch ($column){
+				case 'users':
+					$term  =get_term( $term_id, self::$user_category_taxonomy );
+					$posts = new WP_Query( array(
+						                       'post_type' => $this->post_type,
+						                       'post_status' => 'any',
+						                       'nopaging' => true,
+						                       self::$user_category_taxonomy => $term->slug,
+					                       ) );
+					echo '<a href="edit.php?post_type=rt_contact&'.self::$user_category_taxonomy.'='.$term->slug.'">'.count( $posts->posts ).'</a>';
+					break;
 			}
 
 		}
