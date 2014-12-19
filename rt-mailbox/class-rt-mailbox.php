@@ -68,12 +68,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
 			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
 			$this->auto_loader();
-			$this->db_upgrade();
 			$this->modules = $module;
-			$this->init_mail_functions();
 			$this->init_rt_mail_models();
+			$this->init_mail_functions();
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
+			$this->db_upgrade();
 		}
 
 		function enqueue_styles_scripts(){
