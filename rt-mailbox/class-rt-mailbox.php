@@ -195,7 +195,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			global $rt_setting_inbound_email;
 			if ( isset( $_POST ) && ! empty( $_POST ) ){
 				update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
-				$rt_setting_inbound_email->save_replay_by_email( );
 			}
 			?>
 			<form method="post" action="">
@@ -223,9 +222,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		function imap_view(){
 			global $rt_setting_imap_server;
-			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				$rt_setting_imap_server->save_imap_servers();
-			}
 			?>
 			<div class="imap_servers">
 			<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
