@@ -158,9 +158,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					'desc'     => __( '' ),
 					'type'     => 'radio',
 					'options'  => array(
-						'none'        => __( 'None' ),
+						'none'         => __( 'None' ),
 						'woocommerce' => __( 'Woocommerce' ),
-						'edd'         => __( 'Easy Digital Download' ),
+						'edd' => __( 'Easy Digital Download' ),
 					),
 					'default'  => 'none',
 				),

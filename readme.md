@@ -4,7 +4,7 @@
 ![Banner](assets/banner-1544x500.png)
 rtBiz - WordPress 4 Business!
 
-**Contributors:** [rtcamp](http://profiles.wordpress.org/rtcamp), [desaiuditd](http://profiles.wordpress.org/desaiuditd), [dipeshkakadiya](http://profiles.wordpress.org/dipeshkakadiya), [utkarshpatel](http://profiles.wordpress.org/utkarshpatel)  
+**Contributors:** [rtcamp](http://profiles.wordpress.org/rtcamp), [rahul286](http://profiles.wordpress.org/rahul286), [desaiuditd](http://profiles.wordpress.org/desaiuditd), [faishal](http://profiles.wordpress.org/faishal), [dipeshkakadiya](http://profiles.wordpress.org/dipeshkakadiya), [pareshradadiya](http://profiles.wordpress.org/pareshradadiya), [utkarshpatel](http://profiles.wordpress.org/utkarshpatel)  
 **Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
@@ -15,11 +15,12 @@ rtBiz - WordPress 4 Business!
 ## Description ##
 
 * Mission Statement: WordPress 4 Business
-* Everything is centered around human/contact (they may be wordpress user or may not).
-* Data connection (post-2-post) is most important
-* Default views should be tailored for context e.g. portfolio list view can have thumbnail.
-* Information import/export is the key
-* Reporting will be USP. Site owner should get to know what is selling, who is top buyer, most active contact - all in a click. Sometimes without a click (hint: dashboard)
+* Centered Around Humans: All modules are built around contact. Contacts are people who may or may not be WordPress users.
+* Clear contact groupings: Easily classify your contacts between employees, customers and vendors.
+* Seamless data connections: Connect contacts, companies, departments and offerings on the fly.
+* Easy Mail setup and Integration
+* Great reporting tools
+* Easy import/export of information
 
 Following are some of the trivial features that rtBiz offers:
 
