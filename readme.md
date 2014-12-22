@@ -62,6 +62,11 @@ Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 ## Changelog ##
 
+### 0.5.1 ###
+* Correcting Contributors usernames
+* Mailbox UI Refactoring
+* Mailbox Bug Fixes
+
 ### 0.5 ###
 * Beta Version Release on WordPress.org
 
