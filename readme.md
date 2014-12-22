@@ -54,6 +54,11 @@ Following are some of the trivial features that rtBiz offers:
 
 ## Changelog ##
 
+### 0.5.6 ###
+* Lots of PHP Code Sniffer Fixes
+* a few UX Changes ( Labels updated )
+* svn-push script fix
+
 ### 0.5.5 ###
 * Offering Page Menu Fix
 * ACL Fix for CPT capability
