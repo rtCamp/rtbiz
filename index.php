@@ -291,8 +291,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
 			);
 
-			if ( ! empty( $rtbiz_offerings->product_sync ) ) {
-				$this->menu_order[] = 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . rt_biz_get_contact_post_type();
+			$settings = biz_get_redux_settings();
+			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 			}
 
 			$this->menu_order = array_merge( $this->menu_order, array(
@@ -426,7 +427,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Admin side as of now. Slipt up in case of front end.
 		 */
 		function load_styles_scripts() {
-			global $rt_contact, $rt_company, $rtbiz_offerings;
+			global $rt_contact, $rt_company;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 
 			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && 'edit' == $_REQUEST['action'] ) {
@@ -456,10 +457,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] ) );
 			}
 
-			if ( ! empty( $rtbiz_offerings->product_slug ) ) {
-				if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == $rtbiz_offerings->product_slug ) {
+			$settings = biz_get_redux_settings();
+			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+				if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == Rt_Offerings::$offering_slug ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . $rt_contact->post_type ) );
+					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type ) );
 				}
 			}
 		}
@@ -476,8 +478,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
-			if ( ! empty( $rtbiz_offerings->product_slug ) ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . $rtbiz_offerings->product_slug . '&post_type=' . $rt_contact->post_type );
+			$settings = biz_get_redux_settings();
+			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug );
