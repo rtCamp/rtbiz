@@ -135,20 +135,20 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								$personMarkup = get_avatar( $email, 96 );
 							}
 
-					$all_folders = null;
-					$login_successful = true;
+							$all_folders = null;
+							$login_successful = true;
 
-					try {
-						$hdZendEmail = new Rt_Zend_Mail();
-						if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
-							$storage     = new ImapStorage( $hdZendEmail->imap );
-							$all_folders = $storage->getFolders();
-						} else {
-							$login_successful = false;
-						}
-					} catch ( Exception $e ) {
-							echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
-					} ?>
+							try {
+								$hdZendEmail = new Rt_Zend_Mail();
+								if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
+									$storage     = new ImapStorage( $hdZendEmail->imap );
+									$all_folders = $storage->getFolders();
+								} else {
+									$login_successful = false;
+								}
+							} catch ( Exception $e ) {
+									echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
+							} ?>
 							<div>
 								<div>
 									<input type="hidden" name='mail_ac' value="<?php echo esc_attr( $email ); ?>"/>
@@ -212,8 +212,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</script>
 							</div>
 						<?php
-				}
-			} ?>
+						}
+					} ?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
