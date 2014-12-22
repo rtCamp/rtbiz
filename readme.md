@@ -62,6 +62,9 @@ Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 ## Changelog ##
 
+### 0.5.4 ###
+* assets bug fix
+
 ### 0.5.3 ###
 * svn-push updated.
 * Bug fixes

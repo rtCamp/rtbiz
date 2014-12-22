@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 0.5.3
+  Version: 0.5.4
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '0.5.3' );
+	define( 'RT_BIZ_VERSION', '0.5.4' );
 }
 if ( ! defined( 'RT_BIZ_PATH' ) ) {
 	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );

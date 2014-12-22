@@ -77,6 +77,9 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 Please visit [rtBiz's Roadmap page](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Features page") to get some details about future releases.
 
+= 0.5.4 =
+* assets bug fix
+
 = 0.5.3 =
 * svn-push updated.
 * Bug fixes
