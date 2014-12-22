@@ -73,36 +73,36 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 						<td>
 							<a href="#" class="rthd-edit-server"
 							   data-server-id="<?php echo esc_attr( $server->id ); ?>"><?php _e( 'Edit' ); ?></a> <a href="#"
-							                                                                                         class="rthd-remove-server"
+							                                                                                         class="rtmailbox-remove-server"
 							                                                                                         data-server-id="<?php echo esc_attr( $server->id ); ?>"><?php _e( 'Remove' ); ?></a>
 						</td>
 					</tr>
-					<tr valign="top" id="rthd_imap_server_<?php echo esc_attr( $server->id ); ?>" class="rthd-hide-row">
+					<tr valign="top" id="rtmailbox_imap_server_<?php echo esc_attr( $server->id ); ?>" class="rtmailbox-hide-row">
 						<td colspan="2">
 							<table>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'Server Name: ' ); ?></th>
 									<td><input type="text" required="required"
-									           name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][server_name]"
+									           name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][server_name]"
 									           value="<?php echo esc_attr( $server->server_name ); ?>"/></td>
 								</tr>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'IMAP (Incoming) Server: ' ); ?></th>
 									<td><input type="text" required="required"
-									           name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_server]"
+									           name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_server]"
 									           value="<?php echo esc_attr( $server->incoming_imap_server ); ?>"/></td>
 								</tr>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'IMAP (Incoming) Port: ' ); ?></th>
 									<td><input type="text" required="required"
-									           name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_port]"
+									           name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_port]"
 									           value="<?php echo esc_attr( $server->incoming_imap_port ); ?>"/></td>
 								</tr>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'IMAP (Incoming) Encryption: ' ); ?></th>
 									<td>
 										<select
-											name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_enc]">
+											name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][incoming_imap_enc]">
 											<option value=""><?php _e( 'Select Encryption Method' ); ?></option>
 											<option
 												value="ssl" <?php echo esc_html( ( $server->incoming_imap_enc == 'ssl' ) ? 'selected="selected"' : '' ); ?>><?php _e( 'SSL' ); ?></option>
@@ -114,20 +114,20 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 								<tr valign="top">
 									<th scope="row"><?php _e( 'SMTP (Outgoing) Server: ' ); ?></th>
 									<td><input type="text" required="required"
-									           name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_server]"
+									           name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_server]"
 									           value="<?php echo esc_attr( $server->outgoing_smtp_server ); ?>"/></td>
 								</tr>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'SMTP (Outgoing) Port: ' ); ?></th>
 									<td><input type="text" required="required"
-									           name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_port]"
+									           name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_port]"
 									           value="<?php echo esc_attr( $server->outgoing_smtp_port ); ?>"/></td>
 								</tr>
 								<tr valign="top">
 									<th scope="row"><?php _e( 'SMTP (Outgoing) Encryption: ' ); ?></th>
 									<td>
 										<select
-											name="rthd_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_enc]">
+											name="rtmailbox_imap_servers[<?php echo esc_attr( $server->id ); ?>][outgoing_smtp_enc]">
 											<option value=""><?php _e( 'Select Encryption Method' ); ?></option>
 											<option
 												value="ssl" <?php echo esc_html( ( $server->outgoing_smtp_enc == 'ssl' ) ? 'selected="selected"' : '' ); ?>><?php _e( 'SSL' ); ?></option>
@@ -140,30 +140,34 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 						</td>
 					</tr>
 				<?php } ?>
-				<input type="hidden" name="rthd_imap_servers_changed" value="1"/>
+				</tbody>
+			</table>
+			<table class="imap_table_form">
+				<tbody>
+				<input type="hidden" name="rtmailbox_imap_servers_changed" value="1"/>
 				<tr valign="top">
-					<th scope="row" colspan="2"><a href="#" class="button" id="rthd_add_imap_server"><?php _e( 'Add new server' ); ?></a>
+					<th scope="row" colspan="2"><a href="#" class="button" id="rtmailbox_add_imap_server"><?php _e( 'Add new server' ); ?></a>
 					</th>
 				</tr>
-				<tr valign="top" id="rthd_new_imap_server" class="rthd-hide-row">
+				<tr valign="top" id="rthd_new_imap_server" class="rtmailbox-hide-row">
 					<td colspan="2">
 						<table>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'Server Name: ' ); ?></th>
-								<td><input type="text" name="rthd_imap_servers[new][server_name]"/></td>
+								<td><input type="text" name="rtmailbox_imap_servers[new][server_name]"/></td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'IMAP (Incoming) Server: ' ); ?></th>
-								<td><input type="text" name="rthd_imap_servers[new][incoming_imap_server]"/></td>
+								<td><input type="text" name="rtmailbox_imap_servers[new][incoming_imap_server]"/></td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'IMAP (Incoming) Port: ' ); ?></th>
-								<td><input type="text" name="rthd_imap_servers[new][incoming_imap_port]"/></td>
+								<td><input type="text" name="rtmailbox_imap_servers[new][incoming_imap_port]"/></td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'IMAP (Incoming) Encryption: ' ); ?></th>
 								<td>
-									<select name="rthd_imap_servers[new][incoming_imap_enc]">
+									<select name="rtmailbox_imap_servers[new][incoming_imap_enc]">
 										<option value=""><?php _e( 'Select Encryption Method' ); ?></option>
 										<option value="ssl"><?php _e( 'SSL' ); ?></option>
 										<option value="tls"><?php _e( 'TLS' ); ?></option>
@@ -172,16 +176,16 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'SMTP (Outgoing) Server: ' ); ?></th>
-								<td><input type="text" name="rthd_imap_servers[new][outgoing_smtp_server]"/></td>
+								<td><input type="text" name="rtmailbox_imap_servers[new][outgoing_smtp_server]"/></td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'SMTP (Outgoing) Port: ' ); ?></th>
-								<td><input type="text" name="rthd_imap_servers[new][outgoing_smtp_port]"/></td>
+								<td><input type="text" name="rtmailbox_imap_servers[new][outgoing_smtp_port]"/></td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'Is SSL required for SMTP (Outgoing Mails): ' ); ?></th>
 								<td>
-									<select name="rthd_imap_servers[new][outgoing_smtp_enc]">
+									<select name="rtmailbox_imap_servers[new][outgoing_smtp_enc]">
 										<option value=""><?php _e( 'Select Encryption Method' ); ?></option>
 										<option value="ssl"><?php _e( 'SSL' ); ?></option>
 										<option value="tls"><?php _e( 'TLS' ); ?></option>
@@ -198,12 +202,12 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 
 		function save_imap_servers() {
 
-			if ( isset( $_POST['rthd_imap_servers_changed'] ) ) {
+			if ( isset( $_POST['rtmailbox_imap_servers_changed'] ) ) {
 				global $rt_imap_server_model;
 				$old_servers = $rt_imap_server_model->get_all_servers();
 
-				if ( isset( $_POST['rthd_imap_servers'] ) ) {
-					$new_servers = $_POST['rthd_imap_servers'];
+				if ( isset( $_POST['rtmailbox_imap_servers'] ) ) {
+					$new_servers = $_POST['rtmailbox_imap_servers'];
 
 					// Handle / Update Existing Servers
 					foreach ( $old_servers as $id => $server ) {
