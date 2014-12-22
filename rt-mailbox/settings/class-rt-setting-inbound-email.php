@@ -151,7 +151,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							} ?>
 							<div>
 								<div>
-									<input type="hidden" name='mail_ac' value="<?php echo esc_attr( $email ); ?>"/>
+									<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
 									<strong><?php if ( isset( $ac->email_data['name'] ) ) { echo $ac->email_data['name']; } ?> <br/><a href='mailto:<?php echo $email ?>'><?php echo $email ?></a></strong>
 									<input type="hidden" name="rtmailbox_submit_enable_reply_by_email" value="save"/>
 								</div>
@@ -172,7 +172,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
-												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
+												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
 													<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
 													<?php if ( ! is_null( $all_folders ) ) { ?>
 														<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
@@ -185,7 +185,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<?php } ?>
 											<?php if ( ! is_null( $all_folders ) ) { ?>
 												<div id="mail_folder_container">
-													<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder ); ?>
+													<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder ); ?>
 												</div>
 											<?php } else { ?>
 												<p class="description"><?php _e( 'No Folders found.' ); ?></p>
@@ -227,30 +227,35 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				$module = $_POST['module_to_register'];
 			}
 			if ( ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) || ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) && $_REQUEST['rtmailbox_add_imap_email'] ) ) {
-				if ( isset( $_POST['mail_ac'] ) && is_email( $_POST['mail_ac'] ) ) {
-					if ( isset( $_POST['imap_password'] ) ) {
-						$token = rt_encrypt_decrypt( $_POST['imap_password'] );
-					} else {
-						$token = null;
-					}
-					if ( isset( $_POST['imap_server'] ) ) {
-						$imap_server = $_POST['imap_server'];
-					} else {
-						$imap_server = null;
-					}
-					$email_ac   = $rt_mail_settings->get_email_acc( $_POST['mail_ac'] );
-					$email_data = null;
-					if ( isset( $_POST['mail_folders'] ) && ! empty( $_POST['mail_folders'] ) && is_array( $_POST['mail_folders'] ) && ! empty( $email_ac ) ) {
-						$email_data                 = maybe_unserialize( $email_ac->email_data );
-						$email_data['mail_folders'] = implode( ',', $_POST['mail_folders'] );
-					}
-					if ( isset( $_POST['inbox_folder'] ) && ! empty( $_POST['inbox_folder'] ) && ! empty( $email_ac ) ) {
-						if ( is_null( $email_data ) ) {
-							$email_data = maybe_unserialize( $email_ac->email_data );
+				if ( isset( $_POST['mail_ac'] ) ) {
+					foreach( $_POST['mail_ac'] as $mail_ac ){
+						if ( ! is_email( $mail_ac ) ){
+							continue;
 						}
-						$email_data['inbox_folder'] = $_POST['inbox_folder'];
+						if ( isset( $_POST['imap_password'] ) ) {
+							$token = rt_encrypt_decrypt( $_POST['imap_password'] );
+						} else {
+							$token = null;
+						}
+						if ( isset( $_POST['imap_server'] ) ) {
+							$imap_server = $_POST['imap_server'];
+						} else {
+							$imap_server = null;
+						}
+						$email_ac   = $rt_mail_settings->get_email_acc( $mail_ac );
+						$email_data = null;
+						if ( isset( $_POST['mail_folders'] ) && ! empty( $_POST['mail_folders'] ) && is_array( $_POST['mail_folders'] ) && ! empty( $email_ac ) ) {
+							$email_data                 = maybe_unserialize( $email_ac->email_data );
+							$email_data['mail_folders'] = implode( ',', $_POST['mail_folders'][ $mail_ac ] );
+						}
+						if ( isset( $_POST['inbox_folder'] ) && ! empty( $_POST['inbox_folder'] ) && ! empty( $email_ac ) ) {
+							if ( is_null( $email_data ) ) {
+								$email_data = maybe_unserialize( $email_ac->email_data );
+							}
+							$email_data['inbox_folder'] = $_POST['inbox_folder'][ $mail_ac ];
+						}
+						$rt_mail_settings->update_mail_acl( $mail_ac, $token, maybe_serialize( $email_data ), $imap_server );
 					}
-					$rt_mail_settings->update_mail_acl( $_POST['mail_ac'], $token, maybe_serialize( $email_data ), $imap_server );
 				}
 				if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
 					$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'] );
