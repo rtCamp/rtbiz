@@ -41,7 +41,7 @@ Following are some of the trivial features that rtBiz offers:
 * [FAQ](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ page")
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
 
-[![Build Status](https://travis-ci.org/PatelUtkarsh/rtbiz.png?branch=master)](https://travis-ci.org/PatelUtkarsh/rtbiz)
+[![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz)
 
 ## Installation ##
 

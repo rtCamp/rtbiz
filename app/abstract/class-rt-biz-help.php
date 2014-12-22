@@ -155,16 +155,28 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				),
 				'edit-tags.php' => array(
 					array(
-						'id' => 'user_group_overview',
+						'id' => 'departments_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
 						'taxonomy' => RT_Departments::$slug,
 					),
 					array(
-						'id' => 'user_group_screen_content',
+						'id' => 'departments_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
 						'taxonomy' => RT_Departments::$slug,
+					),
+					array(
+						'id' => 'contact_group_overview',
+						'title' => __( 'Overview' ),
+						'content' => '',
+						'taxonomy' => Rt_Contact::$user_category_taxonomy,
+					),
+					array(
+						'id' => 'contact_group_screen_content',
+						'title' => __( 'Screen Content' ),
+						'content' => '',
+						'taxonomy' => Rt_Contact::$user_category_taxonomy,
 					),
 				),
 					) );
@@ -377,7 +389,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					</p>
 					<?php
 					break;
-				case 'user_group_overview':
+				case 'departments_overview':
 					?>
 					<p>
 						<?php _e( 'This screen is useful when you have to introduce departments within your organization.' ); ?>
@@ -387,7 +399,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					</p>
 					<?php
 					break;
-				case 'user_group_screen_content':
+				case 'departments_screen_content':
 					?>
 					<ul>
 						<li><?php _e( 'Using the left column form, you can create new departments.' ); ?></li>
@@ -395,6 +407,26 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						<li><?php _e( 'You can also assign a color code to the department. It will help you identify the department or the user from which department he is just by the color.' ); ?></li>
 						<li><?php _e( 'On the right column, there will be existing departments listed along with basic information related to the department.' ); ?></li>
 						<li><?php _e( 'You can edit an individual department on the Edit Department Screen.' ); ?></li>
+					</ul>
+					<?php
+					break;
+				case 'contact_group_overview':
+					?>
+					<p>
+						<?php _e( 'This screen is useful when you have to introduce contact groups within your organization.' ); ?>
+						<?php _e( 'You can create, edit, delete departments & perfom other CRUD operations from here.' ); ?>
+						<?php _e( 'These groups can be later assigned to contacts to further categorize them.' ); ?>
+						<?php _e( 'Once a contact is categorized in particular group, there\'ll be additional inforation of contact displayed on Edit Contact Screen.' ); ?>
+					</p>
+					<?php
+					break;
+				case 'contact_group_screen_content':
+					?>
+					<ul>
+						<li><?php _e( 'We\'ve given you the very basic contact groups by default i.e., Customers, Employees, Vendors. These groups will always be there in the system & it will let you categorize your contacts.' ); ?></li>
+						<li><?php _e( 'Using the left column form, you can create new contact groups.' ); ?></li>
+						<li><?php _e( 'On the right column, there will be existing contact groups listed along with basic information related to the contact group.' ); ?></li>
+						<li><?php _e( 'You can edit an individual contact group on the Edit Contact Group Screen.' ); ?></li>
 					</ul>
 					<?php
 					break;
