@@ -228,7 +228,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			}
 			if ( ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) || ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) && $_REQUEST['rtmailbox_add_imap_email'] ) ) {
 				if ( isset( $_POST['mail_ac'] ) ) {
-					foreach( $_POST['mail_ac'] as $mail_ac ){
+					foreach ( $_POST['mail_ac'] as $mail_ac ) {
 						if ( ! is_email( $mail_ac ) ){
 							continue;
 						}
