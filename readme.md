@@ -54,6 +54,9 @@ Following are some of the trivial features that rtBiz offers:
 
 ## Changelog ##
 
+### 0.5.7 ###
+* svn script updated
+
 ### 0.5.6 ###
 * Lots of PHP Code Sniffer Fixes
 * a few UX Changes ( Labels updated )

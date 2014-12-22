@@ -67,6 +67,9 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 == Changelog ==
 
+= 0.5.7 =
+* svn script updated
+
 = 0.5.6 =
 * Lots of PHP Code Sniffer Fixes
 * a few UX Changes ( Labels updated )
