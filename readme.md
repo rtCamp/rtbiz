@@ -62,6 +62,10 @@ Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 ## Changelog ##
 
+### 0.5.5 ###
+* Offering Page Menu Fix
+* ACL Fix for CPT capability
+
 ### 0.5.4 ###
 * assets bug fix
 
