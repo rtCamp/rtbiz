@@ -13,11 +13,12 @@ rtBiz - WordPress 4 Business!
 == Description ==
 
 * Mission Statement: WordPress 4 Business
-* Everything is centered around human/contact (they may be wordpress user or may not).
-* Data connection (post-2-post) is most important
-* Default views should be tailored for context e.g. portfolio list view can have thumbnail.
-* Information import/export is the key
-* Reporting will be USP. Site owner should get to know what is selling, who is top buyer, most active contact - all in a click. Sometimes without a click (hint: dashboard)
+* Centered Around Humans: All modules are built around contact. Contacts are people who may or may not be WordPress users.
+* Clear contact groupings: Easily classify your contacts between employees, customers and vendors.
+* Seamless data connections: Connect contacts, companies, departments and offerings on the fly.
+* Easy Mail setup and Integration
+* Great reporting tools
+* Easy import/export of information
 
 Following are some of the trivial features that rtBiz offers:
 
