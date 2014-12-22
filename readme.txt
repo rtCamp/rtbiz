@@ -31,12 +31,8 @@ Following are some of the trivial features that rtBiz offers:
 
 **NOTE**: Development in progress. This is still a **BETA** Version.
 
-**Important Links ( Future Links - doesn't exist right now )**
+**Important Links**
 
-* [Project Homepage](http://rtcamp.com/rtbiz/ "Visit rtBiz's Homepage")
-* [Roadmap](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Roadmap page")
-* [Documentation](http://rtcamp.com/rtbiz/docs/ "Visit rtBiz's Documentation page")
-* [FAQ](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ page")
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
 
 == Installation ==
@@ -46,10 +42,6 @@ Following are some of the trivial features that rtBiz offers:
 * Activate it through the 'Plugins' section.
 
 == Frequently Asked Questions ==
-
-Please visit [rtBiz's FAQ page](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ page").
-
-Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 > Screenshots are soon to be come.
 
@@ -74,8 +66,6 @@ Great! There are several ways you can get involved to help make rtBiz better:
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtcamp/rtbiz/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
 
 == Changelog ==
-
-Please visit [rtBiz's Roadmap page](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Features page") to get some details about future releases.
 
 = 0.5.5 =
 * Offering Page Menu Fix

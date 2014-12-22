@@ -33,12 +33,8 @@ Following are some of the trivial features that rtBiz offers:
 
 **NOTE**: Development in progress. This is still a **BETA** Version.
 
-**Important Links ( Future Links - doesn't exist right now )**
+**Important Links**
 
-* [Project Homepage](http://rtcamp.com/rtbiz/ "Visit rtBiz's Homepage")
-* [Roadmap](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Roadmap page")
-* [Documentation](http://rtcamp.com/rtbiz/docs/ "Visit rtBiz's Documentation page")
-* [FAQ](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ page")
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
 
 [![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz)
@@ -50,10 +46,6 @@ Following are some of the trivial features that rtBiz offers:
 * Activate it through the 'Plugins' section.
 
 ## Frequently Asked Questions ##
-
-Please visit [rtBiz's FAQ page](http://rtcamp.com/rtbiz/faq/ "Visit rtBiz's FAQ page").
-
-Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 > Screenshots are soon to be come.
 
