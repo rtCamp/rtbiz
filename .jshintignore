@@ -1,2 +1,1 @@
-app/lib
-app/vendor
+bin/.jshintignore
