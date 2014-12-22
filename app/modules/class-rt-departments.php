@@ -394,7 +394,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 								       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 								       value="<?php echo esc_html( $this->get_department_meta( 'email_address' ) ); ?>"/>
 
-								<p class="description"><?php _e( 'Enter a email address for this field', 'rtcamp' ); ?></p>
+								<p class="description"><?php _e( 'Enter a email address for Department', 'rtcamp' ); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -426,7 +426,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 						<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 					       id="<?php echo esc_attr( self::$slug ); ?>[email_address]" value="">
 					</p>
-					<p class="description"><?php _e( 'Enter a Email address for this field', 'rtcamp' ); ?></p>
+					<p class="description"><?php _e( 'Enter a email address for Department', 'rtcamp' ); ?></p>
 				</div>
 				<div class="form-field">
 					<p>
