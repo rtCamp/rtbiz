@@ -195,25 +195,26 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</table>
 								<?php } else {
 									echo '<td class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></td>'; }?>
-								<script>
-									jQuery(document).ready(function ($) {
-										$(document).on('change', 'select[name=inbox_folder]', function (e) {
-											e.preventDefault();
-											inbox = $(this).val();
-											prev_value = $(this).data('prev-value');
-											$(this).data('prev-value', inbox);
-											var email_id = $(this).data('email-id');
-											$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('disabled', 'disabled');
-											$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('checked', false);
-											$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').prop('checked', false);
-											$('input[data-email-id="' + email_id + '"][value="' + prev_value + '"]').removeAttr('disabled');
-										});
-									});
-								</script>
 							</div>
 						<?php
-						}
-					} ?>
+						} ?>
+						<script>
+							jQuery(document).ready(function ($) {
+								$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
+									e.preventDefault()
+									alert('called');
+									inbox = $(this).val();
+									prev_value = $(this).data('prev-value');
+									$(this).data('prev-value', inbox);
+									var email_id = $(this).data('email-id');
+									$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('disabled', 'disabled');
+									$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('checked', false);
+									$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').prop('checked', false);
+									$('input[data-email-id="' + email_id + '"][value="' + prev_value + '"]').removeAttr('disabled');
+								});
+							});
+						</script>
+					<?php } ?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
