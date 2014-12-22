@@ -77,6 +77,10 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 Please visit [rtBiz's Roadmap page](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Features page") to get some details about future releases.
 
+= 0.5.2 =
+* Correcting Contributors usernames
+* Missing app folder
+
 = 0.5.1 =
 * Correcting Contributors usernames
 * Mailbox UI Refactoring

@@ -62,6 +62,10 @@ Read rtBiz [Documentation](http://rtcamp.com/rtbiz/docs/)
 
 ## Changelog ##
 
+### 0.5.2 ###
+* Correcting Contributors usernames
+* Missing app folder
+
 ### 0.5.1 ###
 * Correcting Contributors usernames
 * Mailbox UI Refactoring
