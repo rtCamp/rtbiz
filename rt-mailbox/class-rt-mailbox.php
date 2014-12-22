@@ -208,8 +208,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			?>
 			<div class="tab-body-wrapper">
 					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules ); ?>
-			</div>
-			 <?php
+			</div> <?php
 		}
 
 		function imap_view(){

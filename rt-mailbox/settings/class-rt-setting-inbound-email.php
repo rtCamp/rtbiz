@@ -50,7 +50,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			if ( empty( $imap_servers ) ){
 				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
 				return;
-			}else{
+			} else {
 				if ( $newflag ) { ?>
 
 					<form id="frm-replay-by-email" method="post" action="">
@@ -113,42 +113,42 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			?>
 			<form id="frm-new-mail" method="post" action="">
 				<div class="mail_list" >
-					<h2 class="title">Mail List</h2>
-				<?php
+					<h2 class="title">Mail List</h2><?php
 					$rCount = 0;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
-					if ( isset( $google_acs ) && ! empty( $google_acs ) ) {
-						foreach ( $google_acs as $ac ) {
-							$rCount ++;
-							$ac->email_data = unserialize( $ac->email_data );
-							$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-							$email_type     = $ac->type;
-							$imap_server    = $ac->imap_server;
-							$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
-							$mail_folders   = array_filter( explode( ',', $mail_folders ) );
-							$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
-							$token = $ac->outh_token;
+			if ( isset( $google_acs ) && ! empty( $google_acs ) ){
+				foreach ( $google_acs as $ac ){
+					$rCount ++;
+					$ac->email_data = unserialize( $ac->email_data );
+					$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+					$email_type     = $ac->type;
+					$imap_server    = $ac->imap_server;
+					$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
+					$mail_folders   = array_filter( explode( ',', $mail_folders ) );
+					$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
+					$token = $ac->outh_token;
 
-							if ( isset( $ac->email_data['picture'] ) ) {
-								$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
-								$personMarkup = "<img src='$img?sz=96'>";
-							} else {
-								$personMarkup = get_avatar( $email, 96 );
-							}
+					if ( isset( $ac->email_data['picture'] ) ){
+							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
+							$personMarkup = "<img src='$img?sz=96'>";
+					} else {
+							$personMarkup = get_avatar( $email, 96 );
+					}
 
-							$all_folders = null;
-							$login_successful = true;
-							try {
-								$hdZendEmail = new Rt_Zend_Mail();
-								if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
-									$storage     = new ImapStorage( $hdZendEmail->imap );
-									$all_folders = $storage->getFolders();
-								} else {
-									$login_successful = false;
-								}
-							} catch ( Exception $e ) {
-								echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
-							} ?>
+					$all_folders = null;
+					$login_successful = true;
+
+					try {
+						$hdZendEmail = new Rt_Zend_Mail();
+						if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
+							$storage     = new ImapStorage( $hdZendEmail->imap );
+							$all_folders = $storage->getFolders();
+						} else {
+							$login_successful = false;
+						}
+					} catch ( Exception $e ) {
+							echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
+					} ?>
 							<div>
 								<div>
 									<input type="hidden" name='mail_ac' value="<?php echo esc_attr( $email ); ?>"/>
