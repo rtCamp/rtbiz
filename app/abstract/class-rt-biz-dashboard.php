@@ -229,7 +229,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 				if ( 'taxonomy' == $attr->attribute_store_as ) {
-					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'Wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
+					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
 		}
