@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 0.5.1
+  Version: 0.5.4
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -17,6 +17,29 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+if ( ! defined( 'RT_BIZ_VERSION' ) ) {
+	define( 'RT_BIZ_VERSION', '0.5.4' );
+}
+if ( ! defined( 'RT_BIZ_PATH' ) ) {
+	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
+}
+if ( ! defined( 'RT_BIZ_URL' ) ) {
+	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
+}
+if ( ! defined( 'RT_BIZ_BASE_NAME' ) ){
+	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
+}
+if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
+	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
+}
+if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
+	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
+}
+
+include_once RT_BIZ_PATH . 'app/lib/rt-lib.php';
+include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
+include_once RT_BIZ_PATH . 'app/vendor/taxonomy-metadata.php';
 
 /**
  * Description of class-rt-biz
@@ -784,29 +807,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 	}
 
 }
-
-if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '0.5.1' );
-}
-if ( ! defined( 'RT_BIZ_PATH' ) ) {
-	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
-}
-if ( ! defined( 'RT_BIZ_URL' ) ) {
-	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
-}
-if ( ! defined( 'RT_BIZ_BASE_NAME' ) ){
-	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
-}
-if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
-	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'templates/' );
-}
-if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
-	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
-}
-
-include_once RT_BIZ_PATH . 'app/lib/rt-lib.php';
-include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
-include_once RT_BIZ_PATH . 'app/vendor/taxonomy-metadata.php';
 
 /**
  * The main function responsible for returning the one true Rt_Biz

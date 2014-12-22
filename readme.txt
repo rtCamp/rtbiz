@@ -1,5 +1,5 @@
 === rtBiz ===
-Contributors:      rtcamp, rahul286, desaiuditd, faishal, dipeshkakadiya, pareshradadiya, utkarshpatel
+Contributors:      rtcamp, rahul286, desaiuditd, faishal, dipesh.kakadiya, pareshradadiya, utkarshpatel
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
@@ -77,8 +77,21 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 Please visit [rtBiz's Roadmap page](http://rtcamp.com/rtbiz/roadmap/ "Visit rtBiz's Features page") to get some details about future releases.
 
+= 0.5.4 =
+* assets bug fix
+
+= 0.5.3 =
+* svn-push updated.
+* Bug fixes
+
+= 0.5.2 =
+* Correcting Contributors usernames
+* Missing app folder
+
 = 0.5.1 =
 * Correcting Contributors usernames
+* Mailbox UI Refactoring
+* Mailbox Bug Fixes
 
 = 0.5 =
 * Beta Version Release on WordPress.org
