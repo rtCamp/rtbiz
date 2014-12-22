@@ -68,12 +68,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
 			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
 			$this->auto_loader();
-			$this->db_upgrade();
 			$this->modules = $module;
-			$this->init_mail_functions();
 			$this->init_rt_mail_models();
+			$this->init_mail_functions();
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
+			$this->db_upgrade();
 		}
 
 		function enqueue_styles_scripts(){
@@ -164,16 +164,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
-			// Loop through tabs and build navigation
-			foreach ( array_values( $filterd_tab ) as $tab_data ) {
-				$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
-				$tab_class  = $is_current ? $active_class : $idle_class;
 
-				if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
-					$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+			if ( ! empty( $filterd_tab ) ){
+				$tabs_html .= '<div class="nav-tab-wrapper" >';
+				// Loop through tabs and build navigation
+				foreach ( array_values( $filterd_tab ) as $tab_data ) {
+					$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+					$tab_class  = $is_current ? $active_class : $idle_class;
+
+					if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
+						$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+					}
+
+					$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
 				}
-
-				$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
+				$tabs_html .= '</div>';
 			}
 
 			// Output the tabs
@@ -194,38 +199,20 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function mailbox_view(){
 			global $rt_setting_inbound_email;
 			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
-				$rt_setting_inbound_email->save_replay_by_email( );
-			}
-			?>
-			<form method="post" action="">
-				<div class="enable_reply_div">
-					<span class="mailbox_reply_by_email_label"><?php echo __( 'Enable Reply by Email: ' ); ?></span>
-			<?php $val = self::get_enable_by_reply_email();
-			$yes    = '';
-			$noflag = '';
-			if ( 'yes' == $val ){
-				$yes    = 'checked';
-			}
-			else {
-				$noflag = 'checked';
-			}
-			?>
-					<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo $yes; ?> ><?php echo __( 'Enable' ); ?>
-					<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo $noflag; ?>><?php echo __( 'Disable' );?>
-				</div>
+				if ( ! empty( $_POST['mailbox_reply_by_email'] ) ){
+					update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
+				}
 
-			<?php
-			$rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules );
-			?>				<input class="button button-primary" type="submit" value="Save">
-			</form> <?php
+				//$rt_setting_inbound_email->save_replay_by_email( );
+			}
+			?>
+			<div class="tab-body-wrapper">
+					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules ); ?>
+			</div> <?php
 		}
 
 		function imap_view(){
 			global $rt_setting_imap_server;
-			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				$rt_setting_imap_server->save_imap_servers();
-			}
 			?>
 			<div class="imap_servers">
 			<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
