@@ -592,6 +592,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				'show_in_admin_bar' => false,
 				'supports' => array( 'title', 'editor', 'author', 'comments', 'thumbnail' ),
 				'capability_type' => $name,
+				'map_meta_cap'       => true, //Required For ACL Without map_meta_cap Cap ACL isn't working.
+				//Default WordPress check post capability on admin page so we need to map custom post type capability with post capability.
 			);
 			register_post_type( $name, $args );
 		}
