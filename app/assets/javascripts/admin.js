@@ -58,7 +58,7 @@ jQuery(document).ready(function($) {
 					                                           return false;
 				                                           }
 			                                           }).data('ui-autocomplete')._renderItem = function (ul, item) {
-				return jQuery('<li></li>').data('ui-autocomplete-item', item).append('<a class="ac-assign-selected">' + item.imghtml + '&nbsp;' + item.label + '</a>').appendTo(ul);
+				return jQuery('<li></li>').data('ui-autocomplete-item', item).append('<a class="ac-assign-selected">' + item.imghtml + '&nbsp;' + item.label + '</a> ').appendTo(ul);
 			};
 
 			jQuery(document).on('click', 'a[href=#removeAssign]', function (e) {
