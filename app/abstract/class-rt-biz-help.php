@@ -416,7 +416,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						<?php _e( 'This screen is useful when you have to introduce contact groups within your organization.' ); ?>
 						<?php _e( 'You can create, edit, delete departments & perfom other CRUD operations from here.' ); ?>
 						<?php _e( 'These groups can be later assigned to contacts to further categorize them.' ); ?>
-						<?php _e( 'Once a contact is categorized in particular group, there\'ll be additional inforation of contact displayed on Edit Contact Screen.' ); ?>
+						<?php _e( 'Once a contact is categorized in particular group, there\'ll be additional information of contact displayed on Edit Contact Screen.' ); ?>
 					</p>
 					<?php
 					break;
