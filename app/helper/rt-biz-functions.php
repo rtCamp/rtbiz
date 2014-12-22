@@ -18,8 +18,9 @@
  */
 function rt_biz_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 
-	if ( $args && is_array($args) )
+	if ( $args && is_array( $args ) ) {
 		extract( $args );
+	}
 
 	$located = rt_biz_locate_template( $template_name, $template_path, $default_path );
 
@@ -41,23 +42,27 @@ function rt_biz_get_template( $template_name, $args = array(), $template_path = 
 function rt_biz_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 
 	$rt_biz = rtbiz();
-	if ( ! $template_path ) $template_path = $rt_biz->templateURL;
-	if ( ! $default_path ) $default_path = RT_BIZ_PATH_TEMPLATES;
+	if ( ! $template_path ) {
+		$template_path = $rt_biz->templateURL;
+	}
+
+	if ( ! $default_path ) {
+		$default_path = RT_BIZ_PATH_TEMPLATES;
+	}
 
 	// Look within passed path within the theme - this is priority
-	$template = locate_template(
-		array(
-			trailingslashit( $template_path ) . $template_name,
-			$template_name
-		)
-	);
+	$template = locate_template( array(
+		                             trailingslashit( $template_path ) . $template_name,
+		                             $template_name,
+	                             ) );
 
 	// Get default template
-	if ( ! $template )
+	if ( ! $template ) {
 		$template = $default_path . $template_name;
+	}
 
 	// Return what we found
-	return apply_filters('rt_biz_locate_template', $template, $template_name, $template_path);
+	return apply_filters( 'rt_biz_locate_template', $template, $template_name, $template_path );
 }
 
 /**
@@ -387,30 +392,30 @@ function rt_biz_get_module_department_users( $department_id, $category_slug = ''
 
 	$args = array(
 		RT_Departments::$slug => $department->slug,
-		'post_type' => $rt_contact->post_type,
-		'post_status' => 'any',
-		'nopaging' => true,
+		'post_type'           => $rt_contact->post_type,
+		'post_status'         => 'any',
+		'nopaging'            => true,
 	);
 
-	if ( !empty( $category_slug ) ){
-		$args = array_merge( $args, array( Rt_Contact::$user_category_taxonomy  => $category_slug ) );
+	if ( ! empty( $category_slug ) ) {
+		$args = array_merge( $args, array( Rt_Contact::$user_category_taxonomy => $category_slug ) );
 	}
 
 	$contacts = get_posts( $args );
 
 	$contact_ids = array();
-	foreach( $contacts as $contact ){
+	foreach ( $contacts as $contact ) {
 		// module filter
-		if ( ! empty( $module_key ) ){
+		if ( ! empty( $module_key ) ) {
 			$pp = get_post_meta( $contact->ID, 'rt_biz_profile_permissions', true );
-			if ( isset( $pp[$module_key] ) && intval( $pp[$module_key] ) == 0 ) {
+			if ( isset( $pp[ $module_key ] ) && 0 == intval( $pp[ $module_key ] ) ) {
 				continue;
 			}
 		}
 		$contact_ids[] = $contact->ID;
 	}
 
-	if ( ! empty( $contact_ids ) ){
+	if ( ! empty( $contact_ids ) ) {
 		return rt_biz_get_wp_user_for_contact( $contact_ids );
 	}
 	return array();
@@ -419,16 +424,14 @@ function rt_biz_get_module_department_users( $department_id, $category_slug = ''
 function rt_biz_get_department_users( $department_id ) {
 	global $rt_contact;
 	$department = get_term_by( 'id', $department_id, RT_Departments::$slug );
-	$contacts = get_posts(
-		array(
-			RT_Departments::$slug => $department->slug,
-			'post_type' => $rt_contact->post_type,
-			'post_status' => 'any',
-			'nopaging' => true,
-		)
-	);
+	$contacts = get_posts( array(
+		                       RT_Departments::$slug => $department->slug,
+		                       'post_type'           => $rt_contact->post_type,
+		                       'post_status'         => 'any',
+		                       'nopaging'            => true,
+	                       ) );
 	$contact_ids = array();
-	foreach( $contacts as $contact ){
+	foreach ( $contacts as $contact ) {
 		$contact_ids[] = $contact->ID;
 	}
 
@@ -467,7 +470,7 @@ function rt_biz_get_employees() {
 }
 
 function rt_biz_get_customers() {
-    global $rt_contact;
+	global $rt_contact;
 	return $rt_contact->get_contact_by_category( Rt_Contact::$customer_category_slug );
 }
 
@@ -477,21 +480,19 @@ function rt_biz_get_vendors() {
 }
 
 function rt_biz_get_companies() {
-    global $rt_company;
-    return $rt_company->get_company();
+	global $rt_company;
+	return $rt_company->get_company();
 }
 
 function rt_biz_search_employees( $query ) {
 	$args = array(
-//		'meta_key' => Rt_Contact::$meta_key_prefix.Rt_Contact::$our_team_mate_key,
-//		'meta_value' => '1',
 		'tax_query' => array(
 			'taxonomy' => Rt_Contact::$user_category_taxonomy,
 			'field'    => 'slug',
 			'terms'    => Rt_Contact::$employees_category_slug,
 		),
 	);
-	return rt_biz_search_contact($query, $args);
+	return rt_biz_search_contact( $query, $args );
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -501,7 +502,7 @@ function rt_biz_get_module_users( $module_key ) {
 
 function rt_biz_get_module_employee( $module_key ) {
 	global $rt_access_control;
-	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$employees_category_slug  );
+	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$employees_category_slug );
 }
 
 function rt_biz_get_module_customer( $module_key  ) {
@@ -527,8 +528,8 @@ function rt_biz_get_wp_user_for_contact( $contact_id ) {
 function rt_biz_get_user_department( $user_ID ) {
 	$user_contacts = rt_biz_get_contact_for_wp_user( $user_ID );
 	$ug_terms = array();
-	if ( !empty( $user_contacts ) ){
-		foreach( $user_contacts as $contact ){
+	if ( ! empty( $user_contacts ) ) {
+		foreach ( $user_contacts as $contact ) {
 			$temp_terms = wp_get_post_terms( $contact->ID, RT_Departments::$slug );
 			$ug_terms = array_merge( $ug_terms, $temp_terms );
 		}
@@ -590,23 +591,23 @@ function rtbiz_text_diff( $left_string, $right_string, $args = null ) {
 
 // Setting ApI
 function biz_get_redux_settings() {
-	if ( ! isset( $GLOBALS[Rt_Biz_Setting::$biz_opt] ) ) {
-		$GLOBALS[Rt_Biz_Setting::$biz_opt] = get_option( Rt_Biz_Setting::$biz_opt, array() );
+	if ( ! isset( $GLOBALS[ Rt_Biz_Setting::$biz_opt ] ) ) {
+		$GLOBALS[ Rt_Biz_Setting::$biz_opt ] = get_option( Rt_Biz_Setting::$biz_opt, array() );
 	}
-	return $GLOBALS[Rt_Biz_Setting::$biz_opt];
+	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
 function biz_is_primary_email_unique( $email ) {
 	global $rt_contact;
 	$meta_query_args = array(
 		array(
-			'key'     => Rt_Entity::$meta_key_prefix.$rt_contact->primary_email_key,
-			'value'   => $email,
-		)
+			'key'   => Rt_Entity::$meta_key_prefix . $rt_contact->primary_email_key,
+			'value' => $email,
+		),
 	);
-	$posts = get_posts( array( 'post_type' => 'rt_contact', 'meta_query'=> $meta_query_args ) );
+	$posts = get_posts( array( 'post_type' => 'rt_contact', 'meta_query' => $meta_query_args ) );
 	$count = count( $posts );
-	if ( $count == 0 ){
+	if ( 0 == $count ) {
 		return true;
 	}
 	return false;
@@ -617,11 +618,11 @@ function biz_is_primary_email_unique_company( $email ) {
 		array(
 			'key'     => Rt_Entity::$meta_key_prefix.Rt_Company::$primary_email,
 			'value'   => $email,
-		)
+		),
 	);
-	$posts = get_posts( array( 'post_type' => 'rt_account', 'meta_query'=> $meta_query_args ) );
+	$posts = get_posts( array( 'post_type' => 'rt_account', 'meta_query' => $meta_query_args ) );
 	$count = count( $posts );
-	if ( $count == 0 ){
+	if ( 0 == $count ){
 		return true;
 	}
 	return false;
