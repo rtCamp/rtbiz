@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 0.5.7  
+**Stable tag:** 0.5.8  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -53,6 +53,9 @@ Following are some of the trivial features that rtBiz offers:
 
 
 ## Changelog ##
+
+### 0.5.8 ###
+* svn script updated
 
 ### 0.5.7 ###
 * svn script updated

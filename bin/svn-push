@@ -46,7 +46,7 @@ echo "Versions match in readme.txt and PHP file. Let's proceed..."
 cd $GITPATH
 
 if [ -e readme.txt ]; then
-	$dev_lib_dir/generate-markdown-readme
+	bin/generate-markdown-readme
 	git add readme.md
 fi
 if [ -n "$(git status --porcelain readme.md)" ]; then

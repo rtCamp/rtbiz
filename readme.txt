@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        0.5.7
+Stable tag:        0.5.8
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ Great! There are several ways you can get involved to help make rtBiz better:
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtcamp/rtbiz/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
 
 == Changelog ==
+
+= 0.5.8 =
+* svn script updated
 
 = 0.5.7 =
 * svn script updated
