@@ -116,24 +116,24 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					<h2 class="title">Mail List</h2><?php
 					$rCount = 0;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
-			if ( isset( $google_acs ) && ! empty( $google_acs ) ){
-				foreach ( $google_acs as $ac ){
-					$rCount ++;
-					$ac->email_data = unserialize( $ac->email_data );
-					$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-					$email_type     = $ac->type;
-					$imap_server    = $ac->imap_server;
-					$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
-					$mail_folders   = array_filter( explode( ',', $mail_folders ) );
-					$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
-					$token = $ac->outh_token;
+					if ( isset( $google_acs ) && ! empty( $google_acs ) ){
+						foreach ( $google_acs as $ac ){
+							$rCount ++;
+							$ac->email_data = unserialize( $ac->email_data );
+							$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+							$email_type     = $ac->type;
+							$imap_server    = $ac->imap_server;
+							$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
+							$mail_folders   = array_filter( explode( ',', $mail_folders ) );
+							$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
+							$token = $ac->outh_token;
 
-					if ( isset( $ac->email_data['picture'] ) ){
-							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
-							$personMarkup = "<img src='$img?sz=96'>";
-					} else {
-							$personMarkup = get_avatar( $email, 96 );
-					}
+							if ( isset( $ac->email_data['picture'] ) ){
+								$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
+								$personMarkup = "<img src='$img?sz=96'>";
+							} else {
+								$personMarkup = get_avatar( $email, 96 );
+							}
 
 					$all_folders = null;
 					$login_successful = true;
@@ -194,8 +194,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									</tr>
 								</table>
 								<?php } else {
-									echo '<td class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></td>';
-								}?>
+									echo '<td class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></td>'; }?>
 								<script>
 									jQuery(document).ready(function ($) {
 										$(document).on('change', 'select[name=inbox_folder]', function (e) {
@@ -213,10 +212,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</script>
 							</div>
 						<?php
-						}
-					}
-
-				?>
+				}
+			} ?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
