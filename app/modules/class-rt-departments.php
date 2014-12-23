@@ -119,12 +119,12 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		 * @return type
 		 */
 		function manage_department_column_header( $columns ) {
-
+			global $rt_contact;
 			unset( $columns['posts'], $columns['slug'] );
 
-			$columns['users']         = __( 'Users', RT_BIZ_TEXT_DOMAIN );
 			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RT_BIZ_TEXT_DOMAIN );
+			$columns['posts']         = $rt_contact->labels['name'];
 
 			return $columns;
 		}
@@ -140,11 +140,6 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		 */
 		function manage_department_column_body( $display, $column, $term_id ) {
 			switch ( $column ) {
-				case 'users':
-					$term = get_term( $term_id, self::$slug );
-					$users = rt_biz_get_department_users( $term_id );
-					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( '%s Users', '%s Users', count( $users ), RT_BIZ_TEXT_DOMAIN ), count( $users ) ) );
-					break;
 				case 'color':
 					$color = $this->get_department_meta( 'group-color', $term_id );
 					if ( ! empty( $color ) ) {
