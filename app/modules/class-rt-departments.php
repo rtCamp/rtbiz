@@ -41,7 +41,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			add_filter( self::$slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
 			add_action( 'manage_' . self::$slug . '_custom_column', array( $this, 'manage_department_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$slug . '_columns', array( $this, 'manage_department_column_header' ) );
-			add_filter( 'add_tag_form_pre', array( $this, 'add_manage_acl_button' ) );
+			add_filter( 'admin_notices', array( $this, 'add_manage_acl_link' ) );
 
 		}
 
@@ -443,10 +443,11 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			<?php }
 		}
 
-		function add_manage_acl_button( $taxonomy ){
-			if ( $taxonomy == self::$slug ){
+		function add_manage_acl_link( ){
+			global $pagenow;
+			if ( $pagenow == 'edit-tags.php' && ! empty( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == self::$slug ){
 				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
-				echo '<a href="' . esc_url( $acl_url ) . '" class="button-primary">Manage ACL</a>';
+				echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for this department from <a href="' . esc_url( $acl_url ) . '">Here</a></div>';
 			}
 		}
 	}
