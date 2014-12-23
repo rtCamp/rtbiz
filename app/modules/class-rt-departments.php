@@ -27,7 +27,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		public function __construct(  ) {
 			$this->get_lables();
 
-			add_action( 'plugins_loaded', array( $this, 'register_taxonomy_department' ), 30 );
+			add_action( 'init', array( $this, 'register_taxonomy_department' ), 20 );
 
 			add_action( 'admin_print_scripts', array( $this, 'js_includes' ) );
 			add_action( 'admin_print_styles', array( $this, 'css_includes' ) );
@@ -41,6 +41,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			add_filter( self::$slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
 			add_action( 'manage_' . self::$slug . '_custom_column', array( $this, 'manage_department_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$slug . '_columns', array( $this, 'manage_department_column_header' ) );
+			add_filter( 'admin_notices', array( $this, 'add_manage_acl_button' ) );
 
 		}
 
@@ -76,7 +77,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, );
+			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_department_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
@@ -440,6 +441,14 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				<div id="color-picker"
 				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 			<?php }
+		}
+
+		function add_manage_acl_button( $taxonomy ){
+			global $pagenow;
+			if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ){
+				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
+				echo '<div class="updated" style="padding: 10px 10px 10px;">you can manage ACL for this department from<a href="' . esc_url( $acl_url ) . '">Click Here</a></div>';
+			}
 		}
 	}
 }

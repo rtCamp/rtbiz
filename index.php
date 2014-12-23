@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order = array(
 				self::$dashboard_slug,
 				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
-				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
+				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),
 			);
 
 			$settings = biz_get_redux_settings();
@@ -299,7 +299,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order = array_merge( $this->menu_order, array(
 				'edit.php?post_type=' . rt_biz_get_company_post_type(),
 				self::$access_control_slug,
-				'edit-tags.php?taxonomy='.RT_Departments::$slug,
+				'edit-tags.php?taxonomy='.RT_Departments::$slug. '&post_type=' . rt_biz_get_contact_post_type(),
 				Rt_Biz_Attributes::$attributes_page_slug,
 				Rt_Mailbox::$page_name,
 				self::$settings_slug,
@@ -470,7 +470,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Registers all the menus/submenus for rtBiz
 		 */
 		function register_menu() {
-			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_offerings;
+			global $rt_access_control, $rt_biz_dashboard;
 			$settings  = biz_get_redux_settings();
 			$logo_url               = ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
@@ -480,11 +480,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
 			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type );
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug );
-			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy );
+			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
+			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() );
 		}
 
 		/**
