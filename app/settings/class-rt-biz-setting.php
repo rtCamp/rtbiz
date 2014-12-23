@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// This is where your data is stored in the database and also becomes your global variable name.
 				'display_name'       => __( 'Settings' ),
 				// Name that appears at the top of your panel
-				'display_version'    => '0.0.6',
+				'display_version'    => RT_BIZ_VERSION,
 				// Version that appears at the top of your panel
 				'menu_type'          => 'submenu',
 				//Specify if the admin menu should appear or not. Options: menu or submenu (Under appearance only)
