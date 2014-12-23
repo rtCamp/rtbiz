@@ -22,6 +22,11 @@
 	margin-right: 10px;
 }
 
+.rt_biz_acl_other_option{
+	float: right;
+	margin: 10px 0px;
+}
+
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
 	position: absolute;
 	left: -18px;
