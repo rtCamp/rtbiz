@@ -41,6 +41,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			add_filter( self::$slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
 			add_action( 'manage_' . self::$slug . '_custom_column', array( $this, 'manage_department_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$slug . '_columns', array( $this, 'manage_department_column_header' ) );
+			add_filter( 'add_tag_form_pre', array( $this, 'add_manage_acl_button' ) );
 
 		}
 
@@ -440,6 +441,13 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				<div id="color-picker"
 				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 			<?php }
+		}
+
+		function add_manage_acl_button( $taxonomy ){
+			if ( $taxonomy == self::$slug ){
+				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
+				echo '<a href="' . esc_url( $acl_url ) . '" class="add-new-h2">Manage ACL</a>';
+			}
 		}
 	}
 }
