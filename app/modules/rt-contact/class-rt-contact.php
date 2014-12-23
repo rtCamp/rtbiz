@@ -210,14 +210,39 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 *
 		 */
 		function register_tax(){
+
+			$labels = array(
+				'name'                       => __( 'Contact Groups' ),
+				'singular_name'              => __( 'Contact Group' ),
+				'menu_name'                  => __( 'Contact Groups' ),
+				'search_items'               => __( 'Search Contact Groups' ),
+				'popular_items'              => __( 'Popular Contact Groups' ),
+				'all_items'                  => __( 'All User Contact Groups' ),
+				'edit_item'                  => __( 'Edit Contact Group' ),
+				'update_item'                => __( 'Update Contact Group' ),
+				'add_new_item'               => __( 'Add New Contact Group' ),
+				'new_item_name'              => __( 'New Contact Group Name' ),
+				'separate_items_with_commas' => __( 'Separate Contact Groups with commas' ),
+				'add_or_remove_items'        => __( 'Add or remove Contact Groups' ),
+				'choose_from_most_used'      => __( 'Choose from the most popular Contact Groups' ),
+			);
+
+			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$caps = array(
+				'manage_terms' => $editor_cap,
+				'edit_terms'   => $editor_cap,
+				'delete_terms' => $editor_cap,
+				'assign_terms' => $editor_cap,
+			);
 			register_taxonomy(
 				self::$user_category_taxonomy,
 				'rt_contact',
 				array(
-					'label' => __( 'Contact Group' ),
-					'rewrite' => array( 'slug' => 'rt-user-group' ),
+					'labels' => $labels,
+					'rewrite' => array( 'slug' => self::$user_category_taxonomy ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
+					'capabilities' => $caps
 				)
 			);
 		}
