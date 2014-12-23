@@ -60,7 +60,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_address]',
 					'id' => 'account_meta_address',
 					'description' => __( 'Organization address.' ),
-				    'category' => 'contact',
+				    'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_country',
@@ -71,7 +71,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_country]',
 					'id' => 'account_meta_address',
 					'description' => __( 'Organization country.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_phone',
@@ -82,7 +82,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_phone][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Phone number.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_fax',
@@ -93,7 +93,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_primary_email',
@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'type' => 'text',
 					'name' => 'account_meta[account_primary_email]',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_email',
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_email][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_website',
@@ -125,7 +125,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_website][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Website URL.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_skype_id',
@@ -136,7 +136,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_skype_id][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_twitter',
@@ -147,7 +147,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_twitter][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_facebook',
@@ -158,7 +158,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_facebook][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_linkedin',
@@ -169,7 +169,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'name' => 'account_meta[account_linkedin][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Linked IN Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 			);
 
