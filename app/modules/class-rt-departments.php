@@ -77,7 +77,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, );
+			$arg = array( 'public' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_department_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
@@ -446,7 +446,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		function add_manage_acl_button( $taxonomy ){
 			if ( $taxonomy == self::$slug ){
 				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
-				echo '<a href="' . esc_url( $acl_url ) . '" class="add-new-h2">Manage ACL</a>';
+				echo '<a href="' . esc_url( $acl_url ) . '" class="button-primary">Manage ACL</a>';
 			}
 		}
 	}
