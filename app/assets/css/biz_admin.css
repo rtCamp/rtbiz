@@ -23,8 +23,7 @@
 }
 
 .rt_biz_acl_other_option{
-	float: right;
-	margin: 10px 0px;
+	margin-bottom: 10px;
 }
 
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
