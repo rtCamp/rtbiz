@@ -101,7 +101,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function save_old_data( $post_id ){
 
-			if ( 'rt_contact' != $_POST['post_type'] && 'rt_account' != $_POST['post_type'] ) {
+			if ( rt_biz_get_contact_post_type() != $_POST['post_type'] && rt_biz_get_company_post_type() != $_POST['post_type'] ) {
 				return;
 			}
 			$flag       = false;
@@ -134,10 +134,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 			$meta_key = '';
 			switch ( $_POST['post_type'] ){
-				case 'rt_contact':
+				case rt_biz_get_contact_post_type():
 					$meta_key = 'contact_meta';
 					break;
-				case 'rt_account':
+				case rt_biz_get_company_post_type():
 					$meta_key = 'account_meta';
 					break;
 			}

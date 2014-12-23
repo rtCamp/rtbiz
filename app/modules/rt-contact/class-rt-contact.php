@@ -197,7 +197,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( $allflag ){
 				$current = 'current';
 			}
-			$something = wp_count_posts( 'rt_contact' );
+			$something = wp_count_posts( rt_biz_get_contact_post_type() );
 			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
 			echo '<ul class="subsubsub">';
 			echo implode( ' | ', array_merge( $top, $subsubsub ) );
@@ -236,7 +236,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			);
 			register_taxonomy(
 				self::$user_category_taxonomy,
-				'rt_contact',
+				rt_biz_get_contact_post_type(),
 				array(
 					'labels' => $labels,
 					'rewrite' => array( 'slug' => self::$user_category_taxonomy ),
