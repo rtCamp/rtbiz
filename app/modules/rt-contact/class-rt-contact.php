@@ -242,7 +242,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'rewrite' => array( 'slug' => self::$user_category_taxonomy ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
-					'capabilities' => $caps
+					'capabilities' => $caps,
 				)
 			);
 		}

@@ -445,7 +445,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 		function add_manage_acl_button( $taxonomy ){
 			global $pagenow;
-			if ( $pagenow == 'edit-tags.php' && ! empty( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == self::$slug ){
+			if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ){
 				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
 				echo '<div class="updated" style="padding: 10px 10px 10px;">you can manage ACL for this department from<a href="' . esc_url( $acl_url ) . '">Click Here</a></div>';
 			}
