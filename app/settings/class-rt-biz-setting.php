@@ -30,7 +30,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				return;
 			}
 			// init because can not get Biz ACL before that.
-			add_action( 'init', array( $this, 'init_settings' ), 25 );
+			add_action( 'p2p_init', array( $this, 'init_settings' ), 30 );
 
 		}
 

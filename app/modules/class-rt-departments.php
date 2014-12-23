@@ -27,7 +27,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		public function __construct(  ) {
 			$this->get_lables();
 
-			add_action( 'plugins_loaded', array( $this, 'register_taxonomy_department' ), 30 );
+			add_action( 'init', array( $this, 'register_taxonomy_department' ), 20 );
 
 			add_action( 'admin_print_scripts', array( $this, 'js_includes' ) );
 			add_action( 'admin_print_styles', array( $this, 'css_includes' ) );
@@ -41,7 +41,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			add_filter( self::$slug . '_row_actions', array( $this, 'row_actions' ), 1, 2 );
 			add_action( 'manage_' . self::$slug . '_custom_column', array( $this, 'manage_department_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$slug . '_columns', array( $this, 'manage_department_column_header' ) );
-			add_filter( 'admin_notices', array( $this, 'add_manage_acl_link' ) );
+			add_filter( 'admin_notices', array( $this, 'add_manage_acl_button' ) );
 
 		}
 
@@ -119,12 +119,12 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		 * @return type
 		 */
 		function manage_department_column_header( $columns ) {
-			global $rt_contact;
+
 			unset( $columns['posts'], $columns['slug'] );
 
+			$columns['users']         = __( 'Users', RT_BIZ_TEXT_DOMAIN );
 			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RT_BIZ_TEXT_DOMAIN );
-			$columns['posts']         = $rt_contact->labels['name'];
 
 			return $columns;
 		}
@@ -140,6 +140,11 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 		 */
 		function manage_department_column_body( $display, $column, $term_id ) {
 			switch ( $column ) {
+				case 'users':
+					$term = get_term( $term_id, self::$slug );
+					$users = rt_biz_get_department_users( $term_id );
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . sanitize_title( sprintf( _n( '%s Users', '%s Users', count( $users ), RT_BIZ_TEXT_DOMAIN ), count( $users ) ) );
+					break;
 				case 'color':
 					$color = $this->get_department_meta( 'group-color', $term_id );
 					if ( ! empty( $color ) ) {
@@ -438,11 +443,11 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			<?php }
 		}
 
-		function add_manage_acl_link( ){
+		function add_manage_acl_button( $taxonomy ){
 			global $pagenow;
 			if ( $pagenow == 'edit-tags.php' && ! empty( $_REQUEST[ 'taxonomy' ] ) && $_REQUEST[ 'taxonomy' ] == self::$slug ){
 				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
-				echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for this department from <a href="' . esc_url( $acl_url ) . '">Here</a></div>';
+				echo '<div class="updated" style="padding: 10px 10px 10px;">you can manage ACL for this department from<a href="' . esc_url( $acl_url ) . '">Click Here</a></div>';
 			}
 		}
 	}
