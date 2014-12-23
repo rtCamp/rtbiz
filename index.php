@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order = array(
 				self::$dashboard_slug,
 				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
-				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
+				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),
 			);
 
 			$settings = biz_get_redux_settings();

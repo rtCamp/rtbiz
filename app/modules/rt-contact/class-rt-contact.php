@@ -105,24 +105,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 		function manage_contact_column_header( $columns ){
 			unset( $columns['posts'] );
-			$columns['users']         = __( 'Users', RT_BIZ_TEXT_DOMAIN );
+			$columns['posts']         = $this->labels['name'];
 			return $columns;
 		}
 
 		function manage_contact_column_body( $display, $column, $term_id ){
-			switch ( $column ){
-				case 'users':
-					$term  = get_term( $term_id, self::$user_category_taxonomy );
-					$posts = new WP_Query( array(
-						                       'post_type' => $this->post_type,
-						                       'post_status' => 'any',
-						                       'nopaging' => true,
-						                       self::$user_category_taxonomy => $term->slug,
-					                       ) );
-					echo '<a href="edit.php?post_type=rt_contact&'.self::$user_category_taxonomy.'='.$term->slug.'">'.count( $posts->posts ).'</a>';
-					break;
-			}
-
 		}
 
 		/**
