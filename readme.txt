@@ -40,7 +40,7 @@ Following are some of the trivial features that rtBiz offers:
 * Install the plugin from the 'Plugins' section in your dashboard (Go to `Plugins > Add New > Search` and search for rtBiz).
 * Alternatively, you can [download](http://downloads.wordpress.org/plugin/rtbiz.zip "Download rtBiz") the plugin from the repository. Unzip it and upload it to the plugins folder of your WordPress installation (`wp-content/plugins/` directory of your WordPress installation).
 * Activate it through the 'Plugins' section.
-* rtBiz is heavily dependent on [Posts 2 Posts](https://wordpress.org/plugins/posts-to-posts) plugin. So once you activate rtBiz, it will ask you to install & active Posts 2 Posts.
+* rtBiz is heavily dependent on [Posts 2 Posts](https://wordpress.org/plugins/posts-to-posts) plugin. So once you activate rtBiz, it will ask you to install & activate Posts 2 Posts.
 
 == Frequently Asked Questions ==
 
