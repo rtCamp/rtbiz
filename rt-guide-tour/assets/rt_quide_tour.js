@@ -12,21 +12,19 @@
 	MAP.first_pointer = false; // contain first pointer anchor jQuery object
 	MAP.current_pointer = false; // contain current pointer jQuery object
 	MAP.visible_pointers = []; // contain ids of pointers whose anchors are visible
+
 	MAP.hasPrev = function( data ) { // check if a given pointer object has valid next property
-		return typeof data.prev === 'string'
-			       && data.prev !== ''
-			       && typeof MAP.js_pointers[data.prev].data !== 'undefined'
-			&& typeof MAP.js_pointers[data.prev].data.id === 'string';
+		return typeof data.prev === 'string' && data.prev !== '' && typeof MAP.js_pointers[data.prev].data !== 'undefined' && typeof MAP.js_pointers[data.prev].data.id === 'string';
 	};
+
 	MAP.hasNext = function( data ) { // check if a given pointer object has valid next property
-		return typeof data.next === 'string'
-			       && data.next !== ''
-			       && typeof MAP.js_pointers[data.next].data !== 'undefined'
-			&& typeof MAP.js_pointers[data.next].data.id === 'string';
+		return typeof data.next === 'string' && data.next !== '' && typeof MAP.js_pointers[data.next].data !== 'undefined' && typeof MAP.js_pointers[data.next].data.id === 'string';
 	};
+
 	MAP.isVisible = function( data ) { // check if a anchor of a given pointer object is visible
 		return $.inArray( data.id, MAP.visible_pointers ) !== -1;
 	};
+
 	// given a pointer object, return its the anchor jQuery object if available
 	// otherwise return first available, lookin at next property of subsequent pointers
 	MAP.getPointerData = function( data ) {
@@ -45,6 +43,7 @@
 			? { target: $target, data: data }
 			: { target: false, data: false };
 	};
+
 	// take pointer data and setup pointer plugin for anchor element
 	MAP.setPlugin = function( data ) {
 		MAP.current_pointer = false;
@@ -60,14 +59,15 @@
 	        close: function() {
                 //$.post( ajaxurl, { pointer: data.id, action: 'dismiss-wp-pointer' } );
 	        }
-        })
+        });
 		MAP.current_pointer = { pointer: $pointer, data: data };
 		$(document).trigger( 'MyAdminPointers.current_ready' );
 	};
+
 	// scroll the page to current pointer then open it
 	MAP.openPointer = function() {
 		var $pointer = MAP.current_pointer.pointer;
-		if ( ! typeof $pointer === 'object' ) {
+		if ( typeof $pointer !== 'object' ) {
 			return;
 		}
 		$('html, body').animate({ // scroll page to pointer
@@ -79,6 +79,7 @@
 			$pointer.pointer( 'open' ); // open
 		});
 	};
+
 	// if there is a next pointer set button label to "Next", to "Close" otherwise
 	MAP.setPrev = function( $widget, data ) {
 		if ( typeof $widget === 'object' ) {
@@ -90,8 +91,7 @@
 			$button.click( function(){
 				// open next pointer if it exists
 				if ( MAP.hasPrev( data ) ) {
-					if( typeof data.prevurl === 'string'
-						&& data.prevurl !== '' ){
+					if( typeof data.prevurl === 'string' && data.prevurl !== '' ){
 						window.location = data.prevurl;
 					}
 					MAP.setPlugin( MAP.js_pointers[data.prev].data );
@@ -107,6 +107,7 @@
 			}
 		}
 	};
+
 	// if there is a next pointer set button label to "Next", to "Close" otherwise
 	MAP.setNext = function( $widget, data ) {
 		if ( typeof $widget === 'object' ) {
@@ -117,8 +118,7 @@
 			$button.addClass('button').addClass('button-primary');
 			$button.click( function(){
 				if ( MAP.hasNext( data ) ) {
-					if( typeof data.nexturl === 'string'
-						&& data.nexturl !== '' ){
+					if( typeof data.nexturl === 'string' && data.nexturl !== '' ){
 						window.location = data.nexturl;
 					}
 					MAP.setPlugin( MAP.js_pointers[data.next].data );
@@ -137,12 +137,14 @@
 			$button.html(label).appendTo($buttons);
 		}
 	};
+
 	$(MAP.pointers).each(function(index, pointer) { // loop pointers data
-		if( ! $().pointer ) return; // do nothing if pointer plugin isn't available
+		if( ! $().pointer ) {
+			return;
+		} // do nothing if pointer plugin isn't available
 		MAP.js_pointers[pointer.id] = { data: pointer };
 		var $target = $(pointer.anchor_id);
-		if ( ( $target.length && $target.is(':visible') )
-			|| ( typeof pointer.where === 'string' && pointer.where !== '' ) ) { // anchor exists and is visible?
+		if ( ( $target.length && $target.is(':visible') ) || ( typeof pointer.where === 'string' && pointer.where !== '' ) ) { // anchor exists and is visible?
 			MAP.visible_pointers.push(pointer.id);
 			if ( ! MAP.first_pointer && ( $target.length && $target.is(':visible') ) ) {
 				MAP.first_pointer = pointer;
