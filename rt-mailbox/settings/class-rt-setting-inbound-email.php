@@ -115,6 +115,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				<div class="mail_list" >
 					<h2 class="title">Mail List</h2><?php
 					$rCount = 0;
+					$is_empty_mailbox_check = true;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
 					if ( isset( $google_acs ) && ! empty( $google_acs ) ){
 						foreach ( $google_acs as $ac ){
@@ -127,7 +128,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 							$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
 							$token = $ac->outh_token;
-
+							$is_empty_mailbox_check = false;
 							if ( isset( $ac->email_data['picture'] ) ){
 								$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 								$personMarkup = "<img src='$img?sz=96'>";
@@ -215,6 +216,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							});
 						</script>
 					<?php } ?>
+					<?php
+					if ( $is_empty_mailbox_check ){
+						?>
+						<p>You have no mailbox setup please setup one.</p>
+						<?php
+					}
+					?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
