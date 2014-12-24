@@ -210,7 +210,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 
 		public function set_accounts( $rCount ) {
 			global $rt_lib;
-			$log_file = $rt_lib['rt_lib_path'] . 'mailaccount.txt';
+			$log_file = realpath( dirname( $rt_lib['rt_lib_path'] ) ). '/mailaccount.txt';
 			if ( $fp = fopen( $log_file, 'w+' ) ) {
 				fwrite( $fp, $rCount );
 				fclose( $fp );
