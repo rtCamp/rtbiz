@@ -39,9 +39,7 @@
 				$target = $(data.anchor_id);
 			}
 		}
-		return MAP.isVisible( data )
-			? { target: $target, data: data }
-			: { target: false, data: false };
+		return MAP.isVisible( data ) ? { target: $target, data: data } : { target: false, data: false };
 	};
 
 	// take pointer data and setup pointer plugin for anchor element
