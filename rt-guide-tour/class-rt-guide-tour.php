@@ -15,9 +15,9 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 	class RT_Guide_Tour {
 
 		/**
-		 *
+		 * $tour_list
 		 */
-		var $tour_list =array();
+		var $tour_list = array();
 
 
 		/**
@@ -31,7 +31,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 		 * Hook
 		 */
 		public function hook(){
-			add_action( 'admin_enqueue_scripts', array( $this, 'rt_guide_tour_load') );
+			add_action( 'admin_enqueue_scripts', array( $this, 'rt_guide_tour_load' ) );
 		}
 
 		/**
@@ -48,10 +48,10 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 		 */
 		function parse_guide_tour_list(){
 			$pointers = $this->get_guide_tour_list();
-			if ( empty($pointers) ) return;
+			if ( empty($pointers) ) { return; }
 			foreach ( $pointers as $i => $pointer ) {
 				$pointer['id'] = "{$pointer['prefix']}{$pointer['version']}_{$i}";
-				$this->tour_list[$pointer['id']] = (object) $pointer;
+				$this->tour_list[ $pointer['id'] ] = (object) $pointer;
 			}
 		}
 
@@ -61,37 +61,36 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 		 * @return array
 		 */
 		function filter( $page ){
-			if ( empty( $this->tour_list ) ) return array();
+			if ( empty( $this->tour_list ) ) { return array(); };
 
-			$host = "http://".$_SERVER['HTTP_HOST'];
+			$host = 'http://' . $_SERVER['HTTP_HOST'];
 			$Path = $_SERVER['REQUEST_URI'];
 
 			$uid = get_current_user_id();
-			$dismissed = explode( ',', (string) get_user_meta( $uid, 'dismissed_wp_pointers', TRUE ) );
+			$dismissed = explode( ',', (string) get_user_meta( $uid, 'dismissed_wp_pointers', true ) );
 			$active_ids = array_diff( array_keys( $this->tour_list ), $dismissed );
-			$new_tour_list = array();
+			$new_tour_list = array( );
 			foreach( $this->tour_list as $i => $pointer ) {
-				if (
-					in_array( $i, $active_ids, TRUE ) // is active
+				if ( in_array( $i, $active_ids, true ) // is active
 					&& isset( $pointer->where ) // has where
 				) {
 					$new_tour_list[] = $pointer;
 				}
 			}
 			$count = count( $new_tour_list );
-			if ( $count === 0 ) return array();
+			if ( 0 == $count ){ return array(); }
 
-			foreach( array_values( $new_tour_list ) as $i => $pointer ) {
-				$new_tour_list[$i]->prev = $i-1 > -1 ? $new_tour_list[$i-1]->id : '';
-				$new_tour_list[$i]->next = $i+1 < $count ? $new_tour_list[$i+1]->id : '';
-				if ( $i-1 > -1 && ! empty( $new_tour_list[$i-1]->where ) && $Path != $new_tour_list[$i-1]->where ){
-					$new_tour_list[$i]->prevurl = $host . $new_tour_list[$i-1]->where;
+			foreach( array_values( $new_tour_list ) as $i => $pointer ){
+				$new_tour_list[ $i ]->prev = $i - 1 > -1 ? $new_tour_list[ $i - 1 ]->id : '';
+				$new_tour_list[ $i ]->next = $i + 1 < $count ? $new_tour_list[ $i + 1 ]->id : '';
+				if ( $i-1 > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ){
+					$new_tour_list[ $i ]->prevurl = $host . $new_tour_list[ $i - 1 ]->where;
 				}
-				if ( $i+1 < $count && ! empty( $new_tour_list[$i+1]->where ) && $Path != $new_tour_list[$i+1]->where ){
-					$new_tour_list[$i]->nexturl = $host . $new_tour_list[$i+1]->where;
+				if ( $i+1 < $count && ! empty( $new_tour_list[ $i + 1 ]->where ) && $Path != $new_tour_list[ $i + 1 ]->where ){
+					$new_tour_list[ $i ]->nexturl = $host . $new_tour_list[ $i + 1 ]->where;
 				}
-				if ( $Path == $new_tour_list[$i]->where ){
-					unset( $new_tour_list[$i]->where );
+				if ( $Path == $new_tour_list[ $i ]->where ){
+					unset( $new_tour_list[ $i ]->where );
 				}
 			}
 			return $new_tour_list;
@@ -122,12 +121,12 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 				}
 
 				wp_enqueue_style( 'wp-pointer' );
-				wp_enqueue_script( 'rt_quide_tour', plugin_dir_url( __FILE__ ).'/assets/rt_quide_tour.js', array('wp-pointer'), NULL, TRUE );
+				wp_enqueue_script( 'rt_quide_tour', plugin_dir_url( __FILE__ ) . '/assets/rt_quide_tour.js', array( 'wp-pointer' ), NULL, TRUE );
 
 			    $rt_guide_tour = array(
 					'next_label' => __( 'Next' ),
-					'prev_label' => __('Prev'),
-					'close_label' => __('Dismiss'),
+					'prev_label' => __( 'Prev' ),
+					'close_label' => __( 'Dismiss' ),
 					'pointers' => $pointers,
 			    );
 				wp_localize_script( 'rt_quide_tour', 'RtGuideTourList', $rt_guide_tour );
