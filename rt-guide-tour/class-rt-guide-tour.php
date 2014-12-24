@@ -70,7 +70,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 			$dismissed = explode( ',', (string) get_user_meta( $uid, 'dismissed_wp_pointers', true ) );
 			$active_ids = array_diff( array_keys( $this->tour_list ), $dismissed );
 			$new_tour_list = array();
-			foreach( $this->tour_list as $i => $pointer ){
+			foreach ( $this->tour_list as $i => $pointer ){
 				if ( in_array( $i, $active_ids, true ) // is active
 					&& isset( $pointer->where ) // has where
 				){
@@ -80,7 +80,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 			$count = count( $new_tour_list );
 			if ( 0 == $count ){ return array(); }
 
-			foreach( array_values( $new_tour_list ) as $i => $pointer ){
+			foreach ( array_values( $new_tour_list ) as $i => $pointer ){
 				$new_tour_list[ $i ]->prev = ( $i - 1 ) > -1 ? $new_tour_list[ $i - 1 ]->id : '';
 				$new_tour_list[ $i ]->next = ( $i + 1 ) < $count ? $new_tour_list[ $i + 1 ]->id : '';
 				if ( ( $i - 1 ) > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ){
