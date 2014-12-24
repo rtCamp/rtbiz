@@ -173,7 +173,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
-												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
+												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" class="mailbox-inbox-folder" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
 													<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
 													<?php if ( ! is_null( $all_folders ) ) { ?>
 														<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
@@ -203,7 +203,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							jQuery(document).ready(function ($) {
 								$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
 									e.preventDefault()
-									alert('called');
 									inbox = $(this).val();
 									prev_value = $(this).data('prev-value');
 									$(this).data('prev-value', inbox);
