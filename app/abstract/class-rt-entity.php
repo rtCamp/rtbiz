@@ -88,8 +88,8 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-				add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 			}
+			add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 
 			do_action( 'rt_biz_entity_hooks', $this );
 		}
