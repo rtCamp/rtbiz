@@ -69,11 +69,11 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 			$uid = get_current_user_id();
 			$dismissed = explode( ',', (string) get_user_meta( $uid, 'dismissed_wp_pointers', true ) );
 			$active_ids = array_diff( array_keys( $this->tour_list ), $dismissed );
-			$new_tour_list = array( );
-			foreach( $this->tour_list as $i => $pointer ) {
+			$new_tour_list = array();
+			foreach( $this->tour_list as $i => $pointer ){
 				if ( in_array( $i, $active_ids, true ) // is active
 					&& isset( $pointer->where ) // has where
-				) {
+				){
 					$new_tour_list[] = $pointer;
 				}
 			}
@@ -81,12 +81,12 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 			if ( 0 == $count ){ return array(); }
 
 			foreach( array_values( $new_tour_list ) as $i => $pointer ){
-				$new_tour_list[ $i ]->prev = $i - 1 > -1 ? $new_tour_list[ $i - 1 ]->id : '';
-				$new_tour_list[ $i ]->next = $i + 1 < $count ? $new_tour_list[ $i + 1 ]->id : '';
-				if ( $i-1 > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ){
+				$new_tour_list[ $i ]->prev = ( $i - 1 ) > -1 ? $new_tour_list[ $i - 1 ]->id : '';
+				$new_tour_list[ $i ]->next = ( $i + 1 ) < $count ? $new_tour_list[ $i + 1 ]->id : '';
+				if ( ( $i - 1 ) > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ){
 					$new_tour_list[ $i ]->prevurl = $host . $new_tour_list[ $i - 1 ]->where;
 				}
-				if ( $i+1 < $count && ! empty( $new_tour_list[ $i + 1 ]->where ) && $Path != $new_tour_list[ $i + 1 ]->where ){
+				if ( ( $i + 1 ) < $count && ! empty( $new_tour_list[ $i + 1 ]->where ) && $Path != $new_tour_list[ $i + 1 ]->where ){
 					$new_tour_list[ $i ]->nexturl = $host . $new_tour_list[ $i + 1 ]->where;
 				}
 				if ( $Path == $new_tour_list[ $i ]->where ){
@@ -121,7 +121,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 				}
 
 				wp_enqueue_style( 'wp-pointer' );
-				wp_enqueue_script( 'rt_quide_tour', plugin_dir_url( __FILE__ ) . '/assets/rt_quide_tour.js', array( 'wp-pointer' ), NULL, TRUE );
+				wp_enqueue_script( 'rt_quide_tour', plugin_dir_url( __FILE__ ) . '/assets/rt_quide_tour.js', array( 'wp-pointer' ), null, true );
 
 			    $rt_guide_tour = array(
 					'next_label' => __( 'Next' ),
