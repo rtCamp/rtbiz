@@ -87,9 +87,19 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+				add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 			}
 
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+
+		function preprocess_comment_handler( $commentdata ) {
+			$screen = get_current_screen();
+			if ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) {
+				$commentdata->query_vars['type__not_in'] = 'rt_bot';
+			}
+			return $commentdata;
 		}
 
 		function enqueue_scripts(){
