@@ -88,10 +88,15 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-				add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 			}
-
+			add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
+			add_filter( 'comment_feed_where', array( $this, 'skip_feed_comments' ) );
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+		function skip_feed_comments( $where ){
+			global $wpdb;
+			$where .= " AND $wpdb->posts.post_type NOT IN ('". rt_biz_get_contact_post_type() ."','".rt_biz_get_company_post_type()."')";
+			return $where;
 		}
 
 		function preprocess_comment_handler( $commentdata ) {
