@@ -81,16 +81,16 @@ if ( ! class_exists( 'Rt_Mailbox_Help' ) ) {
 				case 'mailbox_overview':
 					?>
 					<p>
-						<?php _e( 'Mailbox module helps you configure your emails with rtBiz plugin.' ); ?>
-						<?php _e( 'Once configred properly, this module is useful to rtBiz and its addons in many ways.' ); ?>
+						<?php _e( 'Mailbox module helps you configure your emails with plugin that uses this library.' ); ?>
+						<?php _e( 'Once configured properly, this module is useful to rtBiz and its addons in many ways.' ); ?>
 					</p>
 					<p>
-						<?php _e( 'Consider this to be a generic utility which lets you connect your mailbox with rtBiz.' ); ?>
+						<?php _e( 'Consider this to be a generic utility which lets you connect your mailbox with any plugin.' ); ?>
 						<?php _e( 'Once it is connected, this module starts parsing emails from your mailbox and delivers them to you / your addon.' ); ?>
 						<?php _e( 'With those emails received from mailbox module, you can do alot many things that you can imagine.' ); ?>
 					</p>
 					<p>
-						<?php echo sprintf( __( 'For example, if a new email comes to %s then mailbox module parses the emial and delivers it to you.' ), '<code>support@example.com</code>' ); ?>
+						<?php echo sprintf( __( 'For example, if a new email comes to %s then mailbox module parses the email and delivers it to you.' ), '<code>support@example.com</code>' ); ?>
 						<?php echo sprintf( __( 'You could setup a beautiful canned reply message as a response to every email that comes to %s.' ), '<code>support@example.com</code>' ); ?>
 						<?php _e( 'You can develop such functionality within one of your rtBiz addon & it will work like a charm.' ); ?>
 					</p>
@@ -102,6 +102,7 @@ if ( ! class_exists( 'Rt_Mailbox_Help' ) ) {
 				case 'mailbox_screen_content':
 					?>
 					<ul>
+						<li><?php _e( 'Mailbox library will give you a admin page where you can setup this module for your plugin.' ); ?></li>
 						<li><?php _e( 'This screen is divided into two tabs:' ); ?></li>
 						<li>
 							<strong><?php _e( 'Mailbox:' ) ?></strong>
