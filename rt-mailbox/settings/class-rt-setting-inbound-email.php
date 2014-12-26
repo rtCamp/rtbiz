@@ -115,6 +115,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				<div class="mail_list" >
 					<h2 class="title">Mail List</h2><?php
 					$rCount = 0;
+					$is_empty_mailbox_check = true;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
 					if ( isset( $google_acs ) && ! empty( $google_acs ) ){
 						foreach ( $google_acs as $ac ){
@@ -127,7 +128,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 							$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
 							$token = $ac->outh_token;
-
+							$is_empty_mailbox_check = false;
 							if ( isset( $ac->email_data['picture'] ) ){
 								$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 								$personMarkup = "<img src='$img?sz=96'>";
@@ -172,7 +173,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
-												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
+												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" class="mailbox-inbox-folder" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
 													<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
 													<?php if ( ! is_null( $all_folders ) ) { ?>
 														<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
@@ -202,7 +203,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							jQuery(document).ready(function ($) {
 								$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
 									e.preventDefault()
-									alert('called');
 									inbox = $(this).val();
 									prev_value = $(this).data('prev-value');
 									$(this).data('prev-value', inbox);
@@ -215,6 +215,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							});
 						</script>
 					<?php } ?>
+					<?php
+					if ( $is_empty_mailbox_check ){
+						?>
+						<p>You have no mailbox setup please setup one.</p>
+						<?php
+					}
+					?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
@@ -259,7 +266,11 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					}
 				}
 				if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
+					global $rt_mail_accounts_model, $rt_mail_crons;
+					$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
 					$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'] );
+					$tmp = $module[0];
+					$rt_mail_crons->deregister_cron_for_module( $tmp->module );
 					echo '<script>';
 					//					window.location="' . esc_url_raw( add_query_arg(
 					//							array(
