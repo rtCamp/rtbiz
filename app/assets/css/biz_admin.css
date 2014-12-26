@@ -55,6 +55,9 @@
 	border: 1px solid red !important;
 }
 
+.rtbiz-error{
+	color: red;
+}
 /* Smartphone */
 @media screen and (max-width: 600px) {
 	/* Make the close icon larger for tappability. */
