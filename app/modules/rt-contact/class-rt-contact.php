@@ -572,15 +572,33 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 						$( this ).prev().remove();
 						$( this ).remove();
 					} );
+					function addError( selector, msg ){
+						$( selector ).next().next().html( msg );
+						$( selector ).next().next().addClass('rtbiz-error');
+					}
+					function removeError( selector ){
+						$( selector ).next().next().html( '' );
+						$( selector ).next().next().removeClass( 'rtbiz-error' );
+					}
 					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
 						var tempVal = $( this ).prev().val();
-						var name = $( this ).prev().attr( "name" )
-						if ( tempVal == '' )
+						var name = $( this ).prev().attr( "name" );
+						if ( tempVal == '' ){
+							addError( this, 'You must enter value to add more' );
 							return;
+						}
+						else{
+							removeError( this );
+						}
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) )
+								if ( ! IsEmail( tempVal ) ){
+									addError( this, 'Please Enter valid email address' );
 									return;
+								}
+								else{
+									removeError( this );
+								}
 							}
 						}
 

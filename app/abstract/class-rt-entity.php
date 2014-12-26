@@ -373,6 +373,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					</div>
 					<div class="pure-u-1-1 form-input">
 						<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><button data-type='<?php echo ( stristr( $field['key'], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
+						<br /><span></span>
 						<?php foreach ( $values as $value ) { ?>
 							<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="second-multiple-input ' . $field['class'] . '"' : 'class="second-multiple-input"'; ?>>
 							<button type='button' class='button delete-multiple'> - </button>
