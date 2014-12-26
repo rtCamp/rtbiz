@@ -51,6 +51,10 @@
 	color: #c00;
 }
 
+.rtbiz-validation-error{
+	border: 1px solid red !important;
+}
+
 /* Smartphone */
 @media screen and (max-width: 600px) {
 	/* Make the close icon larger for tappability. */

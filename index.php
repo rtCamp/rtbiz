@@ -494,6 +494,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 						wp_enqueue_script( 'jquery-ui-datepicker' );
 					}
+					wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 				}
 			}
 
@@ -504,6 +505,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 					wp_enqueue_script( 'jquery-ui-datepicker' );
 				}
+				wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 			}
 
 			if ( isset( $_REQUEST['taxonomy'] ) && in_array( $_REQUEST['taxonomy'], array( RT_Departments::$slug, Rt_Contact::$user_category_taxonomy ) ) ) {
