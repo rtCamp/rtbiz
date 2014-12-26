@@ -21,7 +21,7 @@ $menu_label = $settings['menu_label'];
 	<div class="rt-biz-container">
 		<ul class="rt_biz_acl_other_option subsubsub">
 			<strong>Department:</strong>
-			<?php foreach( $department as $ug ){ ?>
+			<?php foreach ( $department as $ug ){ ?>
 				<li><a href="<?php echo admin_url( 'edit-tags.php?action=edit&taxonomy=' . RT_Departments::$slug . '&tag_ID=' . $ug->term_id . '&post_type=' . rt_biz_get_contact_post_type() ) ?>" class=""><?php echo $ug->name; ?></a></li> |
 			<?php } ?>
 			<li><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() ); ?>">Add New</a></li>

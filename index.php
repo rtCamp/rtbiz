@@ -428,7 +428,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'anchor_id' => '#rtbiz-customize-biz',
 				'edge' => 'top',
 				'align' => 'left',
-				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard' // <-- Please note this
+				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard', // <-- Please note this
 			);
 			$pointers['pointer2'] = array(
 				'prefix' => RT_BIZ_TEXT_DOMAIN,
