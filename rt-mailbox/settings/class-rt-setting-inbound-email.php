@@ -266,7 +266,11 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					}
 				}
 				if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
+					global $rt_mail_accounts_model, $rt_mail_crons;
+					$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
 					$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'] );
+					$tmp = $module[0];
+					$rt_mail_crons->deregister_cron_for_module( $tmp->module );
 					echo '<script>';
 					//					window.location="' . esc_url_raw( add_query_arg(
 					//							array(
