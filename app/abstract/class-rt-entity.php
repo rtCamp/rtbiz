@@ -87,20 +87,36 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-			}
 
+			}
+			add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
+			add_filter( 'comment_feed_where', array( $this, 'skip_feed_comments' ) );
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+		function skip_feed_comments( $where ){
+			global $wpdb;
+			$where .= " AND $wpdb->posts.post_type NOT IN ('". rt_biz_get_contact_post_type() ."','".rt_biz_get_company_post_type()."')";
+			return $where;
+		}
+
+		function preprocess_comment_handler( $commentdata ) {
+			$screen = get_current_screen();
+			if ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) {
+				$commentdata->query_vars['type__not_in'] = 'rt_bot';
+			}
+			return $commentdata;
 		}
 
 		function enqueue_scripts(){
-			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
+			wp_enqueue_style( 'pure-grid', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
 			wp_enqueue_style( 'biz-admin-css', RT_BIZ_URL.'/app/assets/css/biz_admin.css' );
+			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/form-min.css' );
 		}
 
 
 		function save_old_data( $post_id ){
 
-			if ( 'rt_contact' != $_POST['post_type'] && 'rt_account' != $_POST['post_type'] ) {
+			if ( rt_biz_get_contact_post_type() != $_POST['post_type'] && rt_biz_get_company_post_type() != $_POST['post_type'] ) {
 				return;
 			}
 			$flag       = false;
@@ -133,10 +149,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 			$meta_key = '';
 			switch ( $_POST['post_type'] ){
-				case 'rt_contact':
+				case rt_biz_get_contact_post_type():
 					$meta_key = 'contact_meta';
 					break;
-				case 'rt_account':
+				case rt_biz_get_company_post_type():
 					$meta_key = 'account_meta';
 					break;
 			}
@@ -285,28 +301,34 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			?>
 			<style type="text/css">
 
-				.form-input input, .form-input textarea{
-					width: 60%;
+				.pure-control-group input, .pure-control-group textarea{
+					width: 85%;
 				}
-				.form-label label{
-					width: 30%;
+				.add-gap-div{
+					margin-top: 10px;
 				}
 			</style>
-			<div class="pure-g">
+			<div class="pure-g pure-form">
 
 			<?php
 
 			$category = array_unique( wp_list_pluck( $this->meta_fields, 'category' ) );
 			$cathtml = array();
 			foreach ( $category as $key => $value ){
-				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( ucfirst( $value ) ). __( ' information' ).' </h3> </div>';
+				$cathtml[ $value ] = '<div class="pure-u-1-1"><h3>'.__( $value ). __( ' information:' ).' </h3> </div>';
 			}
-			$cathtml['other'] = '<div class="pure-u-1-1"> <h3> '.__( 'Other information' ).'</h3> </div>';
-			$other_flag = false;
+			$cathtml['other']   = '<div class="pure-u-1-1"> <h3> '.__( 'Other information:' ).'</h3> </div>';
+			$other_flag         = false;
+			$terms              = wp_get_post_terms( $post->ID, Rt_Contact::$user_category_taxonomy );
+			$is_our_team_mate   = false;
+			if ( ! empty( $terms ) && is_array( $terms ) ) {
+				$slug               = wp_list_pluck( $terms, 'slug' );
+				$is_our_team_mate   = in_array( Rt_Contact::$employees_category_slug, $slug );
+			}
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
-				$is_our_team_mate = wp_get_post_terms( $post->ID, Rt_Contact::$employees_category_slug );
+
 				if ( empty( $is_our_team_mate ) && isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
 					continue;
 				}
@@ -324,12 +346,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						} );
 					</script>
 			<?php if ( isset( $field['label'] ) ) { ?>
-						<div class="pure-u-1-4 form-label ">
+						<div class="pure-u-1-2 pure-control-group">
+						<div class="pure-u-1-1">
 						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
 						</div>
-						<div class="pure-u-3-4 form-input">
+						<div class="pure-u-1-1 form-input">
 						<input type="text" <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="datepicker ' . $field['class'] . '"' : 'class="datepicker"'; ?>>
 					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+						</div>
 						</div>
 					<?php
 				} else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
@@ -337,28 +361,32 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					?>
 
 						<?php if ( isset( $field['label'] ) ) { ?>
-						<div class="pure-u-1-4 form-label ">
+						<div class="pure-u-1-2 pure-control-group">
+						<div class="pure-u-1-1">
 						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
 					</div>
-					<div class="pure-u-3-4 form-input">
+					<div class="pure-u-1-1 form-input">
 						<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><button data-type='<?php echo ( stristr( $field['key'], 'email' ) != false ) ? 'email' : ''; ?>' type='button' class='button button-primary add-multiple'>+</button>
 						<?php foreach ( $values as $value ) { ?>
-							<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>>
+							<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> value = '<?php echo $value; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="second-multiple-input ' . $field['class'] . '"' : 'class="second-multiple-input"'; ?>>
 							<button type='button' class='button delete-multiple'> - </button>
 						<?php } ?>
 					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+					</div>
 					</div>
 					<?php
 				} else if ( isset( $field['type'] ) && 'textarea' == $field['type'] ) {
 					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
 						<?php if ( isset( $field['label'] ) ) { ?>
-						<div class="pure-u-1-4 form-label ">
+						<div class="pure-u-1-2 pure-control-group">
+						<div class="pure-u-1-1">
 						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
 						</div>
-					<div class="pure-u-3-4 form-input ">
+					<div class="pure-u-1-1 form-input">
 					<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><?php echo $values; ?></textarea>
 					<?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+					</div>
 					</div>
 					<?php
 				} else if ( isset( $field['type'] ) && 'user_group' == $field['type'] ) {
@@ -377,14 +405,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					?>
 <!--					<div class="form-field pure-control-group">-->
 						<?php if ( isset( $field['label'] ) ) { ?>
-						<div class="pure-u-1-4 form-label ">
-
+						<div class="pure-u-1-2 pure-control-group">
+						<div class="pure-u-1-1">
 						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
 					</div>
-					<div class="pure-u-3-4 form-input ">
-
+					<div class="pure-u-1-1 form-input">
 					<input <?php echo ( isset( $field['type'] ) ) ? 'type="' . $field['type'] . '"' : ''; ?> <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> value='<?php echo $values; ?>' <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>>
 <!--						--><?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
+					</div>
 					</div>
 					<?php
 				}
@@ -397,30 +425,33 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$other_flag = true;
 				}
 			}
-			if ( isset( $cathtml['contact'] ) ) {
-				echo $cathtml['contact'];
-				unset ( $cathtml['contact'] );
+			$printimpload = array();
+			if ( isset( $cathtml['Contact'] ) ) {
+				$printimpload[] = $cathtml['Contact'];
+				unset ( $cathtml['Contact'] );
 			}
-			if ( isset( $cathtml['social'] ) ) {
-				echo $cathtml['social'];
-				unset ( $cathtml['social'] );
+			if ( isset( $cathtml['Social'] ) ) {
+				$printimpload[] = $cathtml['Social'];
+				unset ( $cathtml['Social'] );
 			}
-			if ( isset( $cathtml['hr'] ) ) {
-				echo $cathtml['hr'];
-				unset ( $cathtml['hr'] );
+			if ( isset( $cathtml['HR'] ) ) {
+				if ( $is_our_team_mate ) {
+					$printimpload[] = $cathtml['HR'];
+				}
+				unset ( $cathtml['HR'] );
 			}
 
 			foreach ( $cathtml as $key => $value ){
 				if ( 'other' == $key ){
 					if ( true == $other_flag ) {
-						echo $value;
+						$printimpload[] = $value;
 					}
 				}
 				else {
-					echo $value;
+					$printimpload[] = $value;
 				}
 			}
-
+			echo implode( '<div class="pure-u-1-1 add-gap-div"><hr></div>', $printimpload );
 			?> </div> <?php
 			do_action( 'rt_biz_after_render_meta_fields', $post, $this );
 			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );

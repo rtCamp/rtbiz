@@ -605,7 +605,7 @@ function biz_is_primary_email_unique( $email ) {
 			'value' => $email,
 		),
 	);
-	$posts = get_posts( array( 'post_type' => 'rt_contact', 'meta_query' => $meta_query_args ) );
+	$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args ) );
 	$count = count( $posts );
 	if ( 0 == $count ) {
 		return true;
