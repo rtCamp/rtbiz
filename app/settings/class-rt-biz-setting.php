@@ -152,8 +152,8 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					),
 				),
 				array(
-					'id'       => 'product_plugin',
-					'title'    => __( 'Product Sync Option' ),
+					'id'       => 'offering_plugin',
+					'title'    => __( 'Offering Sync Option' ),
 					'subtitle' => __( 'Select the plugin you want to use for product sync.' ),
 					'desc'     => __( '' ),
 					'type'     => 'radio',

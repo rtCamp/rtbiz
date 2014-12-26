@@ -137,7 +137,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					<div class="welcome-panel-column">
 						<?php if ( current_user_can( $admin_cap ) ): ?>
 							<h4><?php _e( 'Get Started' ); ?></h4>
-							<a class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php _e( 'Customize Your Biz' ); ?></a>
+							<a id="rtbiz-customize-biz" class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php _e( 'Customize Your Biz' ); ?></a>
 						<?php endif; ?>
 						<p><?php printf( __( 'You can also <a href="%s">configure your mailbox</a>' ), admin_url( 'admin.php?page=' . Rt_Mailbox::$page_name ) ); ?></p>
 					</div>
@@ -145,7 +145,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<h4><?php _e( 'Next Steps' ); ?></h4>
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new Contact' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
+								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new Contact' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup Contact Groups' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'Add new Company' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_company_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-networking">' . __( 'Setup Attributes' ) . '</a>', admin_url( 'admin.php?page=' . Rt_Biz_Attributes::$attributes_page_slug ) ); ?></li>
