@@ -276,7 +276,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				<script>
 					var arr_assign_user =<?php echo json_encode( $arrSubscriberUser ); ?>;
 				</script>
-				<input type="text" placeholder="Type assgin name to select" id="assign_user_ac"/>
+				<input type="text" placeholder="Type assignee name to select" id="assign_user_ac"/>
 				<ul id="divAssignList" class="">
 					<?php echo balanceTags( $assignedHTML ); ?>
 				</ul>

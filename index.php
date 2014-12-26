@@ -194,6 +194,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			self::$instance->init_help();
 
+			self::$instance->init_tour();
+
 			self::$instance->register_company_contact_connection();
 
 			self::$instance->templateURL = apply_filters( 'rt_biz_template_url', 'rt_biz/' );
@@ -292,7 +294,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 			}
 
@@ -368,9 +370,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 
-				$product_plugin   = $settings['product_plugin'];
+				$offering_plugin   = $settings['offering_plugin'];
 				$to_register_posttype = array();
 				foreach ( Rt_Access_Control::$modules as $key => $value ){
 
@@ -383,13 +385,18 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					}
 				}
 
-				$rtbiz_offerings = new Rt_Offerings( $product_plugin, $terms_caps, $to_register_posttype );
+				$rtbiz_offerings = new Rt_Offerings( $offering_plugin, $terms_caps, $to_register_posttype );
 			}
 		}
 
 		function init_help() {
 			global $rt_biz_help;
 			$rt_biz_help = new Rt_Biz_Help();
+		}
+
+		function init_tour(){
+			global $rt_biz_tour;
+			$rt_biz_tour = new RT_Guide_Tour();
 		}
 
 		/**
@@ -404,6 +411,53 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, array( $this, 'plugin_action_links' ) );
 				//add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
+
+				// guide Tour
+				add_filter( 'rt_guide_tour_list', array( $this, 'rtbiz_quide_tour' ) );
+
+				add_filter( 'admin_notices', array( $this, 'rtbiz_admin_notices' ) );
+			}
+		}
+
+		function rtbiz_quide_tour( $pointers ){
+			$pointers['pointer1'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( '1Add New Item' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Easily add a new post..' ) ),
+				'anchor_id' => '#rtbiz-customize-biz',
+				'edge' => 'top',
+				'align' => 'left',
+				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard', // <-- Please note this
+			);
+			$pointers['pointer2'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( '2Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#rtiz-add-contact',
+				'edge' => 'top',
+				'align' => 'right',
+				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard', // <-- Please note this
+			);
+			$pointers['pointer3'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( '2Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#rt-departmentdiv',
+				'edge' => 'right',
+				'align' => 'right',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			return $pointers;
+		}
+
+		function rtbiz_admin_notices(){
+			$settings = biz_get_redux_settings();
+			if ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) {
+				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
+				echo '<div class="updated" style="padding: 10px 10px 10px;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">Settings</a></div>';
 			}
 		}
 
@@ -440,6 +494,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 						wp_enqueue_script( 'jquery-ui-datepicker' );
 					}
+					wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 				}
 			}
 
@@ -450,6 +505,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 					wp_enqueue_script( 'jquery-ui-datepicker' );
 				}
+				wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 			}
 
 			if ( isset( $_REQUEST['taxonomy'] ) && in_array( $_REQUEST['taxonomy'], array( RT_Departments::$slug, Rt_Contact::$user_category_taxonomy ) ) ) {
@@ -458,7 +514,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 				if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == Rt_Offerings::$offering_slug ) {
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
 					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type ) );
@@ -479,7 +535,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
