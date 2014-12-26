@@ -8,9 +8,9 @@ jQuery(document).ready(function($) {
 			var eleTitle = jQuery( "#titlewrap #title" );
 			var valTitle = jQuery.trim( eleTitle.val() );
 			if ( ( typeof valTitle === 'undefined' ) || valTitle === '' ) {
-				jQuery( this ).removeClass( 'button-primary-disabled' );
 				jQuery( this ).siblings( '.spinner' ).hide();
 				eleTitle.addClass('rtbiz-validation-error');
+				jQuery( "span[for='"+ eleTitle.attr( 'id' ) +"']" ).remove();
 				eleTitle.after('<span for="' + eleTitle.attr( 'id' ) + '" style="color: red">Please Enter Title ...</span>');
 				eleTitle.focus();
 				e.preventDefault();
