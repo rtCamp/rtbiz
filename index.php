@@ -457,7 +457,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$settings = biz_get_redux_settings();
 			if ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) {
 				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
-				echo '<div class="updated" style="padding: 10px 10px 10px;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">Settings</a></div>';
+				echo '<div class="updated" style="padding: 10px 10px 10px;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a></div>';
 			}
 		}
 
