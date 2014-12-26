@@ -100,8 +100,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 
 		function preprocess_comment_handler( $commentdata ) {
-			$screen = get_current_screen();
-			if ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) {
+			// Contact and company comments needed on from end in furture need to remove else condition.
+			if ( is_admin() ) {
+				$screen = get_current_screen();
+				if ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) {
+					$commentdata->query_vars['type__not_in'] = 'rt_bot';
+				}
+			}
+			else {
 				$commentdata->query_vars['type__not_in'] = 'rt_bot';
 			}
 			return $commentdata;
