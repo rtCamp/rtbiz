@@ -217,11 +217,11 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		function add_dashboard_widgets() {
 
-			add_meta_box( 'rtbiz-department-by-contacts', __( 'Department wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column1' );
+			add_meta_box( 'rtbiz-department-by-contacts', __( 'Contacts by Department', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contact Group wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column2' );
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts by Contact Group', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column2' );
 
-			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Offering wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column3' );
+			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Contacts by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column3' );
 
 			$rt_biz_attributes_model = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
@@ -232,6 +232,26 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
+		}
+
+		function get_post_count_excluding_tax( $taxonomy, $post_type ){
+			$terms_name = get_terms( $taxonomy , array( 'fields' => 'id=>slug' ) );
+			$terms_names = array_values( $terms_name );
+			$posts = new WP_Query( array(
+				                       'post_type' => $post_type,
+				                       'post_status' => 'any',
+				                       'nopaging' => true,
+				                       'tax_query' => array(
+					                       array(
+					                       'taxonomy'  => $taxonomy,
+					                       'field'     => 'slug',
+					                       'terms'     => $terms_names,
+					                       'operator'  => 'NOT IN',
+					                       ),
+				                       ),
+			                       ) );
+
+			return count( $posts->posts );
 		}
 
 		function offering_wise_contacts( $obj, $args ){
@@ -260,13 +280,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -309,13 +324,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -358,13 +368,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -418,7 +423,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				'nopaging' => true,
 			) );
 
-			$rows[] = array( __( 'Others' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Others' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
