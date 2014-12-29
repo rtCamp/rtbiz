@@ -342,26 +342,39 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 		}
 
 		static function get_admin_post_caps( $post_type ) {
-			 $admin_cap = array(
-				 "edit_{$post_type}"              => true,
-				 "read_{$post_type}"              => true,
-				 "delete_{$post_type}"            => true,
-				 "edit_{$post_type}s"             => true,
-				 "edit_others_{$post_type}s"      => true,
-				 "publish_{$post_type}s"          => true,
-				 "read_private_{$post_type}s"     => true,
-				 "delete_{$post_type}s"           => true,
-				 "delete_private_{$post_type}s"   => true,
-				 "delete_published_{$post_type}s" => true,
-				 "delete_others_{$post_type}s"    => true,
-				 "edit_private_{$post_type}s"     => true,
-				 "edit_published_{$post_type}s"   => true,
-				 'manage_terms'                   => true,
-				 'edit_terms'                     => true,
-				 'delete_terms'                   => true,
-				 'assign_terms'                   => true,
-			 );
+			$admin_cap = array(
+				"edit_{$post_type}"              => true,
+				"read_{$post_type}"              => true,
+				"delete_{$post_type}"            => true,
+				"edit_{$post_type}s"             => true,
+				"edit_others_{$post_type}s"      => true,
+				"publish_{$post_type}s"          => true,
+				"read_private_{$post_type}s"     => true,
+				"delete_{$post_type}s"           => true,
+				"delete_private_{$post_type}s"   => true,
+				"delete_published_{$post_type}s" => true,
+				"delete_others_{$post_type}s"    => true,
+				"edit_private_{$post_type}s"     => true,
+				"edit_published_{$post_type}s"   => true,
+				'manage_terms'                   => true,
+				'edit_terms'                     => true,
+				'delete_terms'                   => true,
+				'assign_terms'                   => true,
+			);
 
+			// get all module setting option names
+			$setting_options = array();
+			foreach ( self::$modules as $module ) {
+
+				if ( ! empty( $module['setting_option_name'] ) ) {
+
+					$setting_options[] = $module['setting_option_name'] . '_group';
+
+				}
+			}
+			if ( isset( $_POST['option_page'] ) && in_array( $_POST['option_page'], $setting_options, true )  ) {
+				$admin_cap = array_merge( $admin_cap, array( 'manage_options' => true ) );
+			}
 			return $admin_cap;
 		}
 
