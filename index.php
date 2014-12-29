@@ -791,6 +791,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'post_types' => array( $rt_contact->post_type, $rt_company->post_type ),
 				'require_department' => true,
 			    'require_product_sync' => true,
+			    'setting_option_name' => Rt_Biz_Setting::$biz_opt, // Use For ACL
 			);
 
 			return $modules;
