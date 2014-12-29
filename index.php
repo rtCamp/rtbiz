@@ -507,7 +507,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'version'   => RT_BIZ_VERSION,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
 					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
-					'anchor_id' => 'postbox-container-1 #publish',
+					'anchor_id' => '#postbox-container-1 #publish',
 					'edge'      => 'right',
 					'align'     => 'left',
 					'where'     => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
