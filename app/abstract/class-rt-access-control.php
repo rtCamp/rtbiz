@@ -362,10 +362,10 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				 'assign_terms'                   => true,
 			 );
 
-			//get all module setting option names
+			// get all module setting option names
 			$setting_options = array();
-			foreach ( self::$modules as $module ){
-				if ( ! empty( $module['setting_option_name'] ) ){
+			foreach ( self::$modules as $module ) {
+				if ( ! empty( $module['setting_option_name'] ) ) {
 					$setting_options[] = $module['setting_option_name'] . '_group';
 				}
 			}
