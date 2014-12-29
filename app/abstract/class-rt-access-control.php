@@ -362,16 +362,6 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				 'assign_terms'                   => true,
 			 );
 
-			// get all module setting option names
-			$setting_options = array();
-			foreach ( self::$modules as $module ) {
-				if ( ! empty( $module['setting_option_name'] ) ) {
-					$setting_options[] = $module['setting_option_name'] . '_group';
-				}
-			}
-			if ( isset( $_POST['option_page'] ) && in_array( $_POST['option_page'], $setting_options, true )  ){
-				$admin_cap = array_merge( $admin_cap, array( 'manage_options' => true ) );
-			}
 			return $admin_cap;
 		}
 
