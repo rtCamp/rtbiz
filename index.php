@@ -420,34 +420,94 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function rtbiz_quide_tour( $pointers ){
-			$pointers['pointer1'] = array(
+			$pointers['contact_title'] = array(
 				'prefix' => RT_BIZ_TEXT_DOMAIN,
 				'version' => RT_BIZ_VERSION,
-				'title' => sprintf( '<h3>%s</h3>', esc_html__( '1Add New Item' ) ),
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Enter the title' ) ),
 				'content' => sprintf( '<p>%s</p>', esc_html__( 'Easily add a new post..' ) ),
-				'anchor_id' => '#rtbiz-customize-biz',
+				'anchor_id' => 'input#title',
 				'edge' => 'top',
 				'align' => 'left',
-				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard', // <-- Please note this
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
 			);
-			$pointers['pointer2'] = array(
+			$pointers['contact_group'] = array(
 				'prefix' => RT_BIZ_TEXT_DOMAIN,
 				'version' => RT_BIZ_VERSION,
-				'title' => sprintf( '<h3>%s</h3>', esc_html__( '2Another info' ) ),
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
 				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
-				'anchor_id' => '#rtiz-add-contact',
-				'edge' => 'top',
-				'align' => 'right',
-				'where' => '/wp-admin/admin.php?page=rt-biz-dashboard', // <-- Please note this
+				'anchor_id' => '#rt-contact-groupdiv',
+				'edge' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
 			);
-			$pointers['pointer3'] = array(
+			$pointers['contact_department'] = array(
 				'prefix' => RT_BIZ_TEXT_DOMAIN,
 				'version' => RT_BIZ_VERSION,
-				'title' => sprintf( '<h3>%s</h3>', esc_html__( '2Another info' ) ),
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
 				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
 				'anchor_id' => '#rt-departmentdiv',
 				'edge' => 'right',
-				'align' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_assignee'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#rt-biz-entity-assigned_to',
+				'edge' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_acl'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#rt-biz-acl-details',
+				'edge' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_wpuser'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#p2p-from-rt_contact_to_user',
+				'edge' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_company'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#p2p-to-rt_account_to_rt_contact',
+				'edge' => 'right',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_details'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#rt-biz-entity-details>h3',
+				'edge' => 'top',
+				'align' => 'left',
+				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
+			);
+			$pointers['contact_publish'] = array(
+				'prefix' => RT_BIZ_TEXT_DOMAIN,
+				'version' => RT_BIZ_VERSION,
+				'title' => sprintf( '<h3>%s</h3>', esc_html__( 'Another info' ) ),
+				'content' => sprintf( '<p>%s</p>', esc_html__( 'Lore ipsum....' ) ),
+				'anchor_id' => '#publish',
+				'edge' => 'right',
+				'align' => 'left',
 				'where' => '/wp-admin/post-new.php?post_type=rt_contact', // <-- Please note this
 			);
 			return $pointers;
