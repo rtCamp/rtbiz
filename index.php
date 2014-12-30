@@ -69,7 +69,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * @var string - rtBiz Dashboard Screen ID
 		 */
-		public $dashboard_screen;
+		static $dashboard_screen;
 
 		/**
 		 * @var string - rtBiz Access Control Page Slug
@@ -576,7 +576,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			// Taxonomy menu hack for rtBiz
 			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) )  {
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', self::$dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
 
@@ -590,9 +590,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$settings  = biz_get_redux_settings();
 			$logo_url               = ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
-			$this->dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
+			self::$dashboard_screen = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' ), self::$dashboard_slug, array( $this, 'dashboard_ui' ), $logo_url, self::$menu_position );
 
-			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
+			$rt_biz_dashboard->add_screen_id( self::$dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
 			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
