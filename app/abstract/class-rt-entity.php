@@ -294,6 +294,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( isset( $_POST['assign_to'] ) ){
 				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to'] );
 			}
+			else {
+				rt_biz_update_entity_meta( $post, 'assgin_to', '' );
+			}
 		}
 
 		/**
