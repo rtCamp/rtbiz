@@ -71,7 +71,7 @@
 			                        scrollTop: $pointer.offset().top - 300
 		                        }, 300, function() { // when scroll complete
 			var $widget = $pointer.pointer('widget');
-			if ( MAP.current_pointer.data.edge == 'top' && MAP.current_pointer.data.align == 'right' ){
+			if ( MAP.current_pointer.data.edge === 'top' && MAP.current_pointer.data.align === 'right' ){
 				var $arrow = $widget.find('.wp-pointer-arrow').eq(0);
 				$arrow.attr( 'style', 'left:85%' );
 			}
@@ -163,6 +163,13 @@
 			MAP.visible_pointers.push(pointer.id);
 			if ( ! MAP.first_pointer && ( $target.length && $target.is(':visible') ) ) {
 				MAP.first_pointer = pointer;
+			}
+		}else {
+			if ( index !== ( MAP.pointers.length - 1 ) ){
+				MAP.pointers[ index - 1].next = MAP.pointers[ index + 1].id;
+				MAP.pointers[ index + 1].prev = MAP.pointers[ index - 1].id;
+			} else {
+				MAP.pointers[ index - 1].next = '';
 			}
 		}
 		if ( index === ( MAP.pointers.length - 1 ) && MAP.first_pointer ) {
