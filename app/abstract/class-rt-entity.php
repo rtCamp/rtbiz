@@ -349,7 +349,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						jQuery( document ).ready( function( $ ) {
 							$( document ).on( 'focus', ".datepicker", function() {
 								$( this ).datepicker( {
-									'dateFormat': 'dd/mm/yy'
+									'dateFormat': 'dd/mm/yy',
+									changeMonth: true,
+									changeYear: true
 								} );
 							} );
 						} );
