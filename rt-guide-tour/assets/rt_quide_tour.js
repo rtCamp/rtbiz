@@ -164,6 +164,13 @@
 			if ( ! MAP.first_pointer && ( $target.length && $target.is(':visible') ) ) {
 				MAP.first_pointer = pointer;
 			}
+		}else {
+			if ( index !== ( MAP.pointers.length - 1 ) ){
+				MAP.pointers[ index - 1 ]['next'] = MAP.pointers[ index + 1 ]['id'];
+				MAP.pointers[ index + 1 ]['prev'] = MAP.pointers[ index - 1 ]['id'];
+			} else {
+				MAP.pointers[ index - 1 ]['next'] = '';
+			}
 		}
 		if ( index === ( MAP.pointers.length - 1 ) && MAP.first_pointer ) {
 			$(document).trigger( 'MyAdminPointers.setup_done', MAP.first_pointer );
