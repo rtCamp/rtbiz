@@ -505,13 +505,8 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 		function add_department_support( $supports ){
 
 	        foreach ( self::$modules as $key => $value ){
-
-		        if ( ! empty( $value['require_department'] ) ) {
-			        if ( ! empty( $value['post_types'] ) && is_array( $value['post_types'] ) ) {
-				        foreach ( $value['post_types'] as $posttype ) {
-					        array_push( $supports, $posttype );
-				        }
-			        }
+		        if ( ! empty( $value['department_support'] ) ) {
+			        $supports = array_merge( $supports, $value['department_support'] );
 		        }
 	        }
 			return $supports;

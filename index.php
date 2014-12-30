@@ -379,12 +379,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				$to_register_posttype = array();
 				foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-					if ( ! empty( $value['require_product_sync'] ) ) {
-						if ( isset( $value['post_types'] ) ) {
-							foreach ( $value['post_types'] as $posttype ) {
-								array_push( $to_register_posttype, $posttype );
-							}
-						}
+					if ( ! empty( $value['offering_support'] ) ) {
+						$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
 					}
 				}
 
@@ -852,8 +848,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
 				'post_types' => array( $rt_contact->post_type, $rt_company->post_type ),
-				'require_department' => true,
-			    'require_product_sync' => true,
+				'department_support' => array( $rt_contact->post_type ),
+			    'offering_support' => array( $rt_contact->post_type, $rt_company->post_type ),
 			    'setting_option_name' => Rt_Biz_Setting::$biz_opt, // Use For ACL
 			);
 
