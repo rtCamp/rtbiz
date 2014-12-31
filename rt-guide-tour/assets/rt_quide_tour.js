@@ -90,8 +90,7 @@
 			$button.addClass('button').addClass('button-primary');
 			$button.click( function(){
 				jQuery.each( MAP.js_pointers, function( key, value ) {
-					console.log( JSON.stringify( value.data.id ) );
-					//$.post( ajaxurl, { pointer: value.data.id, action: 'dismiss-wp-pointer' } );
+					$.post( ajaxurl, { pointer: value.data.id, action: 'dismiss-wp-pointer' } );
 				});
 			});
 			var label = MAP.close_label;
