@@ -14,11 +14,5 @@
    * [Offerings](features/offerings/index.md)
    * [Attributes](features/attributes/index.md)
    * [Mailbox](features/mailbox/index.md)
-* [Developers](developers/index.md)
-   * [Entity](developers/entity/index.md)
-       * [Contact](developers/entity/contact/index.md)
-       * [Company](developers/entity/company/index.md)
-   * [Mailbox](developers/mailbox/index.md)
 * [FAQs](faqs/index.md)
 * [Contribute](contribute/index.md)
-
