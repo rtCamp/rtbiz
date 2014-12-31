@@ -1,0 +1,14 @@
+deploy.sh
+deploy-common.sh
+readme.sh
+README.md
+.git
+.gitattributes
+.gitignore
+map.conf
+nginx.log
+tests
+bin
+docs
+phpunit.xml
+assets
