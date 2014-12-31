@@ -434,7 +434,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'anchor_id' => '#post-body input#title',
 					'edge'      => 'top',
 					'align'     => 'left',
-					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type , // <-- Please note this
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
 				);
 				$pointers['contact_group']      = array(
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,

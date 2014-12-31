@@ -485,7 +485,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				</table>
 				<?php
 			} else {
-				?><div><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' )  ); ?> </div><?php
+				?><div><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </div><?php
 			}
 		}
 
