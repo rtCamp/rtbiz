@@ -816,9 +816,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			return get_posts(
 				array(
 					'tax_query' => array(
-						'taxonomy' => self::$user_category_taxonomy,
-						'field'    => 'slug',
-						'terms'    => $category_slug,
+						array(
+							'taxonomy' => self::$user_category_taxonomy,
+							'field'    => 'slug',
+							'terms'    => $category_slug,
+						),
 					),
 					'post_type' => $this->post_type,
 					'post_status' => 'any',
