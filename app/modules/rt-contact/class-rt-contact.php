@@ -105,24 +105,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 		function manage_contact_column_header( $columns ){
 			unset( $columns['posts'] );
-			$columns['users']         = __( 'Users', RT_BIZ_TEXT_DOMAIN );
+			$columns['posts']         = $this->labels['name'];
 			return $columns;
 		}
 
 		function manage_contact_column_body( $display, $column, $term_id ){
-			switch ( $column ){
-				case 'users':
-					$term  = get_term( $term_id, self::$user_category_taxonomy );
-					$posts = new WP_Query( array(
-						                       'post_type' => $this->post_type,
-						                       'post_status' => 'any',
-						                       'nopaging' => true,
-						                       self::$user_category_taxonomy => $term->slug,
-					                       ) );
-					echo '<a href="edit.php?post_type=rt_contact&'.self::$user_category_taxonomy.'='.$term->slug.'">'.count( $posts->posts ).'</a>';
-					break;
-			}
-
 		}
 
 		/**
@@ -210,7 +197,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( $allflag ){
 				$current = 'current';
 			}
-			$something = wp_count_posts( 'rt_contact' );
+			$something = wp_count_posts( rt_biz_get_contact_post_type() );
 			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
 			echo '<ul class="subsubsub">';
 			echo implode( ' | ', array_merge( $top, $subsubsub ) );
@@ -223,14 +210,39 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 *
 		 */
 		function register_tax(){
+
+			$labels = array(
+				'name'                       => __( 'Contact Groups' ),
+				'singular_name'              => __( 'Contact Group' ),
+				'menu_name'                  => __( 'Contact Groups' ),
+				'search_items'               => __( 'Search Contact Groups' ),
+				'popular_items'              => __( 'Popular Contact Groups' ),
+				'all_items'                  => __( 'All User Contact Groups' ),
+				'edit_item'                  => __( 'Edit Contact Group' ),
+				'update_item'                => __( 'Update Contact Group' ),
+				'add_new_item'               => __( 'Add New Contact Group' ),
+				'new_item_name'              => __( 'New Contact Group Name' ),
+				'separate_items_with_commas' => __( 'Separate Contact Groups with commas' ),
+				'add_or_remove_items'        => __( 'Add or remove Contact Groups' ),
+				'choose_from_most_used'      => __( 'Choose from the most popular Contact Groups' ),
+			);
+
+			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$caps = array(
+				'manage_terms' => $editor_cap,
+				'edit_terms'   => $editor_cap,
+				'delete_terms' => $editor_cap,
+				'assign_terms' => $editor_cap,
+			);
 			register_taxonomy(
 				self::$user_category_taxonomy,
-				'rt_contact',
+				rt_biz_get_contact_post_type(),
 				array(
-					'label' => __( 'Contact Group' ),
-					'rewrite' => array( 'slug' => 'rt-user-group' ),
+					'labels' => $labels,
+					'rewrite' => array( 'slug' => self::$user_category_taxonomy ),
 					'hierarchical' => true,
 					'show_admin_column' => true,
+					'capabilities' => $caps,
 				)
 			);
 		}
@@ -273,205 +285,205 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
+					'key' => 'contact_primary_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Primary Email Address' ),
+					'is_multiple' => false,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_primary_email]',
+					'description' => __( 'Valid email address.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'contact_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Secondary Email Address' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_email][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Valid email address.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'contact_phone',
+					'text' => __( 'Phone' ),
+					'label' => __( 'Phone Number' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_phone][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Phone number.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'contact_fax',
+					'text' => __( 'Fax' ),
+					'label' => __( 'Fax Number' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_fax][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Fax number.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'contact_website',
+					'text' => __( 'Website' ),
+					'label' => __( 'Website URL' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'contact_meta[contact_website][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Website URL.' ),
+					'category' => 'Contact',
+				),
+				array(
 					'key' => 'contact_dob',
 					'text' => __( 'Date of Birth' ),
-					'label' => __( 'Enter Date of Birth' ),
+					'label' => __( 'Date of Birth' ),
 					'is_multiple' => false,
 					'is_datepicker' => true,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_dob]',
 					'id' => 'contact_meta_contact_dob',
 					'description' => __( 'Date of Birth.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'contact_address',
 					'text' => __( 'Address' ),
-					'label' => __( 'Enter Address' ),
+					'label' => __( 'Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
 					'name' => 'contact_meta[contact_address]',
 					'class' => '',
 					'description' => __( 'Address.' ),
 					'hide_for_client' => true,
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'contact_postal_address',
 					'text' => __( 'Postal Address' ),
-					'label' => __( 'Enter Postal Address' ),
+					'label' => __( 'Postal Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
 					'name' => 'contact_meta[contact_postal_address]',
 					'class' => '',
 					'description' => __( 'Postal Address.' ),
 					'hide_for_client' => true,
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'contact_tfn',
 					'text' => __( 'Tax File Number' ),
-					'label' => __( 'Enter Tax File Number' ),
+					'label' => __( 'Tax File Number' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_tfn]',
 					'id' => 'contact_meta_contact_tfn',
 					'description' => __( 'Tax File Number.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
-				),
-				array(
-					'key' => 'contact_phone',
-					'text' => __( 'Phone' ),
-					'label' => __( 'Enter Phone Number' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_phone][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Phone number.' ),
-					'category' => 'contact',
-				),
-				array(
-					'key' => 'contact_fax',
-					'text' => __( 'Fax' ),
-					'label' => __( 'Enter Fax Number' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_fax][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Fax number.' ),
-					'category' => 'contact',
-				),
-				array(
-					'key' => 'contact_primary_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Enter Primary Email Address' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_primary_email]',
-					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
-				),
-				array(
-					'key' => 'contact_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Enter Email Address' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_email][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
-				),
-				array(
-					'key' => 'contact_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Enter Website URL' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_website][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Website URL.' ),
-					'category' => 'contact',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_skype_id',
 					'text' => __( 'Skype' ),
-					'label' => __( 'Enter Skype Id' ),
+					'label' => __( 'Skype Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_skype_id][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'contact_twitter',
 					'text' => __( 'Twitter' ),
-					'label' => __( 'Enter Twitter Id' ),
+					'label' => __( 'Twitter Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_twitter][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'contact_facebook',
 					'text' => __( 'Facebook' ),
-					'label' => __( 'Enter Facebook Id' ),
+					'label' => __( 'Facebook Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_facebook][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 
 				),
 				array(
 					'key' => 'contact_linkedin',
 					'text' => __( 'Linked In' ),
-					'label' => __( 'Enter LinkedIn Id' ),
+					'label' => __( 'LinkedIn Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_linkedin][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 
 				),
 				array(
 					'key' => 'contact_kin_name',
 					'text' => __( 'Next of Kin Name' ),
-					'label' => __( 'Enter Next of Kin Name' ),
+					'label' => __( 'Next of Kin Name' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_kin_name]',
 					'id' => 'contact_meta_contact_kin_name',
 					'description' => __( 'Next of Kin Name.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_kin_address',
 					'text' => __( 'Next of Kin Address' ),
-					'label' => __( 'Enter Next of Kin Address' ),
+					'label' => __( 'Next of Kin Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
 					'name' => 'contact_meta[contact_kin_address]',
 					'id' => 'contact_meta_contact_kin_address',
 					'description' => __( 'Next of Kin Address.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_kin_number',
 					'text' => __( 'Next of Kin Number' ),
-					'label' => __( 'Enter Next of Kin Number' ),
+					'label' => __( 'Next of Kin Number' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_kin_number]',
 					'id' => 'contact_meta_contact_kin_number',
 					'description' => __( 'Next of Kin Number.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_kin_relation',
 					'text' => __( 'Next of Kin Relation' ),
-					'label' => __( 'Enter Next of Kin Relation' ),
+					'label' => __( 'Next of Kin Relation' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'contact_meta[contact_kin_relation]',
 					'id' => 'contact_meta_contact_kin_relation',
 					'description' => __( 'Next of Kin Relation.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_commence_date',
 					'text' => __( 'Date of Commencement' ),
-					'label' => __( 'Enter Date of Commencement' ),
+					'label' => __( 'Date of Commencement' ),
 					'is_multiple' => false,
 					'is_datepicker' => true,
 					'type' => 'text',
@@ -479,12 +491,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'id' => 'contact_meta_contact_commence_date',
 					'description' => __( 'Date of Commencement.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 				array(
 					'key' => 'contact_terminate_date',
 					'text' => __( 'Date of Termination' ),
-					'label' => __( 'Enter Date of Termination' ),
+					'label' => __( 'Date of Termination' ),
 					'is_multiple' => false,
 					'is_datepicker' => true,
 					'type' => 'text',
@@ -492,7 +504,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'id' => 'contact_meta_contact_terminate_date',
 					'description' => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
-					'category' => 'hr',
+					'category' => 'HR',
 				),
 			);
 
@@ -560,15 +572,33 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 						$( this ).prev().remove();
 						$( this ).remove();
 					} );
+					function addError( selector, msg ){
+						$( selector ).next().next().html( msg );
+						$( selector ).next().next().addClass('rtbiz-error');
+					}
+					function removeError( selector ){
+						$( selector ).next().next().html( '' );
+						$( selector ).next().next().removeClass( 'rtbiz-error' );
+					}
 					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
 						var tempVal = $( this ).prev().val();
-						var name = $( this ).prev().attr( "name" )
-						if ( tempVal == '' )
+						var name = $( this ).prev().attr( "name" );
+						if ( tempVal == '' ){
+							addError( this, 'You must enter value to add more' );
 							return;
+						}
+						else{
+							removeError( this );
+						}
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) )
+								if ( ! IsEmail( tempVal ) ){
+									addError( this, 'Please enter valid email address' );
 									return;
+								}
+								else{
+									removeError( this );
+								}
 							}
 						}
 
@@ -786,9 +816,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			return get_posts(
 				array(
 					'tax_query' => array(
-						'taxonomy' => self::$user_category_taxonomy,
-						'field'    => 'slug',
-						'terms'    => $category_slug,
+						array(
+							'taxonomy' => self::$user_category_taxonomy,
+							'field'    => 'slug',
+							'terms'    => $category_slug,
+						),
 					),
 					'post_type' => $this->post_type,
 					'post_status' => 'any',

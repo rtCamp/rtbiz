@@ -39,3 +39,5 @@ script:
     - if [ -e phpunit.xml ] || [ -e phpunit.xml.dist ]; then phpunit; fi
     - phpcs --ignore='tests/*,*/vendor/*,app/lib/*,app/helper/class-rt-biz-text-diff.php,bin/*' --standard=WordPress-Core $(find . -name '*.php')
     - jshint .
+notifications:
+  slack: rtcamp:8iYCiGTcfCqSoUXkXJMbPPaO

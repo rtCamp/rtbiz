@@ -342,25 +342,40 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 		}
 
 		static function get_admin_post_caps( $post_type ) {
-			return array(
-				"edit_{$post_type}" => true,
-				"read_{$post_type}" => true,
-				"delete_{$post_type}" => true,
-				"edit_{$post_type}s" => true,
-				"edit_others_{$post_type}s" => true,
-				"publish_{$post_type}s" => true,
-				"read_private_{$post_type}s" => true,
-				"delete_{$post_type}s" => true,
-				"delete_private_{$post_type}s" => true,
+			$admin_cap = array(
+				"edit_{$post_type}"              => true,
+				"read_{$post_type}"              => true,
+				"delete_{$post_type}"            => true,
+				"edit_{$post_type}s"             => true,
+				"edit_others_{$post_type}s"      => true,
+				"publish_{$post_type}s"          => true,
+				"read_private_{$post_type}s"     => true,
+				"delete_{$post_type}s"           => true,
+				"delete_private_{$post_type}s"   => true,
 				"delete_published_{$post_type}s" => true,
-				"delete_others_{$post_type}s" => true,
-				"edit_private_{$post_type}s" => true,
-				"edit_published_{$post_type}s" => true,
-				'manage_terms' => true,
-				'edit_terms' => true,
-				'delete_terms' => true,
-				'assign_terms' => true,
+				"delete_others_{$post_type}s"    => true,
+				"edit_private_{$post_type}s"     => true,
+				"edit_published_{$post_type}s"   => true,
+				'manage_terms'                   => true,
+				'edit_terms'                     => true,
+				'delete_terms'                   => true,
+				'assign_terms'                   => true,
 			);
+
+			// get all module setting option names
+			$setting_options = array();
+			foreach ( self::$modules as $module ) {
+
+				if ( ! empty( $module['setting_option_name'] ) ) {
+
+					$setting_options[] = $module['setting_option_name'] . '_group';
+
+				}
+			}
+			if ( isset( $_POST['option_page'] ) && in_array( $_POST['option_page'], $setting_options, true )  ) {
+				$admin_cap = array_merge( $admin_cap, array( 'manage_options' => true ) );
+			}
+			return $admin_cap;
 		}
 
 		function get_module_users( $module_key, $category_slug = '' ) {
@@ -470,7 +485,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				</table>
 				<?php
 			} else {
-				?><div> Please Connect WpUser with contact to assign profile level access </div><?php
+				?><div><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </div><?php
 			}
 		}
 
@@ -490,13 +505,8 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 		function add_department_support( $supports ){
 
 	        foreach ( self::$modules as $key => $value ){
-
-		        if ( ! empty( $value['require_department'] ) ) {
-			        if ( ! empty( $value['post_types'] ) && is_array( $value['post_types'] ) ) {
-				        foreach ( $value['post_types'] as $posttype ) {
-					        array_push( $supports, $posttype );
-				        }
-			        }
+		        if ( ! empty( $value['department_support'] ) ) {
+			        $supports = array_merge( $supports, $value['department_support'] );
 		        }
 	        }
 			return $supports;

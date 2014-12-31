@@ -72,8 +72,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->init_rt_mail_models();
 			$this->init_mail_functions();
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
+			$this->init_mailbox_help();
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
 			$this->db_upgrade();
+		}
+		function init_mailbox_help(){
+			global $rt_mailbox_help;
+			$rt_mailbox_help = new Rt_Mailbox_Help();
 		}
 
 		function enqueue_styles_scripts(){

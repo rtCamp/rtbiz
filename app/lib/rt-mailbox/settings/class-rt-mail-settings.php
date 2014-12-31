@@ -210,7 +210,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 
 		public function set_accounts( $rCount ) {
 			global $rt_lib;
-			$log_file = $rt_lib['rt_lib_path'] . 'mailaccount.txt';
+			$log_file = realpath( dirname( $rt_lib['rt_lib_path'] ) ). '/mailaccount.txt';
 			if ( $fp = fopen( $log_file, 'w+' ) ) {
 				fwrite( $fp, $rCount );
 				fclose( $fp );
@@ -408,7 +408,8 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		public function get_email_for_sync() {
 			sleep( 5 );
 			global $wpdb, $rt_mail_accounts_model;
-			$sql = $wpdb->prepare( "select * from $rt_mail_accounts_model->table_name where sync_status in ( 'syncing' ) and ( last_sync_time is NULL or addtime( last_sync_time, %s ) < NOW() ) order by last_sync_time limit 1", $this->sync_period );
+			$sql = $wpdb->prepare( "select * from $rt_mail_accounts_model->table_name where sync_status in ( 'syncing' ) and ( last_sync_time is NULL or addtime( last_sync_time, %s ) < NOW() ) order by last_sync_time DESC limit 1", $this->sync_period );
+
 			$row = $wpdb->get_row( $sql );
 			if ( ! $row ) {
 				$sql = "select * from $rt_mail_accounts_model->table_name where not sync_status in ( 'syncing' ) order by last_sync_time limit 1";

@@ -22,6 +22,10 @@
 	margin-right: 10px;
 }
 
+.rt_biz_acl_other_option{
+	margin-bottom: 10px;
+}
+
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
 	position: absolute;
 	left: -18px;
@@ -45,6 +49,18 @@
 
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:hover:before {
 	color: #c00;
+}
+
+.rtbiz-validation-error{
+	border: 1px solid red !important;
+}
+
+.rtbiz-error{
+	color: red;
+}
+
+.contact-list img, .ac-assign-selected img{
+	border-radius: 12px;
 }
 
 /* Smartphone */

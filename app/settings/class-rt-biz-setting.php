@@ -30,7 +30,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				return;
 			}
 			// init because can not get Biz ACL before that.
-			add_action( 'init', array( $this, 'init_settings' ), 25 );
+			add_action( 'p2p_init', array( $this, 'init_settings' ), 30 );
 
 		}
 
@@ -152,10 +152,10 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					),
 				),
 				array(
-					'id'       => 'product_plugin',
-					'title'    => __( 'Product Sync Option' ),
-					'subtitle' => __( 'Select the plugin you want to use for product sync.' ),
-					'desc'     => __( '' ),
+					'id'       => 'offering_plugin',
+					'title'    => __( 'Offering Sync Option' ),
+					'subtitle' => __( 'Select the plugin you want to use for offering sync.' ),
+					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
 					'type'     => 'radio',
 					'options'  => array(
 						'none'         => __( 'None' ),
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// This is where your data is stored in the database and also becomes your global variable name.
 				'display_name'       => __( 'Settings' ),
 				// Name that appears at the top of your panel
-				'display_version'    => '0.0.6',
+				'display_version'    => RT_BIZ_VERSION,
 				// Version that appears at the top of your panel
 				'menu_type'          => 'submenu',
 				//Specify if the admin menu should appear or not. Options: menu or submenu (Under appearance only)

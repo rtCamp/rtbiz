@@ -7,7 +7,7 @@
 **Contributors:** [rtcamp](http://profiles.wordpress.org/rtcamp), [rahul286](http://profiles.wordpress.org/rahul286), [faishal](http://profiles.wordpress.org/faishal), [desaiuditd](http://profiles.wordpress.org/desaiuditd)  
 **Tags:** [library](http://wordpress.org/plugins/tags/library), [autoloader](http://wordpress.org/plugins/tags/autoloader), [database model](http://wordpress.org/plugins/tags/database model), [database updater](http://wordpress.org/plugins/tags/database updater), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups)  
 **Requires at least:** 3.6  
-**Tested up to:** 3.9.1  
+**Tested up to:** 4.1  
 **Stable tag:** master  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 

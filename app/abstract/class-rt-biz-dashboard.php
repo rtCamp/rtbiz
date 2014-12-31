@@ -137,7 +137,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					<div class="welcome-panel-column">
 						<?php if ( current_user_can( $admin_cap ) ): ?>
 							<h4><?php _e( 'Get Started' ); ?></h4>
-							<a class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php _e( 'Customize Your Biz' ); ?></a>
+							<a id="rtbiz-customize-biz" class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php _e( 'Customize Your Biz' ); ?></a>
 						<?php endif; ?>
 						<p><?php printf( __( 'You can also <a href="%s">configure your mailbox</a>' ), admin_url( 'admin.php?page=' . Rt_Mailbox::$page_name ) ); ?></p>
 					</div>
@@ -145,8 +145,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<h4><?php _e( 'Next Steps' ); ?></h4>
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new Contact' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup Contact Groups' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy ) ); ?></li>
+								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new Contact' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup Contact Groups' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'Add new Company' ) . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_company_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-networking">' . __( 'Setup Attributes' ) . '</a>', admin_url( 'admin.php?page=' . Rt_Biz_Attributes::$attributes_page_slug ) ); ?></li>
 							<?php } else { ?>
@@ -165,7 +165,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 							<?php } ?>
 
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Department' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug ) ); ?></li>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Department' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
 							<?php } ?>
 
 							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', 'https://rtcamp.com/rtbiz/docs/' ); ?></li>
@@ -217,11 +217,14 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		function add_dashboard_widgets() {
 
-			add_meta_box( 'rtbiz-department-by-contacts', __( 'Department wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column1' );
+			add_meta_box( 'rtbiz-department-by-contacts', __( 'Contacts by Department', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contact Group wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column2' );
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts by Contact Group', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column2' );
 
-			add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Offering wise Contacts', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column3' );
+			$settings = biz_get_redux_settings();
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+				add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Contacts by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column3' );
+			}
 
 			$rt_biz_attributes_model = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
@@ -232,6 +235,30 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
+		}
+
+		function get_post_count_excluding_tax( $taxonomy, $post_type ){
+			$terms_name = get_terms( $taxonomy , array( 'fields' => 'id=>slug' ) );
+			$count = 0;
+			if ( ! $terms_name instanceof WP_Error && ! empty( $terms_name ) ) {
+				$terms_names = array_values( $terms_name );
+				$posts = new WP_Query( array(
+					                       'post_type' => $post_type,
+					                       'post_status' => 'any',
+					                       'nopaging' => true,
+					                       'tax_query' => array(
+						                       array(
+						                       'taxonomy'  => $taxonomy,
+						                       'field'     => 'slug',
+						                       'terms'     => $terms_names,
+						                       'operator'  => 'NOT IN',
+						                       ),
+					                       ),
+				                       ) );
+
+				$count = count( $posts->posts );
+			}
+			return $count;
 		}
 
 		function offering_wise_contacts( $obj, $args ){
@@ -260,13 +287,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -309,13 +331,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -358,13 +375,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					$total += count( $posts->posts );
 				}
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $post_type,
-				'post_status' => 'any',
-				'nopaging' => true,
-			) );
 
-			$rows[] = array( __( 'Uncategorized' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -418,7 +430,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				'nopaging' => true,
 			) );
 
-			$rows[] = array( __( 'Others' ), count( $posts->posts ) - $total );
+			$rows[] = array( __( 'Others' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;

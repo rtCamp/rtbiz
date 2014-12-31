@@ -54,122 +54,122 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_address',
 					'text' => __( 'Address' ),
-					'label' => __( 'Enter Address' ),
+					'label' => __( 'Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
 					'name' => 'account_meta[account_address]',
 					'id' => 'account_meta_address',
 					'description' => __( 'Organization address.' ),
-				    'category' => 'contact',
+				    'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_country',
 					'text' => __( 'Country' ),
-					'label' => __( 'Enter Country' ),
+					'label' => __( 'Country' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'account_meta[account_country]',
 					'id' => 'account_meta_address',
 					'description' => __( 'Organization country.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_phone',
 					'text' => __( 'Phone' ),
-					'label' => __( 'Enter Phone Number' ),
+					'label' => __( 'Phone Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_phone][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Phone number.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_fax',
 					'text' => __( 'Fax' ),
-					'label' => __( 'Enter Fax Number' ),
+					'label' => __( 'Fax Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_primary_email',
 					'text' => __( 'Email' ),
-					'label' => __( 'Enter Primary Email Address' ),
+					'label' => __( 'Primary Email Address' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'account_meta[account_primary_email]',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_email',
 					'text' => __( 'Email' ),
-					'label' => __( 'Enter Email Address' ),
+					'label' => __( 'Email Address' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_email][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_website',
 					'text' => __( 'Website' ),
-					'label' => __( 'Enter Website URL' ),
+					'label' => __( 'Website URL' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_website][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Website URL.' ),
-					'category' => 'contact',
+					'category' => 'Contact',
 				),
 				array(
 					'key' => 'account_skype_id',
 					'text' => __( 'Skype' ),
-					'label' => __( 'Enter Skype Id' ),
+					'label' => __( 'Skype Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_skype_id][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_twitter',
 					'text' => __( 'Twitter' ),
-					'label' => __( 'Enter Twitter Id' ),
+					'label' => __( 'Twitter Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_twitter][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_facebook',
 					'text' => __( 'Facebook' ),
-					'label' => __( 'Enter Facebook Id' ),
+					'label' => __( 'Facebook Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_facebook][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 				array(
 					'key' => 'account_linkedin',
 					'text' => __( 'Linked In' ),
-					'label' => __( 'Enter LinkedIn Id' ),
+					'label' => __( 'LinkedIn Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_linkedin][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Linked IN Id.' ),
-					'category' => 'social',
+					'category' => 'Social',
 				),
 			);
 
@@ -198,15 +198,33 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 						$( this ).prev().remove();
 						$( this ).remove();
 					} );
+					function addError( selector, msg ){
+						$( selector ).next().next().html( msg );
+						$( selector ).next().next().addClass('rtbiz-error');
+					}
+					function removeError( selector ){
+						$( selector ).next().next().html( '' );
+						$( selector ).next().next().removeClass( 'rtbiz-error' );
+					}
 					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
 						var tempVal = $( this ).prev().val();
-						var name = $( this ).prev().attr( "name" )
-						if ( tempVal == '' )
+						var name = $( this ).prev().attr( "name" );
+						if ( tempVal == '' ){
+							addError( this, 'You must enter value to add more' );
 							return;
+						}
+						else{
+							removeError( this );
+						}
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) )
+								if ( ! IsEmail( tempVal ) ){
+									addError( this, 'Please enter valid email address' );
 									return;
+								}
+								else{
+									removeError( this );
+								}
 							}
 						}
 

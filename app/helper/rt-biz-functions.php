@@ -487,12 +487,34 @@ function rt_biz_get_companies() {
 function rt_biz_search_employees( $query ) {
 	$args = array(
 		'tax_query' => array(
-			'taxonomy' => Rt_Contact::$user_category_taxonomy,
-			'field'    => 'slug',
-			'terms'    => Rt_Contact::$employees_category_slug,
-		),
+			array(
+				'taxonomy' => Rt_Contact::$user_category_taxonomy,
+				'field'    => 'slug',
+				'terms'    => Rt_Contact::$employees_category_slug,
+				),
+			),
 	);
 	return rt_biz_search_contact( $query, $args );
+}
+
+function rt_biz_is_our_employee( $email ){
+	$args = array(
+		'tax_query' => array(
+			array(
+				'taxonomy' => Rt_Contact::$user_category_taxonomy,
+				'field'    => 'slug',
+				'terms'    => Rt_Contact::$employees_category_slug,
+				),
+			),
+		'meta_query' => array(
+			array(
+				'key' => Rt_Entity::$meta_key_prefix.'contact_primary_email',
+				'value' => $email,
+			),
+		),
+	);
+	$employee = rt_biz_search_contact( '', $args );
+	return ( count( $employee ) >= 1 ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -605,7 +627,7 @@ function biz_is_primary_email_unique( $email ) {
 			'value' => $email,
 		),
 	);
-	$posts = get_posts( array( 'post_type' => 'rt_contact', 'meta_query' => $meta_query_args ) );
+	$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args ) );
 	$count = count( $posts );
 	if ( 0 == $count ) {
 		return true;

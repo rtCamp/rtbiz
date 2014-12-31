@@ -2,7 +2,7 @@
 Contributors:      rtcamp, rahul286, faishal, desaiuditd
 Tags:              library, autoloader, database model, database updater, attributes, user groups
 Requires at least: 3.6
-Tested up to:      3.9.1
+Tested up to:      4.1
 Stable tag:        master
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html

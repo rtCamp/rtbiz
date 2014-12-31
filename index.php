@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 0.5.8
+  Version: 1.0
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -19,7 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '0.5.8' );
+	define( 'RT_BIZ_VERSION', '1.0' );
+}
+if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
+	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
 }
 if ( ! defined( 'RT_BIZ_PATH' ) ) {
 	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
@@ -122,6 +125,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				add_action( 'plugins_loaded', array( self::$instance, 'init' ) );
 
+				register_activation_hook( RT_BIZ_PLUGIN_FILE, array( self::$instance, 'plugin_activation_redirect' ) );
+
 			}
 			return self::$instance;
 		}
@@ -173,6 +178,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->load_textdomain();
 
 			add_action( 'init', array( self::$instance, 'hooks' ), 11 );
+			add_action( 'admin_init', array( self::$instance, 'welcome' ) );
 			add_filter( 'rt_biz_modules', array( self::$instance, 'register_rt_biz_module' ) );
 
 			self::$instance->update_database();
@@ -193,6 +199,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->init_dashboard();
 
 			self::$instance->init_help();
+
+			self::$instance->init_tour();
 
 			self::$instance->register_company_contact_connection();
 
@@ -251,6 +259,30 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 		}
 
+		function welcome() {
+
+			// Bail if no activation redirect
+			if ( ! get_transient( '_rtbiz_activation_redirect' ) ) {
+				return;
+			}
+
+			// Delete the redirect transient
+			delete_transient( '_rtbiz_activation_redirect' );
+
+			// Bail if activating from network, or bulk
+			if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+				return;
+			}
+
+			wp_safe_redirect( admin_url( 'admin.php?page=' . Rt_Biz::$dashboard_slug ) );
+			exit;
+		}
+
+		function plugin_activation_redirect() {
+			// Add the transient to redirect
+			set_transient( '_rtbiz_activation_redirect', true, 30 );
+		}
+
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
 			$rt_MailBox = new Rt_Mailbox( Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, trailingslashit( RT_BIZ_PATH ) . 'index.php' );
@@ -288,18 +320,21 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->menu_order = array(
 				self::$dashboard_slug,
 				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
-				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy,
+				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
+			}
+			$this->menu_order[] = 'edit.php?post_type=' . rt_biz_get_company_post_type();
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type();
 			}
 
 			$this->menu_order = array_merge( $this->menu_order, array(
-				'edit.php?post_type=' . rt_biz_get_company_post_type(),
 				self::$access_control_slug,
-				'edit-tags.php?taxonomy='.RT_Departments::$slug,
+				'edit-tags.php?taxonomy='.RT_Departments::$slug. '&post_type=' . rt_biz_get_contact_post_type(),
 				Rt_Biz_Attributes::$attributes_page_slug,
 				Rt_Mailbox::$page_name,
 				self::$settings_slug,
@@ -368,28 +403,29 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 
-				$product_plugin   = $settings['product_plugin'];
+				$offering_plugin   = $settings['offering_plugin'];
 				$to_register_posttype = array();
 				foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-					if ( ! empty( $value['require_product_sync'] ) ) {
-						if ( isset( $value['post_types'] ) ) {
-							foreach ( $value['post_types'] as $posttype ) {
-								array_push( $to_register_posttype, $posttype );
-							}
-						}
+					if ( ! empty( $value['offering_support'] ) ) {
+						$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
 					}
 				}
 
-				$rtbiz_offerings = new Rt_Offerings( $product_plugin, $terms_caps, $to_register_posttype );
+				$rtbiz_offerings = new Rt_Offerings( $offering_plugin, $terms_caps, $to_register_posttype );
 			}
 		}
 
 		function init_help() {
 			global $rt_biz_help;
 			$rt_biz_help = new Rt_Biz_Help();
+		}
+
+		function init_tour(){
+			global $rt_biz_tour;
+			$rt_biz_tour = new RT_Guide_Tour();
 		}
 
 		/**
@@ -404,6 +440,215 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, array( $this, 'plugin_action_links' ) );
 				//add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
+
+				// guide Tour
+				add_filter( 'rt_guide_tour_list', array( $this, 'rtbiz_quide_tour' ) );
+
+				add_filter( 'admin_notices', array( $this, 'rtbiz_admin_notices' ) );
+			}
+		}
+
+		function rtbiz_quide_tour( $pointers ){
+			global $rt_contact, $rt_company;
+
+			// rtbiz version 1.0 guide tour
+
+			$rt_biz_version = 1.0;
+
+			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type ) ) ) {
+				$pointers['contact_title']      = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Enter Contact Name' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Enter Full Name of the contact' ) ),
+					'anchor_id' => '#post-body input#title',
+					'edge'      => 'top',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_group']      = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Select Contact Group ' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Select the contact group to which your contact belongs to.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-contact-groupdiv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_offering'] = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Select Offerings' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Offerings are the products and services offered by you.  ‘Add New Offering’ from here or from ‘Offering’ section in the left pane.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-offeringdiv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_department'] = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Select Department' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Departments are the functional units within your organisation, to which employee belongs to. ‘Add New Department’ from here or from ‘Departments’ section in the left pane.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-departmentdiv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_assignee']   = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Assignee' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Assign this Contact to your employee/s, who will be responsible for further dealing.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-biz-entity-assigned_to',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_wpuser']     = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect contact to WordPress user' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Connect if contact is already present as WordPress user.' ) ),
+					'anchor_id' => '#postbox-container-1 #p2p-from-' . $rt_contact->post_type . '_to_user',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_company']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect Company' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Company is the firm, enterprise, LLC to which your vendors, customers belongs to.' ) ),
+					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type,
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_image']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Assign profile image' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'This version of rtBiz will display contact’s gravatar but new versions are coming out soon with profile image support.' ) ),
+					'anchor_id' => '#postbox-container-1 #postimagediv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_details']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Enter Contact and Social Info' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Notification feature coming out soon to remind you about birthdays.' ) ),
+					'anchor_id' => '#postbox-container-2 #rt-biz-entity-details>h3',
+					'edge'      => 'bottom',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+				$pointers['contact_publish']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'You are ready!! ' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Go ahead and add your first contact. :)' ) ),
+					'anchor_id' => '#postbox-container-1 #publish',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
+				);
+
+			} elseif ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_company->post_type ) ) ) {
+
+				$pointers['company_title']      = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Enter Company Name' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( '-' ) ),
+					'anchor_id' => '#post-body input#title',
+					'edge'      => 'top',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['company_offering'] = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Select Offerings' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Offerings are the products and services offered by you.  ‘Add New Offering’ from here or from ‘Offering’ section in the left pane.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-offeringdiv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['company_assignee']   = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Assign Employee' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Assign an employee/s to this Company, who will be responsible for further dealing.' ) ),
+					'anchor_id' => '#postbox-container-1 #rt-biz-entity-assigned_to',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['company_contact']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect Company Contacts' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Connect all the contacts who works for/with this company.  You can either search the contact or create a new one.' ) ),
+					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type,
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['contact_image']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Add Company Logo. ' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'The company logo will be displayed for the front-end features that will be released soon.' ) ),
+					'anchor_id' => '#postbox-container-1 #postimagediv',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['company_details']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Enter Contact and Social Info' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( '-' ) ),
+					'anchor_id' => '#postbox-container-2 #rt-biz-entity-details>h3',
+					'edge'      => 'bottom',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+				$pointers['company_publish']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Add this company.' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'You can now start adding the departments and offering if not done as yet.' ) ),
+					'anchor_id' => '#postbox-container-1 #publish',
+					'edge'      => 'right',
+					'align'     => 'left',
+					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
+				);
+			} elseif ( '/wp-admin/admin.php' == $_SERVER['SCRIPT_NAME'] && self::$access_control_slug == $_REQUEST['page'] ) {
+				$pointers['acl_help']    = array(
+					'prefix'    => RT_BIZ_TEXT_DOMAIN,
+					'version'   => $rt_biz_version,
+					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Roles' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( "Please click on 'Help' menu on the top left of the screen to know about the ACL roles." ) ),
+					'anchor_id' => '#screen-meta-links #contextual-help-link',
+					'edge'      => 'top',
+					'align'     => 'right',
+					'where'     => '/wp-admin/admin.php?page=' . self::$access_control_slug, // <-- Please note this
+				);
+			}
+			return $pointers;
+		}
+
+		function rtbiz_admin_notices(){
+			$settings = biz_get_redux_settings();
+			if ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) {
+				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
+				echo '<div class="updated" style="padding: 10px 10px 10px;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a></div>';
 			}
 		}
 
@@ -440,6 +685,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 						wp_enqueue_script( 'jquery-ui-datepicker' );
 					}
+					wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 				}
 			}
 
@@ -450,27 +696,22 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				if ( ! wp_script_is( 'jquery-ui-datepicker' ) ) {
 					wp_enqueue_script( 'jquery-ui-datepicker' );
 				}
+				wp_enqueue_script( 'rt-biz-admin-validation', RT_BIZ_URL . 'app/assets/javascripts/validation.js', array( 'jquery' ), RT_BIZ_VERSION, true );
 			}
 
-			if ( isset( $_REQUEST['taxonomy'] ) && in_array( $_REQUEST['taxonomy'], array( RT_Departments::$slug, Rt_Contact::$user_category_taxonomy ) ) ) {
+			// Taxonomy menu hack for rtBiz
+			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) )  {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-				wp_localize_script( 'rt-biz-admin', 'rt_biz_department_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] ) );
+				wp_localize_script( 'rt-biz-admin', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
 
-			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
-				if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == Rt_Offerings::$offering_slug ) {
-					wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', $this->dashboard_screen );
-					wp_localize_script( 'rt-biz-admin', 'rt_biz_offering_url', admin_url( 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type ) );
-				}
-			}
 		}
 
 		/**
 		 *  Registers all the menus/submenus for rtBiz
 		 */
 		function register_menu() {
-			global $rt_contact, $rt_company, $rt_access_control, $rt_biz_dashboard, $rtbiz_offerings;
+			global $rt_access_control, $rt_biz_dashboard;
 			$settings  = biz_get_redux_settings();
 			$logo_url               = ! empty( $settings['logo_url']['url'] ) ? $settings['logo_url']['url'] : RT_BIZ_URL . 'app/assets/img/biz-16X16.png' ;
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
@@ -479,12 +720,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->add_screen_id( $this->dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . $rt_contact->post_type );
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
+			}
+			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type() );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug );
-			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy );
+			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
+			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() );
 		}
 
 		/**
@@ -733,8 +977,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$modules[ rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN ) ] = array(
 				'label'      => $menu_label,
 				'post_types' => array( $rt_contact->post_type, $rt_company->post_type ),
-				'require_department' => true,
-			    'require_product_sync' => true,
+				'department_support' => array( $rt_contact->post_type ),
+			    'offering_support' => array( $rt_contact->post_type, $rt_company->post_type ),
+			    'setting_option_name' => Rt_Biz_Setting::$biz_opt, // Use For ACL
 			);
 
 			return $modules;
