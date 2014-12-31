@@ -21,6 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
 	define( 'RT_BIZ_VERSION', '0.5.8' );
 }
+if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
+	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
+}
 if ( ! defined( 'RT_BIZ_PATH' ) ) {
 	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
 }
@@ -122,6 +125,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				add_action( 'plugins_loaded', array( self::$instance, 'init' ) );
 
+				register_activation_hook( RT_BIZ_PLUGIN_FILE, array( self::$instance, 'plugin_activation_redirect' ) );
+
 			}
 			return self::$instance;
 		}
@@ -173,6 +178,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->load_textdomain();
 
 			add_action( 'init', array( self::$instance, 'hooks' ), 11 );
+			add_action( 'admin_init', array( self::$instance, 'welcome' ) );
 			add_filter( 'rt_biz_modules', array( self::$instance, 'register_rt_biz_module' ) );
 
 			self::$instance->update_database();
@@ -251,6 +257,30 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				// Load the default language files
 				load_plugin_textdomain( RT_BIZ_TEXT_DOMAIN, false, $lang_dir );
 			}
+		}
+
+		function welcome() {
+
+			// Bail if no activation redirect
+			if ( ! get_transient( '_rtbiz_activation_redirect' ) ) {
+				return;
+			}
+
+			// Delete the redirect transient
+			delete_transient( '_rtbiz_activation_redirect' );
+
+			// Bail if activating from network, or bulk
+			if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+				return;
+			}
+
+			wp_safe_redirect( admin_url( 'admin.php?page=' . Rt_Biz::$dashboard_slug ) );
+			exit;
+		}
+
+		function plugin_activation_redirect() {
+			// Add the transient to redirect
+			set_transient( '_rtbiz_activation_redirect', true, 30 );
 		}
 
 		function init_rt_mailbox(){
