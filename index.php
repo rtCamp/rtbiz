@@ -481,7 +481,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect contact to WordPress user' ) ),
 					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Connect if contact is already present as WordPress user.' ) ),
-					'anchor_id' => '#postbox-container-1 #p2p-from-' . $rt_contact->rt_contact . '_to_user',
+					'anchor_id' => '#postbox-container-1 #p2p-from-' . $rt_contact->post_type . '_to_user',
 					'edge'      => 'right',
 					'align'     => 'left',
 					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
@@ -491,7 +491,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect Company' ) ),
 					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Company is the firm, enterprise, LLC to which your vendors, customers belongs to.' ) ),
-					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->rt_contact,
+					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type,
 					'edge'      => 'right',
 					'align'     => 'left',
 					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_contact->post_type, // <-- Please note this
@@ -564,7 +564,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Connect Company Contacts' ) ),
 					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Connect all the contacts who works for/with this company.  You can either search the contact or create a new one.' ) ),
-					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->rt_contact,
+					'anchor_id' => '#postbox-container-1 #p2p-to-' . $rt_company->post_type . '_to_' . $rt_contact->post_type,
 					'edge'      => 'right',
 					'align'     => 'left',
 					'where'     => '/wp-admin/post-new.php?post_type=' . $rt_company->post_type, // <-- Please note this
