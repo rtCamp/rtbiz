@@ -122,6 +122,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function save_old_data( $post_id ){
 
+			if ( ! isset( $_POST['post_type'] ) ){
+				return;
+			}
 			if ( rt_biz_get_contact_post_type() != $_POST['post_type'] && rt_biz_get_company_post_type() != $_POST['post_type'] ) {
 				return;
 			}
