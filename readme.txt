@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.0.1
+Stable tag:        1.0.2
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,9 +42,18 @@ Following are some of the trivial features that rtBiz offers:
 
 == Frequently Asked Questions ==
 
-> Screenshots are soon to be come.
+Please refer to the documentation.
 
 == Screenshots ==
+
+1. rtBiz Dashboard
+2. General Settings
+3. Import/Export Settings
+4. rtBiz Access Control
+5. Contacts
+6. Companies
+7. Departments
+
 
 ** License **
 
@@ -65,6 +74,11 @@ Great! There are several ways you can get involved to help make rtBiz better:
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtcamp/rtbiz/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
 
 == Changelog ==
+
+= 1.0.2 =
+* Banners updated
+* Screenshots added
+* Bug Fixes
 
 = 1.0.1 =
 * Removed docs folder
