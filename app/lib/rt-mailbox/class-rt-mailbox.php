@@ -65,8 +65,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $page_cap;
 		public $modules = array();
 
-		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
+		function __construct( $cap, $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
+			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug, $cap );
 			$this->auto_loader();
 			$this->modules = $module;
 			$this->init_rt_mail_models();
