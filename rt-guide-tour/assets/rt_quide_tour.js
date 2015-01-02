@@ -55,7 +55,6 @@
 	        content: data.title + data.content,
 	        position: { edge: data.edge, align: data.align },
 	        close: function() {
-                //$.post( ajaxurl, { pointer: data.id, action: 'dismiss-wp-pointer' } );
 	        }
         });
 		MAP.current_pointer = { pointer: $pointer, data: data };
@@ -69,13 +68,34 @@
 			return;
 		}
 		$('html, body').animate({ // scroll page to pointer
-			                        scrollTop: $pointer.offset().top - 30
+			                        scrollTop: $pointer.offset().top - 300
 		                        }, 300, function() { // when scroll complete
 			var $widget = $pointer.pointer('widget');
+			if ( MAP.current_pointer.data.edge === 'top' && MAP.current_pointer.data.align === 'right' ){
+				var $arrow = $widget.find('.wp-pointer-arrow').eq(0);
+				$arrow.attr( 'style', 'left:85%' );
+			}
 			MAP.setPrev( $widget, MAP.current_pointer.data );
+			MAP.setDismiss( $widget, MAP.current_pointer.data );
 			MAP.setNext( $widget, MAP.current_pointer.data );
 			$pointer.pointer( 'open' ); // open
 		});
+	};
+
+	MAP.setDismiss = function( $widget, data ){
+		if ( typeof $widget === 'object' ) {
+			var $buttons = $widget.find('.wp-pointer-buttons').eq(0);
+			var $close = $buttons.find('a.close').eq(0);
+			$button = $close.clone(true, true).removeClass('close');
+			$button.addClass('button').addClass('button-primary');
+			$button.click( function(){
+				jQuery.each( MAP.js_pointers, function( key, value ) {
+					$.post( ajaxurl, { pointer: value.data.id, action: 'dismiss-wp-pointer' } );
+				});
+			});
+			var label = MAP.close_label;
+			$button.html(label).appendTo($buttons);
+		}
 	};
 
 	// if there is a next pointer set button label to "Next", to "Close" otherwise
@@ -114,25 +134,21 @@
 			$button = $close.clone(true, true).removeClass('close');
 			$buttons.find('a.close').remove();
 			$button.addClass('button').addClass('button-primary');
+			$button.attr( 'style', 'margin-right:5px;' );
 			$button.click( function(){
-				if ( MAP.hasNext( data ) ) {
-					if( typeof data.nexturl === 'string' && data.nexturl !== '' ){
-						window.location = data.nexturl;
-					}
-					MAP.setPlugin( MAP.js_pointers[data.next].data );
-				}else{
-					jQuery.each( MAP.js_pointers, function( key, value ) {
-						console.log( JSON.stringify( value ) );
-					});
+				if( typeof data.nexturl === 'string' && data.nexturl !== '' ){
+					window.location = data.nexturl;
 				}
+				MAP.setPlugin( MAP.js_pointers[data.next].data );
 			});
 			has_next = false;
 			if ( MAP.hasNext( data ) ) {
 				has_next_data = MAP.getPointerData(MAP.js_pointers[data.next].data);
 				has_next = has_next_data.target && has_next_data.data;
 			}
-			var label = has_next ? MAP.next_label : MAP.close_label;
-			$button.html(label).appendTo($buttons);
+			if ( has_next ){
+				$button.html( MAP.next_label ).appendTo($buttons);
+			}
 		}
 	};
 
@@ -146,6 +162,13 @@
 			MAP.visible_pointers.push(pointer.id);
 			if ( ! MAP.first_pointer && ( $target.length && $target.is(':visible') ) ) {
 				MAP.first_pointer = pointer;
+			}
+		}else {
+			if ( index !== ( MAP.pointers.length - 1 ) ){
+				MAP.pointers[ index - 1].next = MAP.pointers[ index + 1].id;
+				MAP.pointers[ index + 1].prev = MAP.pointers[ index - 1].id;
+			} else {
+				MAP.pointers[ index - 1].next = '';
 			}
 		}
 		if ( index === ( MAP.pointers.length - 1 ) && MAP.first_pointer ) {
