@@ -1,2 +1,6 @@
-*/.sass-cache/*
-.idea/
+*.DS_Store
+*.swp
+*.bak
+*.idea
+*nbproject*
+*/.sass-cache/
