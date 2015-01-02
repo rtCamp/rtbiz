@@ -31,8 +31,6 @@ Following are some of the trivial features that rtBiz offers:
 * Custom Attributes
 * Mailbox Module
 
-**NOTE**: Development in progress. This is still a **BETA** Version.
-
 **Important Links**
 
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
