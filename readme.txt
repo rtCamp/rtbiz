@@ -55,7 +55,6 @@ Please refer to the documentation.
 7. Departments
 
 
-
 ** License **
 
 Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
