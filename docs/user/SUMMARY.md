@@ -15,4 +15,3 @@
    * [Attributes](features/attributes/index.md)
    * [Mailbox](features/mailbox/index.md)
 * [FAQs](faqs/index.md)
-* [Contribute](contribute/index.md)

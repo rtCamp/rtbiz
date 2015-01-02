@@ -13,13 +13,6 @@
 - [Attributes](/features/attributes)
 - [Mailbox](/features/mailbox)
 
-## 3. Developers
-
-- API
-- Hooks
-- Themes
-- Addons
-
 ## 4. FAQs
 
 ## 5. Contribute

@@ -1,7 +1,7 @@
 Developers Documentation
 ========================
 
-- [Entity](/developers/entity)
-	- [Contact](/developers/entity/contact)
-	- [Company](/developers/entity/company)
-- [Mailbox](/developers/mailbox)
+- [Entity](/rtbiz/dev/entity/)
+	- [Contact](/rtbiz/dev/entity/contact/)
+	- [Company](/rtbiz/dev/entity/company/)
+- [Mailbox](/rtbiz/dev/mailbox/)
