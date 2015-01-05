@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			// Contact and company comments needed on from end in furture need to remove else condition.
 			if ( is_admin() ) {
 				$screen = get_current_screen();
-				if ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) {
+				if ( ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rt_Biz::$dashboard_screen ) {
 					$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
 					if ( ! is_array( $types ) ) {
 						$types = array( $types );

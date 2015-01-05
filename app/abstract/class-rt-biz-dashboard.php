@@ -216,14 +216,16 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		function add_dashboard_widgets() {
+			$settings  = biz_get_redux_settings();
+			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
+			add_meta_box( 'rtbiz-activity', __( $menu_label.' Activity', RT_BIZ_TEXT_DOMAIN ), array( $this, 'rtbiz_dashboard_site_activity' ), $this->screen_id ,'column1' );
 
-			add_meta_box( 'rtbiz-department-by-contacts', __( 'Contacts by Department', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column1' );
+			add_meta_box( 'rtbiz-department-by-contacts', __( 'Contacts by Department', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column2' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts by Contact Group', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column2' );
+			add_meta_box( 'rtbiz-contact-type-by-contacts', __( 'Contacts by Contact Group', RT_BIZ_TEXT_DOMAIN ), array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column3' );
 
-			$settings = biz_get_redux_settings();
 			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Contacts by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column3' );
+				add_meta_box( 'rtbiz-offering-wise-contacts', __( 'Contacts by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column5' );
 			}
 
 			$rt_biz_attributes_model = new RT_Attributes_Model();
@@ -235,6 +237,190 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $attr->attribute_label . ' ' . __( 'wise Contacts' ), array( $this, 'dashboard_widget_content' ), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
+		}
+
+		function rtbiz_dashboard_recent_posts( $args, $post_type ) {
+			$query_args = array(
+				'post_type'      => $post_type,
+				'post_status'    => $args['status'],
+				'orderby'        => 'date',
+				'order'          => $args['order'],
+				'posts_per_page' => intval( $args['max'] ),
+				'no_found_rows'  => true,
+				'cache_results'  => false,
+				'perm'           => ( 'future' === $args['status'] ) ? 'editable' : 'readable',
+			);
+			$posts = new WP_Query( $query_args );
+
+			if ( $posts->have_posts() ) {
+
+				echo '<div id="' . $args['id'] . '" class="activity-block">';
+
+				echo '<h4>' . $args['title'] . '</h4>';
+
+				echo '<ul>';
+
+				$today    = date( 'Y-m-d', current_time( 'timestamp' ) );
+				$tomorrow = date( 'Y-m-d', strtotime( '+1 day', current_time( 'timestamp' ) ) );
+
+				while ( $posts->have_posts() ) {
+					$posts->the_post();
+
+					$time = get_the_time( 'U' );
+					if ( date( 'Y-m-d', $time ) == $today ) {
+						$relative = __( 'Today' );
+					} elseif ( date( 'Y-m-d', $time ) == $tomorrow ) {
+						$relative = __( 'Tomorrow' );
+					} else {
+						/* translators: date and time format for recent posts on the dashboard, see http://php.net/date */
+						$relative = date_i18n( __( 'M jS' ), $time );
+					}
+
+					if ( current_user_can( 'edit_post', get_the_ID() ) ) {
+						/* translators: 1: relative date, 2: time, 3: post edit link, 4: post title */
+						$format = __( '<span>%1$s, %2$s</span> <a href="%3$s">%4$s</a>' );
+						printf( "<li>$format</li>", $relative, get_the_time(), get_edit_post_link(), _draft_or_post_title() );
+					} else {
+						/* translators: 1: relative date, 2: time, 3: post title */
+						$format = __( '<span>%1$s, %2$s</span> %3$s' );
+						printf( "<li>$format</li>", $relative, get_the_time(), _draft_or_post_title() );
+					}
+				}
+
+				echo '</ul>';
+				echo '</div>';
+
+			} else {
+				return false;
+			}
+
+			wp_reset_postdata();
+
+			return true;
+		}
+
+		function rtbiz_dashboard_recent_comments_row( &$comment, $show_date = true ) {
+			$GLOBALS['comment'] =& $comment;
+
+			$comment_post_title = strip_tags( get_the_title( $comment->comment_post_ID ) );
+
+			if ( current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
+				$comment_post_url = get_edit_post_link( $comment->comment_post_ID );
+				$comment_post_link = "<a href='$comment_post_url'>$comment_post_title</a>";
+			} else {
+				$comment_post_link = $comment_post_title;
+			}
+
+			$comment_link = '<a class="comment-link" href="' . esc_url( get_comment_link() ) . '">#</a>';
+
+			?>
+
+			<div id="comment-<?php echo $comment->comment_ID; ?>" <?php comment_class( array( 'comment-item', wp_get_comment_status( $comment->comment_ID ) ) ); ?>>
+
+			<?php echo get_avatar( $comment, 50, 'mystery' ); ?>
+
+			<?php if ( ! $comment->comment_type || 'comment' == $comment->comment_type ) : ?>
+
+				<div class="dashboard-comment-wrap">
+				<h4 class="comment-meta">
+					<?php printf( /* translators: 1: comment author, 2: post link, 3: notification if the comment is pending */__( 'From %1$s on %2$s%3$s' ), '<cite class="comment-author">' . get_comment_author_link() . '</cite>', $comment_post_link.' '.$comment_link, ' <span class="approve">' . __( '[Pending]' ) . '</span>' ); ?>
+				</h4>
+
+			<?php
+			else :
+				switch ( $comment->comment_type ) {
+					case 'pingback' :
+						$type = __( 'Pingback' );
+						break;
+					case 'trackback' :
+						$type = __( 'Trackback' );
+						break;
+					default :
+						$type = ucwords( $comment->comment_type );
+				}
+				$type = esc_html( $type );
+				?>
+				<div class="dashboard-comment-wrap">
+				<?php /* translators: %1$s is type of comment, %2$s is link to the post */ ?>
+				<h4 class="comment-meta"><?php printf( _x( '%1$s on %2$s', 'dashboard' ), "<strong>$type</strong>", $comment_post_link.' '.$comment_link ); ?></h4>
+				<p class="comment-author"><?php comment_author_link(); ?></p>
+
+			<?php endif; // comment_type ?>
+			<blockquote><p><?php comment_text(); ?></p></blockquote>
+			</div>
+			</div>
+		<?php
+		}
+
+
+		function rtbiz_dashboard_recent_comments( $total_items = 5 ) {
+			// Select all comment types and filter out spam later for better query performance.
+			$comments = array();
+
+			$comments_query = array(
+				'post_type' => array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ),
+				'number' => $total_items * 5,
+				'offset' => 0,
+			);
+
+			while ( count( $comments ) < $total_items && $possible = get_comments( $comments_query ) ) {
+				foreach ( $possible as $comment ) {
+					if ( ! current_user_can( 'read_post', $comment->comment_post_ID ) ){
+						continue;
+					}
+					$comments[] = $comment;
+					if ( count( $comments ) == $total_items ){
+						break 2;
+					}
+				}
+				$comments_query['offset'] += $comments_query['number'];
+				$comments_query['number'] = $total_items * 10;
+			}
+
+			if ( $comments ) {
+				echo '<div id="latest-comments" class="activity-block">';
+				echo '<h4>' . __( 'Comments' ) . '</h4>';
+
+				echo '<div id="the-comment-list" data-wp-lists="list:comment">';
+				foreach ( $comments as $comment ){
+					$this->rtbiz_dashboard_recent_comments_row( $comment );
+				}
+				echo '</div> </div>';
+			} else {
+				return false;
+			}
+			return true;
+		}
+
+		function rtbiz_dashboard_site_activity() {
+
+			echo '<div id="activity-widget">';
+
+			$future_posts = $this->rtbiz_dashboard_recent_posts( array(
+				                                           'max'    => 5,
+				                                           'status' => 'publish',
+				                                           'order'  => 'ASC',
+				                                           'title'  => __( 'Recently added Contacts' ),
+				                                           'id'     => 'future-posts',
+			                                           ), rt_biz_get_contact_post_type() );
+			$recent_posts = $this->rtbiz_dashboard_recent_posts( array(
+				                                           'max'    => 5,
+				                                           'status' => 'publish',
+				                                           'order'  => 'DESC',
+				                                           'title'  => __( 'Recently added Companies' ),
+				                                           'id'     => 'published-posts',
+			                                           ), rt_biz_get_company_post_type() );
+
+			$recent_comments = $this->rtbiz_dashboard_recent_comments();
+
+			if ( ! $future_posts && ! $recent_posts && ! $recent_comments ) {
+				echo '<div class="no-activity">';
+				echo '<p class="smiley"></p>';
+				echo '<p>' . __( 'No activity yet!' ) . '</p>';
+				echo '</div>';
+			}
+
+			echo '</div>';
 		}
 
 		function get_post_count_excluding_tax( $taxonomy, $post_type ){

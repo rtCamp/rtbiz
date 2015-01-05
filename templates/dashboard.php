@@ -65,6 +65,10 @@ $author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
 				<?php do_meta_boxes( '', 'column4', null ); ?>
 			</div>
 
+			<div id="postbox-container-5" class="postbox-container">
+				<?php do_meta_boxes( '', 'column5', null ); ?>
+			</div>
+
 		</div> <!-- #post-body -->
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
