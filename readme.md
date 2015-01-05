@@ -35,6 +35,24 @@ Following are some of the trivial features that rtBiz offers:
 
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
 
+** License **
+
+Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
+
+**Coming soon:**
+
+ * Import/Export Library
+ * JSON API
+ * New Enhancements
+ * Bug Fixing
+
+**See room for improvement?**
+
+Great! There are several ways you can get involved to help make rtBiz better:
+
+1. **Report Bugs:** If you find a bug, error or other problem, please report it! You can do this by [creating a new topic](https://github.com/rtcamp/rtbiz/issues) in the issue tracker.
+2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtcamp/rtbiz/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
+
 [![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz)
 
 ## Installation ##
