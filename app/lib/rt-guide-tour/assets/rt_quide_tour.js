@@ -68,9 +68,13 @@
 			return;
 		}
 		$('html, body').animate({ // scroll page to pointer
-			                        scrollTop: $pointer.offset().top - 30
+			                        scrollTop: $pointer.offset().top - 300
 		                        }, 300, function() { // when scroll complete
 			var $widget = $pointer.pointer('widget');
+			if ( MAP.current_pointer.data.edge === 'top' && MAP.current_pointer.data.align === 'right' ){
+				var $arrow = $widget.find('.wp-pointer-arrow').eq(0);
+				$arrow.attr( 'style', 'left:85%' );
+			}
 			MAP.setPrev( $widget, MAP.current_pointer.data );
 			MAP.setDismiss( $widget, MAP.current_pointer.data );
 			MAP.setNext( $widget, MAP.current_pointer.data );
@@ -86,8 +90,7 @@
 			$button.addClass('button').addClass('button-primary');
 			$button.click( function(){
 				jQuery.each( MAP.js_pointers, function( key, value ) {
-					console.log( JSON.stringify( value.data.id ) );
-					//$.post( ajaxurl, { pointer: value.data.id, action: 'dismiss-wp-pointer' } );
+					$.post( ajaxurl, { pointer: value.data.id, action: 'dismiss-wp-pointer' } );
 				});
 			});
 			var label = MAP.close_label;
@@ -159,6 +162,13 @@
 			MAP.visible_pointers.push(pointer.id);
 			if ( ! MAP.first_pointer && ( $target.length && $target.is(':visible') ) ) {
 				MAP.first_pointer = pointer;
+			}
+		}else {
+			if ( index !== ( MAP.pointers.length - 1 ) ){
+				MAP.pointers[ index - 1].next = MAP.pointers[ index + 1].id;
+				MAP.pointers[ index + 1].prev = MAP.pointers[ index - 1].id;
+			} else {
+				MAP.pointers[ index - 1].next = '';
 			}
 		}
 		if ( index === ( MAP.pointers.length - 1 ) && MAP.first_pointer ) {

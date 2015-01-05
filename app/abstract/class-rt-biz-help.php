@@ -129,8 +129,8 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'page' => Rt_Biz::$access_control_slug,
 					),
 					array(
-						'id' => 'acl_screen_content',
-						'title' => __( 'Screen Content' ),
+						'id' => 'acl_roles',
+						'title' => __( 'Roles' ),
 						'content' => '',
 						'page' => Rt_Biz::$access_control_slug,
 					),
@@ -438,7 +438,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					</p>
 					<?php
 					break;
-				case 'acl_screen_content':
+				case 'acl_roles':
 					$settings  = biz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>

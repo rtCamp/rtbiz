@@ -58,6 +58,11 @@
 .rtbiz-error{
 	color: red;
 }
+
+.contact-list img, .ac-assign-selected img{
+	border-radius: 12px;
+}
+
 /* Smartphone */
 @media screen and (max-width: 600px) {
 	/* Make the close icon larger for tappability. */

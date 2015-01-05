@@ -104,11 +104,21 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( is_admin() ) {
 				$screen = get_current_screen();
 				if ( ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rt_Biz::$dashboard_screen ) {
-					$commentdata->query_vars['type__not_in'] = 'rt_bot';
+					$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
+					if ( ! is_array( $types ) ) {
+						$types = array( $types );
+					}
+					$types[] = 'rt_bot';
+					$commentdata->query_vars['type__not_in'] = $types;
 				}
 			}
 			else {
-				$commentdata->query_vars['type__not_in'] = 'rt_bot';
+				$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
+				if ( ! is_array( $types ) ) {
+					$types = array( $types );
+				}
+				$types[] = 'rt_bot';
+				$commentdata->query_vars['type__not_in'] = $types;
 			}
 			return $commentdata;
 		}
@@ -122,6 +132,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 		function save_old_data( $post_id ){
 
+			if ( ! isset( $_POST['post_type'] ) ){
+				return;
+			}
 			if ( rt_biz_get_contact_post_type() != $_POST['post_type'] && rt_biz_get_company_post_type() != $_POST['post_type'] ) {
 				return;
 			}
@@ -294,6 +307,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( isset( $_POST['assign_to'] ) ){
 				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to'] );
 			}
+			else {
+				rt_biz_update_entity_meta( $post, 'assgin_to', '' );
+			}
 		}
 
 		/**
@@ -346,7 +362,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						jQuery( document ).ready( function( $ ) {
 							$( document ).on( 'focus', ".datepicker", function() {
 								$( this ).datepicker( {
-									'dateFormat': 'dd/mm/yy'
+									'dateFormat': 'dd/mm/yy',
+									changeMonth: true,
+									changeYear: true
 								} );
 							} );
 						} );

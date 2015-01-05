@@ -54,7 +54,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_address',
 					'text' => __( 'Address' ),
-					'label' => __( 'Enter Address' ),
+					'label' => __( 'Address' ),
 					'is_multiple' => false,
 					'type' => 'textarea',
 					'name' => 'account_meta[account_address]',
@@ -65,7 +65,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_country',
 					'text' => __( 'Country' ),
-					'label' => __( 'Enter Country' ),
+					'label' => __( 'Country' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'account_meta[account_country]',
@@ -76,7 +76,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_phone',
 					'text' => __( 'Phone' ),
-					'label' => __( 'Enter Phone Number' ),
+					'label' => __( 'Phone Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_phone][]',
@@ -87,7 +87,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_fax',
 					'text' => __( 'Fax' ),
-					'label' => __( 'Enter Fax Number' ),
+					'label' => __( 'Fax Number' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_fax][]',
@@ -98,7 +98,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_primary_email',
 					'text' => __( 'Email' ),
-					'label' => __( 'Enter Primary Email Address' ),
+					'label' => __( 'Primary Email Address' ),
 					'is_multiple' => false,
 					'type' => 'text',
 					'name' => 'account_meta[account_primary_email]',
@@ -108,7 +108,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_email',
 					'text' => __( 'Email' ),
-					'label' => __( 'Enter Email Address' ),
+					'label' => __( 'Email Address' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_email][]',
@@ -119,7 +119,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_website',
 					'text' => __( 'Website' ),
-					'label' => __( 'Enter Website URL' ),
+					'label' => __( 'Website URL' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_website][]',
@@ -130,7 +130,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_skype_id',
 					'text' => __( 'Skype' ),
-					'label' => __( 'Enter Skype Id' ),
+					'label' => __( 'Skype Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_skype_id][]',
@@ -141,7 +141,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_twitter',
 					'text' => __( 'Twitter' ),
-					'label' => __( 'Enter Twitter Id' ),
+					'label' => __( 'Twitter Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_twitter][]',
@@ -152,7 +152,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_facebook',
 					'text' => __( 'Facebook' ),
-					'label' => __( 'Enter Facebook Id' ),
+					'label' => __( 'Facebook Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_facebook][]',
@@ -163,7 +163,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				array(
 					'key' => 'account_linkedin',
 					'text' => __( 'Linked In' ),
-					'label' => __( 'Enter LinkedIn Id' ),
+					'label' => __( 'LinkedIn Id' ),
 					'is_multiple' => true,
 					'type' => 'text',
 					'name' => 'account_meta[account_linkedin][]',
@@ -219,7 +219,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
 								if ( ! IsEmail( tempVal ) ){
-									addError( this, 'Please Enter valid email address' );
+									addError( this, 'Please enter valid email address' );
 									return;
 								}
 								else{

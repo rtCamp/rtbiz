@@ -45,28 +45,23 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $module_name;
 
 		/**
-		 * @var $parent_page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
+		 * @var $parent_page_slug - Page slug under which the Mailbox page is to be shown. If null / empty then an individual Menu Page will be added
 		 */
 		var $parent_page_slug;
 
 		/**
-		 * @var $page_slug - Page slug for Attributes Page
+		 * @var $page_slug - Page slug for Mailbox Page
 		 */
 		var $page_slug;
 
 		/**
-		 * @var $post_type - If any post type passed, only attributes for those post type will be listed on the page.
-		 */
-		var $post_type;
-
-		/**
-		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 * @var $page_cap - Capability for Mailbox Admin Page; if not passed, default cap will be 'manage_options'
 		 */
 		var $page_cap;
 		public $modules = array();
 
-		function __construct( $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug );
+		function __construct( $cap, $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
+			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug, $cap );
 			$this->auto_loader();
 			$this->modules = $module;
 			$this->init_rt_mail_models();
@@ -75,6 +70,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->init_mailbox_help();
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
 			$this->db_upgrade();
+			$this->page_cap = $cap;
 		}
 		function init_mailbox_help(){
 			global $rt_mailbox_help;

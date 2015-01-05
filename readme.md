@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 0.5.8  
+**Stable tag:** 1.0.2  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -31,8 +31,6 @@ Following are some of the trivial features that rtBiz offers:
 * Custom Attributes
 * Mailbox Module
 
-**NOTE**: Development in progress. This is still a **BETA** Version.
-
 **Important Links**
 
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
@@ -48,12 +46,55 @@ Following are some of the trivial features that rtBiz offers:
 
 ## Frequently Asked Questions ##
 
-> Screenshots are soon to be come.
+Please refer to the documentation.
 
 ## Screenshots ##
 
+### rtBiz Dashboard
+
+![rtBiz Dashboard](assets/screenshot-1.png)
+
+### General Settings
+
+![General Settings](assets/screenshot-2.png)
+
+### Import/Export Settings
+
+![Import/Export Settings](assets/screenshot-3.png)
+
+### rtBiz Access Control
+
+![rtBiz Access Control](assets/screenshot-4.png)
+
+### Contacts
+
+![Contacts](assets/screenshot-5.png)
+
+### Companies
+
+![Companies](assets/screenshot-6.png)
+
+### Departments
+
+![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.0.2 ###
+* Banners updated
+* Screenshots added
+* Bug Fixes
+
+### 1.0.1 ###
+* Removed docs folder
+* Removed dev files
+
+### 1.0 ###
+* Admin Pointers for User Tour Guide
+* Mailbox Refactored
+* rtBiz ACL Refactored
+* UI Enhancements
+* Bug Fixes
 
 ### 0.5.8 ###
 * svn script updated
