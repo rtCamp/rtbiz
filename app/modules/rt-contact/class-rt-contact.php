@@ -105,7 +105,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		function check_primary_email_for_admin_notice(){
-			if ( isset( $_REQUEST['post'] ) ) {
+			if ( isset( $_REQUEST['post'] ) && get_post_type( $_REQUEST['post'] ) == rt_biz_get_contact_post_type() ) {
 				if ( $primary_unique_meta = get_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'], true ) ) {
 					add_action( 'admin_notices', array( $this, 'primary_email_not_unique' ) );
 					delete_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'] );
