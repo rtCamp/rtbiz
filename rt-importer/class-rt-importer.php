@@ -336,10 +336,8 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					//Upload the file to 'Uploads' folder
 					$file   = $_FILES['map_upload'];
 					$upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-					if ( isset( $upload['error'] ) ) {
-						?>
-						<div id="map_message" class="error"><p><?php echo esc_html( $upload['error'] ); ?>  </p></div>
-						<?php
+					if ( isset( $upload['error'] ) ) { ?>
+						<div id="map_message" class="error"><p><?php echo esc_html( $upload['error'] ); ?>  </p></div> <?php
 						return false;;
 					}
 					if ( ! $flag ) {
@@ -347,8 +345,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					}
 					$csv = new parseCSV();
 					$csv->auto( $upload['file'] );
-					$data = $csv->data[ rand( 1, count( $csv->data ) - 1 ) ];
-					?>
+					$data = $csv->data[ rand( 1, count( $csv->data ) - 1 ) ]; ?>
 					<div id="map_message" class="updated map_message"><p>
 							<?php _e( 'File uploaded:' ); ?>
 							<strong><?php echo esc_html( $_FILES['map_upload']['name'] ); ?></strong>
@@ -424,27 +421,27 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				}
 				?>
 
-				<div id="map_message" class="updated map_message">
-					Form Selected : <strong><?php echo esc_html( $form_data['title'] ); ?></strong><br/> Total Entries:
-					<strong><?php echo esc_html( $form_count['total'] ); ?></strong>
-				</div>
+			<div id="map_message" class="updated map_message">
+				Form Selected : <strong><?php echo esc_html( $form_data['title'] ); ?></strong><br/> Total Entries:
+				<strong><?php echo esc_html( $form_count['total'] ); ?></strong>
+			</div>
 
-				<form method="post" action="" id="rtlibMappingForm" name="rtlibMappingForm">
-					<input type="hidden" name="mapSource" id="mapSource" value="<?php echo esc_attr( $form_id ); ?>"/>
-					<input type="hidden" name="mapPostType" id="mapPostType" value="<?php echo esc_attr( $post_type ); ?>"/>
-					<input type="hidden" name="mapSourceType" id="mapSourceType" value="<?php echo esc_attr( $_REQUEST['type'] ); ?>"/>
-					<input type="hidden" name="mapEntryCount" id="mapEntryCount" value="<?php echo esc_attr( $form_count['total'] ); ?>"/>
-					<table class="wp-list-table widefat fixed posts" >
-						<thead>
-							<tr>
-								<th scope="row"><?php _e( 'Field Name' ); ?></th>
-								<th scope="row"><?php _e( 'Rtbiz Module Column Name' ); ?></th>
-								<th scope="row"><?php _e( 'Default Value' ); ?></th>
-								<th scope="row"><a href="#dummyDataPrev"> << </a><?php _e( 'Sample' ); ?><a
-										href="#dummyDataNext"> >> </a></th>
-							</tr>
-						</thead>
-						<tbody style="  ">
+			<form method="post" action="" id="rtlibMappingForm" name="rtlibMappingForm">
+				<input type="hidden" name="mapSource" id="mapSource" value="<?php echo esc_attr( $form_id ); ?>"/>
+				<input type="hidden" name="mapPostType" id="mapPostType" value="<?php echo esc_attr( $post_type ); ?>"/>
+				<input type="hidden" name="mapSourceType" id="mapSourceType" value="<?php echo esc_attr( $_REQUEST['type'] ); ?>"/>
+				<input type="hidden" name="mapEntryCount" id="mapEntryCount" value="<?php echo esc_attr( $form_count['total'] ); ?>"/>
+				<table class="wp-list-table widefat fixed posts" >
+					<thead>
+						<tr>
+							<th scope="row"><?php _e( 'Field Name' ); ?></th>
+							<th scope="row"><?php _e( 'Rtbiz Module Column Name' ); ?></th>
+							<th scope="row"><?php _e( 'Default Value' ); ?></th>
+							<th scope="row"><a href="#dummyDataPrev"> << </a><?php _e( 'Sample' ); ?><a
+									href="#dummyDataNext"> >> </a></th>
+						</tr>
+					</thead>
+					<tbody style="  ">
 				<?php
 				$formdummydata = RGFormsModel::get_leads( $form_id, 0, 'ASC', '', 0, 1 );
 				foreach ( $form_data['fields'] as &$field ) {
@@ -470,10 +467,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								<td></td>
 								<td class='rtlib-importer-dummy-data'
 							    data-field-name="<?php echo esc_attr( $field['id'] ); ?>"><?php echo esc_html( ( isset( $formdummydata[0][ $field['id'] ] ) ) ? $formdummydata[0][ $field['id'] ] : '' ); ?></td>
-							</tr>
-				<?php } ?>
-						</tbody>
-<?php} ?>
+							</tr><?php
+				} ?>
+						</tbody><?php
+			} ?>
 
 						<tfoot>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
@@ -552,39 +549,38 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				<?php } else {
 					$jsonArray = array();
 					$rCount = 0;
-					foreach ( $csv->data as $cdata ) {
-						$jsonArray[] = array( 'id' => $rCount++ );
-					}
+	foreach ( $csv->data as $cdata ) {
+		$jsonArray[] = array( 'id' => $rCount++ );
+	}
 				?>
 					var arr_lead_id = <?php echo json_encode( $jsonArray ); ?>;
 				<?php } ?>
 					</script>
 					<input type="button" name="map_mapping_import" id="map_mapping_import" value="Import" class="button button-primary"/>
-				</form>
-				<div id='startImporting'>
-					<h2> <?php _e( esc_attr( sprintf( 'Importing %s ...', isset( $formname ) ? $formname : '' ) ) ); ?></h2>
-					<div id="progressbar"></div>
-					<div class="myupdate">
-						<p> <?php _e( 'Successfully imported :' ); ?> <span
-								id='sucessfullyImported'>0</span></p>
-					</div>
-					<div class="myerror">
-						<p> <?php _e( 'Failed to import :' ); ?> <span id='failImported'>0</span></p>
-					</div>
-					<div class="importloading"></div>
-					<div class="sucessmessage">
-					<?php if ( 'gravity' == $_REQUEST['type'] ) {
-					_e( 'Would u like to import future entries automatically?' );?> &nbsp;
-						<input type='button' id='futureYes' value='Yes' class="button button-primary"/>&nbsp;
-						<input type='button' id='futureNo' value='No' class="button "/>
-					<?php } else { ?>
-						<h3><?php _e( 'Done !' ); ?></h3>
-						<span id="extra-data-importer"></span>
-					<?php } ?>
-					</div>
-
+			</form>
+			<div id='startImporting'>
+				<h2> <?php _e( esc_attr( sprintf( 'Importing %s ...', isset( $formname ) ? $formname : '' ) ) ); ?></h2>
+				<div id="progressbar"></div>
+				<div class="myupdate">
+					<p> <?php _e( 'Successfully imported :' ); ?> <span
+							id='sucessfullyImported'>0</span></p>
 				</div>
-			<?php
+				<div class="myerror">
+					<p> <?php _e( 'Failed to import :' ); ?> <span id='failImported'>0</span></p>
+				</div>
+				<div class="importloading"></div>
+				<div class="sucessmessage">
+				<?php if ( 'gravity' == $_REQUEST['type'] ) {
+					_e( 'Would u like to import future entries automatically?' );?> &nbsp;
+					<input type='button' id='futureYes' value='Yes' class="button button-primary"/>&nbsp;
+					<input type='button' id='futureNo' value='No' class="button "/>
+				<?php } else { ?>
+					<h3><?php _e( 'Done !' ); ?></h3>
+					<span id="extra-data-importer"></span>
+				<?php } ?>
+				</div>
+
+			</div><?php
 			die();
 		}
 

@@ -412,8 +412,8 @@ jQuery( document ).ready( function() {
 					jQuery( '.rtlib-importer-dummy-data' ).each( function ( e, el ) {
 						var key = jQuery( el ).data( 'field-name' );
 						if ( isNaN( key ) && key.indexOf( '-s-' ) > - 1 ) {
-							key = key.replace( '/-s-/g', ' ' )
-						};
+							key = key.replace( '/-s-/g', ' ' );
+						}
 						jQuery( el ).html( response[key] );
 					} );
 				} );
@@ -485,7 +485,7 @@ jQuery( document ).ready( function() {
 					var source = jQuery( '#map_table_content' ).html();
 					var template = Handlebars.compile( source );
 
-					var arrTmp = Object();
+					var arrTmp = {};
 					arrTmp.name = '';
 					arrTmp.data = response;
 					arrTmp.mapData = window[jQuery( fieldMap ).data( 'map-data' )];
@@ -539,13 +539,13 @@ jQuery( document ).ready( function() {
 					var source = jQuery( '#defined_filed-option' ).html();
 					var template = Handlebars.compile( source );
 
-					var tmpStr = "<select name='default-" + field_name + "'>";
+					var tmpStr = '<select name="default-' + field_name + '">';
 					var tmpArr = window[arr_map_fields[field_name].definedsource];
 
-					tmpStr += template( tmpArr ) + '</select>'
+					tmpStr += template( tmpArr ) + '</select>';
 					jQuery( this ).parent().next().html( tmpStr );
 					if ( jQuery( this ).next().length < 1 ) {
-						jQuery( this ).after( "<a data-field-name='" + field_name + "' href='#mapField' data-map-data='" + arr_map_fields[field_name].definedsource + "' data-field='" + this.name.replace( 'field-', '' ) + "' > Map </a>" );
+						jQuery( this ).after( '<a data-field-name="' + field_name + '" href="#mapField" data-map-data="' + arr_map_fields[field_name].definedsource + '" data-field="' + this.name.replace( 'field-', '' ) + '" > Map </a>' );
 						if ( field_name !== 'product' ) {
 							jQuery( '[name=' + field_name + ']' ).parent().parent().hide();
 						}
@@ -554,7 +554,7 @@ jQuery( document ).ready( function() {
 						jQuery( '[name=' + jQuery( this ).next().data( 'field-name' ) + ']' ).parent().parent().show();
 						jQuery( this ).next().remove();
 						jQuery( this ).next().remove();
-						jQuery( this ).after( "<a data-field-name='" + field_name + "' href='#mapField' data-map-data='" + arr_map_fields[field_name].definedsource + "' data-field='" + this.name.replace( 'field-', '' ) + "' > Map </a>" );
+						jQuery( this ).after( '<a data-field-name="' + field_name + '" href="#mapField" data-map-data="' + arr_map_fields[field_name].definedsource + '" data-field="' + this.name.replace( 'field-', '' ) + '" > Map </a>' );
 						if ( field_name !== 'product' ) {
 							jQuery( '[name=' + field_name + ']' ).parent().parent().hide();
 						}
@@ -627,6 +627,6 @@ jQuery( document ).ready( function() {
 				        } );
 			} );
 		}
-	}
+	};
 	jQuery.rtImporter.init();
 });
