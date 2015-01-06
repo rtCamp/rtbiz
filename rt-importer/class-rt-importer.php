@@ -573,7 +573,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					</div>
 					<div class="importloading"></div>
 					<div class="sucessmessage">
-					<?php if ( $_REQUEST['type'] == 'gravity' ) {
+					<?php if ( 'gravity' == $_REQUEST['type'] ) {
 					_e( 'Would u like to import future entries automatically?' );?> &nbsp;
 						<input type='button' id='futureYes' value='Yes' class="button button-primary"/>&nbsp;
 						<input type='button' id='futureNo' value='No' class="button "/>
@@ -846,7 +846,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			//clears cache.
 			$_gform_lead_meta = array();
 		}
-
 
 		public function enqueue_scripts(){
 			if ( ! wp_script_is( 'jquery-ui-progressbar' ) ) {
