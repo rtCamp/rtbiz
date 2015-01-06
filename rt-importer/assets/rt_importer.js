@@ -67,7 +67,7 @@ jQuery( document ).ready( function() {
 		initPostData: function(){
 			jQuery( '#map_mapping_import' ).live( 'click', function () {
 				if ( arr_map_fields !== undefined ) {
-					postdata = new Object;
+					postdata = new Object();
 					var data = jQuery( '#rtlibMappingForm' ).serializeArray();
 					var count = jQuery( '#mapEntryCount' ).val();
 					var errorFlag = false;
@@ -90,19 +90,19 @@ jQuery( document ).ready( function() {
 								if ( arr_map_fields[mapping.value].multiple ) {
 									//multiple but assigne first time
 									postdata[mapping.value] = Array();
-									var tmpObj = Object();
+									var tmpObj = new Object();
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = jQuery( jQuery( '#' + mapping.name ).parent().next().children( 'input,select' ) ).val();
 									if ( arr_map_fields[mapping.value].type !== undefined && arr_map_fields[mapping.value].type === 'defined' ) {
 										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
 										if ( arrMapSelects.length < 1 ) {
 											errorFlag = true;
-											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name )
+											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name );
 											jQuery( '#' + mapping.name ).addClass( 'form-invalid' );
 											jQuery( '#' + mapping.name ).focus();
 											return false;
 										} else {
-											var tObj = Object();
+											var tObj = new Object();
 											jQuery.each( arrMapSelects, function ( indx, obj ) {
 												tObj[jQuery( obj ).data( 'map-value' )] = jQuery( this ).val();
 											} );
@@ -110,7 +110,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -125,19 +125,19 @@ jQuery( document ).ready( function() {
 									postdata[mapping.value].push( tmpObj );
 								} else {
 									//multiple not allowed
-									var tmpObj = Object();
+									var tmpObj = new Object();
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = jQuery( jQuery( '#' + mapping.name ).parent().next().children( 'input,select' ) ).val();
 									if ( arr_map_fields[mapping.value].type !== undefined && arr_map_fields[mapping.value].type === 'defined' ) {
 										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
 										if ( arrMapSelects.length < 1 ) {
 											errorFlag = true;
-											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name )
+											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name );
 											jQuery( '#' + mapping.name ).addClass( 'form-invalid' );
 											jQuery( '#' + mapping.name ).focus();
 											return false;
 										} else {
-											tObj = Object();
+											var tObj = new Object();
 											jQuery.each( arrMapSelects, function ( indx, obj ) {
 												tObj[jQuery( obj ).data( 'map-value' )] = jQuery( this ).val();
 											} );
@@ -145,7 +145,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -162,11 +162,11 @@ jQuery( document ).ready( function() {
 
 							} else {
 								if ( arr_map_fields[mapping.value].multiple ) {
-									tmpObj = Object();
+									var tmpObj = new Object();
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = jQuery( jQuery( '#' + mapping.name ).parent().next().children( 'input,select' ) ).val();
 									if ( arr_map_fields[mapping.value].type !== undefined && arr_map_fields[mapping.value].type === 'defined' ) {
-										arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
 										if ( arrMapSelects.length < 1 ) {
 											errorFlag = true;
 											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name );
@@ -174,7 +174,7 @@ jQuery( document ).ready( function() {
 											jQuery( '#' + mapping.name ).focus();
 											return false;
 										} else {
-											tObj = Object();
+											var tObj = new Object();
 											jQuery.each( arrMapSelects, function ( indx, obj ) {
 												tObj[jQuery( obj ).data( 'map-value' )] = jQuery( this ).val();
 											} );
@@ -182,7 +182,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -202,9 +202,9 @@ jQuery( document ).ready( function() {
 										if ( jQuery( this ).val() === mapping.value ) {
 											jQuery( this ).addClass( 'form-invalid' );
 										}
-									} )
-									jQuery( '#' + mapping['name'] ).addClass( 'form-invalid' );
-									jQuery( '#' + mapping['name'] ).focus();
+									} );
+									jQuery( '#' + mapping.name ).addClass( 'form-invalid' );
+									jQuery( '#' + mapping.name ).focus();
 									return false;
 								}
 							}
@@ -216,32 +216,32 @@ jQuery( document ).ready( function() {
 							} else if ( postdata[mapping.value] === undefined ) {
 								if ( arr_map_fields[mapping.value].multiple ) {
 									postdata[mapping.value] = Array();
-									var tmpObj = Object();
-									tmpObj.fieldName = mapping['name'];
+									var tmpObj = new Object();
+									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 
 									postdata[mapping.value].push( tmpObj );
 								} else {
-									var tmpObj = Object();
-									tmpObj.fieldName = mapping['name'];
+									var tmpObj = new Object();
+									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 									postdata[mapping.value] = tmpObj;
 								}
 
 							} else {
 								if ( arr_map_fields[mapping.value].multiple ) {
-									var tmpObj = Object();
-									tmpObj.fieldName = mapping['name'];
+									var tmpObj = new Object();
+									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 									postdata[mapping.value].push( tmpObj );
 								} else {
 									errorFlag = true;
-									alert( 'Multiple ' + arr_map_fields[mapping.value].display_name + ' not allowed' )
+									alert( 'Multiple ' + arr_map_fields[mapping.value].display_name + ' not allowed' );
 									jQuery( 'select,input[type=textbox]' ).each( function ( e ) {
-										if ( jQuery( this ).val() === mapping['value'] ) {
+										if ( jQuery( this ).val() === mapping.value ) {
 											jQuery( this ).addClass( 'form-invalid' );
 										}
-									} )
+									} );
 									jQuery( mapElement ).addClass( 'form-invalid' );
 									jQuery( mapElement ).focus();
 									return false;
@@ -250,7 +250,7 @@ jQuery( document ).ready( function() {
 
 						} else {
 							if ( jQuery( '[name=' + mapping.name + ']' ).parent().parent().css( 'display' ) !== 'none' ) {
-								var tmpObj = Object();
+								var tmpObj = new Object();
 								tmpObj.fieldName = mapping.value;
 								tmpObj.defaultValue = '';
 								if ( postdata[mapping.name] === undefined ) {
