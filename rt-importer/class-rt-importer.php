@@ -54,7 +54,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 			$this->init();
 
-
 			$this->db_upgrade();
 
 			$this->hook();
@@ -327,9 +326,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		public function rtlib_importer() {
 			$flag      = true;
 
-			if ( $_REQUEST['type'] == 'csv' ) {
-				if ( isset( $_FILES['map_upload'] ) && $_FILES['map_upload']['error'] == 0 ) {
-					if ( $_FILES['map_upload']['type'] != 'text/csv' ) {
+			if ( 'csv' == $_REQUEST['type'] ) {
+				if ( isset( $_FILES['map_upload'] ) && 0 == $_FILES['map_upload']['error'] ) {
+					if ( 'text/csv' != $_FILES['map_upload']['type'] ) {
 						echo "<div class='error'>" . esc_html( __( 'Please upload a CSV file only!' ) ) . '</div>';
 
 						return;
@@ -351,9 +350,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					$data = $csv->data[ rand( 1, count( $csv->data ) - 1 ) ];
 					?>
 					<div id="map_message" class="updated map_message"><p>
-							<?php _e( 'File uploaded:'  ); ?>
+							<?php _e( 'File uploaded:' ); ?>
 							<strong><?php echo esc_html( $_FILES['map_upload']['name'] ); ?></strong>
-							<?php _e( 'Total Rows:'  ); ?>
+							<?php _e( 'Total Rows:' ); ?>
 							<strong><?php echo esc_html( count( $csv->data ) ); ?></strong></p>
 					</div>
 
@@ -474,7 +473,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 							</tr>
 				<?php } ?>
 						</tbody>
-			<?php } ?>
+<?php} ?>
 
 						<tfoot>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
@@ -515,7 +514,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 									$form_fields = '<select name="otherfield0" class="other-field">';
 									$form_fields .= '<option value="">Select</option>';
 									foreach ( $this->field_array[ $post_type ] as $lfield ) {
-										if ( isset( $lfield['type'] ) && $lfield['type'] == 'defined' ) {
+										if ( isset( $lfield['type'] ) && 'defined' == $lfield['type'] ) {
 											continue;
 										}
 										$form_fields .= '<option value="' . esc_attr( $lfield['slug'] ) . '">' . esc_html( ucfirst( $lfield['display_name'] ) ) . '</option>';
@@ -548,7 +547,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					<script>
 				var transaction_id =<?php echo esc_attr( time() ); ?>;
 				var arr_map_fields =<?php echo json_encode( $this->field_array[ $post_type ] ); ?>;
-				<?php if ( $_REQUEST['type'] == 'gravity' ) { ?>
+				<?php if ( 'gravity' == $_REQUEST['type'] ) { ?>
 					var arr_lead_id = <?php $this->get_all_gravity_lead( $form_id ); ?>;
 				<?php } else {
 					$jsonArray = array();
@@ -589,7 +588,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			die();
 		}
 
-		public function rtlib_map_import_callback(){
+		function rtlib_map_import_callback(){
 
 			if ( ! isset( $_REQUEST['gravity_lead_id'] ) ) {
 				echo json_encode( array( array( 'status' => false ) ) );
@@ -600,7 +599,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$map_index_lead_id  = $_REQUEST['gravity_lead_id'];
 			$map_source_form_id = $_REQUEST['map_form_id'];
 			$map_data           = $_REQUEST['map_data'];
-			if ( isset( $_REQUEST['forceimport'] ) && $_REQUEST['forceimport'] == 'false' ) {
+			if ( isset( $_REQUEST['forceimport'] ) && 'false' == $_REQUEST['forceimport'] ) {
 				$forceImport = false;
 			} else {
 				$forceImport = true;
@@ -617,7 +616,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$form_id       = $data['id'];
 			$form_mappings = $rtlib_gravity_fields_mapping_model->get_mapping( $form_id );
 
-			$data = apply_filters( 'rtlib_gform_add_custome_field', $data, $form_mappings ) ;
+			$data = apply_filters( 'rtlib_gform_add_custome_field', $data, $form_mappings );
 
 			return $data;
 		}
@@ -638,7 +637,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$form_mappings = $rtlib_gravity_fields_mapping_model->get_mapping( $form_id );
 			foreach ( $form_mappings as $fm ) {
 				$map_data = maybe_unserialize( $fm->mapping );
-				if ( ! empty( $map_data ) && $fm->enable == 'yes' ) {
+				if ( ! empty( $map_data ) && 'yes' == $fm->enable ) {
 					global $gravity_auto_import;
 					$gravity_auto_import = true;
 					$forceImport         = false;
@@ -660,12 +659,12 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 			header( 'Content-Type: application/json' );
 			$form_id = $_REQUEST['map_form_id'];
-			if ( isset( $_REQUEST['mapSourceType'] ) && $_REQUEST['mapSourceType'] == 'gravity' ) {
+			if ( isset( $_REQUEST['mapSourceType'] ) && 'gravity' == $_REQUEST['mapSourceType'] ) {
 				$lead_id       = intval( $_REQUEST['dummy_lead_id'] );
 				$formdummydata = RGFormsModel::get_lead( $lead_id );
 
 				foreach ( $formdummydata as $key => $val ) {
-					if ( ! ( strpos( strval( $key ), '.' ) === false ) ) {
+					if ( false !== ( strpos( strval( $key ), '.' ) ) ) {
 						$pieces = explode( '.', $key );
 
 						if ( ! isset( $formdummydata[ intval( $pieces[0] ) ] ) ) {
@@ -700,17 +699,18 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				$form_id  = $_REQUEST['map_form_id'];
 				$map_data = maybe_serialize( $_REQUEST['map_data'] );
 				$post_type = $_REQUEST['mapPostType'];
-				if ( isset( $this->post_type[ $post_type ] ) && !empty( $this->post_type[ $post_type ]['module'] ) ){
+				if ( isset( $this->post_type[ $post_type ] ) && ! empty( $this->post_type[ $post_type ]['module'] ) ){
 					$module = $this->post_type[ $post_type ]['module'];
-				}else{
+				} else {
 					$module = '';
 				}
 
 				$mapping = $rtlib_gravity_fields_mapping_model->get_mapping( $form_id );
 				if ( ! empty( $mapping ) ) {
-					$data  = array( 'mapping' => $map_data,
-					                'post_type' => $post_type,
-					                'module_id' => $module,);
+					$data  = array(
+						'mapping' => $map_data,
+						'post_type' => $post_type,
+						'module_id' => $module,);
 					$where = array( 'form_id' => $form_id, );
 					$rtlib_gravity_fields_mapping_model->update_mapping( $data, $where );
 				} else {
@@ -735,7 +735,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		 */
 		public function rtlib_defined_map_field_value() {
 			$form_id = $_REQUEST['map_form_id'];
-			if ( isset( $_REQUEST['mapSourceType'] ) && $_REQUEST['mapSourceType'] == 'gravity' ) {
+			if ( isset( $_REQUEST['mapSourceType'] ) && 'gravity' == $_REQUEST['mapSourceType'] ) {
 				$field_id  = intval( $_REQUEST['field_id'] );
 				$tableName = RGFormsModel::get_lead_details_table_name();
 				global $wpdb;

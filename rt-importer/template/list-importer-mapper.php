@@ -7,7 +7,7 @@ if ( ! isset( $_REQUEST['type'] ) ) {
 
 
 <div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rt_Importer_Mapper::$page_slug  ) ); ?>" class="nav-tab nav-tab-active">Gravity</a>
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rt_Importer_Mapper::$page_slug ) ); ?>" class="nav-tab nav-tab-active">Gravity</a>
 </div>
 
 <table class="wp-list-table widefat rtlib-gravity-mapping" cellspacing="0">
@@ -43,7 +43,7 @@ if ( ! isset( $_REQUEST['type'] ) ) {
 	<?php if ( isset( $gravity_fields ) && count( $gravity_fields ) > 0 ) { ?>
 		<?php foreach ( $gravity_fields as $gravity_field ) { ?>
 			<tr id="mapping_<?php echo esc_attr( $gravity_field->id ); ?>" class="">
-				<td class='rtlib_form_name column-rtlib_form_name'><a href="<?php echo admin_url('admin.php?page=gf_edit_forms&id=' . $gravity_field->form_id ); ?>"><?php echo esc_html( $gravity_field->form_name ); ?></a></td>
+				<td class='rtlib_form_name column-rtlib_form_name'><a href="<?php echo admin_url( 'admin.php?page=gf_edit_forms&id=' . $gravity_field->form_id ); ?>"><?php echo esc_html( $gravity_field->form_name ); ?></a></td>
 				<td class='rtlib_post_type column-rtlib_post_type'><?php echo esc_html( $gravity_field->post_type . ' [' . $gravity_field->module_id . ']' ); ?></td>
 				<td class='rtlib_create_date column-rtlib_create_date'><?php echo esc_html( $gravity_field->create_date ); ?></td>
 				<td class='rtlib_enable column-rtlib_enable aligncenter'><input
@@ -56,7 +56,7 @@ if ( ! isset( $_REQUEST['type'] ) ) {
 				</td>
 			</tr>
 		<?php
-		}
+}
 } else {
 	?>
 	<tr>
