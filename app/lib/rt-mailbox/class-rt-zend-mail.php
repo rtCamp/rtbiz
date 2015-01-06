@@ -735,7 +735,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 										$file['filename']      = $filename;
 										$file['extn']          = $extn;
 										$file['type']          = $ContentType;
-										if ( $part->hasHeader( 'xattachmentid' ) ) {
+										if ( $part->__isset( 'xattachmentid' ) ) {
 											$tmpval = $part->getHeader( 'xattachmentid' );
 											$file['xattachmentid'] = $tmpval->getFieldValue();
 										}
