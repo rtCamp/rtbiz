@@ -95,7 +95,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 		function skip_feed_comments( $where ){
 			global $wpdb;
-			$where .= " AND $wpdb->posts.post_type NOT IN ('". rt_biz_get_contact_post_type() ."','".rt_biz_get_company_post_type()."')";
+			$where .= $wpdb->prepare( ' AND comment_type != %s', 'rt_bot' );
 			return $where;
 		}
 
