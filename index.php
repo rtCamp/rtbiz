@@ -183,8 +183,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			self::$instance->update_database();
 
-			self::$instance->init_db_models();
-
 			self::$instance->init_attributes();
 
 			self::$instance->init_notification_queue();
@@ -294,21 +292,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		function init_db_models() {
-			global $rt_biz_notification_rules_model, $rt_biz_notification_queue_model;
-
-			$rt_biz_notification_rules_model = new RT_Biz_Notification_Rules_Model();
-			$rt_biz_notification_queue_model = new RT_Biz_Notification_Queue_Model();
-		}
-
 		function init_attributes() {
 			global $rt_biz_attributes;
 			$rt_biz_attributes = new Rt_Biz_Attributes();
-		}
-
-		function init_notification_queue() {
-			global $rt_biz_notification_queue;
-			$rt_biz_notification_queue = new RT_Biz_Notification_Queue();
 		}
 
 		/**
