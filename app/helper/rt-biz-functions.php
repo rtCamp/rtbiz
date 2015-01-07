@@ -619,7 +619,7 @@ function biz_get_redux_settings() {
 	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
-function biz_is_primary_email_unique( $email ) {
+function biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(
 		array(
@@ -627,7 +627,11 @@ function biz_is_primary_email_unique( $email ) {
 			'value' => $email,
 		),
 	);
-	$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args ) );
+	$args = array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args );
+	if ( ! empty( $postid ) ) {
+		$args['post__not_in'] = array( $postid );
+	}
+	$posts = get_posts( $args );
 	$count = count( $posts );
 	if ( 0 == $count ) {
 		return true;

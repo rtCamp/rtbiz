@@ -101,6 +101,19 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
 			}
 
+			add_action( 'init', array( $this, 'check_primary_email_for_admin_notice' ) );
+		}
+
+		function check_primary_email_for_admin_notice(){
+			if ( isset( $_REQUEST['post'] ) && get_post_type( $_REQUEST['post'] ) == rt_biz_get_contact_post_type() ) {
+				if ( $primary_unique_meta = get_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'], true ) ) {
+					add_action( 'admin_notices', array( $this, 'primary_email_not_unique' ) );
+					delete_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'] );
+				} else if ( $primary_empty_meta = get_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'empty_primary_email_' . $_REQUEST['post'], true ) ) {
+					add_action( 'admin_notices', array( $this, 'primary_email_empty' ) );
+					delete_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'] );
+				}
+			}
 		}
 
 		function manage_contact_column_header( $columns ){
@@ -612,15 +625,41 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			<?php
 		}
 
+		function primary_email_empty(){
+			?>
+			<div class="error">
+				<p><?php _e( 'Primary email is necessary.', RT_BIZ_TEXT_DOMAIN ); ?></p>
+			</div>
+		<?php
+		}
+
+		function primary_email_not_unique(){
+			?>
+			<div class="error">
+				<p><?php _e( 'Primary email is required to be unique.', RT_BIZ_TEXT_DOMAIN ); ?></p>
+			</div>
+		<?php
+		}
+
 		/**
 		 * @param $post_id
 		 */
 		function save_meta_values( $post_id ) {
+			if ( isset( $_POST['contact_meta'][ $this->primary_email_key ] ) && empty( $_POST['contact_meta'][ $this->primary_email_key ] ) ){
+				update_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'], true );
+			}
+			else {
+				delete_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'] );
+			}
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['contact_meta'][ $field['key'] ] ) && ! empty( $_POST['contact_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == $this->primary_email_key ) {
-						if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
+						if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ], $_POST['post_ID'] ) ) {
+							update_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_POST['post_ID'], true );
 							continue;
+						}
+						else {
+							delete_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_POST['post_ID'] );
 						}
 					}
 					$contact_meta[ $field['key'] ] = $_POST['contact_meta'][ $field['key'] ];
