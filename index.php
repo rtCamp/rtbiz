@@ -210,6 +210,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			//after_setup_theme hook because before that we do not have ACL module registered
 			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
+			add_action( 'after_setup_theme', array( self::$instance, 'init_importer' ),21 );
 
 			do_action( 'rt_biz_init' );
 		}
@@ -333,13 +334,33 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type();
 			}
 
-			$this->menu_order = array_merge( $this->menu_order, array(
-				self::$access_control_slug,
-				'edit-tags.php?taxonomy='.RT_Departments::$slug. '&post_type=' . rt_biz_get_contact_post_type(),
-				Rt_Biz_Attributes::$attributes_page_slug,
-				Rt_Mailbox::$page_name,
-				self::$settings_slug,
-			) );
+			if ( !empty( self::$access_control_slug ) ) {
+				$this->menu_order[] = self::$access_control_slug;
+			}
+
+			if ( class_exists( 'RT_Departments' ) ) {
+				$this->menu_order[] = 'edit-tags.php?taxonomy='.RT_Departments::$slug. '&post_type=' . rt_biz_get_contact_post_type();
+			}
+
+			if ( class_exists( 'Rt_Biz_Attributes' ) ) {
+				$this->menu_order[] = Rt_Biz_Attributes::$attributes_page_slug;
+			}
+
+			if ( class_exists( 'Rt_Mailbox' ) ) {
+				$this->menu_order[] = Rt_Mailbox::$page_name;
+			}
+
+			if ( class_exists( 'Rt_Importer' ) ) {
+				$this->menu_order[] = Rt_Importer::$page_slug;
+			}
+
+			if ( class_exists( 'Rt_Importer_Mapper' ) ) {
+				$this->menu_order[] = Rt_Importer_Mapper::$page_slug;
+			}
+
+			if ( !empty( self::$settings_slug ) ) {
+				$this->menu_order[] = self::$settings_slug;
+			}
 		}
 
 		function custom_pages_order( $menu_order ) {
@@ -427,6 +448,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function init_tour(){
 			global $rt_biz_tour;
 			$rt_biz_tour = new RT_Guide_Tour();
+		}
+
+		function init_importer(){
+			global $rt_importer;
+			$arg = array(
+				'parent_slug' => Rt_Biz::$dashboard_slug,
+				'page_capability' => 'manage_options',
+			);
+			$rt_importer = new Rt_Importer( $arg );
 		}
 
 		/**
