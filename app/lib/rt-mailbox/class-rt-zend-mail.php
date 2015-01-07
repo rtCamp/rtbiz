@@ -735,7 +735,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 										$file['filename']      = $filename;
 										$file['extn']          = $extn;
 										$file['type']          = $ContentType;
-										if ( $part->hasHeader( 'xattachmentid' ) ) {
+										if ( $part->__isset( 'xattachmentid' ) ) {
 											$tmpval = $part->getHeader( 'xattachmentid' );
 											$file['xattachmentid'] = $tmpval->getFieldValue();
 										}
@@ -816,10 +816,17 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$visibleText = substr( $htmlBody, 0, ( $offset === false ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
+					$originalBody = '';
+					$tmp  = $message->getHeaders();
+					foreach ( $tmp as $header ){
+						$originalBody .= htmlentities( $header->toString() ). '<br/><br/>';
+					}
+					$originalBody .= 'Body: ';
+					$originalBody .= $txtBody;
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( array( 'email' => $email ) );
-					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail, $from_email );
+					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail, $from_email, $originalBody );
 
 					//					global $threadPostId;
 					//					if ( ! isset( $threadPostId ) ) {
