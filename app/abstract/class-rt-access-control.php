@@ -133,10 +133,12 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 						}
 						$all_caps = array_merge( $all_caps, $valid_caps );
 					}
-					continue;
 				}
 
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+				foreach ( $profile_permissions as $mkey => $pp ) {
+					unset( $module_permissions[ $mkey ] );
+				}
 				$ug_terms = rt_biz_get_user_department( $user->ID );
 				$departments = array();
 				if ( ! $ug_terms instanceof WP_Error ) {
