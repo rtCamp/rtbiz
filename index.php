@@ -317,7 +317,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type();
 			}
 
-			if ( !empty( self::$access_control_slug ) ) {
+			if ( ! empty( self::$access_control_slug ) ) {
 				$this->menu_order[] = self::$access_control_slug;
 			}
 
@@ -341,7 +341,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				$this->menu_order[] = Rt_Importer_Mapper::$page_slug;
 			}
 
-			if ( !empty( self::$settings_slug ) ) {
+			if ( ! empty( self::$settings_slug ) ) {
 				$this->menu_order[] = self::$settings_slug;
 			}
 		}
