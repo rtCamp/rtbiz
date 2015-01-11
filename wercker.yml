@@ -1,13 +1,14 @@
 # our build should run within a Ruby box
 box: wercker/nodejs
 build:
-  steps:
-    - npm-install:
-        package: gitbook
-    # # install gitbook itself
-    # - script:
-    #     name: install gitbook
-    #     code: sudo npm install -g gitbook
+  # steps:
+  #   - npm-install:
+  #       package: gitbook
+
+    # install gitbook itself
+    - script:
+        name: install gitbook
+        code: sudo npm install -g gitbook
 
     # build gitbooks
     - script:
