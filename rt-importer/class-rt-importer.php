@@ -57,6 +57,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$this->db_upgrade();
 
 			$this->hook();
+
+			$this->init_importer_help();
+
 			$this->rt_importer_ajax_hooks();
 
 		}
@@ -85,6 +88,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
 			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
+
+		function init_importer_help(){
+			global $rt_importer_help;
+			$rt_importer_help = new Rt_Importer_Help();
 		}
 
 		/**
@@ -132,7 +140,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		}
 
 		public function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $_REQUEST['page'] .'&type='.$_REQUEST['type']: $_REQUEST['page'] ) : self::$page_slug .'&type=gravity';
+			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $_REQUEST['page'] .'&type='.$_REQUEST['type']: self::$page_slug .'&type=gravity' ) : self::$page_slug .'&type=gravity';
 		}
 
 		public function importer_tab(){
@@ -216,8 +224,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 		public function ui(){
 
-			$this->load_handlebars_templates();
-			$this->importer_tab();
+			$this->load_handlebars_templates(); ?>
+			<div class="wrap">
+			<h2>Importer</h2>
+			<?php $this->importer_tab();
 			$_REQUEST['type'] = 'gravity'; // remove when csv is active
 			if ( isset( $_REQUEST['type'] ) && 'gravity' == $_REQUEST['type'] ) {
 				$forms    = $this->get_forms(); //get gravity for list
@@ -308,7 +318,8 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					</table>
 				</form>
 			<?php
-			}
+			} ?>
+			</div><?php
 		}
 
 		public function rt_importer_ajax_hooks(){

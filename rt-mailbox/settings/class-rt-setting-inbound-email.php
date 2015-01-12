@@ -47,6 +47,12 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 
 			$imap_servers = $rt_imap_server_model->get_all_servers();
 
+			$server_types = array();
+			if ( ! empty( $imap_servers ) ){
+				$server_types['imap'] = 'IMAP';
+			}
+			$server_types = apply_filters( 'rt_mailbox_server_type', $server_types );
+
 			if ( empty( $imap_servers ) ){
 				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
 				return;
@@ -72,8 +78,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<td>
 										<select id="rtmailbox_select_email_acc_type">
 											<option value=""><?php _e( 'Select Type' ); ?></option>
-											<?php if ( ! empty( $imap_servers ) ){?>
-												<option value="imap"><?php _e( 'IMAP' ); ?></option>
+											<?php foreach ( $server_types as $key => $value ) {?>
+												<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 											<?php } ?>
 										</select>
 									</td>
@@ -226,6 +232,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
 			<?php
+			do_action( 'rt_mailbox_reply_by_email_view' );
 		}
 
 		public function save_replay_by_email() {
