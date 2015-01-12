@@ -181,8 +181,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_action( 'admin_init', array( self::$instance, 'welcome' ) );
 			add_filter( 'rt_biz_modules', array( self::$instance, 'register_rt_biz_module' ) );
 
-			self::$instance->update_database();
-
 			self::$instance->init_attributes();
 
 			self::$instance->init_access_control();
@@ -283,11 +281,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			global $rt_MailBox ;
 			$cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$rt_MailBox = new Rt_Mailbox( $cap, Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, trailingslashit( RT_BIZ_PATH ) . 'index.php' );
-		}
-
-		function update_database() {
-			$updateDB = new RT_DB_Update( trailingslashit( RT_BIZ_PATH ) . 'index.php', trailingslashit( RT_BIZ_PATH . 'app/schema/' ) );
-			$updateDB->do_upgrade();
 		}
 
 		function init_attributes() {
