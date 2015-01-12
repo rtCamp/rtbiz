@@ -29,7 +29,7 @@ rtBiz - WordPress 4 Business!
 
 * [GitHub](http://github.com/rtcamp/rtbiz/) - Please mention your wordpress.org username when sending pull requests.
 
-** License **
+**License**
 
 Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
