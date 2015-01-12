@@ -135,7 +135,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
 				$this->mailbox_view();
 			}
-			do_action('rt_mailbox_randed_view_after');
+			do_action( 'rt_mailbox_randed_view_after' );
 			?> </div> <?php
 
 		}
