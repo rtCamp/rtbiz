@@ -204,14 +204,14 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					                       self::$user_category_taxonomy => $term->slug,
 				                       ) );
 
-				$subsubsub[] = "<li><a href='edit.php?post_type=rt_contact&".self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
+				$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type().'&'.self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
 			}
 			$current = '';
 			if ( $allflag ){
 				$current = 'current';
 			}
 			$something = wp_count_posts( rt_biz_get_contact_post_type() );
-			$top = array( "<a href='edit.php?post_type=rt_contact' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
+			$top = array( "<a href='edit.php?post_type=".rt_biz_get_contact_post_type()."' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
 			echo '<ul class="subsubsub">';
 			echo implode( ' | ', array_merge( $top, $subsubsub ) );
 			echo '</ul>';
