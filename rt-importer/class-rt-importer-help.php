@@ -108,20 +108,26 @@ if ( ! class_exists( 'Rt_Importer_Help' ) ) {
 					?>
 					<ul>
 						<li><?php _e( 'Importer library will give you a admin page where you can setup this module for your plugin.' ); ?></li>
+						<li><?php _e( 'New  importer can be added from this tab.' ); ?></li>
+						<li><?php _e( 'By default, Gravity tabs is active on importer page. In future we will add importer support for CSV.' ); ?></li>
+						<li><?php _e( 'you will need to select CPT( rtbiz module post type ) amd gravity form for which you need to setup importer and click on next' ); ?></li>
+						<li><?php _e( 'New panel become visible to map gravity form field with your module field.' ); ?></li>
+						<li><?php _e( 'After setup the mapping click on import button and it imports all existing records into your module' ); ?></li>
+						<li><?php _e( 'once importing done, system will ask for save this importer task for future entries.' ); ?></li>
 					</ul>
 					<?php
 					break;
 				case 'importer_mapper_overview':
 					?>
 					<p>
-						<?php _e( 'This screen provides access to enable/Disable and remove importer mapping  permanently.' ); ?>
+						<?php _e( 'Importer library will give you a admin page where you perform different action on importer mapper.' ); ?>
 					</p>
 					<?php
 					break;
 				case 'importer_mapper_screen_content':
 					?>
 					<ul>
-						<li><?php _e( 'Importer library will give you a admin page where you perform different action on importer mapper.' ); ?></li>
+						<li><?php _e( 'This screen provides access to enable/Disable and remove importer mapping  permanently.' ); ?></li>
 					</ul>
 					<?php
 					break;
