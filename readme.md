@@ -8,28 +8,22 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 1.0.2  
+**Stable tag:** 1.2  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
 ## Description ##
 
-* Mission Statement: WordPress 4 Business
-* Centered Around Humans: All modules are built around contact. Contacts are people who may or may not be WordPress users.
-* Clear contact groupings: Easily classify your contacts between employees, customers and vendors.
-* Seamless data connections: Connect contacts, companies, departments and offerings on the fly.
-* Easy Mail setup and Integration
+* *Mission Statement:* WordPress 4 Business
+* *Centered Around Humans:* All modules are built around contact. Contacts are people who may or may not be WordPress users.
+* *Contacts Management* - Easily manage all your clients, vendors and employee contacts.
+* *Seamless Connections* - Connect contacts with any existing entity within WordPress environment on the fly.
+* *Robust ACL* - Great control over who can access what data
+* *MailBox Setup*  - Configure your mailbox to automate your processes such as support helpdesk using add-ons.
+* *Attributes* - Define dynamic taxonomies to categorize all post types.
+* *Offerings* - Easily sync your WooCommerce/EDT store’s products and services.
 * Great reporting tools
 * Easy import/export of information
-
-Following are some of the trivial features that rtBiz offers:
-
-* Contacts
-* Companies
-* Access Control
-* User Groups
-* Custom Attributes
-* Mailbox Module
 
 **Important Links**
 
@@ -41,7 +35,7 @@ Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
 **Coming soon:**
 
- * Import/Export Library
+ * Export Library
  * JSON API
  * New Enhancements
  * Bug Fixing
@@ -97,6 +91,12 @@ Please refer to the documentation.
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.2 ###
+* Import Library
+* Recent Activity Widget on rtBiz Dashboard
+* New developer friendly filters in Mailbox Library
+* Bug Fixes related to rtBiz Comments, rtBiz Contacts
 
 ### 1.0.2 ###
 * Banners updated
