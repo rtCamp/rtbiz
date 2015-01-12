@@ -309,12 +309,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
-			}
 			$this->menu_order[] = 'edit.php?post_type=' . rt_biz_get_company_post_type();
 			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type();
+				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 			}
 
 			if ( ! empty( self::$access_control_slug ) ) {
@@ -735,10 +732,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
 			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
-			}
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( '--- Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_company_post_type() );
+				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( 'Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			}
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
