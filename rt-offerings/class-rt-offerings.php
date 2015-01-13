@@ -45,14 +45,14 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		var $pluginName;
 
 		function is_woocommerce_active(){
-			if ( 'woocommerce' === $this->pluginName && is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+			if ( 'woocommerce' === $this->pluginName && class_exists( 'WooCommerce' ) ) {
 				return true;
 			}
 			return false;
 		}
 
 		function is_edd_active(){
-			if ( 'edd' === $this->pluginName && is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' ) ) {
+			if ( 'edd' === $this->pluginName && class_exists( 'Easy_Digital_Downloads' ) ) {
 				return true;
 			}
 			return false;
