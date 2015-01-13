@@ -39,7 +39,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		/**
 		 * @var $post_type - If any post type passed, only attributes for those post type will be listed on the page.
 		 */
-		var $post_type;
+		var $post_type = array();
 
 		var $field_array = array();
 
