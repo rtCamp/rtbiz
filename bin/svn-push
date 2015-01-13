@@ -37,6 +37,15 @@ fi
 
 git_root=$(pwd)
 
+if [ -e readme.txt ]; then
+	$dev_lib_dir/generate-markdown-readme
+	git add readme.md
+fi
+if [ -n "$(git status --porcelain readme.md)" ]; then
+	echo "Please commit (--amend?) the updated readme.md"
+	exit 1
+fi
+
 git pull --ff-only origin master
 git push origin master
 svn_url=$(cat svn-url)
