@@ -32,6 +32,11 @@ before_script:
     - cd $PLUGIN_DIR
     - phpenv rehash
     - npm install -g jshint
+    - cd ../
+    - rm -rf posts-to-posts
+    - wget -nv -O posts-to-posts.zip http://downloads.wordpress.org/plugin/posts-to-posts.1.6.3.zip
+    - unzip -q posts-to-posts.zip
+    - cd $PLUGIN_DIR
     - if [ -e phpunit.xml ] || [ -e phpunit.xml.dist ]; then bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION; fi
 
 script:
