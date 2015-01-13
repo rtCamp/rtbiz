@@ -1,3 +1,6 @@
-*/.sass-cache/*
-.idea/
-_book
+*.DS_Store
+*.swp
+*.bak
+*.idea
+*nbproject*
+*/.sass-cache/
