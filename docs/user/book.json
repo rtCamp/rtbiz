@@ -1,10 +1,12 @@
 {
-  "plugins": ["edit-link","ga","anchors"],
+  "plugins": ["edit-link","ga","anchors","-mathjax"],
   "pluginsConfig": {
-    "rtEditLinkBase": "https://github.com/rtCamp/rtbiz/edit/master/docs/user",
-    "rtEditLinkLabel": "Edit This Page",
-    "ga": {
-      "token": "UA-15354140-3"
-    }
+        "edit-link": {
+          "base": "https://github.com/rtCamp/rtbiz/edit/master/docs/user",
+          "label": "Edit This Page"
+        },
+        "ga": {
+          "token": "UA-15354140-3"
+        }
   }
 }
