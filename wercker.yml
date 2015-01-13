@@ -3,7 +3,6 @@ box: wercker/nodejs
 build:
   steps:
     # - npm-install
-  #       package: gitbook
 
     # install gitbook itself
     - script:
