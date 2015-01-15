@@ -136,8 +136,10 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				}
 
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-				foreach ( $profile_permissions as $mkey => $pp ) {
-					unset( $module_permissions[ $mkey ] );
+				if ( ! empty( $profile_permissions ) && is_array( $profile_permissions ) ) {
+					foreach ( $profile_permissions as $mkey => $pp ) {
+						unset( $module_permissions[ $mkey ] );
+					}
 				}
 				$ug_terms = rt_biz_get_user_department( $user->ID );
 				$departments = array();
