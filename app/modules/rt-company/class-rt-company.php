@@ -78,7 +78,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'text' => __( 'Phone' ),
 					'label' => __( 'Phone Number' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'tel',
 					'name' => 'account_meta[account_phone][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Phone number.' ),
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'text' => __( 'Fax' ),
 					'label' => __( 'Fax Number' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'tel',
 					'name' => 'account_meta[account_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'text' => __( 'Email' ),
 					'label' => __( 'Primary Email Address' ),
 					'is_multiple' => false,
-					'type' => 'text',
+					'type' => 'email',
 					'name' => 'account_meta[account_primary_email]',
 					'description' => __( 'Valid email address.' ),
 					'category' => 'Contact',
@@ -110,7 +110,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					'text' => __( 'Email' ),
 					'label' => __( 'Email Address' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'email',
 					'name' => 'account_meta[account_email][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
@@ -218,11 +218,17 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 						}
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) ){
+								if ( ! IsEmail( tempVal ) ) {
 									addError( this, 'Please enter valid email address' );
 									return;
+								} else {
+									removeError( this );
 								}
-								else{
+							} else if ( $( this ).data( "type" ) == 'tel' ) {
+								if ( ! validatePhone( tempVal ) ) {
+									addError( this, 'Please Enter Valid Number' );
+									return;
+								} else {
 									removeError( this );
 								}
 							}

@@ -302,7 +302,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'text' => __( 'Email' ),
 					'label' => __( 'Primary Email Address' ),
 					'is_multiple' => false,
-					'type' => 'text',
+					'type' => 'email',
 					'name' => 'contact_meta[contact_primary_email]',
 					'description' => __( 'Valid email address.' ),
 					'category' => 'Contact',
@@ -312,7 +312,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'text' => __( 'Email' ),
 					'label' => __( 'Secondary Email Address' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'email',
 					'name' => 'contact_meta[contact_email][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
@@ -323,7 +323,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'text' => __( 'Phone' ),
 					'label' => __( 'Phone Number' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'tel',
 					'name' => 'contact_meta[contact_phone][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Phone number.' ),
@@ -334,7 +334,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'text' => __( 'Fax' ),
 					'label' => __( 'Fax Number' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'tel',
 					'name' => 'contact_meta[contact_fax][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Fax number.' ),
@@ -345,7 +345,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'text' => __( 'Website' ),
 					'label' => __( 'Website URL' ),
 					'is_multiple' => true,
-					'type' => 'text',
+					'type' => 'url',
 					'name' => 'contact_meta[contact_website][]',
 					'class' => 'input-multiple',
 					'description' => __( 'Website URL.' ),
@@ -605,11 +605,17 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 						}
 						if ( $( this ).data( "type" ) != undefined ) {
 							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) ){
+								if ( ! IsEmail( tempVal ) ) {
 									addError( this, 'Please enter valid email address' );
 									return;
+								} else {
+									removeError( this );
 								}
-								else{
+							} else if ( $( this ).data( "type" ) == 'tel' ) {
+								if ( ! validatePhone( tempVal ) ) {
+									addError( this, 'Please Enter Valid Number' );
+									return;
+								} else {
 									removeError( this );
 								}
 							}
