@@ -1,4 +1,4 @@
-/* global jQuery, document, redux, redux.args, confirm, relid:true, console, jsonView */
+/* global confirm, relid:true, jsonView */
 
 (function( $ ) {
     'use strict';
@@ -29,6 +29,7 @@
                 return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
             };
 
+            $.redux.hideFields();
             $.redux.checkRequired();
             $.redux.initEvents();
             $.redux.initQtip();
@@ -36,8 +37,6 @@
             $.redux.notices();
             $.redux.tabControl();
             $.redux.devFunctions();
-
-
         }
     );
 
@@ -50,11 +49,14 @@
 
         $( '#toplevel_page_' + redux.args.slug + ' .wp-submenu a, #wp-admin-bar-' + redux.args.slug + ' a.ab-item' ).click(
             function( e ) {
-                if ( $( '#toplevel_page_' + redux.args.slug ).hasClass( 'wp-menu-open' ) || $( this ).hasClass( 'ab-item' ) ) {
-                    e.preventDefault();
 
+                if ( ( $( '#toplevel_page_' + redux.args.slug ).hasClass( 'wp-menu-open' ) || $( this ).hasClass( 'ab-item' ) ) && !$( this ).parents( 'ul.ab-submenu:first' ).hasClass( 'ab-sub-secondary' ) ) {
+                    e.preventDefault();
                     var url = $( this ).attr( 'href' ).split( '&tab=' );
                     $( '#' + url[1] + '_section_group_li_a' ).click();
+                    $( this ).parents( 'ul:first' ).find( '.current' ).removeClass( 'current' );
+                    $( this ).addClass( 'current' );
+                    $( this ).parent().addClass( 'current' );
                     return false;
                 }
             }
@@ -84,9 +86,27 @@
 
         $( '.expand_options' ).click(
             function( e ) {
+                
                 e.preventDefault();
 
+                var container = $('.redux-container');
+                if ($(container).hasClass('fully-expanded')) {
+                    $(container).removeClass('fully-expanded');
+
+                    var tab = $.cookie( "redux_current_tab" );
+
+                    $('.redux-container:first').find( '#' + tab + '_section_group' ).fadeIn(
+                        200, function() {
+                            if ( $('.redux-container:first').find( '#redux-footer' ).length !== 0 ) {
+                                $.redux.stickyInfo(); // race condition fix
+                            }
+                            $.redux.initFields();
+                        }
+                    );                
+                }
+
                 $.redux.expandOptions( $( this ).parents( '.redux-container:first' ) );
+
                 return false;
             }
         );
@@ -132,7 +152,13 @@
                 window.onbeforeunload = null;
             }
         );
+    };
 
+    $.redux.hideFields = function() {
+        $("label[for='redux_hide_field']").each(function(idx,val){
+            var tr = $(this).parent().parent();
+            $(tr).addClass('hidden');
+        });
     };
 
     $.redux.checkRequired = function() {
@@ -295,11 +321,12 @@
                     var elements = $( this ).closest( 'ul' ).find( '.redux-group-tab-link-a' );
                     var index = elements.index( this );
                     link = elements.slice( index + 1, index + 2 );
-
                 }
                 var el = link.parents( '.redux-container:first' );
                 var relid = link.data( 'rel' ); // The group ID of interest
-                var oldid = el.find( '.redux-group-tab-link-li.active .redux-group-tab-link-a' ).data( 'rel' );
+                var oldid = el.find( '.redux-group-tab-link-li.active:first .redux-group-tab-link-a' ).data( 'rel' );
+
+                //console.log('id: '+relid+' oldid: '+oldid);
 
                 if ( oldid === relid ) {
                     return;
@@ -353,12 +380,20 @@
                     el.find( '#' + relid + '_section_group_li' ).addClass( 'active' ).removeClass( 'activeChild' ).find( 'ul.subsection' ).slideDown();
 
                     if ( el.find( '#' + oldid + '_section_group_li' ).find( 'ul.subsection' ).length ) {
-                        //console.log('oldid is parent')
+                        //console.log('oldid is parent');
+                        //console.log('#' + relid + '_section_group_li');
+
                         el.find( '#' + oldid + '_section_group_li' ).find( 'ul.subsection' ).slideUp(
                             'fast', function() {
                                 el.find( '#' + oldid + '_section_group_li' ).removeClass( 'active' ).removeClass( 'activeChild' );
                             }
                         );
+                        var newParent = el.find( '#' + relid + '_section_group_li' ).parents( '.hasSubSections:first' );
+                        if ( newParent.length > 0 ) {
+                            el.find( '#' + relid + '_section_group_li' ).removeClass( 'active' );
+                            relid = newParent.find( '.redux-group-tab-link-a:first' ).data( 'rel' );
+                            el.find( '#' + relid + '_section_group_li' ).addClass( 'active' ).removeClass( 'activeChild' ).find( 'ul.subsection' ).slideDown();
+                        }
                     } else if ( el.find( '#' + oldid + '_section_group_li' ).parents( 'ul.subsection' ).length ) {
                         //console.log('oldid is a child');
                         if ( !el.find( '#' + oldid + '_section_group_li' ).parents( '#' + relid + '_section_group_li' ).length ) {
@@ -396,6 +431,8 @@
                         $.redux.initFields();
                     }
                 );
+                $( '#toplevel_page_' + redux.args.slug ).find( '.current' ).removeClass( 'current' );
+
             }
         );
 
@@ -434,7 +471,7 @@
     };
 
     $.redux.initFields = function() {
-        $( ".redux-field-init:visible" ).each(
+        $( ".redux-group-tab:visible" ).find( ".redux-field-init:visible" ).each(
             function() {
                 var type = $( this ).attr( 'data-type' );
                 //console.log(type);
@@ -747,93 +784,173 @@
         switch ( operation ) {
             case '=':
             case 'equals':
-                //if value was array
-                if ( $.isArray( checkValue ) ) {
-                    if ( $.inArray( parentValue, checkValue ) != -1 ) {
-                        show = true;
-                    }
+                if ( $.isArray( parentValue ) ) {
+                    $(parentValue[0]).each(function(idx, val){
+                        if ($.isArray(checkValue)) {
+                            $(checkValue).each (function(i, v){
+                                if (val == v) {
+                                    show = true;
+                                    return true;
+                                }
+                            });
+                        } else {
+                            if (val == checkValue) {
+                                show = true;
+                                return true;
+                            }
+                        }
+                    });
                 } else {
-                    if ( parentValue == checkValue ) {
-                        show = true;
-                    } else if ( $.isArray( parentValue ) ) {
-                        if ( $.inArray( checkValue, parentValue ) != -1 ) {
+                    if ($.isArray(checkValue)) {
+                        $(checkValue).each (function(i, v){
+                            if (parentValue == v) {
+                                show = true;
+                            }
+                        });
+                    } else {
+                        if (parentValue == checkValue) {
                             show = true;
                         }
                     }
                 }
-                break;
+            break;
+            
             case '!=':
             case 'not':
-                //if value was array
-                if ( $.isArray( checkValue ) ) {
-                    //if (checkValue.toString().indexOf('|') !== -1) {
-                    //    checkValue_array = checkValue.split('|');
-                    if ( $.inArray( parentValue, checkValue ) == -1 ) {
-                        show = true;
-                    }
+                if ( $.isArray( parentValue ) ) {
+                    $(parentValue[0]).each(function(idx, val){
+                        if ($.isArray(checkValue)) {
+                            $(checkValue).each (function(i, v){
+                                if (val != v) {
+                                    show = true;
+                                    return true;
+                                }
+                            });
+                        } else {
+                            if (val != checkValue) {
+                                show = true;
+                                return true;
+                            }
+                        }
+                    });
                 } else {
-                    if ( parentValue != checkValue ) {
-                        show = true;
-                    } else if ( $.isArray( parentValue ) ) {
-                        if ( $.inArray( checkValue, parentValue ) == -1 ) {
+                    if ($.isArray(checkValue)) {
+                        $(checkValue).each (function(i, v){
+                            if (parentValue != v) {
+                                show = true;
+                            }
+                        });
+                    } else {
+                        if (parentValue != checkValue) {
                             show = true;
                         }
                     }
                 }
-                break;
+                
+//                //if value was array
+//                if ( $.isArray( checkValue ) ) {
+//                    if ( $.inArray( parentValue, checkValue ) == -1 ) {
+//                        show = true;
+//                    }
+//                } else {
+//                    if ( parentValue != checkValue ) {
+//                        show = true;
+//                    } else if ( $.isArray( parentValue ) ) {
+//                        if ( $.inArray( checkValue, parentValue ) == -1 ) {
+//                            show = true;
+//                        }
+//                    }
+//                }
+            break;
+            
             case '>':
             case 'greater':
             case 'is_larger':
-                if ( parseFloat( parentValue ) > parseFloat( checkValue ) )
+                if ( parseFloat( parentValue ) > parseFloat( checkValue ) ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case '>=':
             case 'greater_equal':
             case 'is_larger_equal':
-                if ( parseFloat( parentValue ) >= parseFloat( checkValue ) )
+                if ( parseFloat( parentValue ) >= parseFloat( checkValue ) ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case '<':
             case 'less':
             case 'is_smaller':
-                if ( parseFloat( parentValue ) < parseFloat( checkValue ) )
+                if ( parseFloat( parentValue ) < parseFloat( checkValue ) ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case '<=':
             case 'less_equal':
             case 'is_smaller_equal':
-                if ( parseFloat( parentValue ) <= parseFloat( checkValue ) )
+                if ( parseFloat( parentValue ) <= parseFloat( checkValue ) ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case 'contains':
-                if ( parentValue.toString().indexOf( checkValue ) != -1 )
-                    show = true;
-                break;
+                if ( $.isArray( checkValue ) ) {
+                    $(checkValue).each (function(idx, val) {
+                        if ( parentValue.toString().indexOf( val ) !== -1 ) {
+                            show = true;
+                        }
+                    });
+                } else {
+                    if ( parentValue.toString().indexOf( checkValue ) !== -1 ) {
+                        show = true;
+                    }
+                }
+            break;
+            
             case 'doesnt_contain':
             case 'not_contain':
-                if ( parentValue.toString().indexOf( checkValue ) == -1 )
-                    show = true;
-                break;
+                if ( $.isArray( checkValue ) ) {
+                    $(checkValue).each (function(idx, val) {
+                        if ( parentValue.toString().indexOf( val ) === -1 ) {
+                            show = true;
+                        }
+                    });
+                } else {
+                    if ( parentValue.toString().indexOf( checkValue ) === -1 ) {
+                        show = true;
+                    }
+                }
+            break;
+            
             case 'is_empty_or':
-                if ( parentValue === "" || parentValue == checkValue )
+                if ( parentValue === "" || parentValue == checkValue ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case 'not_empty_and':
-                if ( parentValue !== "" && parentValue != checkValue )
+                if ( parentValue !== "" && parentValue != checkValue ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case 'is_empty':
             case 'empty':
             case '!isset':
-                if ( !parentValue || parentValue === "" || parentValue === null )
+                if ( !parentValue || parentValue === "" || parentValue === null ) {
                     show = true;
-                break;
+                }
+            break;
+            
             case 'not_empty':
             case '!empty':
             case 'isset':
-                if ( parentValue && parentValue !== "" && parentValue !== null )
+                if ( parentValue && parentValue !== "" && parentValue !== null ) {
                     show = true;
-                break;
+                }
+            break;
         }
         return show;
 
@@ -872,7 +989,7 @@
     };
 
     $.redux.stickyInfo = function() {
-        var stickyWidth = $( '#info_bar' ).width() - 2;
+        var stickyWidth = $( '#info_bar' ).width() - 4;
 
         if ( !$( '#info_bar' ).isOnScreen() && !$( '#redux-footer-sticky' ).isOnScreen() ) {
             $( '#redux-sticky' ).addClass( 'sticky-save-warn' );
@@ -907,7 +1024,7 @@
 
     $.redux.expandOptions = function( parent ) {
         var trigger = parent.find( '.expand_options' );
-        var width = parent.find( '.redux-sidebar' ).width();
+        var width = parent.find( '.redux-sidebar' ).width() - 1;
         var id = $( '.redux-group-menu .active a' ).data( 'rel' ) + '_section_group';
 
         if ( trigger.hasClass( 'expanded' ) ) {
@@ -923,7 +1040,9 @@
             parent.find( '.redux-main' ).stop().animate(
                 {
                     'margin-left': width
-                }, 500
+                }, 500, function() {
+                    parent.find( '.redux-main' ).attr( 'style', '' );
+                }
             );
 
             parent.find( '.redux-group-tab' ).each(
@@ -940,13 +1059,13 @@
 
             parent.find( '.redux-sidebar' ).stop().animate(
                 {
-                    'margin-left': -width - 102
+                    'margin-left': -width - 113
                 }, 500
             );
 
             parent.find( '.redux-main' ).stop().animate(
                 {
-                    'margin-left': '0px'
+                    'margin-left': '-1px'
                 }, 500
             );
 
@@ -969,10 +1088,15 @@
             el.attr( 'data-width', width );
         }
         var height = el.attr( 'data-height' );
-        if ( !height ) {
-            height = el.height();
+        var eHeight = el.height();
+        if ( !height || eHeight > height ) {
+            height = eHeight;
             el.attr( 'data-height', height );
+            el.css( "width", 'auto' );
+            el.attr( 'data-width', el.width() );
+            width = el.width();
         }
+
 
         // Check if the current width is larger than the max
         if ( width > maxWidth ) {
@@ -981,8 +1105,10 @@
             el.css( "height", height * ratio );  // Scale height based on ratio
             height = height * ratio;    // Reset height to match scaled image
             width = width * ratio;    // Reset width to match scaled image
+
         } else {
             el.css( "width", 'auto' );   // Set new height
+
         }
 
         // Check if current height is larger than max
@@ -992,8 +1118,18 @@
             el.css( "width", width * ratio );    // Scale width based on ratio
             width = width * ratio;    // Reset width to match scaled image
             height = height * ratio;    // Reset height to match scaled image
+
+
         } else {
             el.css( "height", 'auto' );   // Set new height
+
+        }
+
+        var test = ($( document.getElementById( 'redux-header' ) ).height() - el.height()) / 2;
+        if ( test > 0 ) {
+            el.css( "margin-top", test );
+        } else {
+            el.css( "margin-top", 0 );
         }
 
         if ( $( '#redux-header .redux_field_search' ) ) {
@@ -1032,42 +1168,53 @@
     $( document ).ready(
         function() {
             if ( redux.rAds ) {
-                $( '#redux-header' ).append( '<div class="rAds"></div>' );
-                var el = $( '#redux-header' );
-                el.css( 'position', 'relative' );
-
-                el.find( '.rAds' ).attr(
-                    'style', 'position:absolute; top: 6px; right: 6px; display:block !important;overflow:hidden;'
-                ).css( 'left', '-99999px' );
-                el.find( '.rAds' ).html( redux.rAds.replace( /<br\s?\/?>/, '' ) );
-                var rAds = el.find( '.rAds' );
-
-                var maxHeight = el.height();
-                var maxWidth = el.width() - el.find( '.display_header' ).width() - 30;
-
-                $( rAds ).css( 'height', maxHeight ).css( 'max-width', maxWidth ).css( 'width', maxWidth );
-
-                rAds.find( 'a' ).css( 'float', 'right' ).css( 'line-height', el.height() + 'px' ).css(
-                    'margin-left', '5px'
-                );
-
-
-                $( document ).ajaxComplete(
+                setTimeout(
                     function() {
-                        setTimeout(
+                        $( '#redux-header' ).append( '<div class="rAds"></div>' );
+                        var el = $( '#redux-header' );
+                        el.css( 'position', 'relative' );
+
+                        el.find( '.rAds' ).attr(
+                            'style',
+                            'position:absolute; top: 6px; right: 6px; display:block !important;overflow:hidden;'
+                        ).css( 'left', '-99999px' );
+                        el.find( '.rAds' ).html( redux.rAds.replace( /<br\s?\/?>/, '' ) );
+                        var rAds = el.find( '.rAds' );
+
+                        var maxHeight = el.height();
+                        var maxWidth = el.width() - el.find( '.display_header' ).width() - 30;
+
+                        rAds.find( 'a' ).css( 'float', 'right' ).css( 'line-height', el.height() + 'px' ).css(
+                            'margin-left', '5px'
+                        );
+
+                        $( document ).ajaxComplete(
+                            function() {
+                                rAds.find( 'a' ).hide();
+                                setTimeout(
+                                    function() {
+                                        $.redux.resizeAds();
+                                        rAds.find( 'a' ).fadeIn();
+                                    }, 1400
+                                );
+                                setTimeout(
+                                    function() {
+                                        $.redux.resizeAds();
+
+                                    }, 1500
+                                );
+                                $( document ).unbind( 'ajaxComplete' );
+                            }
+                        );
+
+                        $( window ).resize(
                             function() {
                                 $.redux.resizeAds();
-                            }, 1500
+                            }
                         );
-                        $( document ).unbind( 'ajaxComplete' );
-                    }
+                    }, 400
                 );
 
-                $( window ).resize(
-                    function() {
-                        $.redux.resizeAds();
-                    }
-                );
             }
         }
     );
