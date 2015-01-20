@@ -37,6 +37,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		var $page_cap;
 
 		/**
+		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 */
+		var $base_url;
+
+		/**
 		 * @var $post_type - If any post type passed, only attributes for those post type will be listed on the page.
 		 */
 		var $post_type = array();
@@ -46,28 +51,19 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		/**
 		 * @param $args
 		 */
-		public function __construct( $args ) {
-			$this->parent_page_slug      = $args['parent_slug'];
-			$this->page_cap              = $args['page_capability'];
-
+		public function __construct( $args = false ) {
 			$this->auto_loader();
-
-			$this->init();
-
 			$this->db_upgrade();
-
-			$this->hook();
-
+			$this->hook( $args );
+			$this->init();
 			$this->init_importer_help();
-
 			$this->rt_importer_ajax_hooks();
-
 		}
 
 		public function init(){
 			global $rtlib_gravity_fields_mapping_model, $rtlib_importer_mapper;
-			$rtlib_gravity_fields_mapping_model = new Rtlib_Gravity_Fields_Mapping_Model();
 
+			$rtlib_gravity_fields_mapping_model = new Rtlib_Gravity_Fields_Mapping_Model();
 			$rtlib_importer_mapper = new Rt_Importer_Mapper( $this->parent_page_slug, $this->page_cap );
 		}
 
@@ -83,16 +79,42 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		public  function hook(){
+		public  function hook( $args ){
 			$this->field_array = apply_filters( 'rtlib_importer_fields', $this->field_array );
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
-			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+
+			$pageflag = isset( $args )  && $args !== false ? true : false;
+			if(  $pageflag ){
+				$this->parent_page_slug      = $args['parent_slug'];
+				$this->page_cap              = $args['page_capability'];
+
+				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+			}else{
+				add_action( 'rt_configuration_add_tab', array( $this, 'register_tab' ) );
+				add_action( 'rt_configuration_tab_ui', array( $this, 'register_tab_ui' ) );
+			}
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 
 		function init_importer_help(){
 			global $rt_importer_help;
 			$rt_importer_help = new Rt_Importer_Help();
+		}
+
+		public function register_tab( $tabs ){
+			$tabs[] = array(
+				'href' => get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) ),
+				'name' => __( ucfirst( self::$page_name ) ),
+				'slug' => RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug,
+			);
+			$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
+			return $tabs;
+		}
+
+		public function register_tab_ui( $current_tab ){
+			if( RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug == $current_tab ){
+				$this->ui();
+			}
 		}
 
 		/**
@@ -104,6 +126,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			} else {
 				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'ui' ) );
 			}
+			$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
 		}
 
 		/**
@@ -140,7 +163,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		}
 
 		public function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $_REQUEST['page'] .'&type='.$_REQUEST['type']: self::$page_slug .'&type=gravity' ) : self::$page_slug .'&type=gravity';
+			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=gravity' ) : $this->base_url .'&type=gravity';
 		}
 
 		public function importer_tab(){
@@ -152,13 +175,13 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			// Setup core admin tabs
 			$tabs = array(
 				/*array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) ),
+					'href' => $this->base_url . '&type=CSV',
 					'name' => __( 'CSV' ),
-					'slug' => self::$page_slug,
+					'slug' => $this->base_url . '&type=CSV' ,
 				),*/ array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug.'&type=gravity' ), 'admin.php' ) ),
+					'href' => $this->base_url . '&type=gravity',
 					'name' => __( 'Gravity' ),
-					'slug' => self::$page_slug .'&type=gravity',
+					'slug' => $this->base_url .'&type=gravity',
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
@@ -228,8 +251,12 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			<div class="wrap">
 			<h2>Importer</h2>
 			<?php $this->importer_tab();
-			$_REQUEST['type'] = 'gravity'; // remove when csv is active
-			if ( isset( $_REQUEST['type'] ) && 'gravity' == $_REQUEST['type'] ) {
+
+			if ( ! isset( $_REQUEST['type'] ) ){
+				$_REQUEST['type'] = 'gravity'; // remove when csv is active
+			}
+
+			if  ( 'gravity' == $_REQUEST['type'] ) {
 				$forms    = $this->get_forms(); //get gravity for list
 
 				if ( isset( $forms ) && ! empty( $forms ) ) {
