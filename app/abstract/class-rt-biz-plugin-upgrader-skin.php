@@ -35,7 +35,7 @@ if ( ! class_exists( 'Rt_Biz_Plugin_Upgrader_Skin' ) ) {
 			parent::__construct( $args );
 		}
 
-		public function request_filesystem_credentials( $error = false ) {
+		public function request_filesystem_credentials( $error = false, $context = false, $allow_relaxed_file_ownership = false) {
 			return true;
 		}
 
