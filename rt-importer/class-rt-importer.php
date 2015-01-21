@@ -59,10 +59,18 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		/**
 		 * @param $args
 		 */
-		public function __construct( $args = false ) {
+		public function __construct( $parent_slug, $cap = '', $admin_menu = true ) {
+			$this->pageflag = $admin_menu;
+			$this->parent_page_slug = $parent_slug;
+			if ( $this->pageflag ) {
+				$this->page_cap = $cap;
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
+			} else {
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
+			}
 			$this->auto_loader();
 			$this->db_upgrade();
-			$this->hook( $args );
+			$this->hook();
 			$this->init();
 			$this->init_importer_help();
 			$this->rt_importer_ajax_hooks();
@@ -72,7 +80,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			global $rtlib_gravity_fields_mapping_model, $rtlib_importer_mapper;
 
 			$rtlib_gravity_fields_mapping_model = new Rtlib_Gravity_Fields_Mapping_Model();
-			$rtlib_importer_mapper = new Rt_Importer_Mapper( $this->parent_page_slug, $this->page_cap );
+			$rtlib_importer_mapper = new Rt_Importer_Mapper( $this->parent_page_slug, $this->page_cap, $this->pageflag );
 		}
 
 		public function auto_loader() {
@@ -87,21 +95,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		public  function hook( $args ){
+		public  function hook(){
 			$this->field_array = apply_filters( 'rtlib_importer_fields', $this->field_array );
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
-
-			$this->pageflag = isset( $args )  && $args !== false ? true : false;
 			if ( $this->pageflag ){
-				$this->parent_page_slug      = $args['parent_slug'];
-				$this->page_cap              = $args['page_capability'];
-
 				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
-			} else {
-				add_action( 'rt_configuration_add_tab', array( $this, 'register_tab' ) );
-				add_action( 'rt_configuration_tab_ui', array( $this, 'register_tab_ui' ) );
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
@@ -109,21 +107,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		function init_importer_help(){
 			global $rt_importer_help;
 			$rt_importer_help = new Rt_Importer_Help();
-		}
-
-		public function register_tab( $tabs ){
-			$tabs[] = array(
-				'href' => get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) ),
-				'name' => __( ucfirst( self::$page_name ) ),
-				'slug' => RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug,
-			);
-			return $tabs;
-		}
-
-		public function register_tab_ui( $current_tab ){
-			if( RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug == $current_tab ){
-				$this->ui();
-			}
 		}
 
 		/**
@@ -921,6 +904,5 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			wp_enqueue_style( 'jquery-ui-custom',  plugin_dir_url( __FILE__ ).'/assets/css/jquery-ui-1.9.2.custom.css' );
 			wp_enqueue_style( 'importer-setting-css',  plugin_dir_url( __FILE__ ).'/assets/css/rt_importer.css' );
 		}
-
 	}
 }

@@ -51,11 +51,15 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		 *
 		 * @since
 		 */
-		public function __construct( $parent_page_slug = false, $page_cap = false ) {
-
-			$this->page_cap = $page_cap;
+		public function __construct( $parent_page_slug = false, $page_cap = false, $pageflag = true ) {
+			$this->pageflag = $pageflag;
 			$this->parent_page_slug = $parent_page_slug;
-
+			if ( $this->pageflag ) {
+				$this->page_cap = $page_cap;
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
+			} else {
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
+			}
 			$this->hooks();
 		}
 
@@ -66,32 +70,12 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		 * @since
 		 */
 		function hooks() {
-			$this->pageflag = isset( $this->page_cap )  && $this->page_cap !== false && isset( $this->parent_page_slug )  && $this->parent_page_slug !== false ? true : false;
 			if ( $this->pageflag ) {
 				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
-			} else {
-				add_action( 'rt_configuration_add_tab', array( $this, 'register_tab' ) );
-				add_action( 'rt_configuration_tab_ui', array( $this, 'register_tab_ui' ) );
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
 			add_action( 'wp_ajax_rtlib_delete_mapping', array( $this, 'delete_mapping_ajax' ) );
 			add_action( 'wp_ajax_rtlib_enable_mapping', array( $this, 'enable_mapping_ajax' ) );
-		}
 
-		public function register_tab( $tabs ){
-			$tabs[] = array (
-				'href' => get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) ),
-				'name' => __( ucfirst( self::$page_name ) ),
-				'slug' => RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug,
-			);
-			return $tabs;
-		}
-
-		public function register_tab_ui( $current_tab ){
-			if( RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug == $current_tab ){
-				$this->ui();
-			}
 		}
 
 		function register_attribute_menu(){
