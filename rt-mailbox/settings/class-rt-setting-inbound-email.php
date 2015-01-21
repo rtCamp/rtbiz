@@ -125,7 +125,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			?>
 			<form id="frm-new-mail" method="post" action="">
 				<div class="mail_list" >
-					<h2 class="title">Mail List</h2><?php
+					<h3 class="title">Mail List</h3><?php
 					$rCount = 0;
 					$is_empty_mailbox_check = true;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
