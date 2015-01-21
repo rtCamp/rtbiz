@@ -1,17 +1,4 @@
-<?php
-
-if ( ! isset( $_REQUEST['type'] ) ) {
-	$_REQUEST['type'] = 'gravity';
-}
-?>
-
-<div class="wrap">
-	<h2><?php _e( 'Importer Mapping List' ) ?></h2>
-
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rt_Importer_Mapper::$page_slug ) ); ?>" class="nav-tab nav-tab-active">Gravity</a>
-</div>
-
+<?php ?>
 <table class="wp-list-table widefat rtlib-gravity-mapping" cellspacing="0">
 	<thead>
 	<tr>
@@ -67,4 +54,3 @@ if ( ! isset( $_REQUEST['type'] ) ) {
 	<?php } ?>
 	</tbody>
 </table>
-</div>

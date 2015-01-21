@@ -22,7 +22,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		static $page_name = 'Importer';
 
 		/**
-		 * @var $page_slug - Page slug for gravity importer Page
+		 * @var $page_slug - Page slug for importer Page
 		 */
 		static $page_slug = 'rtbiz-importer';
 
@@ -37,15 +37,23 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		var $page_cap;
 
 		/**
-		 * @var $page_cap - Capability for Attributes Admin Page; if not passed, default cap will be 'manage_options'
+		 * @var $base_url - url for page
 		 */
 		var $base_url;
+
+		/**
+		 * @var $pageflag - flag for page :  true for page | false for subpage
+		 */
+		var $pageflag;
 
 		/**
 		 * @var $post_type - If any post type passed, only attributes for those post type will be listed on the page.
 		 */
 		var $post_type = array();
 
+		/**
+		 * @var array
+		 */
 		var $field_array = array();
 
 		/**
@@ -83,15 +91,17 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$this->field_array = apply_filters( 'rtlib_importer_fields', $this->field_array );
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
 
-			$pageflag = isset( $args )  && $args !== false ? true : false;
-			if(  $pageflag ){
+			$this->pageflag = isset( $args )  && $args !== false ? true : false;
+			if ( $this->pageflag ){
 				$this->parent_page_slug      = $args['parent_slug'];
 				$this->page_cap              = $args['page_capability'];
 
 				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-			}else{
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
+			} else {
 				add_action( 'rt_configuration_add_tab', array( $this, 'register_tab' ) );
 				add_action( 'rt_configuration_tab_ui', array( $this, 'register_tab_ui' ) );
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
@@ -107,7 +117,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				'name' => __( ucfirst( self::$page_name ) ),
 				'slug' => RT_BIZ_Configuration::$page_slug  . '&subpage=' .  self::$page_slug,
 			);
-			$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => RT_BIZ_Configuration::$page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			return $tabs;
 		}
 
@@ -126,7 +135,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			} else {
 				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'ui' ) );
 			}
-			$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
 		}
 
 		/**
@@ -169,15 +177,13 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		public function importer_tab(){
 			// Declare local variables
 			$tabs_html    = '';
-			$idle_class   = 'nav-tab';
-			$active_class = 'nav-tab nav-tab-active';
 
 			// Setup core admin tabs
 			$tabs = array(
 				/*array(
 					'href' => $this->base_url . '&type=CSV',
 					'name' => __( 'CSV' ),
-					'slug' => $this->base_url . '&type=CSV' ,
+					'slug' => self::$page_slug . '&type=CSV' ,
 				),*/ array(
 					'href' => $this->base_url . '&type=gravity',
 					'name' => __( 'Gravity' ),
@@ -187,19 +193,38 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
 
 			if ( ! empty( $filterd_tab ) ){
-				$tabs_html .= '<div class="nav-tab-wrapper" >';
-				// Loop through tabs and build navigation
-				foreach ( array_values( $filterd_tab ) as $tab_data ) {
-					$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
-					$tab_class  = $is_current ? $active_class : $idle_class;
+				if ( $this->pageflag ) {
+					$idle_class   = 'nav-tab';
+					$active_class = 'nav-tab nav-tab-active';
+					$tabs_html .= '<div class="nav-tab-wrapper" >';
+					// Loop through tabs and build navigation
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data[ 'slug' ] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
 
-					if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
-						$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+						if ( isset( $tab_data[ 'class' ] ) && is_array( $tab_data[ 'class' ] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data[ 'class' ] );
+						}
+
+						$tabs_html .= '<a href="' . $tab_data[ 'href' ] . '" class="' . $tab_class . '">' . $tab_data[ 'name' ] . '</a>';
 					}
+					$tabs_html .= '</div>';
+				} else {
+					$idle_class   = '';
+					$active_class = 'current';
+					$tabs_html .= '<div class="nav-tab-wrapper" style="height: 40px;" ><ul class="subsubsub">';
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data[ 'slug' ] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
 
-					$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
+						if ( isset( $tab_data[ 'class' ] ) && is_array( $tab_data[ 'class' ] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data[ 'class' ] );
+						}
+
+						$tabs_html .= '<li class="' . $tab_data[ 'name' ] . '"><a href="' . $tab_data[ 'href' ] . '" class="' . $tab_class . '">' . $tab_data[ 'name' ] . '</a> | </li>';
+					}
+					$tabs_html .= '</ul></div>';
 				}
-				$tabs_html .= '</div>';
 			}
 
 			// Output the tabs
@@ -247,10 +272,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 		public function ui(){
 
-			$this->load_handlebars_templates(); ?>
+			$this->load_handlebars_templates();
+			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
 			<div class="wrap">
-			<h2>Importer</h2>
-			<?php $this->importer_tab();
+			<?php echo '<' . $title_ele . '>' .  __( 'Importer' ) . '</' . $title_ele . '>';
+			$this->importer_tab();
 
 			if ( ! isset( $_REQUEST['type'] ) ){
 				$_REQUEST['type'] = 'gravity'; // remove when csv is active
