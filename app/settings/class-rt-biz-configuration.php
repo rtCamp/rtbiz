@@ -115,6 +115,9 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 
 		public function ui(){
 			global $rt_importer, $rtlib_importer_mapper, $rt_MailBox, $rt_biz_rt_attributes;
+			if ( ! isset( $_REQUEST['subpage'] ) ){
+				$_REQUEST['subpage'] = Rt_Mailbox::$page_slug;
+			}
 			?>
 			<div class="wrap">
 				<h2>Configuration</h2>
