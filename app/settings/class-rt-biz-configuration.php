@@ -68,8 +68,24 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 			$active_class = 'nav-tab nav-tab-active';
 
 			// Setup core admin tabs
-			$tabs = array();
-			$filterd_tab = apply_filters( 'rt_configuration_add_tab', $tabs, self::$page_slug );
+			$tabs = array(
+				array(
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Mailbox::$page_slug ), 'admin.php' ) ),
+					'name' => __( ucfirst( Rt_Mailbox::$page_name ) ),
+					'slug' => self::$page_slug  . '&subpage=' .  Rt_Mailbox::$page_slug,
+				),
+				array(
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Importer::$page_slug ), 'admin.php' ) ),
+					'name' => __( ucfirst( Rt_Importer::$page_name ) ),
+					'slug' => self::$page_slug  . '&subpage=' .  Rt_Importer::$page_slug,
+				),
+				array (
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Importer_Mapper::$page_slug ), 'admin.php' ) ),
+					'name' => __( ucfirst( Rt_Importer_Mapper::$page_name ) ),
+					'slug' => self::$page_slug  . '&subpage=' .  Rt_Importer_Mapper::$page_slug,
+				),
+			);
+			$filterd_tab = apply_filters( 'rt_configuration_add_tab', $tabs );
 			if ( ! empty( $filterd_tab ) ){
 				$tabs_html .= '<div class="nav-tab-wrapper" >';
 				// Loop through tabs and build navigation
@@ -93,12 +109,21 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 
 
 		public function ui(){
+			global $rt_importer, $rtlib_importer_mapper, $rt_MailBox;
 			?>
 			<div class="wrap">
 				<h2>Configuration</h2>
 				<?php $this->importer_tab(); ?>
 			</div>
 			<?php
+			if ( self::$page_slug  . '&subpage=' .  Rt_Importer::$page_slug == $this->get_current_tab() ) {
+				$rt_importer->ui();
+			} elseif ( self::$page_slug  . '&subpage=' .  Rt_Importer_Mapper::$page_slug == $this->get_current_tab() ) {
+				$rtlib_importer_mapper->ui();
+			} elseif ( self::$page_slug  . '&subpage=' .  Rt_Mailbox::$page_slug == $this->get_current_tab() ) {
+				$rt_MailBox->render_mailbox_setting_page();
+			}
+
 			do_action( 'rt_configuration_tab_ui', $this->get_current_tab() );
 		}
 
