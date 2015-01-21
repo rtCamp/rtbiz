@@ -84,6 +84,11 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 					'name' => __( ucfirst( Rt_Importer_Mapper::$page_name ) ),
 					'slug' => self::$page_slug  . '&subpage=' .  Rt_Importer_Mapper::$page_slug,
 				),
+				array (
+					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Biz_Attributes::$attributes_page_slug ), 'admin.php' ) ),
+					'name' => __( 'Attributes' ),
+					'slug' => self::$page_slug  . '&subpage=' .  Rt_Biz_Attributes::$attributes_page_slug,
+				),
 			);
 			$filterd_tab = apply_filters( 'rt_configuration_add_tab', $tabs );
 			if ( ! empty( $filterd_tab ) ){
@@ -109,7 +114,7 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 
 
 		public function ui(){
-			global $rt_importer, $rtlib_importer_mapper, $rt_MailBox;
+			global $rt_importer, $rtlib_importer_mapper, $rt_MailBox, $rt_biz_rt_attributes;
 			?>
 			<div class="wrap">
 				<h2>Configuration</h2>
@@ -122,6 +127,8 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 				$rtlib_importer_mapper->ui();
 			} elseif ( self::$page_slug  . '&subpage=' .  Rt_Mailbox::$page_slug == $this->get_current_tab() ) {
 				$rt_MailBox->render_mailbox_setting_page();
+			} elseif ( self::$page_slug  . '&subpage=' .  Rt_Biz_Attributes::$attributes_page_slug == $this->get_current_tab() ) {
+				$rt_biz_rt_attributes->render_attributes_page();
 			}
 
 			do_action( 'rt_configuration_tab_ui', $this->get_current_tab() );
