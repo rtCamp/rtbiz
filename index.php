@@ -280,7 +280,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, null, true );
+			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', Rt_Access_Control::$modules, Rt_Biz::$dashboard_slug, null, false );
 		}
 
 		function init_attributes() {
