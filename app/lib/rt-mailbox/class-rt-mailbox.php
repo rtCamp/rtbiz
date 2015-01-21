@@ -8,7 +8,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
-		static $page_name = 'mailbox';
+		/**
+		 * @var $page_slug - Page slug for Mailbox Page
+		 */
+		static $page_slug = 'mailbox';
+
+		static $page_name = 'Mailbox';
 
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
@@ -50,18 +55,32 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $parent_page_slug;
 
 		/**
-		 * @var $page_slug - Page slug for Mailbox Page
-		 */
-		var $page_slug;
-
-		/**
 		 * @var $page_cap - Capability for Mailbox Admin Page; if not passed, default cap will be 'manage_options'
 		 */
 		var $page_cap;
+
+		/**
+		 * @var $base_url - url for page
+		 */
+		var $base_url;
+
+		/**
+		 * @var $pageflag - flag for page :  true for page | false for subpage
+		 */
+		var $pageflag;
+
 		public $modules = array();
 
-		function __construct( $cap, $module = array(), $setting_page_parent_slug = '', $plugin_path_for_deactivate_cron ) {
-			$this->add_mailbox_page( self::$page_name, $setting_page_parent_slug, $cap );
+		function __construct( $plugin_path_for_deactivate_cron, $module = array(), $parent_slug, $cap = '', $admin_menu = true ) {
+			$this->pageflag = $admin_menu;
+			$this->parent_page_slug = $parent_slug;
+			if ( $this->pageflag ) {
+				$this->page_cap = $cap;
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
+			} else {
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
+			}
+			$this->add_mailbox_page();
 			$this->auto_loader();
 			$this->modules = $module;
 			$this->init_rt_mail_models();
@@ -70,7 +89,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->init_mailbox_help();
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
 			$this->db_upgrade();
-			$this->page_cap = $cap;
 		}
 		function init_mailbox_help(){
 			global $rt_mailbox_help;
@@ -84,7 +102,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		function init_mail_functions(){
 			global $rt_setting_inbound_email, $rt_setting_imap_server, $rt_mail_settings;
-			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email();
+			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email( $this->base_url );
 			$rt_setting_imap_server     = new RT_Setting_Imap_Server();
 			$rt_mail_settings           = new Rt_Mail_Settings();
 		}
@@ -117,22 +135,25 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		function register_attribute_menu() {
 			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
+				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'render_mailbox_setting_page' ) );
 			} else {
-				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, $this->page_slug, array( $this, 'render_mailbox_setting_page' ) );
+				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'render_mailbox_setting_page' ) );
 			}
 		}
 
 		function render_mailbox_setting_page(){
-			?>
+			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
 			<div class="wrap">
-			<h2> <?php echo __( 'Mailbox Setting' ); ?></h2>
 			<?php
+			echo '<' . $title_ele . '>' . __( 'Mailbox Setting' ) . '</' . $title_ele . '>';
 			$this->mailbox_tabs();
+			if ( ! isset( $_REQUEST['type'] ) ){
+				$_REQUEST['type'] = 'mailbox'; // remove when csv is active
+			}
 			do_action( 'rt_mailbox_randed_view_before' );
-			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
+			if ( isset( $_REQUEST['type'] ) && 'imap' == $_REQUEST['type'] ) {
 				echo $this->imap_view();
-			} else if ( isset( $_REQUEST['page'] ) && self::$page_name == $_REQUEST['page'] ){
+			} else if ( isset( $_REQUEST['type'] ) && self::$page_slug == $_REQUEST['type'] ){
 				$this->mailbox_view();
 			}
 			do_action( 'rt_mailbox_randed_view_after' );
@@ -140,12 +161,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		}
 
-		function add_mailbox_page( $page_slug, $parent_page_slug = '', $page_cap = 'manage_options' ) {
-			$this->page_slug             = $page_slug;
-			$this->parent_page_slug      = $parent_page_slug;
-			$this->page_cap              = $page_cap;
-
-			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+		function add_mailbox_page() {
+			if (  $this->pageflag ) {
+				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+			}
 		}
 
 		function mailbox_tabs( $active_tab = '' ){
@@ -157,31 +176,52 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			// Setup core admin tabs
 			$tabs = array(
 				array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name ), 'admin.php' ) ),
+					'href' => $this->base_url . '&type=mailbox',
 					'name' => __( ucfirst( self::$page_name ), self::$page_name ),
-					'slug' => self::$page_name,
+					'slug' => $this->base_url . '&type=mailbox',
 				), array(
-					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_name.'&tab=imap' ), 'admin.php' ) ),
+					'href' => $this->base_url . '&type=imap',
 					'name' => __( 'IMAP', self::$page_name ),
-					'slug' => self::$page_name.'&tab=imap',
+					'slug' => $this->base_url . '&type=imap',
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
 
 			if ( ! empty( $filterd_tab ) ){
-				$tabs_html .= '<div class="nav-tab-wrapper" >';
-				// Loop through tabs and build navigation
-				foreach ( array_values( $filterd_tab ) as $tab_data ) {
-					$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
-					$tab_class  = $is_current ? $active_class : $idle_class;
+				if ( $this->pageflag ) {
 
-					if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ){
-						$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+					$idle_class   = 'nav-tab';
+					$active_class = 'nav-tab nav-tab-active';
+
+					$tabs_html .= '<div class="nav-tab-wrapper" >';
+					// Loop through tabs and build navigation
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
+
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+						}
+
+						$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
 					}
+					$tabs_html .= '</div>';
+				} else {
+					$idle_class   = '';
+					$active_class = 'current';
+					$tabs_html .= '<div class="nav-tab-wrapper" style="height: 40px;" ><ul class="subsubsub">';
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
 
-					$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+						}
+
+						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a> | </li>';
+					}
+					$tabs_html .= '</ul></div>';
 				}
-				$tabs_html .= '</div>';
 			}
 
 			// Output the tabs
@@ -195,8 +235,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		static function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['tab'] )? $_REQUEST['page'] .'&tab='.$_REQUEST['tab']: $_REQUEST['page'] ) : 'mailbox';
+		public function get_current_tab(){
+			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=mailbox' ) : $this->base_url .'&type=mailbox';
 		}
 
 		function mailbox_view(){

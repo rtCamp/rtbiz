@@ -31,7 +31,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 */
 		var $client = null;
 
-		function __construct() {
+		/**
+		 * @var $base_url - url for page
+		 */
+		var $base_url;
+
+		function __construct( $base_url ) {
+			$this->base_url = $base_url;
 			add_action( 'init', array( $this, 'save_replay_by_email' ) );
 		}
 
@@ -119,7 +125,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			?>
 			<form id="frm-new-mail" method="post" action="">
 				<div class="mail_list" >
-					<h2 class="title">Mail List</h2><?php
+					<h3 class="title">Mail List</h3><?php
 					$rCount = 0;
 					$is_empty_mailbox_check = true;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
@@ -284,7 +290,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					//								'post_type' => Rt_HD_Module::$post_type,
 					//								'page'      => 'rthd-settings',
 					//							), admin_url( 'admin.php' ) ) ) . '";</script>';
-						echo 'window.location="'. admin_url( 'admin.php' ) .'?page='.Rt_Mailbox::$page_name.'"; </script>';
+						echo 'window.location="'. $this->base_url . '&type=mailbox' .'"; </script>';
 					die();
 				}
 				if ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) ) {
