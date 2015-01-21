@@ -32,6 +32,16 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		var $page_cap;
 
 		/**
+		 * @var $base_url - url for page
+		 */
+		var $base_url;
+
+		/**
+		 * @var $pageflag - flag for page :  true for page | false for subpage
+		 */
+		var $pageflag;
+
+		/**
 		 * @var $parent_page_slug - Page slug under which the attributes page is to be shown. If null / empty then an individual Menu Page will be added
 		 */
 		var $parent_page_slug;
@@ -41,11 +51,15 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		 *
 		 * @since
 		 */
-		public function __construct( $parent_page_slug, $page_cap ) {
-
-			$this->page_cap = $page_cap;
+		public function __construct( $parent_page_slug = false, $page_cap = false, $pageflag = true ) {
+			$this->pageflag = $pageflag;
 			$this->parent_page_slug = $parent_page_slug;
-
+			if ( $this->pageflag ) {
+				$this->page_cap = $page_cap;
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
+			} else {
+				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
+			}
 			$this->hooks();
 		}
 
@@ -56,8 +70,9 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		 * @since
 		 */
 		function hooks() {
-			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-
+			if ( $this->pageflag ) {
+				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+			}
 			add_action( 'wp_ajax_rtlib_delete_mapping', array( $this, 'delete_mapping_ajax' ) );
 			add_action( 'wp_ajax_rtlib_enable_mapping', array( $this, 'enable_mapping_ajax' ) );
 
@@ -106,6 +121,70 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			die( 0 );
 		}
 
+		public function get_current_tab(){
+			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=gravity' ) : $this->base_url .'&type=gravity';
+		}
+
+		public function importer_tab(){
+			// Declare local variables
+			$tabs_html    = '';
+
+			// Setup core admin tabs
+			$tabs = array(
+				/*array(
+					'href' => $this->base_url . '&type=CSV',
+					'name' => __( 'CSV' ),
+					'slug' => self::$page_slug . '&type=CSV' ,
+				),*/ array(
+					'href' => $this->base_url . '&type=gravity',
+					'name' => __( 'Gravity' ),
+					'slug' => $this->base_url .'&type=gravity',
+				),
+			);
+			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
+
+			if ( ! empty( $filterd_tab ) ){
+				if ( $this->pageflag ) {
+
+					$idle_class   = 'nav-tab';
+					$active_class = 'nav-tab nav-tab-active';
+
+					$tabs_html .= '<div class="nav-tab-wrapper" >';
+					// Loop through tabs and build navigation
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
+
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+						}
+
+						$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
+					}
+					$tabs_html .= '</div>';
+				} else {
+					$idle_class   = '';
+					$active_class = 'current';
+					$tabs_html .= '<div class="nav-tab-wrapper" style="height: 40px;" ><ul class="subsubsub">';
+					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$tab_class  = $is_current ? $active_class : $idle_class;
+
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
+						}
+
+						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a> | </li>';
+					}
+					$tabs_html .= '</ul></div>';
+				}
+			}
+
+			// Output the tabs
+			echo $tabs_html;
+		}
+
+
 		/**
 		 * Setting up UI
 		 *
@@ -129,7 +208,19 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 				}
 			}
 			$args['gravity_fields'] = $gravity_fields;
+
+			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
+			<div class="wrap">
+			<?php
+			echo '<' . $title_ele . '>' .  __( 'Importer Mapping List' ) . '</' . $title_ele . '>';
+			$this->importer_tab();
+			if ( ! isset( $_REQUEST['type'] ) ){
+				$_REQUEST['type'] = 'gravity'; // remove when csv is active
+			}
+
 			include dirname( __FILE__ ) . '/template/list-importer-mapper.php';
+
+			?></div><?php
 		}
 
 
