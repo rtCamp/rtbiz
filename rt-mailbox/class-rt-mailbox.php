@@ -196,14 +196,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$tabs_html .= '<div class="nav-tab-wrapper" >';
 					// Loop through tabs and build navigation
 					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data[ 'slug' ] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
-						if ( isset( $tab_data[ 'class' ] ) && is_array( $tab_data[ 'class' ] ) ) {
-							$tab_class .= ' ' . implode( ' ', $tab_data[ 'class' ] );
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
 
-						$tabs_html .= '<a href="' . $tab_data[ 'href' ] . '" class="' . $tab_class . '">' . $tab_data[ 'name' ] . '</a>';
+						$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
 					}
 					$tabs_html .= '</div>';
 				} else {
@@ -211,14 +211,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$active_class = 'current';
 					$tabs_html .= '<div class="nav-tab-wrapper" style="height: 40px;" ><ul class="subsubsub">';
 					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data[ 'slug' ] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
-						if ( isset( $tab_data[ 'class' ] ) && is_array( $tab_data[ 'class' ] ) ) {
-							$tab_class .= ' ' . implode( ' ', $tab_data[ 'class' ] );
+						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
+							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
 
-						$tabs_html .= '<li class="' . $tab_data[ 'name' ] . '"><a href="' . $tab_data[ 'href' ] . '" class="' . $tab_class . '">' . $tab_data[ 'name' ] . '</a> | </li>';
+						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a> | </li>';
 					}
 					$tabs_html .= '</ul></div>';
 				}
