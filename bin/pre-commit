@@ -58,7 +58,7 @@ if [ ${#staged_php_files[@]} != 0 ]; then
 	echo "## phpcs"
 	if command -v phpcs >/dev/null 2>&1; then
 		phpcs_standard=WordPress-Core
-		phpcs -p -s -v --ignore='tests/*,*/vendor/*,app/lib/*,app/helper/class-rt-biz-text-diff.php,bin/*' --standard=$phpcs_standard "${staged_php_files[@]}"
+		phpcs -p -s -v --ignore='tests/*,*/vendor/*' --standard=$phpcs_standard "${staged_php_files[@]}"
 	else
 		echo "Skipping phpcs since not installed"
 	fi

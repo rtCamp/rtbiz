@@ -37,6 +37,15 @@ fi
 
 git_root=$(pwd)
 
+if [ -e readme.txt ]; then
+	$dev_lib_dir/generate-markdown-readme
+	git add readme.md
+fi
+if [ -n "$(git status --porcelain readme.md)" ]; then
+	echo "Please commit (--amend?) the updated readme.md"
+	exit 1
+fi
+
 git pull --ff-only origin master
 git push origin master
 svn_url=$(cat svn-url)
@@ -97,16 +106,14 @@ else
 fi
 
 # rsync all committed files from the Git repo to SVN
-rsync -avz --delete --delete-excluded --exclude '/docs' --exclude '/assets' --exclude '/.git*' --exclude '/dev-lib' --exclude '/.jshint*' --exclude '/svn-url' --exclude '/.travis.yml' $git_tmp_repo_dir/ $svn_tmp_repo_dir/trunk/
+rsync -avz --delete --delete-excluded --exclude 'assets' --exclude '.git*' --exclude 'dev-lib' --exclude '.jshint*' --exclude 'svn-url' --exclude '.travis.yml' $git_tmp_repo_dir/ $svn_tmp_repo_dir/trunk/
 if [ -e $git_tmp_repo_dir/assets/ ]; then
 	mkdir -p $svn_tmp_repo_dir/assets/
 	rsync -avz --delete $git_tmp_repo_dir/assets/ $svn_tmp_repo_dir/assets/
 fi
 cd $svn_tmp_repo_dir
 
-if svn status | grep -s '^!'; then
-    svn status | grep '^!' | awk '{print $2}' | xargs svn delete --force
-fi
+svn status | grep '^!' | awk '{print $2}' | xargs svn delete --force
 svn add --force trunk --auto-props --parents --depth infinity -q
 
 mkdir -p tags
