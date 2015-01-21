@@ -212,7 +212,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param bool   $storage_type_required
 		 * @param bool   $orderby_required
 		 */
-		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false ) {
+		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false, $admin_menu = true ) {
 
 			$this->page_slug             = $page_slug;
 			$this->parent_page_slug      = $parent_page_slug;
@@ -222,9 +222,9 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$this->render_type_required  = $render_type_required;
 			$this->storage_type_required = $storage_type_required;
 			$this->orderby_required      = $orderby_required;
-
-			add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-
+			if ( $admin_menu ) {
+				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
+			}
 			$this->register_attribute_mappings();
 		}
 
