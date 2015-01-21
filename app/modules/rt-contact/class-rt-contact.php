@@ -785,18 +785,22 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * create contact
 		 *
-		 * @param $name
+		 * @param        $name
 		 * @param string $description
+		 * @param string $email
+		 *
 		 * @return int|WP_Error
 		 */
-		function add_contact( $name, $description = '' ) {
+		function add_contact( $name, $description = '', $email = '' ) {
 			$contact_id = wp_insert_post( array(
 				                              'post_title'   => $name,
 				                              'post_content' => $description,
 				                              'post_type'    => $this->post_type,
 				                              'post_status'  => 'publish',
 			                              ) );
-
+			if ( ! empty( $email ) ){
+				rt_biz_update_entity_meta( $contact_id, $this->primary_email_key, $email );
+			}
 			return $contact_id;
 		}
 

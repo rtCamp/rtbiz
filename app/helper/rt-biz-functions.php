@@ -234,13 +234,15 @@ function rt_biz_add_company( $name, $note = '', $address = '', $country = '', $m
 /**
  * add a contact
  *
- * @param $name
+ * @param        $name
  * @param string $description
+ * @param string $email
+ *
  * @return mixed
  */
-function rt_biz_add_contact( $name, $description = '' ) {
+function rt_biz_add_contact( $name, $description = '', $email = '' ) {
 	global $rt_contact;
-	return $rt_contact->add_contact( $name, $description );
+	return $rt_contact->add_contact( $name, $description, $email );
 }
 
 function rt_biz_clear_post_connections_to_contact( $post_type, $from ) {
