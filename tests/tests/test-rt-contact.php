@@ -13,6 +13,10 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->Rt_Contact = new Rt_Contact();
 	}
 
+	function test_tax_exist(){
+		$this->assertEquals( true, taxonomy_exists( Rt_Contact::$user_category_taxonomy ) );
+	}
+
 	function test_tax(){
 		$cust = term_exists( Rt_Contact::$customer_category_slug, Rt_Contact::$user_category_taxonomy );
 		$this->assertTrue( ! empty( $cust  ), 'term customer not exist in user category' );
@@ -30,13 +34,23 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 
 	function test_add_contact(){
 		$this->assertEquals( 0, sizeof( get_posts( array( 'post_type'=> rt_biz_get_contact_post_type() ) ) ) );
-		$this->Rt_Contact->add_contact( 'sherlock holmes' );
+		$this->Rt_Contact->add_contact( 'sherlock holmes','','221b_backer@street.com' );
 		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
 		$this->assertEquals( 1, sizeof( $posts ) ) ;
-		update_post_meta( $posts[0]->ID, Rt_Entity::$meta_key_prefix.$this->Rt_Contact->primary_email_key, '221b_backer@street.com' );
 		$this->assertEquals( false, biz_is_primary_email_unique( '221b_backer@street.com' ) );
 		$this->assertEquals( true, biz_is_primary_email_unique( 'james_moriart@woman.com' ) );
 	}
+
+	function test_get_contact_by_email(){
+		$this->Rt_Contact->add_contact( 'sherlock holmes' );
+		$this->Rt_Contact->add_contact( 'John Watson' );
+		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
+		$this->assertEquals( 2, sizeof( $posts ) ) ;
+		update_post_meta( $posts[1]->ID, Rt_Entity::$meta_key_prefix.$this->Rt_Contact->primary_email_key, '221b_backer@street.com' );
+		$contact = rt_biz_get_contact_by_email('221b_backer@street.com');
+		$this->assertEquals( 'sherlock holmes', $contact[0]->post_title ) ;
+	}
+
 	function test_functions(){
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'check_primary_email_for_admin_notice' ), 'method setup_meta_fields does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_header' ), 'method print_metabox_js does not exist in rtbiz') ;

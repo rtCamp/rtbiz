@@ -42,7 +42,6 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			);
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
-
 		}
 
 
