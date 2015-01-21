@@ -209,16 +209,16 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				} else {
 					$idle_class   = '';
 					$active_class = 'current';
-					$tabs_html .= '<div class="nav-tab-wrapper" style="height: 40px;" ><ul class="subsubsub">';
-					foreach ( array_values( $filterd_tab ) as $tab_data ) {
+					$tabs_html .= '<div class="sub-nav-tab-wrapper" ><ul class="subsubsub">';
+					foreach ( array_values( $filterd_tab ) as $i => $tab_data ) {
 						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
 							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
-
-						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a> | </li>';
+						$separator = $i != ( count( $filterd_tab ) - 1 ) ? ' | ' : '';
+						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>'. $separator .'</li>';
 					}
 					$tabs_html .= '</ul></div>';
 				}
