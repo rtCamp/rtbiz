@@ -79,12 +79,12 @@ if ( ! class_exists( 'RT_BIZ_Configuration' ) ) {
 					'name' => __( ucfirst( Rt_Importer::$page_name ) ),
 					'slug' => self::$page_slug  . '&subpage=' .  Rt_Importer::$page_slug,
 				),
-				array (
+				array(
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Importer_Mapper::$page_slug ), 'admin.php' ) ),
 					'name' => __( ucfirst( Rt_Importer_Mapper::$page_name ) ),
 					'slug' => self::$page_slug  . '&subpage=' .  Rt_Importer_Mapper::$page_slug,
 				),
-				array (
+				array(
 					'href' => get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug . '&subpage=' .  Rt_Biz_Attributes::$attributes_page_slug ), 'admin.php' ) ),
 					'name' => __( 'Attributes' ),
 					'slug' => self::$page_slug  . '&subpage=' .  Rt_Biz_Attributes::$attributes_page_slug,
