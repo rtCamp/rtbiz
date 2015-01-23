@@ -655,3 +655,13 @@ function biz_is_primary_email_unique_company( $email ) {
 	}
 	return false;
 }
+
+function rtbiz_get_contact_edit_link( $email ){
+	$post = rt_biz_get_contact_by_email( $email );
+	if ( ! empty( $post ) ){
+		return get_edit_post_link( $post[0]->ID );
+	}
+	else {
+		return '#';
+	}
+}
