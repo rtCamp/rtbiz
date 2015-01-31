@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						e.preventDefault();
 						rtbiz_welcomePanel.addClass('hidden');
 						rtbiz_updateWelcomePanel( 0 );
-						$('#wp_welcome_panel-hide').prop('checked', false);
+						$('#rtbiz_welcome_panel-hide').prop('checked', false);
 					});
 
 					$(document).on('click', rtbiz_welcomePanelHide, function() {
