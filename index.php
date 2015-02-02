@@ -455,7 +455,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				add_filter( 'rt_guide_tour_list', array( $this, 'rtbiz_quide_tour' ) );
 
 				add_filter( 'admin_notices', array( $this, 'rtbiz_admin_notices' ) );
+				add_action( 'wp_ajax_rtbiz_hide_offering_notice', array( $this, 'rtbiz_hide_offering_notice' ), 10 );
 			}
+		}
+
+		function rtbiz_hide_offering_notice(){
+			global $current_user;
+			$user_id = $current_user->ID;
+			add_user_meta( $user_id, 'rtbiz_hide-offering-notice', 'true', true );
+			echo 'true';
+			die();
 		}
 
 		function rtbiz_quide_tour( $pointers ){
@@ -656,9 +665,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function rtbiz_admin_notices(){
 			$settings = biz_get_redux_settings();
-			if ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) {
+			global $current_user ;
+			$user_id = $current_user->ID;
+			if ( ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) && ! get_user_meta( $user_id, 'rtbiz_hide-offering-notice' ) ) {
 				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
-				echo '<div class="updated" style="padding: 10px 10px 10px;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a></div>';
+				echo '<div class="updated rtbiz-offering-notice" style="padding: 10px 10px 10px;"><div style="display: inline;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a>';
+				echo '</div><a href="#" class="rtbiz_offering_dissmiss">x</a></div>';
 			}
 		}
 
@@ -684,7 +696,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function load_styles_scripts() {
 			global $rt_contact, $rt_company;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
-
+			wp_localize_script( 'rt-biz-admin', 'rtbiz_ajax_url_offering', admin_url( 'admin-ajax.php' ) );
 			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && 'edit' == $_REQUEST['action'] ) {
 
 				$post_type = get_post_type( $_REQUEST['post'] );

@@ -95,3 +95,8 @@
 .welcome-panel .welcome-universal-access-alt:before {
 	content: "\f507";
 }
+
+.rtbiz_offering_dissmiss{
+	right: 50px;
+	position: absolute;
+}

@@ -71,4 +71,17 @@ jQuery(document).ready(function($) {
 
 	}
 
+	jQuery('.rtbiz_offering_dissmiss' ).click( function (e ) {
+		e.preventDefault();
+		var param = {
+			action: 'rtbiz_hide_offering_notice'
+		};
+		jQuery.post( rtbiz_ajax_url_offering, param,function(data){
+			data = data.trim();
+			if(data === 'true') {
+				jQuery('.rtbiz-offering-notice' ).hide();
+			}
+		});
+	});
+
 });
