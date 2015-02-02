@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 1.2  
+**Stable tag:** 1.2.1  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -37,8 +37,8 @@ Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
  * Export Library
  * JSON API
+ * UI Enhancements
  * New Enhancements
- * Bug Fixing
 
 **See room for improvement?**
 
@@ -91,6 +91,15 @@ Please refer to the documentation.
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.2.1 ###
+* New Redux Framework updated.
+* Input field validations added for Contacts & Companies additional information
+* New test cases added for plugin functionality.
+* New configuration page for Mailbox & Importer Setup
+* Improved rtBot Comments : Added support for taxonomy changes.
+* `dev-lib` updated
+* Bug fixes
 
 ### 1.2 ###
 * Import Library

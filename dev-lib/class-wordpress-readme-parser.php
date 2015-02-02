@@ -1,13 +1,14 @@
 <?php
-
 /**
  * Lightweight WordPress readme.txt parser and converter to Markdown
  * The WordPress-Plugin-Readme-Parser project is too heavy and has too many dependencies for what we need (we don't need conversion to HTML)
  * @link https://github.com/markjaquith/WordPress-Plugin-Readme-Parser Alternative to WordPress-Plugin-Readme-Parser
  * @version 1.1.1
- * @author Udit Desai <desaiuditd@gmail.com> (@desaiuditd)
+ * @author Weston Ruter <weston@xwp.co> (@westonruter)
+ * @copyright Copyright (c) 2013, XWP <https://xwp.co/>
  * @license GPLv2+
  */
+
 class WordPress_Readme_Parser {
 	public $path;
 	public $source;
@@ -32,19 +33,19 @@ class WordPress_Readme_Parser {
 		if ( ! $syntax_ok ) {
 			throw new Exception( 'Malformed metadata block' );
 		}
-		$this->title             = $matches[1];
+		$this->title = $matches[1];
 		$this->short_description = $matches[3];
-		$readme_txt_rest         = $matches[4];
-		$this->metadata          = array_fill_keys( array( 'Contributors', 'Tags', 'Requires at least', 'Tested up to', 'Stable tag', 'License', 'License URI' ), null );
+		$readme_txt_rest = $matches[4];
+		$this->metadata = array_fill_keys( array( 'Contributors', 'Tags', 'Requires at least', 'Tested up to', 'Stable tag', 'License', 'License URI' ), null );
 		foreach ( explode( "\n", $matches[2] ) as $metadatum ) {
 			if ( ! preg_match( '/^(.+?):\s+(.+)$/', $metadatum, $metadataum_matches ) ) {
 				throw new Exception( "Parse error in $metadatum" );
 			}
-			list( $name, $value ) = array_slice( $metadataum_matches, 1, 2 );
+			list( $name, $value )  = array_slice( $metadataum_matches, 1, 2 );
 			$this->metadata[ $name ] = $value;
 		}
 		$this->metadata['Contributors'] = preg_split( '/\s*,\s*/', $this->metadata['Contributors'] );
-		$this->metadata['Tags']         = preg_split( '/\s*,\s*/', $this->metadata['Tags'] );
+		$this->metadata['Tags'] = preg_split( '/\s*,\s*/', $this->metadata['Tags'] );
 
 		$syntax_ok = preg_match_all( '/(?:^|\n)== (.+?) ==\n(.+?)(?=\n== |$)/s', $readme_txt_rest, $section_matches, PREG_SET_ORDER );
 		if ( ! $syntax_ok ) {
@@ -57,14 +58,23 @@ class WordPress_Readme_Parser {
 			$body        = trim( array_shift( $section_match ) );
 			$subsections = array();
 
-			// @todo Parse out front matter /(.+?)(\n=\s+.+$)/s
+			// Check if there is front matter
+			if ( preg_match( '/^(\s*[^=].+?)(?=\n=|$)(.*$)/s', $body, $matches ) ) {
+				$body = $matches[1];
+				$subsection_search_area = $matches[2];
+			} else {
+				$subsection_search_area = $body;
+				$body = null;
+			}
 
 			// Parse subsections
-			if ( preg_match_all( '/(?:^|\n)= (.+?) =\n(.+?)(?=\n= |$)/s', $body, $subsection_matches, PREG_SET_ORDER ) ) {
-				$body = null;
+			if ( preg_match_all( '/(?:^|\n)= (.+?) =\n(.+?)(?=\n= |$)/s', $subsection_search_area, $subsection_matches, PREG_SET_ORDER ) ) {
 				foreach ( $subsection_matches as $subsection_match ) {
 					array_shift( $subsection_match );
-					$subsections[] = array( 'heading' => array_shift( $subsection_match ), 'body' => trim( array_shift( $subsection_match ) ), );
+					$subsections[] = array(
+						'heading' => array_shift( $subsection_match ),
+						'body' => trim( array_shift( $subsection_match ) ),
+					);
 				}
 			}
 
@@ -74,29 +84,30 @@ class WordPress_Readme_Parser {
 
 	/**
 	 * Convert the parsed readme.txt into Markdown
-	 *
 	 * @param array|string [$params]
-	 *
 	 * @return string
 	 */
 	function to_markdown( $params = array() ) {
 
 		$general_section_formatter = function ( $body ) use ( $params ) {
-			$body = preg_replace( '#\[youtube\s+(?:http://www\.youtube\.com/watch\?v=|http://youtu\.be/)(.+?)\]#', '[![Play video on YouTube](http://i1.ytimg.com/vi/$1/hqdefault.jpg)](http://www.youtube.com/watch?v=$1)', $body );
-
+			$body = preg_replace(
+				'#\[youtube\s+(?:https?://www\.youtube\.com/watch\?v=|https?://youtu\.be/)(.+?)\]#',
+				'[![Play video on YouTube](https://i1.ytimg.com/vi/$1/hqdefault.jpg)](https://www.youtube.com/watch?v=$1)',
+				$body
+			);
+			// Convert <pre lang="php"> into GitHub-flavored ```php markdown blocks
+			$body = preg_replace(
+				'#\n?<pre lang="(\w+)">\n?(.+?)\n?</pre>\n?#s',
+				"\n" . '```$1' . "\n" . '$2' . "\n" . '```' . "\n",
+				$body
+			);
 			return $body;
 		};
 
 		// Parse sections
 		$section_formatters = array(
-			'Description' => function ( $body ) use ( $params ) {
-				if ( isset( $params['travis_ci_url'] ) ) {
-					$body .= sprintf( "\n\n[![Build Status](%s.png?branch=master)](%s)", $params['travis_ci_url'], $params['travis_ci_url'] );
-				}
-
-				return $body;
-			}, 'Screenshots'                       => function ( $body ) {
-				$body     = trim( $body );
+			'Screenshots' => function ( $body ) {
+				$body = trim( $body );
 				$new_body = '';
 				if ( ! preg_match_all( '/^\d+\. (.+?)$/m', $body, $screenshot_matches, PREG_SET_ORDER ) ) {
 					throw new Exception( 'Malformed screenshot section' );
@@ -107,7 +118,8 @@ class WordPress_Readme_Parser {
 						$filepath = sprintf( 'assets/screenshot-%d.%s', $i + 1, $ext );
 						if ( file_exists( dirname( $this->path ) . DIRECTORY_SEPARATOR . $filepath ) ) {
 							break;
-						} else {
+						}
+						else {
 							$filepath = null;
 						}
 					}
@@ -121,28 +133,40 @@ class WordPress_Readme_Parser {
 					$new_body .= sprintf( "![%s](%s)\n", $screenshot_name, $filepath );
 					$new_body .= "\n";
 				}
-
 				return $new_body;
-			}, );
+			},
+		);
 
 		// Format metadata
-		$formatted_metadata                 = $this->metadata;
-		$formatted_metadata['Contributors'] = join( ', ', array_map( function ( $contributor ) {
-													$contributor = strtolower( $contributor );
-													// @todo Map to GitHub account
-													return sprintf( '[%1$s](http://profiles.wordpress.org/%1$s)', $contributor );
-												}, $this->metadata['Contributors'] ) );
-		$formatted_metadata['Tags']         = join( ', ', array_map( function ( $tag ) {
-													return sprintf( '[%1$s](http://wordpress.org/plugins/tags/%1$s)', $tag );
-												}, $this->metadata['Tags'] ) );
-		$formatted_metadata['License']      = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
+		$formatted_metadata = $this->metadata;
+		$formatted_metadata['Contributors'] = join(
+			', ',
+			array_map(
+				function ( $contributor ) {
+					$contributor = strtolower( $contributor );
+					// @todo Map to GitHub account
+					return sprintf( '[%1$s](https://profiles.wordpress.org/%1$s)', $contributor );
+				},
+				$this->metadata['Contributors']
+			)
+		);
+		$formatted_metadata['Tags'] = join(
+			', ',
+			array_map(
+				function ( $tag ) {
+					return sprintf( '[%1$s](https://wordpress.org/plugins/tags/%1$s)', $tag );
+				},
+				$this->metadata['Tags']
+			)
+		);
+		$formatted_metadata['License'] = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
 		unset( $formatted_metadata['License URI'] );
 		if ( 'trunk' === $this->metadata['Stable tag'] ) {
 			$formatted_metadata['Stable tag'] .= ' (master)';
 		}
 
 		// Render metadata
-		$markdown = "<!-- DO NOT EDIT THIS FILE; it is auto-generated from readme.txt -->\n";
+		$markdown  = "<!-- DO NOT EDIT THIS FILE; it is auto-generated from readme.txt -->\n";
 		$markdown .= sprintf( "# %s\n", $this->title );
 		$markdown .= "\n";
 		if ( file_exists( 'assets/banner-1544x500.png' ) ) {
@@ -153,6 +177,17 @@ class WordPress_Readme_Parser {
 		$markdown .= "\n";
 		foreach ( $formatted_metadata as $name => $value ) {
 			$markdown .= sprintf( "**%s:** %s  \n", $name, $value );
+		}
+
+		if ( isset( $params['travis_ci_url'] ) || isset( $params['coveralls_url'] ) ) {
+			$markdown .= "\n";
+			if ( isset( $params['travis_ci_url'] ) ) {
+				$markdown .= sprintf( '[![Build Status](%s.png?branch=master)](%s) ', $params['travis_ci_url'], $params['travis_ci_url'] );
+			}
+			if ( isset( $params['coveralls_url'] ) ) {
+				$markdown .= sprintf( '[![Build Status](%s?branch=master)](%s) ', $params['coveralls_badge_src'], $params['coveralls_url'] );
+			}
+			$markdown .= "\n";
 		}
 		$markdown .= "\n";
 
@@ -168,11 +203,14 @@ class WordPress_Readme_Parser {
 			}
 
 			if ( $body ) {
-				$markdown .= sprintf( "%s\n", $body );
+				$markdown .= sprintf( "%s\n", $this->chomp( $body ) );
 			}
 			foreach ( $section['subsections'] as $subsection ) {
+				$sub_body = $subsection['body'];
+				$sub_body = call_user_func( $general_section_formatter, $sub_body );
+
 				$markdown .= sprintf( "### %s ###\n", $subsection['heading'] );
-				$markdown .= sprintf( "%s\n", $subsection['body'] );
+				$markdown .= sprintf( "%s\n", $this->chomp( $sub_body ) );
 				$markdown .= "\n";
 			}
 
@@ -180,6 +218,17 @@ class WordPress_Readme_Parser {
 		}
 
 		return $markdown;
+	}
+
+	/**
+	 * Remove last newline. Props Perl.
+	 *
+	 * @param $string
+	 *
+	 * @return string
+	 */
+	function chomp( $string ) {
+		return preg_replace( '/\n$/', '', $string );
 	}
 
 }

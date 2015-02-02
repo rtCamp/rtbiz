@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2
+Stable tag:        1.2.1
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,8 +35,8 @@ Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
  * Export Library
  * JSON API
+ * UI Enhancements
  * New Enhancements
- * Bug Fixing
 
 **See room for improvement?**
 
@@ -67,6 +67,15 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.2.1 =
+* New Redux Framework updated.
+* Input field validations added for Contacts & Companies additional information
+* New test cases added for plugin functionality.
+* New configuration page for Mailbox & Importer Setup
+* Improved rtBot Comments : Added support for taxonomy changes.
+* `dev-lib` updated
+* Bug fixes
 
 = 1.2 =
 * Import Library
