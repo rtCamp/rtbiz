@@ -5,3 +5,5 @@ readme.md
 .gitmodules
 .travis.yml
 .git
+docs
+tests
