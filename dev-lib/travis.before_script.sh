@@ -56,4 +56,11 @@ if [ -e composer.json ]; then
 	wget http://getcomposer.org/composer.phar && php composer.phar install --dev
 fi
 
+# P2P Plugin Setup for rtBiz
+cd ../
+rm -rf posts-to-posts
+wget -nv -O posts-to-posts.zip http://downloads.wordpress.org/plugin/posts-to-posts.1.6.3.zip
+unzip -q posts-to-posts.zip
+cd $PLUGIN_DIR
+
 set +e
