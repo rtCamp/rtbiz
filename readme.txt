@@ -56,7 +56,6 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 Please refer to the documentation.
 Testing
-123 & 123
 
 == Screenshots ==
 
