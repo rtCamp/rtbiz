@@ -10,8 +10,8 @@
 	"onevar": true,
 	"quotmark": "single",
 	"trailing": true,
-	"undef": true,
-	"unused": true,
+	"undef": false,
+	"unused": false,
 
 	"browser": true,
 
