@@ -37,8 +37,8 @@ Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
  * Export Library
  * JSON API
+ * UI Enhancements
  * New Enhancements
- * Bug Fixing
 
 **See room for improvement?**
 
@@ -98,6 +98,7 @@ Please refer to the documentation.
 * New test cases added for plugin functionality.
 * New configuration page for Mailbox & Importer Setup
 * Improved rtBot Comments : Added support for taxonomy changes.
+* `dev-lib` updated
 * Bug fixes
 
 ### 1.2 ###
