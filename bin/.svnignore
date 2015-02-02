@@ -1,5 +1,5 @@
 svn-url
-dev-lib
+bin
 readme.md
 .ci-env.sh
 .gitmodules
