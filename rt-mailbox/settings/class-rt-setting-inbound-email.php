@@ -96,7 +96,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<td>
 										<select id="module_to_register" name="module_to_register" required>
 											<?php foreach ( $modules as $key => $value ) { ?>
-												<option value="<?php echo $key; ?>"><?php echo $key; ?></option>
+												<option value="<?php echo $key; ?>"><?php echo ( ! empty($value['label']))? $value['label']: $key; ?></option>
 											<?php } ?>
 										</select>
 									</td>
