@@ -188,7 +188,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( isset( $_REQUEST[ self::$user_category_taxonomy ] ) ){
 				$checkreq = true;
 			}
-			else if ( isset( $_REQUEST[ 'post_status' ] ) ){
+			else if ( isset( $_REQUEST['post_status'] ) ){
 				$check_post_status = true;
 			}
 			else {
@@ -215,7 +215,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				'nopaging' => true,
 			) );
 			$current = '';
-			if ( $check_post_status && $_REQUEST['post_status'] == "trash" ){
+			if ( $check_post_status && 'trash' == $_REQUEST['post_status'] ){
 				$current  = 'current';
 				$check_post_status = false;
 			}
@@ -899,17 +899,16 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function contact_create_for_wp_user( $user_id ) {
 			$contact_id = '';
-			
 			$user = get_user_by( 'id', $user_id );
 			/* Check for existing contact using contact primary email. */
-			$check_exist_contact = get_posts( 
+			$check_exist_contact = get_posts(
 				array(
-					'post_type' 	=> $this->post_type, 
-					'meta_key' 		=> self::$meta_key_prefix.$this->primary_email_key, 
+					'post_type' 	=> $this->post_type,
+					'meta_key' 		=> self::$meta_key_prefix.$this->primary_email_key,
 					'meta_value' 	=> $user->user_email,
 				)
 			);
-			if( count( $check_exist_contact ) > 0 ) {
+			if ( count( $check_exist_contact ) > 0 ) {
 				$contact_id = $check_exist_contact[0]->ID;
 			}
 			else {
