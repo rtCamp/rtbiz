@@ -1,7 +1,0 @@
-svn-url
-bin
-readme.md
-.ci-env.sh
-.gitmodules
-.travis.yml
-.git
