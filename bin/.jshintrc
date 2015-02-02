@@ -3,18 +3,21 @@
 	"curly": true,
 	"eqeqeq": true,
 	"eqnull": true,
+	"es3": true,
 	"expr": true,
 	"immed": true,
 	"noarg": true,
+	"onevar": true,
 	"quotmark": "single",
 	"trailing": true,
-	"undef": true,
-	"unused": true,
+	"undef": false,
+	"unused": false,
 
 	"browser": true,
-	"devel": true,
 
 	"globals": {
+		"_": false,
+		"Backbone": false,
 		"jQuery": false,
 		"wp": false
 	}

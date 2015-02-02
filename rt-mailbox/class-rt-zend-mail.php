@@ -351,6 +351,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		/**
 		 * Read Email
 		 *
+		 * @param        $from_email
 		 * @param        $email
 		 * @param        $accessToken
 		 * @param        $email_type
@@ -361,10 +362,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @param string $signature
 		 *
 		 * @return bool
-		 *
+		 * @internal param $module
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function reademail( $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $isSystemEmail = false, $signature = '' ) {
+		public function reademail( $from_email, $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $isSystemEmail = false, $signature = '' ) {
 			set_time_limit( 0 );
 			global $signature, $rt_mail_settings;
 			if ( ! $this->try_imap_login( $email, $accessToken, $email_type, $imap_server ) ) {
@@ -420,7 +421,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				error_log( sanitize_email( $email ) . ' : Found ' . esc_attr( count( $arrayMailIds ) ) . ' Mails \r\n' );
-				$this->rt_parse_email( $email, $storage, $arrayMailIds, $user_id, $isSystemEmail );
+				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $isSystemEmail );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -534,16 +535,18 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		/**
 		 * parse email message
 		 *
+		 * @param $from_email
 		 * @param $email
 		 * @param $storage
 		 * @param $arrayMailIds
 		 * @param $user_id
 		 * @param $isSystemEmail
 		 *
+		 * @internal param $module
 		 * @internal param $hdUser
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function rt_parse_email( $email, &$storage, &$arrayMailIds, $user_id, $isSystemEmail ) {
+		public function rt_parse_email( $from_email, $email, &$storage, &$arrayMailIds, $user_id, $isSystemEmail ) {
 
 			$lastMessageId = '-1';
 			//			global $rt_hd_import_operation;
@@ -732,7 +735,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 										$file['filename']      = $filename;
 										$file['extn']          = $extn;
 										$file['type']          = $ContentType;
-										if ( $part->hasHeader( 'xattachmentid' ) ) {
+										if ( $part->__isset( 'xattachmentid' ) ) {
 											$tmpval = $part->getHeader( 'xattachmentid' );
 											$file['xattachmentid'] = $tmpval->getFieldValue();
 										}
@@ -813,10 +816,17 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$visibleText = substr( $htmlBody, 0, ( $offset === false ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
+					$originalBody = '';
+					$tmp  = $message->getHeaders();
+					foreach ( $tmp as $header ){
+						$originalBody .= htmlentities( $header->toString() ). '<br/><br/>';
+					}
+					$originalBody .= 'Body: ';
+					$originalBody .= $txtBody;
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( array( 'email' => $email ) );
-					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail );
+					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail, $from_email, $originalBody );
 
 					//					global $threadPostId;
 					//					if ( ! isset( $threadPostId ) ) {
