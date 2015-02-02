@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2.1
+Stable tag:        1.2.2
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.2.2 =
+* Bug fixes.
+* Extra directories removed from svn.
 
 = 1.2.1 =
 * New Redux Framework updated.
