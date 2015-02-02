@@ -95,7 +95,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<th><label for="module_to_register">Select Module To Register </label></th>
 									<td>
 										<select id="module_to_register" name="module_to_register" required>
-											<?php foreach ( Rt_Access_Control::$modules as $key => $value ) { ?>
+											<?php foreach ( $modules as $key => $value ) { ?>
 												<option value="<?php echo $key; ?>"><?php echo $key; ?></option>
 											<?php } ?>
 										</select>
