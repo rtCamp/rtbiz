@@ -4,13 +4,15 @@
 ![Banner](assets/banner-1544x500.png)
 rtBiz - WordPress 4 Business!
 
-**Contributors:** [rtcamp](http://profiles.wordpress.org/rtcamp), [rahul286](http://profiles.wordpress.org/rahul286), [desaiuditd](http://profiles.wordpress.org/desaiuditd), [faishal](http://profiles.wordpress.org/faishal), [dipesh.kakadiya](http://profiles.wordpress.org/dipesh.kakadiya), [pareshradadiya](http://profiles.wordpress.org/pareshradadiya), [utkarshpatel](http://profiles.wordpress.org/utkarshpatel)  
-**Tags:** [contacts](http://wordpress.org/plugins/tags/contacts), [companies](http://wordpress.org/plugins/tags/companies), [people management](http://wordpress.org/plugins/tags/people management), [business](http://wordpress.org/plugins/tags/business), [email parsing](http://wordpress.org/plugins/tags/email parsing), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups), [access control](http://wordpress.org/plugins/tags/access control), [acl](http://wordpress.org/plugins/tags/acl), [wordpress](http://wordpress.org/plugins/tags/wordpress)  
+**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel)  
+**Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
 **Stable tag:** 1.2.3  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
+
+[![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz) 
 
 ## Description ##
 
@@ -46,8 +48,6 @@ Great! There are several ways you can get involved to help make rtBiz better:
 
 1. **Report Bugs:** If you find a bug, error or other problem, please report it! You can do this by [creating a new topic](https://github.com/rtcamp/rtbiz/issues) in the issue tracker.
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtcamp/rtbiz/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
-
-[![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz)
 
 ## Installation ##
 
