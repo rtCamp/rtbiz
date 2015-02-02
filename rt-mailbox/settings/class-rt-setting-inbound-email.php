@@ -95,8 +95,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<th><label for="module_to_register">Select Module To Register </label></th>
 									<td>
 										<select id="module_to_register" name="module_to_register" required>
-											<?php foreach ( Rt_Access_Control::$modules as $key => $value ) { ?>
-												<option value="<?php echo $key; ?>"><?php echo $key; ?></option>
+											<?php foreach ( $modules as $key => $value ) { ?>
+												<option value="<?php echo $key; ?>"><?php echo ( ! empty($value['label']))? $value['label']: $key; ?></option>
 											<?php } ?>
 										</select>
 									</td>
@@ -180,7 +180,12 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 										<td class="long">
 											<?php if ( ! empty( $ac->module ) ){
 												?>
-												<b> <?php echo __( 'Mailbox Registered with ' ); ?><?php echo $ac->module ?></b> <br/>
+												<br/><p class="description"><?php echo __( 'This mailbox is registered with <strong>' ); ?><?php echo ( ( empty( $modules[ $ac->module ]['label'] ) )? $ac->module.'.' : $modules[ $ac->module ]['label'].'</strong>.' );
+												if ( ! empty( $modules[ $ac->module ]['mailbox_setting_page_url'] ) ){
+													echo ' Please click <a href="'.$modules[ $ac->module ]['mailbox_setting_page_url'].'">here</a> to explore more settings regarding <strong>'.( ( empty( $modules[ $ac->module ]['label'] ) )? $ac->module : $modules[ $ac->module ]['label'] ).'</strong>';
+												}
+													?>
+												</p><br/>
 											<?php } ?>
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
