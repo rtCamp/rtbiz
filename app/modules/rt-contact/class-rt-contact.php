@@ -188,6 +188,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( isset( $_REQUEST[ self::$user_category_taxonomy ] ) ){
 				$checkreq = true;
 			}
+			else if ( isset( $_REQUEST['post_status'] ) ){
+				$check_post_status = true;
+			}
 			else {
 				$allflag = true;
 			}
@@ -206,6 +209,17 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 				$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type().'&'.self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
 			}
+			$posts = new WP_Query( array(
+				'post_type' => $this->post_type,
+				'post_status' => 'trash',
+				'nopaging' => true,
+			) );
+			$current = '';
+			if ( $check_post_status && 'trash' == $_REQUEST['post_status'] ){
+				$current  = 'current';
+				$check_post_status = false;
+			}
+			$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type()."&post_status=trash' class='".$current."'>".__( Trash )."<span class='count'> (". $posts->post_count .')</span></a></li>';
 			$current = '';
 			if ( $allflag ){
 				$current = 'current';
@@ -884,11 +898,25 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @param $user_id
 		 */
 		function contact_create_for_wp_user( $user_id ) {
+			$contact_id = '';
 			$user = get_user_by( 'id', $user_id );
-			$contact_id = $this->add_contact( $user->display_name );
+			/* Check for existing contact using contact primary email. */
+			$check_exist_contact = get_posts(
+				array(
+					'post_type' 	=> $this->post_type,
+					'meta_key' 		=> self::$meta_key_prefix.$this->primary_email_key,
+					'meta_value' 	=> $user->user_email,
+				)
+			);
+			if ( count( $check_exist_contact ) > 0 ) {
+				$contact_id = $check_exist_contact[0]->ID;
+			}
+			else {
+				$contact_id = $this->add_contact( $user->display_name );
+			}
 			$this->connect_contact_to_user( $contact_id, $user_id );
-			Rt_Contact::add_meta( $contact_id, $this->primary_email_key, $user->user_email );
-			Rt_Contact::add_meta( $contact_id, $this->website_url_key, $user->user_url );
+			Rt_Contact::update_meta( $contact_id, $this->primary_email_key, $user->user_email );
+			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
 		function get_user_from_name() {

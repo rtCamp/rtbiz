@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						e.preventDefault();
 						rtbiz_welcomePanel.addClass('hidden');
 						rtbiz_updateWelcomePanel( 0 );
-						$('#wp_welcome_panel-hide').prop('checked', false);
+						$('#rtbiz_welcome_panel-hide').prop('checked', false);
 					});
 
 					$(document).on('click', rtbiz_welcomePanelHide, function() {
@@ -129,9 +129,11 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function rtbiz_welcome_panel() {
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$settings = biz_get_redux_settings();
+			$welcome_label = $settings['menu_label'];
 			?>
 			<div class="welcome-panel-content">
-				<h3><?php _e( 'Welcome to rtBiz!' ); ?></h3>
+				<h3><?php _e( 'Welcome to '.$welcome_label ); ?></h3>
 				<p class="about-description"><?php _e( 'We&#8217;ve assembled some links to get you started:' ); ?></p>
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
