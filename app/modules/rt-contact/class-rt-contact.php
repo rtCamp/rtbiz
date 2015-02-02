@@ -189,13 +189,13 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$checkreq = true;
 			}
 			else if ( isset( $_REQUEST[ 'post_status' ] ) ){
-				$check_post_status= true;
+				$check_post_status = true;
 			}
 			else {
 				$allflag = true;
 			}
 			foreach ( $terms as $term ){
-				$current = ''; 
+				$current = '';
 				if ( $checkreq && $_REQUEST[ self::$user_category_taxonomy ] == $term->slug ){
 					$current  = 'current';
 					$checkreq = false;
@@ -209,19 +209,17 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 				$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type().'&'.self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
 			}
-			
 			$posts = new WP_Query( array(
 				'post_type' => $this->post_type,
 				'post_status' => 'trash',
 				'nopaging' => true,
 			) );
 			$current = '';
-			if ( $check_post_status && $_REQUEST[ 'post_status' ] == 'trash' ){
+			if ( $check_post_status && $_REQUEST['post_status'] == "trash" ){
 				$current  = 'current';
 				$check_post_status = false;
 			}
 			$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type()."&post_status=trash' class='".$current."'>".__( Trash )."<span class='count'> (". $posts->post_count .')</span></a></li>';
-			
 			$current = '';
 			if ( $allflag ){
 				$current = 'current';
@@ -903,14 +901,13 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$contact_id = '';
 			
 			$user = get_user_by( 'id', $user_id );
-			
 			/* Check for existing contact using contact primary email. */
 			$check_exist_contact = get_posts( 
-				array( 
+				array(
 					'post_type' 	=> $this->post_type, 
 					'meta_key' 		=> self::$meta_key_prefix.$this->primary_email_key, 
-					'meta_value' 	=> $user->user_email, 
-				) 
+					'meta_value' 	=> $user->user_email,
+				)
 			);
 			if( count( $check_exist_contact ) > 0 ) {
 				$contact_id = $check_exist_contact[0]->ID;
@@ -918,7 +915,6 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			else {
 				$contact_id = $this->add_contact( $user->display_name );
 			}
-			
 			$this->connect_contact_to_user( $contact_id, $user_id );
 			Rt_Contact::update_meta( $contact_id, $this->primary_email_key, $user->user_email );
 			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );

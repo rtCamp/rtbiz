@@ -129,7 +129,6 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function rtbiz_welcome_panel() {
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			
 			$settings = biz_get_redux_settings();
 			$welcome_label = $settings['menu_label'];
 			?>
