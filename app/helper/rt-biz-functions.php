@@ -710,5 +710,5 @@ function rt_biz_get_department_contacts( $department_id ) {
 			'post_status'         => 'any',
 			'nopaging'            => true,
 	) );
-	return count( $contacts );
+	return $contacts;
 }

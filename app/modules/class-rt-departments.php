@@ -142,7 +142,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			switch ( $column ) {
 				case 'contacts':
 					$term = get_term( $term_id, self::$slug );
-					$contacts_count = rt_biz_get_department_contacts( $term_id );
+					$contacts_count = count( rt_biz_get_department_contacts( $term_id ) );
 					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'color':
