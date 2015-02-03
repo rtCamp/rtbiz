@@ -4,12 +4,14 @@
 
 
 
-**Contributors:** [rtcamp](http://profiles.wordpress.org/rtcamp), [rahul286](http://profiles.wordpress.org/rahul286), [faishal](http://profiles.wordpress.org/faishal), [desaiuditd](http://profiles.wordpress.org/desaiuditd)  
-**Tags:** [library](http://wordpress.org/plugins/tags/library), [autoloader](http://wordpress.org/plugins/tags/autoloader), [database model](http://wordpress.org/plugins/tags/database model), [database updater](http://wordpress.org/plugins/tags/database updater), [attributes](http://wordpress.org/plugins/tags/attributes), [user groups](http://wordpress.org/plugins/tags/user groups)  
+**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [faishal](https://profiles.wordpress.org/faishal), [desaiuditd](https://profiles.wordpress.org/desaiuditd)  
+**Tags:** [library](https://wordpress.org/plugins/tags/library), [autoloader](https://wordpress.org/plugins/tags/autoloader), [database model](https://wordpress.org/plugins/tags/database model), [database updater](https://wordpress.org/plugins/tags/database updater), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups)  
 **Requires at least:** 3.6  
 **Tested up to:** 4.1  
 **Stable tag:** master  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
+
+[![Build Status](https://travis-ci.org/rtCamp/rt-lib.png?branch=master)](https://travis-ci.org/rtCamp/rt-lib) 
 
 ## Description ##
 
@@ -62,8 +64,6 @@ Great! There are several ways you can get involved to help make Stream better:
 
 1. **Report Bugs:** If you find a bug, error or other problem, please report it! You can do this by [creating a new topic](https://github.com/rtCamp/rt-lib/issues) in the issue tracker.
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtCamp/rt-lib/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
-
-[![Build Status](https://travis-ci.org/rtCamp/rt-lib.png?branch=master)](https://travis-ci.org/rtCamp/rt-lib)
 
 ## Changelog ##
 
