@@ -695,3 +695,20 @@ function rtbiz_get_tex_diff( $post_id, $texonomy ){
 	}
 	return '';
 }
+
+/**
+ * Count total contacts for department.
+ * @param int $department_id
+ * @return int $total
+ */
+function rt_biz_get_department_contacts( $department_id ) {
+	global $rt_contact;
+	$department = get_term_by( 'id', $department_id, RT_Departments::$slug );
+	$contacts = get_posts( array(
+			RT_Departments::$slug => $department->slug,
+			'post_type'           => $rt_contact->post_type,
+			'post_status'         => 'any',
+			'nopaging'            => true,
+	) );
+	return count( $contacts );
+}
