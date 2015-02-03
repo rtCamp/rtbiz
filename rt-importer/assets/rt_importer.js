@@ -320,7 +320,7 @@ jQuery( document ).ready( function() {
 						map_data: postdata,
 						map_form_id: jQuery( '#mapSource' ).val(),
 						map_row_index: rCount,
-						gravity_lead_id: parseInt( arr_lead_id[rCount].id ),
+						gravity_lead_id: parseInt( arr_lead_id[rCount].id, 10 ),
 						forceimport: forceImport,
 						trans_id: transaction_id,
 						rthd_module: jQuery( '#rthd_module' ).val()
