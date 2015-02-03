@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 1.2.4  
+**Stable tag:** 1.2.5  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -59,7 +59,6 @@ Great! There are several ways you can get involved to help make rtBiz better:
 ## Frequently Asked Questions ##
 
 Please refer to the documentation.
-Testing
 
 ## Screenshots ##
 
@@ -92,6 +91,13 @@ Testing
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.2.5 ###
+* Contacts Count on Department List View
+* Dismiss link on offerings admin notice
+* rtLib updated
+* Mailbox UI proper labels & messages updated
+* Bug Fixes
 
 ### 1.2.4 ###
 * only root level Docs & Tests folders removed from svn.

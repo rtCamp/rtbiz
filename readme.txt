@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2.4
+Stable tag:        1.2.5
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,6 @@ Great! There are several ways you can get involved to help make rtBiz better:
 == Frequently Asked Questions ==
 
 Please refer to the documentation.
-Testing
 
 == Screenshots ==
 
@@ -68,6 +67,13 @@ Testing
 7. Departments
 
 == Changelog ==
+
+= 1.2.5 =
+* Contacts Count on Department List View
+* Dismiss link on offerings admin notice
+* rtLib updated
+* Mailbox UI proper labels & messages updated
+* Bug Fixes
 
 = 1.2.4 =
 * only root level Docs & Tests folders removed from svn.
