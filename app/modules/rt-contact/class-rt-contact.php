@@ -185,6 +185,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$subsubsub  = array();
 			$checkreq   = false;
 			$allflag    = false;
+			$check_post_status = false;
 			if ( isset( $_REQUEST[ self::$user_category_taxonomy ] ) ){
 				$checkreq = true;
 			}
@@ -219,7 +220,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$current  = 'current';
 				$check_post_status = false;
 			}
-			$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type()."&post_status=trash' class='".$current."'>".__( Trash )."<span class='count'> (". $posts->post_count .')</span></a></li>';
+			$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type()."&post_status=trash' class='".$current."'>".__( 'Trash' )."<span class='count'> (". $posts->post_count .')</span></a></li>';
 			$current = '';
 			if ( $allflag ){
 				$current = 'current';
