@@ -218,7 +218,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rtb_abstract_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/abstract/' );
 			$rtb_modules_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/modules/' );
 			$rtb_settings_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/settings/' );
-			$rtb_reports_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/lib/rtreports/' );
 			$rtb_helper_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/helper/' );
 		}
 
