@@ -459,9 +459,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function rtbiz_hide_offering_notice(){
-			global $current_user;
-			$user_id = $current_user->ID;
-			add_user_meta( $user_id, 'rtbiz_hide-offering-notice', 'true', true );
+			update_option( 'rtbiz_hide-offering-notice', true );
 			echo 'true';
 			die();
 		}
@@ -664,12 +662,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function rtbiz_admin_notices(){
 			$settings = biz_get_redux_settings();
-			global $current_user ;
-			$user_id = $current_user->ID;
-			if ( ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) && ! get_user_meta( $user_id, 'rtbiz_hide-offering-notice' ) ) {
+			if ( ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) && ! get_option( 'rtbiz_hide-offering-notice' ) ) {
 				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
 				echo '<div class="updated rtbiz-offering-notice" style="padding: 10px 10px 10px;"><div style="display: inline;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a>';
 				echo '</div><a href="#" class="rtbiz_offering_dissmiss">x</a></div>';
+			} else {
+				delete_option( 'rtbiz_hide-offering-notice' );
 			}
 		}
 
