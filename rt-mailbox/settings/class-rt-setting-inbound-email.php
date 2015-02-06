@@ -64,17 +64,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				return;
 			} else {
 				if ( $newflag ) { ?>
-
-					<form id="frm-replay-by-email" method="post" action="">
-						<div class="form-body">
-							<label><?php echo __( 'Enable Reply by Email: ' ); ?></label>
-							<?php $val = Rt_Mailbox::get_enable_by_reply_email(); ?>
-							<input type="radio" name="mailbox_reply_by_email" value="yes" <?php echo 'yes' == $val ? 'checked' :  '' ; ?> ><?php echo __( 'Enable' ); ?>
-							<input type="radio" name="mailbox_reply_by_email" value="no" <?php echo 'yes' != $val ? 'checked' :  '' ;; ?>><?php echo __( 'Disable' );?>
-						</div>
-						<input class="button button-primary" type="submit" value="Save">
-					</form>
-
 					<form id="frm-new-mail" method="post" action="">
 						<legend><a class="button" id="rtmailbox_add_personal_email" href="#"><?php _e( 'Add Email' ); ?></a></legend>
 						<div class="rtmailbox-hide-row" id="rtmailbox_email_acc_type_container">

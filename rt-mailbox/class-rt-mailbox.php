@@ -269,13 +269,5 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			</div>
 				<?php
 		}
-		public static function get_enable_by_reply_email(){
-			$google_auth = get_option( 'mailbox_reply_by_email' );
-			if ( ! empty( $google_auth ) ) {
-				return $google_auth;
-			}
-			return null;
-		}
-
 	}
 }
