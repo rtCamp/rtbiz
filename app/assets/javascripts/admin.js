@@ -84,4 +84,23 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+	jQuery('.rtbiz-export' ).click(function(e){
+		var that = jQuery(this).parent();
+		e.preventDefault();
+		var id = jQuery(this ).data('id');
+		var nonce= jQuery(this ).next().val();
+		var param = {
+			action: 'rtbiz_export_contact',
+			id: id,
+			nonce: nonce
+		};
+		jQuery.post( rtbiz_ajax_url_offering, param,function(data){
+			if( data.status ) {
+				that.html(data.html);
+				console.log(that.parent());
+			}
+		}, 'json' );
+
+	});
+
 });

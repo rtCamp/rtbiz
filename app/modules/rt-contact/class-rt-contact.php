@@ -85,7 +85,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'init', array( $this, 'register_tax' ), 9 );
 
 			add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );
-			add_filter( 'views_edit-rt_contact', array( $this, 'edit_view_filters' ) );
+			add_filter( 'views_edit-'.$this->post_type, array( $this, 'edit_view_filters' ) );
 			add_action( 'p2p_init', array( $this, 'contact_user_p2p' ) );
 
 			add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
@@ -102,6 +102,143 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			}
 
 			add_action( 'init', array( $this, 'check_primary_email_for_admin_notice' ) );
+			// For User setting page
+			add_action( 'manage_users_custom_column', array( $this, 'manage_export_user_columns' ), 15, 3 );
+			add_action( 'wp_ajax_rtbiz_export_contact', array( $this, 'rtbiz_export_contact' ) );
+			// for bulk action
+			add_action( 'admin_footer-users.php',  array( $this, 'add_export_user_bulk_action' ) );
+			add_action( 'load-users.php', array( $this, 'callback_rtbiz_bulk_action' ) );
+			add_action( 'admin_notices', array( $this, 'exported_admin_notice' ) );
+			// end
+		}
+
+
+		/**
+		 * admin notice for exported users
+		 */
+		function exported_admin_notice() {
+			global $pagenow;
+
+			if ( 'users.php' == $pagenow && isset( $_REQUEST['exported'] ) && (int) $_REQUEST['exported'] ) {
+				$message = sprintf( _n( 'Contacts exported to rtbiz Contacts.', '%s Contacts exported to rtbiz Contacts.', $_REQUEST['exported'] ), number_format_i18n( $_REQUEST['exported'] ) );
+				echo "<div class='updated'><p>{$message}</p></div>";
+			}
+		}
+
+		/**
+		 * Call back to bulk user edit from users.php to export rtbiz contacts
+		 */
+		function callback_rtbiz_bulk_action(){
+			if ( empty( $_REQUEST['users'] ) || empty( $_REQUEST['action'] ) || 'rtexport' != $_REQUEST['action'] ){
+				return ;
+			}
+			check_admin_referer( 'bulk-users' );
+			$userids = $_REQUEST['users'];
+			if ( ! empty( $userids ) ){
+				$this->export_biz_contacts( $userids );
+			}
+			$redirect = 'users.php';
+			$sendback = add_query_arg( array( 'exported' => count( $userids ) ), $redirect );
+
+			wp_redirect( $sendback );
+			exit();
+		}
+
+		/**
+		 * JS hack for adding user bulk actions
+		 */
+		function add_export_user_bulk_action(){
+			?>
+			<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery('<option>').val('rtexport').text('<?php _e( 'Export' )?>').appendTo("select[name='action']");
+				});
+			</script>
+
+			<?php
+		}
+
+		/**
+		 * AJAX callback for single user export from user.php
+		 */
+		function rtbiz_export_contact(){
+			check_ajax_referer( 'rt-biz-export-'.$_POST['id'], 'nonce' );
+			$return_array = array();
+			$postid = $this->export_biz_contact( $_POST['id'] );
+			if ( ! empty( $postid ) ){
+				$post = get_post( $postid );
+				$return_array['html'] = '<a href="'.get_edit_post_link( $postid ).'">'.$post->post_title.'</a>';
+				$return_array['status'] = true;
+			}
+			echo json_encode( $return_array );
+			die();
+		}
+
+		/**
+		 * @param array $ids
+		 *  bulk Map users to rtbiz contacts
+		 */
+		function export_biz_contacts( $ids = array() ){
+			if ( empty( $ids ) ){
+				$users = get_users();
+				$ids = wp_list_pluck( $users, 'ID' );
+			}
+			foreach ( $ids as $id ) {
+				$possts = rt_biz_get_contact_for_wp_user( $id );
+				if ( empty( $possts ) ){
+					$this->export_biz_contact( $id );
+				}
+			}
+		}
+
+		/**
+		 * @param $id int WP_USER ID
+		 * export single contact from user to rtbiz contact
+		 * it will check if contact exists then it will map or else create new contact and will map with p2p
+		 * @return mixed|null
+		 */
+		function export_biz_contact( $id ){
+			$user = get_user_by( 'id', $id );
+			$email = $user->user_email;
+			$post_id = null;
+			$meta_query_args = array(
+				array(
+					'key'   => Rt_Entity::$meta_key_prefix . $this->primary_email_key,
+					'value' => $email,
+				),
+			);
+			$args = array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args );
+			$posts = get_posts( $args );
+
+			if ( biz_is_primary_email_unique( $email ) && empty( $posts ) ){
+				$post_id = rt_biz_add_contact( $user->display_name, '',$email );
+			} else if ( ! empty( $posts ) ){
+				$post_id = $posts[0]->ID;
+			}
+			if ( ! empty( $post_id ) ){
+				$this->connect_contact_to_user( $post_id, $id );
+			}
+			return $post_id;
+		}
+
+		/**
+		 * @param $value
+		 * @param $column_name
+		 * @param $id
+		 *  Call back for managing user columns for exporter
+		 * @return string
+		 */
+		function manage_export_user_columns( $value, $column_name, $id ){
+			if ( 'p2p-to-'.$this->post_type.'_to_user' == $column_name ){
+				$posts = rt_biz_get_contact_for_wp_user( $id );
+				if ( ! empty( $posts ) ){
+					return '<a href="'.get_edit_post_link( $posts[0]->ID ).'">'.$posts[0]->post_title.'</a>';
+				} else {
+					$nonce = wp_create_nonce( 'rt-biz-export-'.$id );
+					return '<button type="button" class="rtbiz-export button" data-id="'.$id.'">Export</button><input type="hidden" class="rtbiz-export-nonce" value="'.$nonce.'">';
+				}
+			}
+
 		}
 
 		function check_primary_email_for_admin_notice(){
