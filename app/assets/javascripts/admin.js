@@ -116,7 +116,7 @@ jQuery(document).ready(function($) {
 				jQuery('#rtbiz-exporter-message' ).html('Export success!');
 			}
 			else{
-				console.log("Something is Wrong!");
+				console.log('Something is Wrong!');
 			}
 			jQuery('#rtbiz-export-spinner' ).hide();
 		});
