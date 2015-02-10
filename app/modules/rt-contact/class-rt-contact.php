@@ -105,6 +105,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			// For User setting page
 			add_action( 'manage_users_custom_column', array( $this, 'manage_export_user_columns' ), 15, 3 );
 			add_action( 'wp_ajax_rtbiz_export_contact', array( $this, 'rtbiz_export_contact' ) );
+			add_action( 'wp_ajax_rtbiz_export_all_contacts', array( $this, 'rtbiz_export_all_contacts' ) );
 			// for bulk action
 			add_action( 'admin_footer-users.php',  array( $this, 'add_export_user_bulk_action' ) );
 			add_action( 'load-users.php', array( $this, 'callback_rtbiz_bulk_action' ) );
@@ -171,6 +172,13 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$return_array['status'] = true;
 			}
 			echo json_encode( $return_array );
+			die();
+		}
+
+		function rtbiz_export_all_contacts(){
+			check_ajax_referer( 'rt-biz-export-all', 'nonce' );
+			$this->export_biz_contacts();
+			echo 'true';
 			die();
 		}
 
