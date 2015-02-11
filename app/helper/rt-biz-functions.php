@@ -735,10 +735,10 @@ function rt_biz_imap_setup_view(){
 	return $rt_MailBox->imap_view();
 }
 
-function rt_biz_gravity_importer_view(){
+function rt_biz_gravity_importer_view( $module ){
 	global $rt_importer;
 	ob_start();
-	$rt_importer->importer_ui();
+	$rt_importer->importer_ui( $module );
 	$gravity_importer_view = ob_get_clean();
 	return $gravity_importer_view;
 }
