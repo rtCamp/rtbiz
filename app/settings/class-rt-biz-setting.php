@@ -181,7 +181,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'title'   => 'IMAP Server Setup',
 				'subtitle' => __( 'Configured IMAP Server(s)' ),
 				'desc'    => 'Following servers used into Mailbox',
-				'callback' => rt_biz_imap_setup_view,
+				'callback' => 'rt_biz_imap_setup_view',
 			) );
 
 			$this->sections[] = array(
