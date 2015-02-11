@@ -76,11 +76,49 @@ jQuery(document).ready(function($) {
 		var param = {
 			action: 'rtbiz_hide_offering_notice'
 		};
-		jQuery.post( rtbiz_ajax_url_offering, param,function(data){
+		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
 			data = data.trim();
 			if(data === 'true') {
 				jQuery('.rtbiz-offering-notice' ).hide();
 			}
+		});
+	});
+
+	jQuery('.rtbiz-export' ).click(function(e){
+		var that = jQuery(this).parent();
+		e.preventDefault();
+		var id = jQuery(this ).data('id');
+		var nonce= jQuery(this ).next().val();
+		var param = {
+			action: 'rtbiz_export_contact',
+			id: id,
+			nonce: nonce
+		};
+		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
+			if( data.status ) {
+				that.html(data.html);
+				console.log(that.parent());
+			}
+		}, 'json' );
+
+	});
+
+	jQuery('.rtbiz-export-button' ).click(function(e){
+		var nonce= jQuery(this ).next().val();
+		var param = {
+			action: 'rtbiz_export_all_contacts',
+			nonce: nonce
+		};
+		jQuery('.rtbiz-import-spinner' ).show();
+		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
+			data = data.trim();
+			if( data === 'true' ) {
+				jQuery('#rtbiz-exporter-message' ).html('Export success!');
+			}
+			else{
+				console.log('Something is Wrong!');
+			}
+			jQuery('#rtbiz-export-spinner' ).hide();
 		});
 	});
 

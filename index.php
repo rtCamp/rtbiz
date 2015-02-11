@@ -693,7 +693,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function load_styles_scripts() {
 			global $rt_contact, $rt_company;
 			wp_enqueue_script( 'rt-biz-admin', RT_BIZ_URL . 'app/assets/javascripts/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
-			wp_localize_script( 'rt-biz-admin', 'rtbiz_ajax_url_offering', admin_url( 'admin-ajax.php' ) );
+			wp_localize_script( 'rt-biz-admin', 'rtbiz_ajax_url_admin', admin_url( 'admin-ajax.php' ) );
 			if ( isset( $_REQUEST['post'] ) && isset( $_REQUEST['action'] ) && 'edit' == $_REQUEST['action'] ) {
 
 				$post_type = get_post_type( $_REQUEST['post'] );
