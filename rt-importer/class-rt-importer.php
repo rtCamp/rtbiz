@@ -37,11 +37,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		var $page_cap;
 
 		/**
-		 * @var $base_url - url for page
-		 */
-		var $base_url;
-
-		/**
 		 * @var $pageflag - flag for page :  true for page | false for subpage
 		 */
 		var $pageflag;
@@ -57,17 +52,14 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		var $field_array = array();
 
 		/**
-		 * @param $args
 		 */
 		public function __construct( $parent_slug, $cap = '', $admin_menu = true ) {
 			$this->pageflag = $admin_menu;
 			$this->parent_page_slug = $parent_slug;
 			if ( $this->pageflag ) {
 				$this->page_cap = $cap;
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
-			} else {
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
+
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->hook();
@@ -153,24 +145,20 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		<?php
 		}
 
-		public function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=gravity' ) : $this->base_url .'&type=gravity';
-		}
-
 		public function importer_tab(){
 			// Declare local variables
 			$tabs_html    = '';
 
 			// Setup core admin tabs
 			$tabs = array(
-				/*array(
-					'href' => $this->base_url . '&type=CSV',
+				array(
+					'href' => '#csv',
 					'name' => __( 'CSV' ),
-					'slug' => self::$page_slug . '&type=CSV' ,
-				),*/ array(
-					'href' => $this->base_url . '&type=gravity',
+					'slug' => 'csv',
+				), array(
+					'href' => '#gravity',
 					'name' => __( 'Gravity' ),
-					'slug' => $this->base_url .'&type=gravity',
+					'slug' => 'gravity',
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
@@ -182,7 +170,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					$tabs_html .= '<div class="nav-tab-wrapper" >';
 					// Loop through tabs and build navigation
 					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == 'gravity' );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
@@ -197,7 +185,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					$active_class = 'current';
 					$tabs_html .= '<div class="sub-nav-tab-wrapper"><ul class="subsubsub">';
 					foreach ( array_values( $filterd_tab ) as $i => $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == 'gravity' );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
@@ -254,63 +242,65 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		}
 
 		public function ui(){
+			?>
+			<form method="post" action="" enctype="multipart/form-data" >
+				<?php $this->importer_ui(); ?>
+			</form>
+			<?php
+		}
 
-			$this->load_handlebars_templates();
-			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
-			<div class="wrap">
-			<?php echo '<' . $title_ele . '>' .  __( 'Importer' ) . '</' . $title_ele . '>';
-			$this->importer_tab();
+		public function importer_ui(){
+			$this->load_handlebars_templates(); ?>
 
-			if ( ! isset( $_REQUEST['type'] ) ){
-				$_REQUEST['type'] = 'gravity'; // remove when csv is active
-			}
-
-			if  ( 'gravity' == $_REQUEST['type'] ) {
-				$forms    = $this->get_forms(); //get gravity for list
-
-				if ( isset( $forms ) && ! empty( $forms ) ) {
-					$noFormflag = false;
-					if ( isset( $_POST['mapSource'] ) && trim( $_POST['mapSource'] ) == '' ) {
-						$class = ' class="form-invalid" ';
-					} else {
-						$class = '';
-					}
-					$form_select = '<select name="mapSource" id="mapSource" ' . $class . '>';
-					$form_select .= '<option value="">' . __( 'Please select a form' ) . '</option>';
-					foreach ( $forms as $id => $form ) {
-						if ( isset( $_POST['mapSource'] ) && intval( $_POST['mapSource'] ) == $id ) {
-							$selected = "selected='selected'";
-							$formname = $form;
-						} else {
-							$selected = '';
-						}
-						$form_select .= '<option value="' . $id . '"' . $selected . '>' . $form . '</option>';
-					}
-				} else {
-					$form_select = '<strong>Please create some forms!</strong>';
-					$noFormflag  = true;
-				}
-
-				if ( isset( $_POST['mapPostType'] ) && trim( $_POST['mapPostType'] ) == '' ) {
+			<?php
+			$forms    = $this->get_forms(); //get gravity for list
+			// Create Field select box
+			if ( isset( $forms ) && ! empty( $forms ) ) {
+				$noFormflag = false;
+				if ( isset( $_POST['mapSource'] ) && trim( $_POST['mapSource'] ) == '' ) {
 					$class = ' class="form-invalid" ';
 				} else {
 					$class = '';
 				}
-				$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
-				$form_posttype .= '<option value="">' . __( 'Please select a CPT' ) . '</option>';
-				foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
-					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
+				$form_select = '<select name="mapSource" id="mapSource" ' . $class . '>';
+				$form_select .= '<option value="">' . __( 'Please select a form' ) . '</option>';
+				foreach ( $forms as $id => $form ) {
+					if ( isset( $_POST['mapSource'] ) && intval( $_POST['mapSource'] ) == $id ) {
 						$selected = "selected='selected'";
 						$formname = $form;
 					} else {
 						$selected = '';
 					}
-					$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
+					$form_select .= '<option value="' . $id . '"' . $selected . '>' . $form . '</option>';
 				}
-				?>
+			} else {
+				$form_select = '<strong>Please create some forms!</strong>';
+				$noFormflag  = true;
+			}
 
-				<form action="" method="post">
-					<table class="form-table">
+			//Create posttype select box
+			if ( isset( $_POST['mapPostType'] ) && trim( $_POST['mapPostType'] ) == '' ) {
+				$class = ' class="form-invalid" ';
+			} else {
+				$class = '';
+			}
+			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
+			$form_posttype .= '<option value="">' . __( 'Please select a CPT' ) . '</option>';
+			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
+				if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
+					$selected = "selected='selected'";
+					$formname = $form;
+				} else {
+					$selected = '';
+				}
+				$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
+			} ?>
+			<div class="wrap">
+				<?php if ( $this->pageflag ) {
+					echo '<h2>' . __( 'Importer' ) . '</h2>'; }
+				//$this->importer_tab(); ?>
+				<div class="gravity_importer_tab">
+					<table>
 						<tr>
 							<th scope="row"><label
 									for="mapPostType"><?php _e( 'Select a CPT:' ); ?></label></th>
@@ -329,20 +319,17 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 							<tr>
 								<th scope="row"></th>
 								<td><input type="button" id="map_submit" name="map_submit" value="Next"
-								           class="button button-primary"/></td>
+										   class="button button-primary"/></td>
 							</tr>
 						<?php endif; ?>
 					</table>
 					<div id="mapping-form"></div>
-				</form>
-			<?php
-			} else if ( isset( $_REQUEST['page'] ) && self::$page_slug == $_REQUEST['page'] ){
-				?>
-				<form action="" method="post" enctype="multipart/form-data">
+				</div>
+				<!--<div class="csv_importer_tab">
 					<table class="form-table">
 						<tr>
 							<th scope="row"><label
-									for="map_upload"><?php _e( 'Upload a data file:' ); ?></label>
+									for="map_upload"><?php /*_e( 'Upload a data file:' ); */?></label>
 							</th>
 							<td>
 								<input type="file" name="map_upload" id="map_upload"/>
@@ -352,9 +339,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 							<td><input type="submit" name="map_submit" value="Upload" class="button"/></td>
 						</tr>
 					</table>
-				</form>
-			<?php
-			} ?>
+				</div>-->
 			</div><?php
 		}
 

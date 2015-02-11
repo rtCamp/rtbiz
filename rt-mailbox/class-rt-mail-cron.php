@@ -90,10 +90,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function rt_parse_email( $module ) {
 
 			global $rt_mail_settings, $rt_mail_accounts_model ;
-			$val = Rt_Mailbox::get_enable_by_reply_email();
-			if ( empty( $val ) || 'yes' != $val ) {
-				return;
-			}
+
 			//			$emailRow = $rt_mail_settings->get_email_for_sync();
 			$emails = $rt_mail_accounts_model->get_mail_account( array( 'module' => $module ) );
 			foreach ( $emails as $emailRow ) {
