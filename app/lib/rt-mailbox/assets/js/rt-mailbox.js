@@ -35,8 +35,8 @@ jQuery( document ).ready(function(){
 		} else if ( jQuery( this ).val() === 'imap' ) {
 			jQuery( '#rtmailbox_add_imap_acc_form' ).removeClass( 'rtmailbox-hide-row' ).addClass( 'rtmailbox-show-row' );
 			jQuery( '#rthd_goauth_container' ).removeClass( 'rtmailbox-show-row' ).addClass( 'rtmailbox-hide-row' );
-			jQuery( '#rtmailbox_add_imap_acc_form #rtmailbox_add_imap_acc_fields' ).append( '<input type="email" autocomplete="off" name="rtmailbox_imap_user_email" placeholder="Email"/>' );
-			jQuery( '#rtmailbox_add_imap_acc_form #rtmailbox_add_imap_acc_fields' ).append( '<input type="password" autocomplete="off" name="rtmailbox_imap_user_pwd" placeholder="Password"/>' );
+			jQuery( '#rtmailbox_add_imap_acc_form #rtmailbox_add_imap_acc_fields' ).append( '<input type="email" autocomplete="off" id="rtmailbox_imap_user_email" name="rtmailbox_imap_user_email" placeholder="Email"/>' );
+			jQuery( '#rtmailbox_add_imap_acc_form #rtmailbox_add_imap_acc_fields' ).append( '<input type="password" autocomplete="off" id="rtmailbox_imap_user_pwd" name="rtmailbox_imap_user_pwd" placeholder="Password"/>' );
 		} else {
 			jQuery( '#rthd_goauth_container' ).removeClass( 'rtmailbox-show-row' ).addClass( 'rtmailbox-hide-row' );
 			jQuery( '#rtmailbox_add_imap_acc_form' ).removeClass( 'rtmailbox-show-row' ).addClass( 'rtmailbox-hide-row' );
@@ -57,7 +57,25 @@ jQuery( document ).ready(function(){
 
 	jQuery( '.rtMailbox-hide-mail-folders' ).click( function ( e ) {
 		e.preventDefault();
-		jQuery( this ).parent().next( 'table' ).toggleClass( 'rtmailbox-hide-row' );
+		jQuery( this ).parent().parent().next( 'table' ).toggleClass( 'rtmailbox-hide-row' );
+	});
+
+	jQuery( '#rtmailbox_add_imap' ).click( function ( e ) {
+		if ( ! jQuery( '#rtmailbox_imap_server' ).val()) {
+			alert('Please select mail server!');
+			e.preventDefault();
+			return false;
+		}
+		if ( ! jQuery( '#rtmailbox_imap_user_email' ).val()) {
+			alert('Please enter Email address!');
+			e.preventDefault();
+			return false;
+		}
+		if ( ! jQuery( '#rtmailbox_imap_user_pwd' ).val()) {
+			alert('Please enter Email address!');
+			e.preventDefault();
+			return false;
+		}
 	});
 
 });

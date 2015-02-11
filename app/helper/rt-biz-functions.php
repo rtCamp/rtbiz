@@ -724,3 +724,29 @@ function rt_biz_get_department_contacts( $department_id ) {
 	) );
 	return $contacts;
 }
+
+function rt_biz_mailbox_setup_view( $module ){
+	global $rt_MailBox ;
+	return $rt_MailBox->mailbox_view( $module );
+}
+
+function rt_biz_imap_setup_view(){
+	global $rt_MailBox ;
+	return $rt_MailBox->imap_view();
+}
+
+function rt_biz_gravity_importer_view(){
+	global $rt_importer;
+	ob_start();
+	$rt_importer->importer_ui();
+	$gravity_importer_view = ob_get_clean();
+	return $gravity_importer_view;
+}
+
+function rt_biz_gravity_importer_mapper_view(){
+	global $rtlib_importer_mapper;
+	ob_start();
+	$rtlib_importer_mapper->ui();
+	$gravity_import_mapper_content = ob_get_clean();
+	return $gravity_import_mapper_content;
+}

@@ -32,11 +32,6 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		var $page_cap;
 
 		/**
-		 * @var $base_url - url for page
-		 */
-		var $base_url;
-
-		/**
 		 * @var $pageflag - flag for page :  true for page | false for subpage
 		 */
 		var $pageflag;
@@ -56,9 +51,6 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			$this->parent_page_slug = $parent_page_slug;
 			if ( $this->pageflag ) {
 				$this->page_cap = $page_cap;
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
-			} else {
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
 			$this->hooks();
 		}
@@ -211,12 +203,10 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 
 			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
 			<div class="wrap">
-			<?php
-			echo '<' . $title_ele . '>' .  __( 'Importer Mapping List' ) . '</' . $title_ele . '>';
-			$this->importer_tab();
-			if ( ! isset( $_REQUEST['type'] ) ){
-				$_REQUEST['type'] = 'gravity'; // remove when csv is active
-			}
+			<?php if ( $this->pageflag ){
+				echo '<h2>' .  __( 'Importer Mapping List' ) . '</h2>'; }
+
+			//$this->importer_tab();
 
 			include dirname( __FILE__ ) . '/template/list-importer-mapper.php';
 
