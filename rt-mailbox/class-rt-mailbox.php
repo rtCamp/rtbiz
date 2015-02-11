@@ -94,7 +94,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		function init_mail_functions(){
 			global $rt_setting_inbound_email, $rt_setting_imap_server, $rt_mail_settings;
-			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email( $this->base_url );
+			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email( );
 			$rt_setting_imap_server     = new RT_Setting_Imap_Server();
 			$rt_mail_settings           = new Rt_Mail_Settings();
 		}
