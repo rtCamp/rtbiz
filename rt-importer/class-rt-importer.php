@@ -244,12 +244,12 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		public function ui(){
 			?>
 			<form method="post" action="" enctype="multipart/form-data" >
-				<?php $this->importer_ui(); ?>
+				<?php $this->importer_ui( null, true ); ?>
 			</form>
 			<?php
 		}
 
-		public function importer_ui(){
+		public function importer_ui( $module = null, $all_module = false ){
 			$this->load_handlebars_templates(); ?>
 
 			<?php
@@ -287,13 +287,15 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
 			$form_posttype .= '<option value="">' . __( 'Please select a CPT' ) . '</option>';
 			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
-				if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
-					$selected = "selected='selected'";
-					$formname = $form;
-				} else {
-					$selected = '';
+				if ( $all_module || $cpt_label['lable'] == $module ){
+					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
+						$selected = "selected='selected'";
+						$formname = $form;
+					} else {
+						$selected = '';
+					}
+					$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
 				}
-				$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
 			} ?>
 			<div class="wrap">
 				<?php if ( $this->pageflag ) {

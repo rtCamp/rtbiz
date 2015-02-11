@@ -31,13 +31,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 */
 		var $client = null;
 
-		/**
-		 * @var $base_url - url for page
-		 */
-		var $base_url;
-
-		function __construct( $base_url ) {
-			$this->base_url = $base_url;
+		function __construct( ) {
 			add_action( 'init', array( $this, 'save_replay_by_email' ) );
 		}
 
