@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
 			$form_posttype .= '<option value="">' . __( 'Please select a CPT' ) . '</option>';
 			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
-				if ( $all_module || $cpt_label['lable'] == $module ){
+				if ( $all_module || $cpt_label['module'] == $module ){
 					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
 						$selected = "selected='selected'";
 						$formname = $form;
@@ -453,6 +453,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				if ( ! $flag ) {
 					return;
 				}
+				$style = '';
+				if ( empty( $form_count['total'] ) ){
+					$style = 'style="display:none;"';
+				}
 				?>
 
 			<div id="map_message" class="updated map_message">
@@ -468,8 +472,8 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				<table class="wp-list-table widefat fixed posts" >
 					<thead>
 						<tr>
-							<th scope="row"><?php _e( 'Field Name' ); ?></th>
-							<th scope="row"><?php _e( 'Rtbiz Module Column Name' ); ?></th>
+							<th scope="row"><?php _e( 'Form field name' ); ?></th>
+							<th scope="row"><?php _e( 'Mapped with entity' ); ?></th>
 							<th scope="row"><?php _e( 'Default Value' ); ?></th>
 							<th scope="row"><a href="#dummyDataPrev"> << </a><?php _e( 'Sample' ); ?><a
 									href="#dummyDataNext"> >> </a></th>
@@ -507,6 +511,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			} ?>
 
 						<tfoot>
+						<tr>
+							<td> <strong>Additional fields:</strong></td>
+						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
 							<tr>
 								<td>
@@ -514,7 +521,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								</td>
 								<td>
 									<input type="text" value="" name="dateformat"/> <a
-										href='http://www.php.net/manual/en/datetime.createfromformat.php' target='_blank'>Refrence</a>
+										href='http://www.php.net/manual/en/datetime.createfromformat.php' target='_blank'>Reference</a>
 								</td>
 								<td></td>
 								<td></td>
@@ -540,6 +547,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								<td></td>
 							</tr>
 							<tr>
+								<td>Additional fields to map</td>
 								<td>
 									<?php
 									$form_fields = '<select name="otherfield0" class="other-field">';
@@ -593,19 +601,19 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					<input type="button" name="map_mapping_import" id="map_mapping_import" value="Import" class="button button-primary"/>
 			</form>
 			<div id='startImporting'>
-				<h2> <?php _e( esc_attr( sprintf( 'Importing %s ...', isset( $formname ) ? $formname : '' ) ) ); ?></h2>
-				<div id="progressbar"></div>
-				<div class="myupdate">
+				<h2 <?php echo $style; ?>> <?php _e( esc_attr( sprintf( 'Importing %s ...', isset( $formname ) ? $formname : '' ) ) ); ?></h2>
+				<div id="progressbar" <?php echo $style; ?> ></div>
+				<div class="myupdate" <?php echo $style; ?> >
 					<p> <?php _e( 'Successfully imported :' ); ?> <span
 							id='sucessfullyImported'>0</span></p>
 				</div>
-				<div class="myerror">
+				<div class="myerror" <?php echo $style; ?>>
 					<p> <?php _e( 'Failed to import :' ); ?> <span id='failImported'>0</span></p>
 				</div>
 				<div class="importloading"></div>
 				<div class="sucessmessage">
 				<?php if ( 'gravity' == $_REQUEST['type'] ) {
-					_e( 'Would u like to import future entries automatically?' );?> &nbsp;
+					_e( 'Would you like to import future entries automatically?' );?> &nbsp;
 					<input type='button' id='futureYes' value='Yes' class="button button-primary"/>&nbsp;
 					<input type='button' id='futureNo' value='No' class="button "/>
 				<?php } else { ?>
