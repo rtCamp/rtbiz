@@ -203,13 +203,13 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 
 			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
 			<div class="wrap">
-				<?php if ( $this->pageflag ){
-					echo '<h2>' .  __( 'Importer Mapping List' ) . '</h2>';
-				}
+			<?php if ( $this->pageflag ){
+				echo '<h2>' .  __( 'Importer Mapping List' ) . '</h2>';
+			}
 
-				//$this->importer_tab();
+			//$this->importer_tab();
 
-				include dirname( __FILE__ ) . '/template/list-importer-mapper.php';
+			include dirname( __FILE__ ) . '/template/list-importer-mapper.php';
 
 			?></div><?php
 		}

@@ -302,7 +302,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			global $rt_mail_accounts_model;
 			$result = $rt_mail_accounts_model->remove_mail_account( array(
 				                                                        'email' => $email,
-																		'module' => $module
+																		'module' => $module,
 			                                                        ) );
 			$this->update_gmail_ac_count();
 			return $result;

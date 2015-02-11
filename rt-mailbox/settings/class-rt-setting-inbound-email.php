@@ -99,38 +99,38 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				$is_empty_mailbox_check = true;
 				$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $modules ) );
 				if ( isset( $google_acs ) && ! empty( $google_acs ) ){
-				foreach ( $google_acs as $ac ){
-					$rCount ++;
-					$ac->email_data = unserialize( $ac->email_data );
-					$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-					$email_type     = $ac->type;
-					$imap_server    = $ac->imap_server;
-					$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
-					$mail_folders   = array_filter( explode( ',', $mail_folders ) );
-					$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
-					$token = $ac->outh_token;
-					$is_empty_mailbox_check = false;
-					if ( isset( $ac->email_data['picture'] ) ){
-						$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
-						$personMarkup = "<img src='$img?sz=96'>";
-					} else {
-						$personMarkup = get_avatar( $email, 96 );
-					}
-
-					$all_folders = null;
-					$login_successful = true;
-
-					try {
-						$hdZendEmail = new Rt_Zend_Mail();
-						if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
-							$storage     = new ImapStorage( $hdZendEmail->imap );
-							$all_folders = $storage->getFolders();
+					foreach ( $google_acs as $ac ){
+						$rCount ++;
+						$ac->email_data = unserialize( $ac->email_data );
+						$email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+						$email_type     = $ac->type;
+						$imap_server    = $ac->imap_server;
+						$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
+						$mail_folders   = array_filter( explode( ',', $mail_folders ) );
+						$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
+						$token = $ac->outh_token;
+						$is_empty_mailbox_check = false;
+						if ( isset( $ac->email_data['picture'] ) ){
+							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
+							$personMarkup = "<img src='$img?sz=96'>";
 						} else {
-							$login_successful = false;
+							$personMarkup = get_avatar( $email, 96 );
 						}
-					} catch ( Exception $e ) {
-						echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
-					} ?>
+
+						$all_folders = null;
+						$login_successful = true;
+
+						try {
+							$hdZendEmail = new Rt_Zend_Mail();
+							if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
+								$storage     = new ImapStorage( $hdZendEmail->imap );
+								$all_folders = $storage->getFolders();
+							} else {
+								$login_successful = false;
+							}
+						} catch ( Exception $e ) {
+							echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
+						} ?>
 					<div>
 						<div>
 							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
@@ -168,8 +168,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</tr>
 							</table>
 						<?php } else {
-							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>';
-						}?>
+							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
 				<?php
 				} ?>

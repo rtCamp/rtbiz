@@ -154,7 +154,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				array(
 					'href' => '#csv',
 					'name' => __( 'CSV' ),
-					'slug' => 'csv' ,
+					'slug' => 'csv',
 				), array(
 					'href' => '#gravity',
 					'name' => __( 'Gravity' ),
@@ -296,12 +296,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
 			} ?>
 			<div class="wrap">
-				<?php
-					if ( $this->pageflag ) {
-						echo '<h2>' . __('Importer') . '</h2>';
-					}
-					//$this->importer_tab();
-				?>
+				<?php if ( $this->pageflag ) {
+					echo '<h2>' . __( 'Importer' ) . '</h2>';
+				}
+				//$this->importer_tab(); ?>
 				<div class="gravity_importer_tab">
 					<table>
 						<tr>
