@@ -61,17 +61,17 @@ jQuery( document ).ready(function(){
 	});
 
 	jQuery( '#rtmailbox_add_imap' ).click( function ( e ) {
-		if ( ! jQuery( "#rtmailbox_imap_server" ).val()) {
+		if ( ! jQuery( '#rtmailbox_imap_server' ).val()) {
 			alert('Please select mail server!');
 			e.preventDefault();
 			return false;
 		}
-		if ( ! jQuery( "#rtmailbox_imap_user_email" ).val()) {
+		if ( ! jQuery( '#rtmailbox_imap_user_email' ).val()) {
 			alert('Please enter Email address!');
 			e.preventDefault();
 			return false;
 		}
-		if ( ! jQuery( "#rtmailbox_imap_user_pwd" ).val()) {
+		if ( ! jQuery( '#rtmailbox_imap_user_pwd' ).val()) {
 			alert('Please enter Email address!');
 			e.preventDefault();
 			return false;
