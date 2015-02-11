@@ -170,8 +170,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						<?php } else {
 							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
-				<?php
-				} ?>
+				<?php } ?>
 					<script>
 						jQuery(document).ready(function ($) {
 							$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
@@ -188,17 +187,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						});
 					</script>
 				<?php } ?>
-				<?php
-				if ( $is_empty_mailbox_check ){
+				<?php if ( $is_empty_mailbox_check ){
 					?>
 					<p>You have no mailbox setup please setup one.</p>
-				<?php
-				}
-				?>
+				<?php } ?>
 			</div>
 			<input class="button button-primary" name="rtmailbox_submit_enable_reply_by_email" type="submit" value="save">
-			<?php
-			do_action( 'rt_mailbox_reply_by_email_view' );
+			<?php do_action( 'rt_mailbox_reply_by_email_view' );
 		}
 
 		public function save_replay_by_email() {

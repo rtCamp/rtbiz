@@ -297,8 +297,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			} ?>
 			<div class="wrap">
 				<?php if ( $this->pageflag ) {
-					echo '<h2>' . __( 'Importer' ) . '</h2>';
-				}
+					echo '<h2>' . __( 'Importer' ) . '</h2>'; }
 				//$this->importer_tab(); ?>
 				<div class="gravity_importer_tab">
 					<table>
