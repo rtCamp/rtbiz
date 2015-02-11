@@ -81,13 +81,13 @@ jQuery( document ).ready(function(){
 
 		if ( confirm( 'Are you sure you want to remove this email A/C ?' ) ) {
 
-			var requestArray = new Object();
+			var requestArray = {};
 			var mailboxID = jQuery(this).attr('data-mailboxid');
 
-			requestArray['rtmailbox_submit_action'] =  'delete';
-			requestArray['email'] =  jQuery(this).attr('data-email');
-			requestArray['module_to_register'] =  jQuery(this).attr('data-module');
-			requestArray['action'] = 'rtmailbox_remove_account';
+			requestArray.rtmailbox_submit_action =  'delete';
+			requestArray.email =  jQuery(this).attr('data-email');
+			requestArray.module_to_register =  jQuery(this).attr('data-module');
+			requestArray.action = 'rtmailbox_remove_account';
 			jQuery('#remove-mailbox-spinner'+mailboxID ).show();
 			jQuery.ajax( {
 				url: ajaxurl,
