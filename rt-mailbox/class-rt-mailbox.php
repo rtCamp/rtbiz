@@ -60,29 +60,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		var $page_cap;
 
 		/**
-		 * @var $base_url - url for page
-		 */
-		var $base_url;
-
-		/**
 		 * @var $pageflag - flag for page :  true for page | false for subpage
 		 */
 		var $pageflag;
 
 		public $modules = array();
 
-		function __construct( $plugin_path_for_deactivate_cron, $module = array(), $parent_slug, $cap = '', $admin_menu = true ) {
+		function __construct( $plugin_path_for_deactivate_cron, $parent_slug, $cap = '', $admin_menu = true ) {
 			$this->pageflag = $admin_menu;
 			$this->parent_page_slug = $parent_slug;
 			if ( $this->pageflag ) {
 				$this->page_cap = $cap;
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => self::$page_slug ), 'admin.php' ) );
-			} else {
-				$this->base_url = get_admin_url( null, add_query_arg( array( 'page' => $this->parent_page_slug . '&subpage=' .  self::$page_slug ), 'admin.php' ) );
 			}
+
 			$this->add_mailbox_page();
 			$this->auto_loader();
-			$this->modules = $module;
 			$this->init_rt_mail_models();
 			$this->init_mail_functions();
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
@@ -154,7 +146,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			if ( isset( $_REQUEST['type'] ) && 'imap' == $_REQUEST['type'] ) {
 				echo $this->imap_view();
 			} else if ( isset( $_REQUEST['type'] ) && self::$page_slug == $_REQUEST['type'] ){
-				$this->mailbox_view();
+				$module_key = rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN );
+				$this->mailbox_view( $module_key );
 			}
 			do_action( 'rt_mailbox_randed_view_after' );
 			?> </div> <?php
@@ -176,13 +169,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			// Setup core admin tabs
 			$tabs = array(
 				array(
-					'href' => $this->base_url . '&type=mailbox',
+					'href' => 'mailbox',
 					'name' => __( ucfirst( self::$page_name ), self::$page_name ),
-					'slug' => $this->base_url . '&type=mailbox',
+					'slug' => 'mailbox',
 				), array(
-					'href' => $this->base_url . '&type=imap',
+					'href' => 'imap',
 					'name' => __( 'IMAP', self::$page_name ),
-					'slug' => $this->base_url . '&type=imap',
+					'slug' => 'imap',
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
@@ -196,7 +189,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$tabs_html .= '<div class="nav-tab-wrapper" >';
 					// Loop through tabs and build navigation
 					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == 'mailbox' );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
@@ -211,7 +204,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$active_class = 'current';
 					$tabs_html .= '<div class="sub-nav-tab-wrapper" ><ul class="subsubsub">';
 					foreach ( array_values( $filterd_tab ) as $i => $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $this->get_current_tab() );
+						$is_current = (bool) ( $tab_data['slug'] == 'mailbox' );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
@@ -235,47 +228,24 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		public function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=mailbox' ) : $this->base_url .'&type=mailbox';
-		}
-
-		function mailbox_view(){
+		function mailbox_view( $module ){
 			global $rt_setting_inbound_email;
-			if ( isset( $_POST ) && ! empty( $_POST ) ){
-				if ( ! empty( $_POST['mailbox_reply_by_email'] ) ){
-					update_option( 'mailbox_reply_by_email', $_POST['mailbox_reply_by_email'] );
-				}
-
-				//$rt_setting_inbound_email->save_replay_by_email( );
-			}
-			?>
-			<div class="tab-body-wrapper">
-					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $this->modules ); ?>
-			</div> <?php
+			do_action( 'rt_mailbox_randed_mailbox_view_before' ); ?>
+			<fieldset class="tab-body-wrapper">
+					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $module ); ?>
+			</fieldset> <?php
+			do_action( 'rt_mailbox_randed_mailbox_view_after' );
 		}
 
 		function imap_view(){
 			global $rt_setting_imap_server;
-			?>
+			do_action( 'rt_mailbox_randed_imap_view_before' ); ?>
 			<div class="imap_servers">
-			<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
-			<form method="post" action="">
-			<?php
-			$rt_setting_imap_server->rt_imap_servers( null, null );
-
-			?>
+				<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
+				<?php $rt_setting_imap_server->rt_imap_servers( null, null ); ?>
 				<input class="button button-primary" type="submit" value="Save">
-			</form>
-			</div>
-				<?php
+			</div> <?php
+			do_action( 'rt_mailbox_randed_imap_view_after' );
 		}
-		public static function get_enable_by_reply_email(){
-			$google_auth = get_option( 'mailbox_reply_by_email' );
-			if ( ! empty( $google_auth ) ) {
-				return $google_auth;
-			}
-			return null;
-		}
-
 	}
 }
