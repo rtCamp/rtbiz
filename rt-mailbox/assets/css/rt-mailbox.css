@@ -9,7 +9,7 @@
 }
 
 .tab-body-wrapper{
-	margin-top: 30px;
+	margin: 12px 0px;
 }
 
 .sub-nav-tab-wrapper{
@@ -88,4 +88,13 @@ form#frm-replay-by-email div.form-body{
 
 .imap_table tr td,.imap_table tr th{
 	padding: 5px;
+}
+
+.rtmailbox-maillist-action{
+	display: inline-block;
+	float: right;
+}
+
+.rtmailbox-severtype-container{
+	margin: 10px 0px;
 }
