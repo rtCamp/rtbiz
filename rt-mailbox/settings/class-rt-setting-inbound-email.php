@@ -258,7 +258,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		public function rtmailbox_remove_account_callback() {
 
 			$response = array();
-			$response['status']= false;
+			$response['status'] = false;
 
 			if ( isset( $_POST['rtmailbox_submit_action'] ) && 'delete' == $_POST['rtmailbox_submit_action'] ) {
 
@@ -268,13 +268,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					$status = $rt_mail_settings->delete_user_google_ac( $_POST['email'], $_POST['module_to_register'] );
 					$rt_mail_crons->deregister_cron_for_module( $_POST['module_to_register'] );
 
-					if( $status ) {
-						$response['status']= true;
+					if ( $status ) {
+						$response['status'] = true;
 					}
 				}
 			}
 
-			echo json_encode($response);
+			echo json_encode( $response );
 			die();
 		}
 	}

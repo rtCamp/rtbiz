@@ -616,7 +616,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tTo->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(),'key'     => 'to', );
+							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to', );
 						}
 					}
 					if ( isset( $message->cc ) ) { // or $message->headerExists('cc');
@@ -625,7 +625,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key'     => 'cc', );
+							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc', );
 						}
 					}
 					if ( isset( $message->bcc ) ) { // or $message->headerExists('cc');
@@ -634,7 +634,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tBCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key'     => 'bcc', );
+							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc', );
 						}
 					}
 					$htmlBody     = '';
