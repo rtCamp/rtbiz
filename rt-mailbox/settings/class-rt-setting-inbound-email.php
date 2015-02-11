@@ -33,6 +33,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 
 		function __construct( ) {
 			add_action( 'init', array( $this, 'save_replay_by_email' ) );
+			add_action( 'wp_ajax_rtmailbox_remove_account', array( $this, 'rtmailbox_remove_account_callback' ) );
 		}
 
 
@@ -125,7 +126,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						} catch ( Exception $e ) {
 							echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
 						} ?>
-					<div>
+					<div id="rtmailbox-container<?php echo $rCount; ?>">
 						<div>
 							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
 							<strong><?php if ( isset( $ac->email_data['name'] ) ) { echo $ac->email_data['name']; } ?> <br/><a href='mailto:<?php echo $email ?>'><?php echo $email ?></a></strong>
@@ -133,7 +134,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								<?php if ( $login_successful ) { ?>
 									<a class="button rtMailbox-hide-mail-folders mailbox_show_hide" href="#"><?php echo __( 'Show' ); ?></a>
 								<?php } ?>
-								<a class='button remove-google-ac' href='<?php echo esc_url( $_SERVER['REQUEST_URI'] . '&rtmailbox_submit_enable_reply_by_email=save&email=' . $email . '&module_to_register=' . $modules ); ?>'><?php echo __( 'Remove A/C' ); ?></a>
+								<a class='button remove-google-ac remove-mailbox' data-mailboxid="<?php echo $rCount; ?>" data-email="<?php echo $email; ?>" data-module="<?php echo $modules; ?>" href="javascript:;"><?php echo __( 'Remove A/C' ); ?></a>
+								<img id="remove-mailbox-spinner<?php echo $rCount; ?>" class="rtmailbox-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
 							</div>
 						</div>
 						<?php if ( $login_successful ) { ?>
@@ -227,28 +229,53 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$rt_mail_settings->update_mail_acl( $mail_ac, $token, maybe_serialize( $email_data ), $imap_server );
 					}
 				}
-				if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
-					global $rt_mail_accounts_model, $rt_mail_crons;
-					$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
-					$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'], $module );
-					$tmp = $module[0];
-					$rt_mail_crons->deregister_cron_for_module( $tmp->module );
-					return;
-				}
-				if ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) ) {
-					if ( isset( $_POST['rtmailbox_imap_user_email'] ) && ! empty( $_POST['rtmailbox_imap_user_email'] ) && isset( $_POST['rtmailbox_imap_user_pwd'] ) && ! empty( $_POST['rtmailbox_imap_user_pwd'] ) && isset( $_POST['rtmailbox_imap_server'] ) && ! empty( $_POST['rtmailbox_imap_server'] ) ) {
-						$password    = $_POST['rtmailbox_imap_user_pwd'];
-						$email       = $_POST['rtmailbox_imap_user_email'];
-						$email_data  = array(
-							'email' => $email,
-						);
-						$imap_server = $_POST['rtmailbox_imap_server'];
-						$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
-					}
+			}
+			if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
+				global $rt_mail_accounts_model, $rt_mail_crons;
+				$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
+				$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'], $module );
+				$tmp = $module[0];
+				$rt_mail_crons->deregister_cron_for_module( $tmp->module );
+				return;
+			}
+			if ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) ) {
+				if ( isset( $_POST['rtmailbox_imap_user_email'] ) && ! empty( $_POST['rtmailbox_imap_user_email'] ) && isset( $_POST['rtmailbox_imap_user_pwd'] ) && ! empty( $_POST['rtmailbox_imap_user_pwd'] ) && isset( $_POST['rtmailbox_imap_server'] ) && ! empty( $_POST['rtmailbox_imap_server'] ) ) {
+
+					$password    = $_POST['rtmailbox_imap_user_pwd'];
+					$email       = $_POST['rtmailbox_imap_user_email'];
+					$email_data  = array(
+						'email' => $email,
+					);
+					$imap_server = $_POST['rtmailbox_imap_server'];
+					$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
 				}
 			}
 		}
 
-	}
+		/**
+		 * Remove Mailbox account using ajax request.
+		 */
+		public function rtmailbox_remove_account_callback() {
 
+			$response = array();
+			$response['status']= false;
+
+			if ( isset( $_POST['rtmailbox_submit_action'] ) && 'delete' == $_POST['rtmailbox_submit_action'] ) {
+
+				if ( isset( $_POST['email'] ) && is_email( $_POST['email'] ) ) {
+
+					global $rt_mail_crons, $rt_mail_settings;
+					$status = $rt_mail_settings->delete_user_google_ac( $_POST['email'], $_POST['module_to_register'] );
+					$rt_mail_crons->deregister_cron_for_module( $_POST['module_to_register'] );
+
+					if( $status ) {
+						$response['status']= true;
+					}
+				}
+			}
+
+			echo json_encode($response);
+			die();
+		}
+	}
 }

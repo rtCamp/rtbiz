@@ -358,14 +358,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @param        $imap_server
 		 * @param        $lastDate
 		 * @param        $user_id
-		 * @param bool   $isSystemEmail
 		 * @param string $signature
 		 *
 		 * @return bool
 		 * @internal param $module
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function reademail( $from_email, $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $isSystemEmail = false, $signature = '' ) {
+		public function reademail( $from_email, $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $signature = '' ) {
 			set_time_limit( 0 );
 			global $signature, $rt_mail_settings;
 			if ( ! $this->try_imap_login( $email, $accessToken, $email_type, $imap_server ) ) {
@@ -400,9 +399,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			array_unshift( $mail_folders, $inbox_folder );
 			global $sync_inbox_type;
 			global $rt_mail_uid;
-			if ( $isSystemEmail ) {
-				$mail_folders = array( $inbox_folder );
-			}
+
 			foreach ( $mail_folders as $folder ) {
 				$storage->selectFolder( $folder );
 				error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
@@ -421,7 +418,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				error_log( sanitize_email( $email ) . ' : Found ' . esc_attr( count( $arrayMailIds ) ) . ' Mails \r\n' );
-				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $isSystemEmail );
+				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -540,13 +537,12 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @param $storage
 		 * @param $arrayMailIds
 		 * @param $user_id
-		 * @param $isSystemEmail
 		 *
 		 * @internal param $module
 		 * @internal param $hdUser
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function rt_parse_email( $from_email, $email, &$storage, &$arrayMailIds, $user_id, $isSystemEmail ) {
+		public function rt_parse_email( $from_email, $email, &$storage, &$arrayMailIds, $user_id ) {
 
 			$lastMessageId = '-1';
 			//			global $rt_hd_import_operation;
@@ -554,7 +550,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$lastFlag  = array();
 			$message   = null;
 
-			$systemEmails = rt_get_all_system_emails();
 			//			global $threadPostId;
 
 			foreach ( $arrayMailIds as $UmailId ) {
@@ -603,24 +598,16 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					$from       = array();
 					$allEmails  = array();
-					//global $rthd_all_emails;
-					$rthd_all_emails = array();
 					if ( isset( $message->from ) ) { // or $message->headerExists('cc');
 						$arrFrom = $message->getHeader( 'from' )->getAddressList();
 						foreach ( $arrFrom as $tFrom ) {
 							$from['address']   = $tFrom->getEmail();
 							$from['name']      = $tFrom->getName();
-							$rthd_all_emails[] = array(
+							$allEmails[] = array(
 								'address' => $tFrom->getEmail(),
 								'name'    => $tFrom->getName(),
 								'key'     => 'from',
 							);
-							if ( ! in_array( $tFrom->getEmail(), $systemEmails ) ) {
-								$allEmails[] = array(
-									'address' => $tFrom->getEmail(),
-									'name'    => $tFrom->getName()
-								);
-							}
 						}
 					}
 					if ( isset( $message->to ) ) { // or $message->headerExists('cc');
@@ -629,14 +616,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tTo->getEmail() ) ) {
 								continue;
 							}
-							$rthd_all_emails[] = array(
-								'address' => $tTo->getEmail(),
-								'name'    => $tTo->getName(),
-								'key'     => 'to',
-							);
-							if ( ! in_array( $tTo->getEmail(), $systemEmails ) ) {
-								$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName() );
-							}
+							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(),'key'     => 'to', );
 						}
 					}
 					if ( isset( $message->cc ) ) { // or $message->headerExists('cc');
@@ -645,14 +625,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tCc->getEmail() ) ) {
 								continue;
 							}
-							$rthd_all_emails[] = array(
-								'address' => $tCc->getEmail(),
-								'name'    => $tCc->getName(),
-								'key'     => 'cc',
-							);
-							if ( ! in_array( $tCc->getEmail(), $systemEmails ) ) {
-								$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName() );
-							}
+							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key'     => 'cc', );
 						}
 					}
 					if ( isset( $message->bcc ) ) { // or $message->headerExists('cc');
@@ -661,14 +634,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tBCc->getEmail() ) ) {
 								continue;
 							}
-							$rthd_all_emails[] = array(
-								'address' => $tBCc->getEmail(),
-								'name'    => $tBCc->getName(),
-								'key'     => 'bcc',
-							);
-							if ( ! in_array( $tBCc->getEmail(), $systemEmails ) ) {
-								$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName() );
-							}
+							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key'     => 'bcc', );
 						}
 					}
 					$htmlBody     = '';
@@ -826,7 +792,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( array( 'email' => $email ) );
-					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $rthd_all_emails, $isSystemEmail, $from_email, $originalBody );
+					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $from_email, $originalBody );
 
 					//					global $threadPostId;
 					//					if ( ! isset( $threadPostId ) ) {
