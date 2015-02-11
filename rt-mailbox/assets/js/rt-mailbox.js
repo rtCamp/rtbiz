@@ -45,20 +45,15 @@ jQuery( document ).ready(function(){
 		}
 	});
 
-	jQuery( '.remove-google-ac' ).click( function ( e ) {
-		var r = confirm( 'Are you sure you want to remove this email A/C ?' );
-		if ( r === true ) {
-
-		} else {
-			e.preventDefault();
-			return false;
-		}
-	} );
-
 	jQuery( '.rtMailbox-hide-mail-folders' ).click( function ( e ) {
 		e.preventDefault();
 		jQuery( this ).parent().parent().next( 'table' ).toggleClass( 'rtmailbox-hide-row' );
 	});
+
+	function validateEmail(email) {
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
 
 	jQuery( '#rtmailbox_add_imap' ).click( function ( e ) {
 		if ( ! jQuery( '#rtmailbox_imap_server' ).val()) {
@@ -70,10 +65,47 @@ jQuery( document ).ready(function(){
 			alert('Please enter Email address!');
 			e.preventDefault();
 			return false;
+		} else if ( !validateEmail( jQuery( '#rtmailbox_imap_user_email' ).val() ) ) {
+			alert('Please enter valid Email address!');
+			e.preventDefault();
+			return false;
 		}
 		if ( ! jQuery( '#rtmailbox_imap_user_pwd' ).val()) {
-			alert('Please enter Email address!');
+			alert('Please enter Password!');
 			e.preventDefault();
+			return false;
+		}
+	});
+
+	jQuery( document ).on( 'click', '.remove-mailbox', function () {
+
+		if ( confirm( 'Are you sure you want to remove this email A/C ?' ) ) {
+
+			var requestArray = {};
+			var mailboxID = jQuery(this).attr('data-mailboxid');
+
+			requestArray.rtmailbox_submit_action =  'delete';
+			requestArray.email =  jQuery(this).attr('data-email');
+			requestArray.module_to_register =  jQuery(this).attr('data-module');
+			requestArray.action = 'rtmailbox_remove_account';
+			jQuery('#remove-mailbox-spinner'+mailboxID ).show();
+			jQuery.ajax( {
+				url: ajaxurl,
+				dataType: 'json',
+				type: 'post',
+				data: requestArray,
+				success: function ( data ) {
+					if (data.status) {
+						jQuery('#rtmailbox-container'+mailboxID ).remove();
+					}
+					jQuery('#remove-mailbox-spinner'+mailboxID ).hide();
+				},
+				error: function(){
+					jQuery('#remove-mailbox-spinner'+mailboxID ).hide();
+					alert( 'Something goes wrong. Please try again.' );
+				}
+			});
+		} else {
 			return false;
 		}
 	});
