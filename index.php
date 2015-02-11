@@ -203,7 +203,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_action( 'after_setup_theme', array( self::$instance, 'init_wc_product_taxonomy' ),20 );
 
 			//after_setup_theme hook because before that we do not have ACL module registered
-			add_action( 'after_setup_theme', array( self::$instance, 'init_configuration' ),20 );
+			//add_action( 'after_setup_theme', array( self::$instance, 'init_configuration' ),20 );
 			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
 			add_action( 'after_setup_theme', array( self::$instance, 'init_importer' ),21 );
 
@@ -279,7 +279,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_rt_mailbox(){
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', Rt_Access_Control::$modules, RT_BIZ_Configuration::$page_slug, null, false );
+			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', Rt_Access_Control::$modules, null, null, false );
 		}
 
 		function init_attributes() {
@@ -424,17 +424,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function init_importer(){
 			global $rt_importer;
-			$rt_importer = new Rt_Importer( RT_BIZ_Configuration::$page_slug, null, false );
+			$rt_importer = new Rt_Importer( null, null, false );
 		}
 
 		function init_configuration(){
-			global $rt_configuration;
+			/*global $rt_configuration;
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
 			$arg = array(
 				'parent_slug' => Rt_Biz::$dashboard_slug,
 				'page_capability' => $editor_cap,
 			);
-			$rt_configuration = new RT_BIZ_Configuration( $arg );
+			$rt_configuration = new RT_BIZ_Configuration( $arg );*/
 		}
 
 		/**

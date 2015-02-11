@@ -44,7 +44,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$rt_biz_rt_attributes->add_attributes_page( self::$attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false, false );
+			$rt_biz_rt_attributes->add_attributes_page( self::$attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
 		}
 
 		function convert_term_id_to_term_slug_for_attributes_filter( $query ) {
