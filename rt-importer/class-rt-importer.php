@@ -509,10 +509,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				} ?>
 						</tbody><?php
 			} ?>
-
 						<tfoot>
+
 						<tr>
-							<td> <strong>Default settings:</strong></td>
+							<td colspan="4">	<hr>
+								<strong>Default settings:</strong><hr></td>
 						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
 							<tr>
@@ -546,8 +547,12 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								<td></td>
 								<td></td>
 							</tr>
+						<tr>
+							<td> <strong>Additional fields to map</strong>
+							</td>
+						</tr>
 							<tr>
-								<td>Additional fields to map</td>
+								<td></td>
 								<td>
 									<?php
 									$form_fields = '<select name="otherfield0" class="other-field">';
@@ -565,7 +570,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								<td>
 									<input type="text" value="" id="otherfield0"/>
 								</td>
-								<td></td>
 								<td></td>
 							</tr>
 							<tr>

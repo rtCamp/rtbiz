@@ -102,7 +102,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$imap_server    = $ac->imap_server;
 						$mail_folders   = ( isset( $ac->email_data['mail_folders'] ) ) ? $ac->email_data['mail_folders'] : '';
 						$mail_folders   = array_filter( explode( ',', $mail_folders ) );
-						$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
 						$token = $ac->outh_token;
 						$is_empty_mailbox_check = false;
 						if ( isset( $ac->email_data['picture'] ) ){
@@ -143,19 +142,9 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								<tr valign="top" >
 									<td class="long">
 										<label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
-										<label>
-											<?php _e( 'Inbox Folder' ); ?>
-											<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" class="mailbox-inbox-folder" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
-												<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
-												<?php if ( ! is_null( $all_folders ) ) { ?>
-													<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
-												<?php } ?>
-											</select>
-										</label>
-										<p class="description"><?php _e( 'Choosing an Inbox Folder is mandatory in order to parse the emails from Mailbox.' ) ?></p>
 										<?php if ( ! is_null( $all_folders ) ) { ?>
 											<div id="mail_folder_container">
-												<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id, $inbox_folder ); ?>
+												<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id ); ?>
 											</div>
 										<?php } else { ?>
 											<p class="description"><?php _e( 'No Folders found.' ); ?></p>
@@ -167,21 +156,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
 				<?php } ?>
-					<script>
-						jQuery(document).ready(function ($) {
-							$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
-								e.preventDefault()
-								inbox = $(this).val();
-								prev_value = $(this).data('prev-value');
-								$(this).data('prev-value', inbox);
-								var email_id = $(this).data('email-id');
-								$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('disabled', 'disabled');
-								$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').attr('checked', false);
-								$('input[data-email-id="' + email_id + '"][value="' + inbox + '"]').prop('checked', false);
-								$('input[data-email-id="' + email_id + '"][value="' + prev_value + '"]').removeAttr('disabled');
-							});
-						});
-					</script>
 				<?php } ?>
 				<?php if ( $is_empty_mailbox_check ){
 					?>
@@ -219,12 +193,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						if ( isset( $_POST['mail_folders'] ) && ! empty( $_POST['mail_folders'] ) && is_array( $_POST['mail_folders'] ) && ! empty( $email_ac ) ) {
 							$email_data                 = maybe_unserialize( $email_ac->email_data );
 							$email_data['mail_folders'] = implode( ',', $_POST['mail_folders'][ $mail_ac ] );
-						}
-						if ( isset( $_POST['inbox_folder'] ) && ! empty( $_POST['inbox_folder'] ) && ! empty( $email_ac ) ) {
-							if ( is_null( $email_data ) ) {
-								$email_data = maybe_unserialize( $email_ac->email_data );
-							}
-							$email_data['inbox_folder'] = $_POST['inbox_folder'][ $mail_ac ];
 						}
 						$rt_mail_settings->update_mail_acl( $mail_ac, $token, maybe_serialize( $email_data ), $imap_server );
 					}
