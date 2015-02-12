@@ -159,7 +159,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						</div>
 						<?php if ( $imap_servers ) { ?>
 							<div class="rtmailbox-hide-row" id="rtmailbox_add_imap_acc_form" autocomplete="off">
-								<select  name="rtmailbox_imap_server" id="rtmailbox_imap_server" required>
+								<select  name="rtmailbox_imap_server" id="rtmailbox_imap_server">
 									<option value=""><?php _e( 'Select Mail Server' ); ?></option>
 									<?php foreach ( $imap_servers as $server ) { ?>
 										<option value="<?php echo esc_attr( $server->id ); ?>"><?php echo esc_html( $server->server_name ); ?></option>
