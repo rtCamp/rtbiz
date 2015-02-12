@@ -1,0 +1,104 @@
+.nav-tab-wrapper{
+	margin-top: 10px;
+	margin-bottom: 30px;
+	border-bottom: 1px solid #CCC;
+}
+
+.nav-tab-wrapper .nav-tab{
+	font-size: 16px;
+}
+
+.tab-body-wrapper{
+	margin: 12px 0px;
+}
+
+.sub-nav-tab-wrapper{
+	height: 40px;
+}
+
+div#rtmailbox_add_imap_acc_fields{
+	display: inline-block;
+}
+
+div#rtmailbox_email_acc_type_container table{
+	text-align: left;
+}
+
+div#rtmailbox_email_acc_type_container table th,div#rtmailbox_email_acc_type_container table td{
+	padding: 5px 0px;
+}
+
+
+.rtmailbox-remove-server {
+	margin-left: 5px;
+	color: red;
+}
+
+.rtmailbox-hide-row {
+	display: none;
+}
+
+.rtmailbox-show-row {
+	visibility:visible ;
+}
+
+.mailbox_reply_by_email_label{
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+form#frm-replay-by-email{
+	margin-bottom: 10px;
+}
+
+div.mail_list{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+div.mail_list h2.title{
+	border-bottom: 1px solid #CCC;
+}
+
+table.imap_table, table.imap_table_form{
+	text-align: left;
+}
+
+form#frm-replay-by-email div.form-body{
+	display: inline-block;
+	margin-right: 10px;
+}
+
+
+.rtmailbox-google-profile-table{
+	width: 80%;
+}
+
+.imap_servers{
+	margin-top: 30px;
+}
+
+#rtmailbox_add_imap_server{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.imap_table{
+	min-width: 40%;
+}
+
+.imap_table tr td,.imap_table tr th{
+	padding: 5px;
+}
+
+.rtmailbox-maillist-action{
+	display: inline-block;
+	float: right;
+}
+
+.rtmailbox-severtype-container{
+	margin: 10px 0px;
+}
+
+.rtmailbox-spinner {
+	display: none;
+}
