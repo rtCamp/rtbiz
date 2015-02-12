@@ -113,10 +113,12 @@ jQuery(document).ready(function($) {
 		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
 			data = data.trim();
 			if( data === 'true' ) {
-				jQuery('#rtbiz-exporter-message' ).html('Export success!');
+				jQuery( '#rtbiz-exporter-message' ).html( 'Import success!' );
+				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-sucess' );
 			}
 			else{
-				console.log('Something is Wrong!');
+				jQuery( '#rtbiz-exporter-message' ).html( 'Error: Import not successfully!' );
+				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-sucess').addClass( 'rtbiz-error' );
 			}
 			jQuery('#rtbiz-export-spinner' ).hide();
 		});

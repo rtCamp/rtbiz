@@ -59,6 +59,10 @@
 	color: red;
 }
 
+.rtbiz-sucess{
+	color: green;
+}
+
 .contact-list img, .ac-assign-selected img{
 	border-radius: 12px;
 }
@@ -99,4 +103,8 @@
 .rtbiz_offering_dissmiss{
 	right: 50px;
 	position: absolute;
+}
+
+.rtbiz-exporter-message{
+	margin-left: 10px;
 }

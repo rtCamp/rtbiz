@@ -643,13 +643,13 @@ function biz_is_primary_email_unique( $email, $postid = null ) {
 
 
 function rtbiz_export_wp_users_to_contacts(){
-	$nonce = wp_create_nonce( 'rt-biz-export-all' );
-
-	?>
-	<button type="button" class="rtbiz-export-button button button-primary">Export All</button>
-	<input type="hidden" value="<?php echo $nonce ?>" />
-	<img id="rtbiz-export-spinner" style="display: none;"  src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
-	<span id="rtbiz-exporter-message" class="rtbiz-exporter-sucess"></span>
+	$nonce = wp_create_nonce( 'rt-biz-export-all' ); ?>
+	<div class="rtbiz-exporter-container">
+		<button type="button" class="rtbiz-export-button button button-primary"><?php _e( 'Import all' ); ?></button>
+		<input type="hidden" value="<?php echo $nonce ?>" />
+		<img id="rtbiz-export-spinner" style="display: none;"  src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
+		<span id="rtbiz-exporter-message" class="rtbiz-exporter-message"></span>
+	</div>
 <?php
 }
 

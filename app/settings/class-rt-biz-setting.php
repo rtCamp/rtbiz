@@ -128,6 +128,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 		public function set_sections() {
 			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
+			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
 
 			// ACTUAL DECLARATION OF SECTIONS
 			$general_fields = array(
@@ -189,6 +190,22 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'title'       => __( 'IMAP' ),
 				'permissions' => $admin_cap,
 				'fields'      => $Imap_fields,
+			);
+
+			$this->sections[]   = array(
+				'title'       => __( 'Contact Importer' ),
+				'icon'        => 'el-icon-list-alt',
+				'permissions' => $editor_cap,
+				//'subsection'  => true,
+				'fields'      => array(
+					array(
+						'id'      => 'rt_biz_import_users_to_contacts',
+						'type'    => 'callback',
+						'title'   => 'Import WP_Users to Contacts',
+						'subtitle' => __( 'Can import contacts to rtbiz contacts from wp_users, You can import selected users to contacts from wp user page.' ),
+						'callback' => 'rtbiz_export_wp_users_to_contacts',
+					),
+				),
 			);
 
 			return true;
