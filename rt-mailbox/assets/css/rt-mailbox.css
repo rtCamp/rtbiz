@@ -115,3 +115,7 @@ form#frm-replay-by-email div.form-body{
 .rtmailbox_submit_enable_reply_by_email{
 	display: inline;
 }
+
+table#rtmailbox-container th, table#rtmailbox-container td {
+	padding: 5px !important;
+}
