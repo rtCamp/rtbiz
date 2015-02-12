@@ -191,9 +191,8 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'permissions' => $admin_cap,
 				'fields'      => $Imap_fields,
 			);
-			
 			$this->sections[] = array(
-				'icon'        => 'el-icon-cogs',
+				'icon'        => 'el-icon-envelope',
 				'title'       => __( 'Mailbox List' ),
 				'permissions' => $admin_cap,
 				'fields'      => array(
@@ -341,6 +340,5 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
  */
 function rtbiz_mailbox_list_view() {
 	global $rt_setting_inbound_email;
-	
 	$rt_setting_inbound_email->rtmailbox_list_all();
 }
