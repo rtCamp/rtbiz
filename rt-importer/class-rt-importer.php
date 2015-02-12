@@ -512,7 +512,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 						<tfoot>
 						<tr>
-							<td> <strong>Additional fields:</strong></td>
+							<td> <strong>Default settings:</strong></td>
 						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
 							<tr>
