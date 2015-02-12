@@ -285,7 +285,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				$class = '';
 			}
 			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
-			$form_posttype .= '<option value="">' . __( 'Please select a CPT' ) . '</option>';
+			$form_posttype .= '<option value="">' . __( 'Please select attribute' ) . '</option>';
 			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
 				if ( $all_module || $cpt_label['module'] == $module ){
 					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
@@ -304,26 +304,21 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				<div class="gravity_importer_tab">
 					<table>
 						<tr>
-							<th scope="row"><label
-									for="mapPostType"><?php _e( 'Select a CPT:' ); ?></label></th>
 							<td>
 								<?php echo balanceTags( $form_posttype ); ?>
 							</td>
-						</tr>
-						<tr>
-							<th scope="row"><label
-									for="mapSource"><?php _e( 'Select a Form:' ); ?></label></th>
 							<td>
 								<?php echo balanceTags( $form_select ); ?>
 							</td>
+							<?php if ( ! $noFormflag ) : ?>
+							<td><input type="button" id="map_submit" name="map_submit" value="Next"
+							           class="button button-primary"/>
+								<img class="rt-lib-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
+
+							</td>
+							<?php endif; ?>
 						</tr>
-						<?php if ( ! $noFormflag ) : ?>
-							<tr>
-								<th scope="row"></th>
-								<td><input type="button" id="map_submit" name="map_submit" value="Next"
-										   class="button button-primary"/></td>
-							</tr>
-						<?php endif; ?>
+
 					</table>
 					<div id="mapping-form"></div>
 				</div>
@@ -460,8 +455,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				?>
 
 			<div id="map_message" class="updated map_message">
-				Form Selected : <strong><?php echo esc_html( $form_data['title'] ); ?></strong><br/> Total Entries:
-				<strong><?php echo esc_html( $form_count['total'] ); ?></strong>
+				<div>Form Selected : <strong><?php echo esc_html( $form_data['title'] ); ?></strong></div>
+				<div>Total Entries:
+				<strong><?php echo esc_html( $form_count['total'] ); ?></strong></div>
 			</div>
 
 			<form method="post" action="" id="rtlibMappingForm" name="rtlibMappingForm">
@@ -474,7 +470,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 						<tr>
 							<th scope="row"><?php _e( 'Form field name' ); ?></th>
 							<th scope="row"><?php _e( 'Mapped with entity' ); ?></th>
-							<th scope="row"><?php _e( 'Default Value' ); ?></th>
+							<th scope="row"><?php _e( 'Default value' ); ?></th>
 							<th scope="row"><a href="#dummyDataPrev"> << </a><?php _e( 'Sample' ); ?><a
 									href="#dummyDataNext"> >> </a></th>
 						</tr>
@@ -513,7 +509,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 						<tr>
 							<td colspan="4">	<hr>
-								<strong>Default settings:</strong><hr></td>
+								<strong>Default settings</strong><hr></td>
 						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
 							<tr>
@@ -548,7 +544,8 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								<td></td>
 							</tr>
 						<tr>
-							<td> <strong>Additional fields to map</strong>
+							<td colspan="4">	<hr>
+								<strong>Additional fields to map</strong><hr>
 							</td>
 						</tr>
 							<tr>

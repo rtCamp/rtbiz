@@ -28,6 +28,11 @@ div#rtmailbox_email_acc_type_container table th,div#rtmailbox_email_acc_type_con
 	padding: 5px 0px;
 }
 
+.rt_mailbox_error{
+	color: #cd0a0a;
+	margin-top: 10px;
+}
+
 
 .rtmailbox-remove-server {
 	margin-left: 5px;
@@ -101,4 +106,12 @@ form#frm-replay-by-email div.form-body{
 
 .rtmailbox-spinner {
 	display: none;
+}
+
+.rt-mailbox-hr{
+	margin-top: 30px;
+}
+
+.rtmailbox_submit_enable_reply_by_email{
+	display: inline;
 }

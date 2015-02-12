@@ -44,10 +44,17 @@
 	margin: 25px 15px 10px;
 }
 
-#rtlibMappingForm{
-	margin: 5px 15px 5px;
+table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th{
+	padding: 10px;
+}
+.gravity_importer_tab table td{
+	padding: 0 10px 0 0;
 }
 
 #progressbar{
 	margin: 5px 15px 10px;
+}
+
+div#map_message div{
+	margin: 5px;
 }

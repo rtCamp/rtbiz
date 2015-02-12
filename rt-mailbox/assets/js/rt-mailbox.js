@@ -47,7 +47,13 @@ jQuery( document ).ready(function(){
 
 	jQuery( '.rtMailbox-hide-mail-folders' ).click( function ( e ) {
 		e.preventDefault();
-		jQuery( this ).parent().parent().next( 'table' ).toggleClass( 'rtmailbox-hide-row' );
+		that  = jQuery( this ).parent().parent().next( 'table' );
+		if (that.is(":visible")){
+			jQuery(this).text('Show');
+		}else{
+			jQuery(this).text('Hide');
+		}
+		that.toggleClass( 'rtmailbox-hide-row' );
 	});
 
 	function validateEmail(email) {
@@ -57,21 +63,21 @@ jQuery( document ).ready(function(){
 
 	jQuery( '#rtmailbox_add_imap' ).click( function ( e ) {
 		if ( ! jQuery( '#rtmailbox_imap_server' ).val()) {
-			alert('Please select mail server!');
+			jQuery(this ).next('.rt_mailbox_error' ).text('Please select mail server.');
 			e.preventDefault();
 			return false;
 		}
 		if ( ! jQuery( '#rtmailbox_imap_user_email' ).val()) {
-			alert('Please enter Email address!');
+			jQuery(this ).next('.rt_mailbox_error' ).text('Please enter Email address.');
 			e.preventDefault();
 			return false;
 		} else if ( !validateEmail( jQuery( '#rtmailbox_imap_user_email' ).val() ) ) {
-			alert('Please enter valid Email address!');
+			jQuery(this ).next('.rt_mailbox_error' ).text('Please enter valid Email address!');
 			e.preventDefault();
 			return false;
 		}
 		if ( ! jQuery( '#rtmailbox_imap_user_pwd' ).val()) {
-			alert('Please enter Password!');
+			jQuery(this ).next('.rt_mailbox_error' ).text('Please enter Password!');
 			e.preventDefault();
 			return false;
 		}
@@ -96,6 +102,7 @@ jQuery( document ).ready(function(){
 				data: requestArray,
 				success: function ( data ) {
 					if (data.status) {
+						jQuery('#rtmailbox-container'+mailboxID ).next('hr' ).remove();
 						jQuery('#rtmailbox-container'+mailboxID ).remove();
 					}
 					jQuery('#remove-mailbox-spinner'+mailboxID ).hide();

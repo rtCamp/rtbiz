@@ -53,40 +53,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 				$server_types['imap'] = 'IMAP';
 			}
 			$server_types = apply_filters( 'rt_mailbox_server_type', $server_types );
-
-			if ( empty( $imap_servers ) ){
-				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
-				return;
-			} else {
-				if ( $newflag ) { ?>
-						<legend><a class="button" id="rtmailbox_add_personal_email" href="#"><?php _e( 'Add Email' ); ?></a></legend>
-						<div class="rtmailbox-hide-row" id="rtmailbox_email_acc_type_container">
-							<div class="rtmailbox-severtype-container" >
-								<input type="hidden" name="module_to_register" name="module_to_register" value="<?php echo $modules; ?>" />
-								<select id="rtmailbox_select_email_acc_type">
-									<option value=""><?php _e( 'Select Server Connection Type' ); ?></option>
-									<?php foreach ( $server_types as $key => $value ) {?>
-										<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
-									<?php } ?>
-								</select>
-							</div>
-						<?php if ( $imap_servers ) { ?>
-							<div class="rtmailbox-hide-row" id="rtmailbox_add_imap_acc_form" autocomplete="off">
-								<select  name="rtmailbox_imap_server" id="rtmailbox_imap_server">
-									<option value=""><?php _e( 'Select Mail Server' ); ?></option>
-									<?php foreach ( $imap_servers as $server ) { ?>
-										<option value="<?php echo esc_attr( $server->id ); ?>"><?php echo esc_html( $server->server_name ); ?></option>
-									<?php } ?>
-								</select>
-								<div id="rtmailbox_add_imap_acc_fields">
-								</div>
-								<input id="rtmailbox_add_imap" name="rtmailbox_add_imap_email" class="button button-primary" type="submit" value="save">
-							</div>
-						<?php } ?>
-						</div>
-					<?php
-				}
-			}
 			?>
 			<div class="mail_list" >
 				<h3 class="title">Mail List</h3><?php
@@ -155,6 +121,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						<?php } else {
 							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
+						<hr class="rt-mailbox-hr">
 				<?php } ?>
 				<?php } ?>
 				<?php if ( $is_empty_mailbox_check ){
@@ -162,7 +129,54 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					<p>You have no mailbox setup please setup one.</p>
 				<?php } ?>
 			</div>
-			<input class="button button-primary" name="rtmailbox_submit_enable_reply_by_email" type="submit" value="save">
+			<input class="button button-primary rtmailbox_submit_enable_reply_by_email" name="rtmailbox_submit_enable_reply_by_email" type="submit" value="Save">
+			<?php
+			if ( empty( $imap_servers ) ){
+				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
+				return;
+			} else {
+				if ( $newflag ) { ?>
+					<a class="button" id="rtmailbox_add_personal_email" href="#"><?php _e( 'Add Email' ); ?></a>
+					<?php
+					$error_login = get_option( 'rt_login_fail_email' );
+					if ( ! empty( $error_login ) ){
+						?>
+						<div class="rt_mailbox_error"> <?php echo $error_login; ?>login failed. Please enter correct credential or enable IMAP in your mailbox.</div>
+						<?php
+						delete_option( 'rt_login_fail_email' );
+					}
+
+					?>
+					<div class="rtmailbox-hide-row" id="rtmailbox_email_acc_type_container">
+						<div class="rtmailbox-severtype-container" >
+							<input type="hidden" name="module_to_register" name="module_to_register" value="<?php echo $modules; ?>" />
+							<select id="rtmailbox_select_email_acc_type" >
+								<option value="" ><?php _e( 'Select Server Connection Type' ); ?></option>
+								<?php foreach ( $server_types as $key => $value ) {?>
+									<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<?php if ( $imap_servers ) { ?>
+							<div class="rtmailbox-hide-row" id="rtmailbox_add_imap_acc_form" autocomplete="off">
+								<select  name="rtmailbox_imap_server" id="rtmailbox_imap_server" required>
+									<option value=""><?php _e( 'Select Mail Server' ); ?></option>
+									<?php foreach ( $imap_servers as $server ) { ?>
+										<option value="<?php echo esc_attr( $server->id ); ?>"><?php echo esc_html( $server->server_name ); ?></option>
+									<?php } ?>
+								</select>
+								<div id="rtmailbox_add_imap_acc_fields">
+								</div>
+								<input id="rtmailbox_add_imap" name="rtmailbox_add_imap_email" class="button button-primary" type="submit" value="Connect">
+								<div class="rt_mailbox_error"></div>
+							</div>
+						<?php } ?>
+					</div>
+				<?php
+				}
+			}
+
+			?>
 			<?php do_action( 'rt_mailbox_reply_by_email_view' );
 		}
 
@@ -207,7 +221,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						'email' => $email,
 					);
 					$imap_server = $_POST['rtmailbox_imap_server'];
-					$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
+					$hdZendEmail = new Rt_Zend_Mail();
+					$email_type = 'imap';
+					if ( ! $hdZendEmail->try_imap_login( $email, $password, $email_type, $imap_server ) ) {
+						update_option( 'rt_login_fail_email', $email );
+					} else {
+						$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
+					}
 				}
 			}
 		}
