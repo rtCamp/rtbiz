@@ -55,7 +55,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			$server_types = apply_filters( 'rt_mailbox_server_type', $server_types );
 			?>
 			<div class="mail_list" >
-				<h3 class="title">Mail List</h3><?php
+				<?php
 				$rCount = 0;
 				$is_empty_mailbox_check = true;
 				$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $modules ) );
