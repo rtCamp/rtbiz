@@ -507,7 +507,8 @@ Search for entity for given term
 @param $query string    - Keyword to search
 @param $args array      - WordPress WP_Query arguments.
 
-@uses WP_Query  - WordPress Core.```
+@uses WP_Query  - WordPress Core.
+```
 
 
 #### Hooks
