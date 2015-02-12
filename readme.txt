@@ -19,7 +19,7 @@ rtBiz - WordPress 4 Business!
 * *Robust ACL* - Great control over who can access what data
 * *MailBox Setup*  - Configure your mailbox to automate your processes such as support helpdesk using add-ons.
 * *Attributes* - Define dynamic taxonomies to categorize all post types.
-* *Offerings* - Easily sync your WooCommerce/EDT store’s products and services.
+* *Offerings* - Easily sync your WooCommerce/EDD store’s products and services.
 * Great reporting tools
 * Easy import/export of information
 
