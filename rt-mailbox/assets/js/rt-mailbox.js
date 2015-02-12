@@ -48,7 +48,7 @@ jQuery( document ).ready(function(){
 	jQuery( '.rtMailbox-hide-mail-folders' ).click( function ( e ) {
 		e.preventDefault();
 		that  = jQuery( this ).parent().parent().next( 'table' );
-		if (that.is(":visible")){
+		if (that.is(':visible')){
 			jQuery(this).text('Show');
 		}else{
 			jQuery(this).text('Hide');
