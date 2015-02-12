@@ -191,6 +191,22 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'permissions' => $admin_cap,
 				'fields'      => $Imap_fields,
 			);
+			
+			$this->sections[] = array(
+				'icon'        => 'el-icon-cogs',
+				'title'       => __( 'Mailbox List' ),
+				'permissions' => $admin_cap,
+				'fields'      => array(
+					array(
+						'id'      => 'rtbiz_Mailbox_list',
+						'type'    => 'callback',
+						'title'   => 'Mailbox List',
+						'subtitle' => __( 'All Configured Mailbox(s)' ),
+						//'desc'    => 'Following mailboxes have been configured for various modules. Emails from these mailboxes will be parsed and Helpdesk will use them to create new ticket / add new followup accordingly. You can configure these mailboxes from <a href="'.add_query_arg( 'page', RT_BIZ_Configuration::$page_slug, admin_url( 'admin.php' ) ).'"rtBiz</a>',
+						'callback' => 'rtbiz_mailbox_list_view',
+					),
+				),
+			);
 
 			$this->sections[]   = array(
 				'title'       => __( 'Contact Importer' ),
@@ -318,4 +334,13 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 	}
 
+}
+
+/**
+ * Display all congigured mailbox(s).
+ */
+function rtbiz_mailbox_list_view() {
+	global $rt_setting_inbound_email;
+	
+	$rt_setting_inbound_email->rtmailbox_list_all();
 }

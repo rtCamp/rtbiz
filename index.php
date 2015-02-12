@@ -996,6 +996,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'department_support' => array( $rt_contact->post_type ),
 			    'offering_support' => array( $rt_contact->post_type, $rt_company->post_type ),
 			    'setting_option_name' => Rt_Biz_Setting::$biz_opt, // Use For ACL
+				'setting_page_url'	=> admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ), // for setting page
 			);
 
 			return $modules;
