@@ -125,12 +125,8 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 				$access_token = $rt_mail_settings->get_accesstoken_from_email( $email, $signature, $email_type, $imap_server );
 
 				$rtZendEmail = new Rt_Zend_Mail();
-				//System Mail
-				$isSystemMail = false;
-				if ( rt_is_system_email( $email ) ) {
-					$isSystemMail = true;
-				}
-				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
+
+				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $signature );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 			}
