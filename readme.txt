@@ -30,12 +30,12 @@ Inspired from https://github.com/zendframework/zf2/tree/master/library/Zend/
 
 To add it in your plugin/theme
 ```
-git subtree add --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
+git subtree add --prefix app/lib https://github.com/rtCamp/rt-lib.git master --squash
 ```
 
 To update the library
 ```
-git subtree pull --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
+git subtree pull --prefix app/lib https://github.com/rtCamp/rt-lib.git master --squash
 ```
 
 Add following line in plugin loader file
