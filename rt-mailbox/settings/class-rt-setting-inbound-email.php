@@ -230,14 +230,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					}
 				}
 			}
-			if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
-				global $rt_mail_accounts_model, $rt_mail_crons;
-				$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
-				$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'], $module );
-				$tmp = $module[0];
-				$rt_mail_crons->deregister_cron_for_module( $tmp->module );
-				return;
-			}
 			if ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) ) {
 				if ( isset( $_POST['rtmailbox_imap_user_email'] ) && ! empty( $_POST['rtmailbox_imap_user_email'] ) && isset( $_POST['rtmailbox_imap_user_pwd'] ) && ! empty( $_POST['rtmailbox_imap_user_pwd'] ) && isset( $_POST['rtmailbox_imap_server'] ) && ! empty( $_POST['rtmailbox_imap_server'] ) ) {
 
