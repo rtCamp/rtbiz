@@ -491,6 +491,19 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			return $rows_affected;
 		}
 
+		/**
+		 * Get all mailbox
+		 *
+		 * @return mixed
+		 *
+		 */
+		public function get_all_mailbox() {
+			global $rt_mail_accounts_model;
+			return $rt_mail_accounts_model->get_all_mail_accounts();
+		}
+
+
+
 	}
 
 }
