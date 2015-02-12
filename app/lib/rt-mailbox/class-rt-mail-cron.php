@@ -126,7 +126,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 				$rtZendEmail = new Rt_Zend_Mail();
 
-				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $signature );
+				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $module, $signature );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 			}

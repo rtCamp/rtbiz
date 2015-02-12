@@ -86,7 +86,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
-				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 				$settings = biz_get_redux_settings();
 				if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 					add_filter( 'manage_edit-'.Rt_Offerings::$offering_slug .'_columns', array( $this, 'edit_offering_columns' ) );
@@ -102,7 +101,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			unset($offering_columns['posts']);
 			$offering_columns[ rt_biz_get_contact_post_type() ] = 'Contact';
 			$offering_columns[ rt_biz_get_company_post_type() ] = 'Company';
-			return $offering_columns;
+			return apply_filter( 'rt_biz_offerings_columns' , $offering_columns, $this );
 		}
 
 		function add_offering_column_content( $content, $column_name, $term_id ){
@@ -129,7 +128,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$content = "<a href='edit.php?post_type=$contact&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a>';
 					break;
 			}
-			return $content;
+			return apply_filters( 'rt_biz_offering_column_content', $content, $column_name, $term_id );
 		}
 
 		/**
@@ -166,13 +165,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 			return $commentdata;
 		}
-
-		function enqueue_scripts(){
-			wp_enqueue_style( 'pure-grid', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
-			wp_enqueue_style( 'biz-admin-css', RT_BIZ_URL.'/app/assets/css/biz_admin.css' );
-			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/form-min.css' );
-		}
-
 
 		function save_old_data( $post_id ){
 			if ( ! isset( $_POST['post_type'] ) ){
@@ -290,6 +282,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( isset( $post->post_type ) && $post->post_type == $this->post_type && ! wp_script_is( 'jquery-ui-autocomplete' ) ) {
 				wp_enqueue_script( 'jquery-ui-autocomplete', '', array( 'jquery-ui-widget', 'jquery-ui-position' ), '1.9.2', true );
 			}
+
+			wp_enqueue_style( 'pure-grid', RT_BIZ_URL.'/app/assets/css/grids-min.css' );
+			wp_enqueue_style( 'biz-admin-css', RT_BIZ_URL.'/app/assets/css/biz_admin.css' );
+			wp_enqueue_style( 'pure-form', RT_BIZ_URL.'/app/assets/css/form-min.css' );
 		}
 
 		/**
@@ -338,6 +334,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				</ul>
 			</div>
 			<?php
+			do_action( 'rt_biz_assign_to_metabox_after', $post, $this->post_type );
 		}
 
 		function save_meta_assign_to( $post ){

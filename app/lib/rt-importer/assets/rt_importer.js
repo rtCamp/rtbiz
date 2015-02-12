@@ -20,6 +20,8 @@ jQuery( document ).ready( function() {
 		},
 		initMapSubmit: function(){
 			jQuery( '#map_submit' ).click( function () {
+				jQuery(this ).next('.rt-lib-spinner' ).show();
+				var that = this;
 				var data = {
 					action: 'rtlib_import',
 					type: 'gravity',
@@ -32,6 +34,8 @@ jQuery( document ).ready( function() {
 					failCount = 0;
 					forceImport = false;
 					jQuery( '#mapping-form' ).html( response );
+					jQuery(that ).next('.rt-lib-spinner' ).hide();
+
 				} );
 			} );
 		},
