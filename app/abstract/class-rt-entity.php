@@ -101,7 +101,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			unset($offering_columns['posts']);
 			$offering_columns[ rt_biz_get_contact_post_type() ] = 'Contact';
 			$offering_columns[ rt_biz_get_company_post_type() ] = 'Company';
-			return apply_filter( 'rt_biz_offerings_columns' , $offering_columns, $this );
+			return apply_filters( 'rt_biz_offerings_columns' , $offering_columns, $this );
 		}
 
 		function add_offering_column_content( $content, $column_name, $term_id ){
