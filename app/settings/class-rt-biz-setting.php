@@ -174,6 +174,25 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'fields'      => $general_fields,
 			);
 
+			$contact_importer_subtitle = __('<h3>Import WordPress Users to Contacts</h3>');
+			$contact_importer_subtitle .= __( 'Use this tool to import all current users to rtBiz Contacts. You can also import selected users from ' );
+			$contact_importer_subtitle .= '<a href="' . admin_url( "user.php" ) . '">WP users</a> page.';
+			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as Contacts.<br/><br/>' );
+			$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
+			$this->sections[]   = array(
+				'title'       => __( 'Contact Importer' ),
+				'icon'        => 'el-icon-list-alt',
+				'permissions' => $editor_cap,
+				//'subsection'  => true,
+				'fields'      => array(
+					array(
+						'id'      => 'rt_biz_import_users_to_contacts',
+						'type'    => 'raw',
+						'content' => $contact_importer_subtitle,
+					),
+				),
+			);
+
 			$Imap_fields = array();
 
 			array_push( $Imap_fields, array(
@@ -203,25 +222,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 						'subtitle' => __( 'All Configured Mailbox(s)' ),
 						//'desc'    => 'Following mailboxes have been configured for various modules. Emails from these mailboxes will be parsed and Helpdesk will use them to create new ticket / add new followup accordingly. You can configure these mailboxes from <a href="'.add_query_arg( 'page', RT_BIZ_Configuration::$page_slug, admin_url( 'admin.php' ) ).'"rtBiz</a>',
 						'callback' => 'rtbiz_mailbox_list_view',
-					),
-				),
-			);
-
-			$contact_importer_subtitle = __( 'Use this tool to Import all current users to rtBiz Contacts.<br/>You can also import selected users from ' );
-			$contact_importer_subtitle .= '<a href="' . admin_url( "user.php" ) . '">WP user page</a> .';
-			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as Contacts.' );
-			$this->sections[]   = array(
-				'title'       => __( 'Contact Importer' ),
-				'icon'        => 'el-icon-list-alt',
-				'permissions' => $editor_cap,
-				//'subsection'  => true,
-				'fields'      => array(
-					array(
-						'id'      => 'rt_biz_import_users_to_contacts',
-						'type'    => 'callback',
-						'title'   => 'Import WordPress Users to Contacts',
-						'subtitle' => $contact_importer_subtitle,
-						'callback' => 'rtbiz_export_wp_users_to_contacts',
 					),
 				),
 			);

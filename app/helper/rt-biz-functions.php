@@ -642,7 +642,9 @@ function biz_is_primary_email_unique( $email, $postid = null ) {
 }
 
 function rtbiz_export_wp_users_to_contacts(){
+	ob_start();
 	rtbiz_export_wp_users_to_contacts_dashborad( '' );
+	return ob_get_clean();
 }
 
 
