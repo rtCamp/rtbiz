@@ -141,7 +141,6 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 							<h4><?php _e( 'Get Started' ); ?></h4>
 							<a id="rtbiz-customize-biz" class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php _e( 'Customize Your Biz' ); ?></a>
 						<?php endif; ?>
-						<p><?php printf( __( 'You can also <a href="%s">configure your mailbox</a>' ), admin_url( 'admin.php?page=' . Rt_Mailbox::$page_name ) ); ?></p>
 					</div>
 					<div class="welcome-panel-column">
 						<h4><?php _e( 'Next Steps' ); ?></h4>
