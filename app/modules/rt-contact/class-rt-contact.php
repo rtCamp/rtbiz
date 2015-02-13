@@ -152,7 +152,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			?>
 			<script type="text/javascript">
 				jQuery(document).ready(function() {
-					jQuery('<option>').val('rtexport').text('<?php _e( 'Export' )?>').appendTo("select[name='action']");
+					jQuery('<option>').val('rtexport').text('<?php _e( 'Export to contacts' )?>').appendTo("select[name='action']");
 				});
 			</script>
 
