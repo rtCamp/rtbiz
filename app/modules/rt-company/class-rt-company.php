@@ -180,7 +180,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				),
 			);
 
-			$this->meta_fields = apply_filters( 'rt_biz_organization_meta_fields', $this->meta_fields );
+			$this->meta_fields = apply_filters( 'rt_biz_company_meta_fields', $this->meta_fields, $this );
 		}
 
 		/**

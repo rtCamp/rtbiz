@@ -48,6 +48,14 @@ Prefix string for all the meta keys of entity.
 
 A few common methods that are defined in `Rt_Entity` class:
 
+##### `__construct()`
+
+Constructor method for the class.
+
+``` php
+@uses Rt_Entity::hooks()    - rtBiz Core. Initializes hooks for this class.
+```
+
 ##### `init_entity()`
 
 Initializes the post_type in WordPress.
@@ -304,6 +312,14 @@ function my_custom_after_meta_fields( $post, $entity_object ) {
 
 function my_custom_metabox_js( $post, $entity_object ) {
     echo "<script>console.log("Yo ! This is the right place to add custom JS !");</script>";
+}
+
+function my_custom_loop_sigle_field( $field ) {
+    // Remove contact fax field
+    if ( $field['key'] == 'contact_fax' ) {
+        return array();
+    }
+    return $field;
 }
 ```
 
