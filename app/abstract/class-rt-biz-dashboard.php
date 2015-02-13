@@ -148,7 +148,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) {
 								echo '<li>';
-								echo rtbiz_export_wp_users_to_contacts( '<a class="welcome-icon welcome-admin-users rtbiz-export-button" style="display: inline-block;" >Import contacts</a>' );
+								echo rtbiz_export_wp_users_to_contacts_dashborad( '<a class="welcome-icon welcome-admin-users rtbiz-export-button" style="display: inline-block;" >Import contacts</a>' );
 								echo '</li>'; } ?>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Department & assign them to contact' ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>

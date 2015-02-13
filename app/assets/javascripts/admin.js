@@ -104,26 +104,26 @@ jQuery(document).ready(function($) {
 	});
 
 	jQuery('.rtbiz-export-button' ).click(function(e){
-		var nonce= jQuery(this ).next().val();
+		var nonce= jQuery('#rtbiz-contact-import-nonce').val();
 		var param = {
 			action: 'rtbiz_export_all_contacts',
 			nonce: nonce
 		};
-		jQuery('.rtbiz-import-spinner' ).show();
+		jQuery('#rtbiz-import-spinner' ).show();
 		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
 			if ( data.status ) {
 				if( data.count > 0 ){
-					jQuery( '#rtbiz-exporter-message' ).html(' '+ data.count + ' contacts imported!' );
+					jQuery( '#rtbiz-import-message' ).html(' '+ data.count + ' contacts imported!' );
 				} else{
-					jQuery( '#rtbiz-exporter-message' ).html(' All contacts are in sync!' );
+					jQuery( '#rtbiz-import-message' ).html(' All contacts are in sync!' );
 				}
-				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-success' );
+				jQuery( '#rtbiz-import-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-success' );
 			}
 			else{
-				jQuery( '#rtbiz-exporter-message' ).html( 'Error: Import not success!' );
-				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-success').addClass( 'rtbiz-error' );
+				jQuery( '#rtbiz-import-message' ).html( 'Error: Import not success!' );
+				jQuery( '#rtbiz-import-message' ).removeClass( 'rtbiz-success').addClass( 'rtbiz-error' );
 			}
-			jQuery('#rtbiz-export-spinner' ).hide();
+			jQuery('#rtbiz-import-spinner' ).hide();
 		}, 'json');
 	});
 

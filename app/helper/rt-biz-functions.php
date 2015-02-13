@@ -641,16 +641,20 @@ function biz_is_primary_email_unique( $email, $postid = null ) {
 	return false;
 }
 
+function rtbiz_export_wp_users_to_contacts(){
+	rtbiz_export_wp_users_to_contacts_dashborad( '' );
+}
 
-function rtbiz_export_wp_users_to_contacts( $btnhtml = null ){
+
+function rtbiz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 	$nonce = wp_create_nonce( 'rt-biz-export-all' ); ?>
 	<div class="rtbiz-exporter-container">
 		<?php if ( empty( $btnhtml ) ){ ?>
 			<button type="button" class="rtbiz-export-button button button-primary"><?php _e( 'Import all' ); ?></button>
 		<?php } else { echo $btnhtml; } ?>
-		<img id="rtbiz-export-spinner" style="display: none;"  src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
-		<input type="hidden" value="<?php echo $nonce ?>" />
-		<span id="rtbiz-exporter-message" class="rtbiz-exporter-message"></span>
+		<img id="rtbiz-import-spinner" style="display: none;"  src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
+		<input id="rtbiz-contact-import-nonce" type="hidden" value="<?php echo $nonce ?>" />
+		<span id="rtbiz-import-message" class="rtbiz-import-message"></span>
 	</div>
 <?php
 }
