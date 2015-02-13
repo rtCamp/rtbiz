@@ -175,28 +175,42 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			die();
 		}
 
+		/**
+		 * Export call contacts from wp_users to rtcontact
+		 */
 		function rtbiz_export_all_contacts(){
 			check_ajax_referer( 'rt-biz-export-all', 'nonce' );
-			$this->export_biz_contacts();
-			echo 'true';
+			$return = array();
+			$return['status'] = true;
+			$count = $this->export_biz_contacts();
+			$return['count'] = $count;
+			echo json_encode( $return );
 			die();
 		}
 
 		/**
 		 * @param array $ids
 		 *  bulk Map users to rtbiz contacts
+		 *
+		 * @return int count
 		 */
 		function export_biz_contacts( $ids = array() ){
+			$count = 0;
 			if ( empty( $ids ) ){
 				$users = get_users();
 				$ids = wp_list_pluck( $users, 'ID' );
 			}
 			foreach ( $ids as $id ) {
 				$possts = rt_biz_get_contact_for_wp_user( $id );
+
 				if ( empty( $possts ) ){
-					$this->export_biz_contact( $id );
+					$postid = $this->export_biz_contact( $id );
+					if ( $postid ){
+						$count = $count + 1;
+					}
 				}
 			}
+			return $count;
 		}
 
 		/**

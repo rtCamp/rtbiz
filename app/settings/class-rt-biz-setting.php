@@ -217,7 +217,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 						'id'      => 'rt_biz_import_users_to_contacts',
 						'type'    => 'callback',
 						'title'   => 'Import WP_Users to Contacts',
-						'subtitle' => __( 'Can import contacts to rtbiz contacts from wp_users, You can import selected users to contacts from wp user page.' ),
+						'subtitle' => __( 'Can import contacts to rtbiz contacts from wp_users, You can import selected users to contacts from wp user page. All new users will be imported automatically.' ),
 						'callback' => 'rtbiz_export_wp_users_to_contacts',
 					),
 				),

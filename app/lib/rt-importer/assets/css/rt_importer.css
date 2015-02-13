@@ -44,7 +44,7 @@
 	margin: 25px 15px 10px;
 }
 
-table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th{
+table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th, table.wp-list-table.widefat.rtlib-gravity-mapping th, table.wp-list-table.widefat.rtlib-gravity-mapping td,table.wp-list-table.widefat.fixed td, table.wp-list-table.widefat.fixed th {
 	padding: 10px;
 }
 .gravity_importer_tab table td{
