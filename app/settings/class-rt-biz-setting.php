@@ -234,7 +234,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		public function set_arguments() {
 
 			//$theme = wp_get_theme(); // For use with some settings. Not necessary.
-			$author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
+			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
 			$this->args = array(
 				// TYPICAL -> Change these values as you need/desire
 				'opt_name'           => self::$biz_opt,
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
 				'page_parent'        => Rt_Biz::$dashboard_slug,
 				// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters
-				'page_permissions'   => $author_cap,
+				'page_permissions'   => $editor_cap,
 				// Permissions needed to access the options panel.
 				//'menu_icon' => '', // Specify a custom URL to an icon
 				//'last_tab' => '', // Force your panel to always open to a specific tab (by id)
