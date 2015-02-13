@@ -44,6 +44,14 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			add_action( 'init', array( $this, 'init_entity' ) );
 		}
 
+		public function manage_post_table_columns( $column, $post_id ){
+			switch ( $column ) {
+				case 'country':
+					echo esc_attr( implode( ' , ', get_post_meta( $post_id, Rt_Entity::$meta_key_prefix . 'account_country' ) ) );
+					break;
+			}
+		}
+
 
 		/**
 		 *  Init Meta Fields
