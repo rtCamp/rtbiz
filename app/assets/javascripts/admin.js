@@ -111,17 +111,20 @@ jQuery(document).ready(function($) {
 		};
 		jQuery('.rtbiz-import-spinner' ).show();
 		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
-			data = data.trim();
-			if( data === 'true' ) {
-				jQuery( '#rtbiz-exporter-message' ).html( 'Import success!' );
-				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-sucess' );
+			if ( data.status ) {
+				if( data.count > 0 ){
+					jQuery( '#rtbiz-exporter-message' ).html(' '+ data.count + ' contacts imported!' );
+				} else{
+					jQuery( '#rtbiz-exporter-message' ).html(' All contacts are in sync!' );
+				}
+				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-success' );
 			}
 			else{
-				jQuery( '#rtbiz-exporter-message' ).html( 'Error: Import not successfully!' );
-				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-sucess').addClass( 'rtbiz-error' );
+				jQuery( '#rtbiz-exporter-message' ).html( 'Error: Import not success!' );
+				jQuery( '#rtbiz-exporter-message' ).removeClass( 'rtbiz-success').addClass( 'rtbiz-error' );
 			}
 			jQuery('#rtbiz-export-spinner' ).hide();
-		});
+		}, 'json');
 	});
 
 });
