@@ -470,7 +470,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 						<tr>
 							<th scope="row"><?php _e( 'Form field name' ); ?></th>
 							<th scope="row"><?php _e( 'Mapped with entity' ); ?></th>
-							<th scope="row"><?php _e( 'Default value' ); ?></th>
+							<th scope="row"><?php _e( 'Default value (optional)' ); ?></th>
 							<th scope="row"><a href="#dummyDataPrev"> << </a><?php _e( 'Sample' ); ?><a
 									href="#dummyDataNext"> >> </a></th>
 						</tr>
@@ -520,7 +520,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 									<input type="text" value="" name="dateformat"/> <a
 										href='http://www.php.net/manual/en/datetime.createfromformat.php' target='_blank'>Reference</a>
 								</td>
-								<td></td>
+								<td><p class="description"> for example enter: l M d, Y H:i e : Friday Feb 13, 2015 10:01 UTC</p></td>
 								<td></td>
 							</tr>
 							<tr>
