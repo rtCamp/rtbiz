@@ -61,21 +61,40 @@ Overriden from `Rt_Entity` parent class. It is adding JS codes for email validat
 
 Overriden from `Rt_Entity` parent class. Here all the meta values will be saved for Company.
 
-##### `post_table_columns()`
+``` php
+@param $post_id int - WordPress Post ID
 
-Adds additional columns for Person list table. ( Country ). Overriden from `Rt_Entity` parent class.
+@uses biz_is_primary_email_unique_company() - rtBiz Core. Checks for unique email.
+@uses Rt_Entity::get_meta()					- rtBiz core. Gets meta value of Company for given meta key.
+@uses Rt_Entity::delete_meta()				- rtBiz Core. deletes meta value of company for given key.
+@uses Rt_Entity::add_meta()					- rtBiz Core. add meta value for company with given key and value.
+@uses Rt_Entity::update_meta()				- rtBiz Core. update existing meta value.
+@uses Rt_Entity::save_meta_values()			- rtBiz Core. Calling parent method for this class.
+```
+
+##### `post_table_columns( $columns )`
+
+Modifies the columns array for new sequence for Company List Table, i.e., Country, Offerings, etc. This method is overriden from `Rt_Entity` parent class.
+
+``` php
+@param $columns array - Existing columns for Company List Table.
+
+@return $cols array - New columns for Company List Table.
+
+@uses Rt_Entity::post_table_columns()	- rtBiz Core. Calling parent method.
+```
 
 ##### `manage_post_table_columns()`
 
 Manages additional columns mentioned above.
 
-##### `add_organization()`
+##### `add_company( $name, $note, $address, $country, $meta )`
 
-Adds new organization in the database.
+Adds new company in the database.
 
-##### `get_organizations()`
+##### `get_company()`
 
-Returns Organizations post objects if found according to arguments passed and empty array if not found.
+Returns companies post objects if found according to arguments passed and empty array if not found.
 
 #### Hooks
 
