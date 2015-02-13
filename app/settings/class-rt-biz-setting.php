@@ -207,6 +207,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				),
 			);
 
+			$contact_importer_subtitle = __( 'Use this tool to Import all current users to rtBiz Contacts.<br/>You can also import selected users from ' );
+			$contact_importer_subtitle .= '<a href="' . admin_url( "user.php" ) . '">WP user page</a> .';
+			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as Contacts.' );
 			$this->sections[]   = array(
 				'title'       => __( 'Contact Importer' ),
 				'icon'        => 'el-icon-list-alt',
@@ -216,8 +219,8 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					array(
 						'id'      => 'rt_biz_import_users_to_contacts',
 						'type'    => 'callback',
-						'title'   => 'Import WP_Users to Contacts',
-						'subtitle' => __( 'Can import contacts to rtbiz contacts from wp_users, You can import selected users to contacts from wp user page. All new users will be imported automatically.' ),
+						'title'   => 'Import WordPress Users to Contacts',
+						'subtitle' => $contact_importer_subtitle,
 						'callback' => 'rtbiz_export_wp_users_to_contacts',
 					),
 				),
