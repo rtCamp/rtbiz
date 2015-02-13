@@ -174,7 +174,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'fields'      => $general_fields,
 			);
 
-			$contact_importer_subtitle = __('<h3>Import WordPress Users to Contacts</h3>');
+			$contact_importer_subtitle = __('<div class="redux_field_th">Import WordPress Users to Contacts</div>');
 			$contact_importer_subtitle .= __( 'Use this tool to import all current users to rtBiz Contacts. You can also import selected users from ' );
 			$contact_importer_subtitle .= '<a href="' . admin_url( "user.php" ) . '">WP users</a> page.';
 			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as Contacts.<br/><br/>' );
