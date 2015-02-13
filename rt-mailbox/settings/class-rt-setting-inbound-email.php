@@ -141,7 +141,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					$error_login = get_option( 'rt_login_fail_email' );
 					if ( ! empty( $error_login ) ){
 						?>
-						<div class="rt_mailbox_error"> <?php echo $error_login; ?>login failed. Please enter correct credential or enable IMAP in your mailbox.</div>
+						<div class="rt_mailbox_error"> <?php echo $error_login; ?> login failed. Please enter correct credential or enable IMAP in your mailbox.</div>
 						<?php
 						delete_option( 'rt_login_fail_email' );
 					}
@@ -223,7 +223,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					$imap_server = $_POST['rtmailbox_imap_server'];
 					$hdZendEmail = new Rt_Zend_Mail();
 					$email_type = 'imap';
-					if ( ! $hdZendEmail->try_imap_login( $email, $password, $email_type, $imap_server ) ) {
+					if ( ! $hdZendEmail->try_imap_login( $email, rt_encrypt_decrypt( $password ), $email_type, $imap_server ) ) {
 						update_option( 'rt_login_fail_email', $email );
 					} else {
 						$rt_mail_settings->add_user_google_ac( rt_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), $this->user_id, 'imap', $imap_server, $module );
