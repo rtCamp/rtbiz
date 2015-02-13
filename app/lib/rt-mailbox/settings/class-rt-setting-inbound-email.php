@@ -186,7 +186,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			if ( isset( $_POST['module_to_register'] ) && ! empty( $_POST['module_to_register'] ) ){
 				$module = $_POST['module_to_register'];
 			}
-			if ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) {
+			if ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'Save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) {
 				if ( isset( $_POST['mail_ac'] ) ) {
 					foreach ( $_POST['mail_ac'] as $mail_ac ) {
 						if ( ! is_email( $mail_ac ) ){
