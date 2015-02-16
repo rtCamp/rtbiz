@@ -73,11 +73,6 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
 
 			/**
-			 * Is Our Team Mate MetaBox for Person - Uses Titan Framework That's why on plugins_loaded
-			 */
-			//			add_action( 'plugins_loaded', array( $this, 'person_meta_box' ), 27 );
-
-			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
 			 */
 			add_action( 'user_register', array( $this, 'contact_create_for_wp_user' ) );
@@ -127,7 +122,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		/**
-		 * Call back to bulk user edit from users.php to export rtbiz contacts
+		 * Call back method for bulk export action from users.php to export rtbiz contacts
 		 */
 		function callback_rtbiz_bulk_action(){
 			if ( empty( $_REQUEST['users'] ) || empty( $_REQUEST['action'] ) || 'rtexport' != $_REQUEST['action'] ){
@@ -146,7 +141,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		/**
-		 * JS hack for adding user bulk actions
+		 * This method adds bulk action option to export WordPress users to rtBiz Contacts via JS hack.
 		 */
 		function add_export_user_bulk_action(){
 			?>
