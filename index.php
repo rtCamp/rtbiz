@@ -793,7 +793,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					$nonce = wp_create_nonce( 'rtbiz_install_plugin_posts-to-posts' );
 					?>
 					<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
-					                                                            onclick="install_rtbiz_plugin('posts-to-posts','rtbiz_install_plugin','<?php echo $nonce ?>')">here</a> <?php _e( 'to install posts-to-posts.', 'posts-to-posts' ) ?>
+					                                                            onclick="install_rtbiz_plugin('posts-to-posts','rtbiz_install_plugin','<?php echo $nonce ?>')">here</a> <?php _e( 'to install Posts 2 Posts.', 'posts-to-posts' ) ?>
 					</p>
 				<?php
 				} else {
@@ -802,7 +802,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 						$nonce = wp_create_nonce( 'rtbiz_activate_plugin_' . $path );
 						?>
 						<p><b><?php _e( 'rtBiz:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
-						                                                            onclick="activate_rtbiz_plugin('<?php echo $path ?>','rtbiz_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate posts-to-posts.', 'posts-to-posts' ) ?>
+						                                                            onclick="activate_rtbiz_plugin('<?php echo $path ?>','rtbiz_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate Posts 2 Posts.', 'posts-to-posts' ) ?>
 						</p>
 					<?php
 					}
