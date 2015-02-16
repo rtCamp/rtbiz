@@ -94,8 +94,12 @@ AJAX callback to export all WordPress users to rtBiz Contacts.
 
 ##### `export_biz_contacts( $ids )`
 
+This method exports WP users to rtBiz contacts in bulk.
+
 ``` php
 @param $ids array - Array of WordPress User IDs
+
+@return int - Count of exported users.
 
 @uses get_users() - WordPress Core. To fetch the users.
 @uses wp_list_pluck() - WordPress Core. To extract User ID from WordPress User object.
@@ -106,6 +110,45 @@ AJAX callback to export all WordPress users to rtBiz Contacts.
 ##### `export_biz_contact()`
 
 This method exports single WP user to rtbiz contact. It will check if contact exists then it will map or else create new contact and will map with p2p.
+
+``` php
+@param $id int - WordPress User ID
+
+@return mixed - rtBiz Contact ID if a contact is imported successfully otherwise null.
+
+@uses get_user_by() - WordPress core. Get user object from ID.
+@uses get_posts() - WordPress core. Fetches contacts posts to verify if contact exists or not.
+@uses biz_is_primary_email_unique() - rtBiz Core. To verify unique email.
+@uses rt_biz_add_contact() - rtBiz core. Adds new contact.
+@uses Rt_Contact::connect_contact_to_user() - connects WP User to rtBiz Contact.
+```
+
+##### `manage_export_user_columns( $value, $column_name, $id )`
+
+Call back method to manage user columns for rtBiz Contact Export.
+
+``` php
+@param $value string - Value to display in the column.
+@param $column_name string - Column name to identify
+@param $id int - User ID
+
+@return string - Markup string to display in the column.
+
+@uses rt_biz_get_contact_for_wp_user() - rtBiz core. Get rtBiz contact for given WP User ID
+@uses wp_create_nonce() - WordPrecc Core. Creates nonce for export action.
+```
+
+##### `check_primary_email_for_admin_notice()`
+
+This method checks for Unique Primary Email & Empty Primary Email for rtBiz Contact and adds appropriate admin notices on the screen.
+
+``` php
+@uses rt_biz_get_contact_post_type() - rtBiz core. To check for needed post type.
+@uses get_user_meta() - WordPress core. Fetches email id from user meta table.
+@uses get_current_user_id() - WordPress core. Fetches User ID of currently logged in user.
+@uses add_action() - Adds action method to display admin notice.
+@uses delete_user_meta() - deletes user meta value after displaying the admin notice.
+```
 
 ##### `setup_meta_fields()`
 
