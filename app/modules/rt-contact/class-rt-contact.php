@@ -181,9 +181,18 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function rtbiz_export_all_contacts(){
 			check_ajax_referer( 'rt-biz-export-all', 'nonce' );
 			$return = array();
-			$return['status'] = true;
+			$return['status'] = false;
 			$count = $this->export_biz_contacts();
-			$return['count'] = $count;
+			$return['message'] = '';
+			if ( $count >= 0  ){
+				$return['status'] = true;
+				if ( $count > 0 ){
+					$label = ( $count == 1 ) ? ' contact' : ' contacts';
+					$return['message'] = __(  $count . $label . ' imported!' );
+				}else{
+					$return['message'] = __( 'All contacts are in sync!' );
+				}
+			}
 			echo json_encode( $return );
 			die();
 		}

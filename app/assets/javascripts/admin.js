@@ -112,11 +112,7 @@ jQuery(document).ready(function($) {
 		jQuery('#rtbiz-import-spinner' ).show();
 		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
 			if ( data.status ) {
-				if( data.count > 0 ){
-					jQuery( '#rtbiz-import-message' ).html(' '+ data.count + ' contacts imported!' );
-				} else{
-					jQuery( '#rtbiz-import-message' ).html(' All contacts are in sync!' );
-				}
+				jQuery( '#rtbiz-import-message' ).html( data.message );
 				jQuery( '#rtbiz-import-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-success' );
 			}
 			else{
