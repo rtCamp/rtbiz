@@ -4,6 +4,7 @@
 * [Entity](entity/index.md)
    * [Contact](entity/contact/index.md)
    * [Company](entity/company/index.md)
+* [Access Control](access-control/index.md)
 * [Mailbox](mailbox/index.md)
 * [Internal Architecture](internal-architecture/index.md)
 * [Database](database/index.md)

@@ -51,9 +51,6 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 			add_filter( 'user_has_cap', array( $this, 'filter_caps' ), 900, 4 );
 
-			//add_action( 'edit_user_profile', array( $this, 'profile_level_permission' ), 1 );
-			//add_action( 'show_user_profile', array( $this, 'profile_level_permission' ), 1 );
-			//add_action( 'profile_update', array( $this, 'save_profile_level_permission' ), 10, 2 );
 		}
 
 		function filter_caps( $all_caps, $required_caps, $args, $user ) {
@@ -222,7 +219,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			 */
 			self::$modules = apply_filters( 'rt_biz_modules', array() );
 
-			self::$permissions = array(
+			self::$permissions = apply_filters( 'rt_biz_permissions', array(
 				'no_access' => array(
 					'value' => 0,
 					'name' => __( 'No Role' ),
@@ -243,7 +240,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 					'name' => __( 'Admin' ),
 					'tooltip' => __( 'Read/Write (Everything) + Settings' ),
 				),
-			);
+			) );
 		}
 
 		/**
