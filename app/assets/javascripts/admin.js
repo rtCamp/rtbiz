@@ -131,8 +131,8 @@ jQuery(document).ready(function($) {
 			else {
 				rtbiz_ajaxcall_contacts( data.offset, nonce );
 			}
-			countselect.text( parseInt(data.contact_processed) + parseInt(countselect.text()) );
-			imported.text( parseInt(data.count) + parseInt(imported.text()) );
+			countselect.text( parseInt(data.contact_processed) + parseInt(countselect.text()) ); // jshint ignore:line
+			imported.text( parseInt(data.count) + parseInt(imported.text()) ); // jshint ignore:line
 		}, 'json' );
     }
 
