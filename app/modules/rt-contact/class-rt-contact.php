@@ -176,18 +176,32 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function rtbiz_export_all_contacts() {
 			check_ajax_referer( 'rt-biz-export-all', 'nonce' );
 			$return = array();
-			$return['status'] = false;
-			$count = $this->export_biz_contacts();
-			$return['message'] = '';
-			if ( $count >= 0  ) {
-				$return['status'] = true;
-				if ( $count > 0 ) {
+			$return['complete'] = false;
+			//			$return['message'] = '';
+			$offset = 0;
+			if ( ! empty( $_POST['offset'] ) ){
+				$offset = intval( $_POST['offset'] );
+			}
+			$limit = 2;
+			$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => $limit, 'offset' => $offset ) );
+
+			$count = $this->export_biz_contacts( $users->get_results() );
+			$return['count'] = $count;
+			$return['offset'] = $limit + $offset;
+			$return['contact_processed'] = count( $users->get_results() );
+			if ( $users->get_total() <= $offset ){
+				$return['complete'] = true;
+			}
+			// remove message from contact as we are sending multiple ajax request.
+			/*if ( $count >= 0  ){
+				$return['complete'] = true;
+				if ( $count > 0 ){
 					$label = ( $count == 1 ) ? ' contact' : ' contacts';
 					$return['message'] = __( $count . $label . ' imported!' );
 				} else {
 					$return['message'] = __( 'All contacts are in sync!' );
 				}
-			}
+			}*/
 			echo json_encode( $return );
 			die();
 		}
@@ -198,12 +212,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 *
 		 * @return int count
 		 */
-		function export_biz_contacts( $ids = array() ) {
+		function export_biz_contacts( $ids ){
 			$count = 0;
-			if ( empty( $ids ) ) {
-				$users = get_users();
-				$ids = wp_list_pluck( $users, 'ID' );
-			}
 			foreach ( $ids as $id ) {
 				$possts = rt_biz_get_contact_for_wp_user( $id );
 
