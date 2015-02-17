@@ -794,6 +794,15 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 			return $entity->posts;
 		}
+		/**
+		 * Remove single connection from registered post type to Rt_Entity
+		 * @param unknown $post_type
+		 * @param mixed $from
+		 * @param mixed $to
+		 */
+		function clear_post_connection_to_entity( $post_type, $from = '', $to = '' ) {
+			return p2p_delete_connections( $post_type . '_to_' . $this->post_type, array( 'from' => $from, 'to' => $to ) );
+		}
 
 	}
 
