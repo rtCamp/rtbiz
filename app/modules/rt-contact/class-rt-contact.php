@@ -182,26 +182,16 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( ! empty( $_POST['offset'] ) ){
 				$offset = intval( $_POST['offset'] );
 			}
-			$limit = 2;
+			$limit = 25;
 			$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => $limit, 'offset' => $offset ) );
 
 			$count = $this->export_biz_contacts( $users->get_results() );
 			$return['count'] = $count;
 			$return['offset'] = $limit + $offset;
 			$return['contact_processed'] = count( $users->get_results() );
-			if ( $users->get_total() <= $offset ){
+			if ( $users->get_total() <= $return['offset'] ){
 				$return['complete'] = true;
 			}
-			// remove message from contact as we are sending multiple ajax request.
-			/*if ( $count >= 0  ){
-				$return['complete'] = true;
-				if ( $count > 0 ){
-					$label = ( $count == 1 ) ? ' contact' : ' contacts';
-					$return['message'] = __( $count . $label . ' imported!' );
-				} else {
-					$return['message'] = __( 'All contacts are in sync!' );
-				}
-			}*/
 			echo json_encode( $return );
 			die();
 		}

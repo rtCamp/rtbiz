@@ -660,11 +660,15 @@ function rtbiz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 		<input id="rtbiz-contact-import-nonce" type="hidden" value="<?php echo $nonce ?>" />
 		<span id="rtbiz-import-message" class="rtbiz-exporter-message"></span>
 		<div class="contact-update" style="display: none;">
-			<p> <?php _e( 'Successfully imported :' ); ?> <span
-					id='rtbiz-contact-count-imported'>0</span></p>
-			<p> <?php _e( 'Successfully processed :' ); ?> <span
+			<p> <?php _e( 'Syncing contacts :' ); ?> <span
 					id='rtbiz-contact-count-proceed'>0</span></p>
 		</div>
+		<div class="contact-synced" style="display: none;">
+			<p> <?php _e( 'All contact synced!' ); ?> </p>
+		</div>
+		<div id="rtbiz-contact-importer-bar"></div>
+
+
 		<input id="rtbiz-contact-count" type="hidden" value="<?php echo $users->get_total(); ?>" />
 	</div>
 <?php
