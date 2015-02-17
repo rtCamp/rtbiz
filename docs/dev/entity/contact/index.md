@@ -322,44 +322,89 @@ Adds additional columns for Person list table. ( Phone Number, Country & Organiz
 
 Manages additional columns mentioned above.
 
-##### `add_person()`
+``` php
+@uses Rt_Entity::manage_post_table_columns() - rtBiz Core. Calling parent class method to manage extra columns.
+```
 
-Adds new person in the database.
+##### `add_contact( $name, $description, $email )`
 
-##### `get_by_email()`
+Adds new rtBiz Contact in the database.
 
-Search person by email. Returns Person post object if found and empty array if not found.
+``` php
+@param $name string - rtBiz Contact Title.
+@param $description string - rtBiz Contact Description.
+@param $email string - rtBiz Contact Email.
 
-##### `get_contact_for_wp_user()`
+@return $contact_id int - Returns rtBiz Contact Post ID.
 
-Search person object for given WP_User ID. Returns person object if found otherwise empty array.
+@uses wp_insert_post() - WordPress Core. Inserts new post in database.
+@uses rt_biz_update_entity_meta() - rtBiz Core. Adds email in Contact Meta.
+```
 
-##### `get_wp_user_for_person()`
+##### `get_by_email( $email )`
+
+Search contact by email. Returns contact post object if found and empty array if not found.
+
+``` php
+@param $email string - Email string to search for in rtBiz Contacts.
+
+@return array - An array of rtBiz Contacts if given email is matched with any rtBiz Contact otherwise an empty array is returned.
+
+@uses get_posts() - WordPress Core. To fetch the contacts.
+```
+
+##### `get_contact_for_wp_user( $user_id )`
+
+Search contact object for given WP_User ID. Returns contact object if found otherwise empty array.
+
+``` php
+@param $user_id int - WordPress User ID
+
+@uses get_posts() - WordPress core. Fetches rtBiz Contacts.
+```
+
+##### `get_contact_by_category( $category_slug )`
+
+Get list of contact by category
+
+``` php
+@param $category_slug string - Category Slug to search for in rtBiz Contacts.
+
+@return array - An array of rtBiz Contacts for given category slug.
+```
+
+##### `get_wp_user_for_contact( $contact_id )`
 
 Search for WP_User for given person id. Returns WP_User ID if found otherwise returns `false`.
 
-##### `get_employees()`
+##### `contact_create_for_wp_user( $user_id )`
 
-Returns all the employees from all the persons.
+Creates Contact object for given WP_User.
 
-##### `get_clients()`
+``` php
+@param $user_id int - WordPress User ID
 
-Returns all the employees from all the persons.
+@uses get_user_by() - WordPress Core. Fetch users based on ID.
+@uses get_posts() - Fetch contacts and check for existing contact.
+@uses Rt_Contact::add_contact() - rtBiz Core. Add new contact if it does not exist.
+@uses Rt_Contact::connect_contact_to_user() - rtBiz Core. Connect rtBiz Contact with WP User.
+@uses Rt_Contact::update_meta() - rtBiz Core. Updates meta values for Contact.
+```
 
-##### `person_create_for_wp_user()`
+##### `get_user_from_name()`
 
-Creates Person object for given WP_User.
+Search by name method for AJAX callback.
+
+``` php
+@uses WPDB::get_results() - Executes custom query to fetch display name & username.
+```
 
 #### Hooks
 
 ##### Actions
 
-###### `rt_biz_person_meta_box`
-
-Any additional metabox can be added using this action, if needed.
-
 ##### Filters
 
-###### `rt_biz_person_meta_fields`
+###### `rt_biz_contact_meta_fields`
 
 Additional custom fields can be added using this filter.
