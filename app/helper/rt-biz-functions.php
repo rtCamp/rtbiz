@@ -758,3 +758,14 @@ function rt_biz_gravity_importer_mapper_view(){
 	$gravity_import_mapper_content = ob_get_clean();
 	return $gravity_import_mapper_content;
 }
+
+/**
+ * Remove single connection from registered post type to Rt_Entity
+ * @param string $post_type
+ * @param mixed $from
+ * @param mixed $to
+ */
+function rt_biz_clear_post_connection_to_contact( $post_type, $from, $to ) {
+	global $rt_contact;
+	return $rt_contact->clear_post_connection_to_entity( $post_type, $from, $to );
+}
