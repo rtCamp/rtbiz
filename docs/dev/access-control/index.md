@@ -272,3 +272,17 @@ Adds department support for rtBiz plugin.
 
 @return $supports array - updated value of supports variable.
 ```
+
+#### Hooks
+
+##### Actions
+
+##### Filters
+
+###### `rt_biz_modules`
+
+This filter is used to register new plugin modules to rtBiz for its ACL.
+
+###### `rt_biz_permissions`
+
+This filter is used to add / update default rtBiz permissions.
