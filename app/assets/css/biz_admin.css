@@ -109,3 +109,12 @@
 	margin-left: 10px;
 	color: green;
 }
+
+#rtbiz-contact-importer-bar, .contact-update{
+	margin-top: 10px;
+}
+
+.rtbiz-import-contact-warning span{
+	padding: 0 !important;
+	margin: 0 !important;
+}

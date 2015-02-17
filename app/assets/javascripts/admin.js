@@ -105,6 +105,7 @@ jQuery(document).ready(function($) {
 	var contacts_counts = jQuery('#rtbiz-contact-count' ).val();
 
 	jQuery('.rtbiz-export-button' ).click(function(e){
+		jQuery(this ).attr('disabled','disabled');
 		var nonce= jQuery('#rtbiz-contact-import-nonce').val();
 		var contacts_counts = jQuery('#rtbiz-contact-count' ).val();
 		rtbiz_ajaxcall_contacts( 0, nonce );
@@ -113,10 +114,12 @@ jQuery(document).ready(function($) {
 		jQuery('.contact-update' ).addClass('updated');
 		jQuery('#rtbiz-contact-count-proceed' ).val(0);
 		jQuery('#rtbiz-contact-count-imported' ).val(0);
+		jQuery('#rtbiz-contact-importer-bar' ).progressbar({
+			                                max: parseInt(contacts_counts,10)
+		                                });
 	});
 
 	function rtbiz_ajaxcall_contacts( offset, nonce ){
-		imported = jQuery('#rtbiz-contact-count-imported' );
 		countselect= jQuery('#rtbiz-contact-count-proceed' );
 
 		var param = {
@@ -127,12 +130,17 @@ jQuery(document).ready(function($) {
 		jQuery.post( rtbiz_ajax_url_admin, param ,function( data ){
 			if ( data.complete ){
 				jQuery('#rtbiz-import-spinner' ).hide();
+				jQuery('.contact-update' ).hide();
+				jQuery('.contact-synced' ).addClass('updated');
+				jQuery('.contact-synced' ).show();
+				jQuery('.rtbiz-export-button' ).removeAttr('disabled');
 			}
 			else {
 				rtbiz_ajaxcall_contacts( data.offset, nonce );
 			}
-			countselect.text( parseInt(data.contact_processed) + parseInt(countselect.text()) ); // jshint ignore:line
-			imported.text( parseInt(data.count) + parseInt(imported.text()) ); // jshint ignore:line
+			var proceeded =  parseInt(data.contact_processed) + parseInt(countselect.text()); // jshint ignore:line
+			jQuery( '#rtbiz-contact-importer-bar' ).progressbar('option','value', proceeded );
+			countselect.text( proceeded );
 		}, 'json' );
     }
 
