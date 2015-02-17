@@ -150,6 +150,66 @@ This method checks for Unique Primary Email & Empty Primary Email for rtBiz Cont
 @uses delete_user_meta() - deletes user meta value after displaying the admin notice.
 ```
 
+##### `manage_contact_column_header( $columns )`
+
+This method updates the label of Posts column in user category taxonomy list table.
+
+``` php
+@param $columns array - An array of columns along with their labels.
+
+@return $columns array - updated array of columns for list table.
+```
+
+##### `manage_contact_column_body( $display, $column, $term_id )`
+
+To add custom value in column on User Category taxonomy list table.
+
+``` php
+@param $display string - Content to display in column.
+@param $column string - column slug
+@param $term_id - Term ID for which the row is rendered in the table.
+```
+
+##### `contact_meta_boxes()`
+
+This action method adds up additional metaboxes for Contact post type.
+
+``` php
+@uses add_meta_box() - WordPress Core. To add new metabox
+```
+
+##### `contact_user_p2p()`
+
+Registers rtBiz Contact => WP User P2P connection
+
+``` php
+@uses p2p_register_connection_type() - P2P Core. Registers new connection between two entities.
+```
+
+##### `connect_contact_to_user( $from, $to )`
+
+Connects a rtBiz Contact to a WP User.
+
+``` php
+@param $from mixed - rtBiz Contact Post ID or Post Object
+@param $to mixed - WP User ID or User Object.
+
+@uses p2p_connection_exists() - P2P Core. Checks if rtBiz Contact is already connected or not.
+@uses p2p_type() - P2P core. Gets a P2P connection type.
+@uses P2P_Connection_Type_Factory::connect() - P2P Core. Connects two entities for given objects/IDs.
+```
+
+##### `remove_contact_to_user( $from, $to )`
+
+``` php
+@param $from mixed - rtBiz Contact Post ID or Post Object
+@param $to mixed - WP User ID or User Object.
+
+@uses p2p_connection_exists() - P2P Core. Checks if rtBiz Contact is already connected or not.
+@uses p2p_type() - P2P core. Gets a P2P connection type.
+@uses P2P_Connection_Type_Factory::disconnect() - P2P Core. Removes connection between two entities for given objects/IDs.
+```
+
 ##### `setup_meta_fields()`
 
 This method defines all the meta fields needed for `Person` entity.

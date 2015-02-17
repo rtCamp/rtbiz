@@ -371,29 +371,24 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					                       self::$user_category_taxonomy => $term->slug,
 				                       ) );
 
-				$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type().'&'.self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
+				$subsubsub[ $term->slug ] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type().'&'.self::$user_category_taxonomy.'='.$term->slug."' class='".$current."'>".__( $term->name )."<span class='count'> (".count( $posts->posts ).')</span></a></li>';
 			}
-			$posts = new WP_Query( array(
-				'post_type' => $this->post_type,
-				'post_status' => 'trash',
-				'nopaging' => true,
-			) );
-			$current = '';
-			if ( $check_post_status && 'trash' == $_REQUEST['post_status'] ){
-				$current  = 'current';
-				$check_post_status = false;
+
+			// We are removing publish status since we don't need it. All contacts will be in publish status. So it doen't make any sense.
+			if ( ! empty( $views['publish'] ) ) {
+				unset( $views['publish'] );
 			}
-			$subsubsub[] = "<li><a href='edit.php?post_type=".rt_biz_get_contact_post_type()."&post_status=trash' class='".$current."'>".__( 'Trash' )."<span class='count'> (". $posts->post_count .')</span></a></li>';
-			$current = '';
-			if ( $allflag ){
-				$current = 'current';
+
+			// Check if it's request for all contacts. If it's a custom filter request for any user category then remove current class from "All" link.
+			if ( ! $allflag && ! empty( $views['all'] ) ) {
+				$views['all'] = str_replace( 'current', '', $views['all'] );
 			}
-			$something = wp_count_posts( rt_biz_get_contact_post_type() );
-			$top = array( "<a href='edit.php?post_type=".rt_biz_get_contact_post_type()."' class='".$current."'>".__( 'All' )." <span class='count'> (".$something->publish.')</span></a>' );
-			echo '<ul class="subsubsub">';
-			echo implode( ' | ', array_merge( $top, $subsubsub ) );
-			echo '</ul>';
-			//			return $views;
+
+			// Merge Custom filter links with existing views.
+			$views = array_merge( $views, $subsubsub );
+
+			// Return new array.
+			return $views;
 		}
 
 
