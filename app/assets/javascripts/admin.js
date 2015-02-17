@@ -102,25 +102,38 @@ jQuery(document).ready(function($) {
 		}, 'json' );
 
 	});
+	var contacts_counts = jQuery('#rtbiz-contact-count' ).val();
 
 	jQuery('.rtbiz-export-button' ).click(function(e){
 		var nonce= jQuery('#rtbiz-contact-import-nonce').val();
+		var contacts_counts = jQuery('#rtbiz-contact-count' ).val();
+		rtbiz_ajaxcall_contacts( 0, nonce );
+		jQuery('#rtbiz-import-spinner' ).show();
+		jQuery('.contact-update' ).show();
+		jQuery('.contact-update' ).addClass('updated');
+		jQuery('#rtbiz-contact-count-proceed' ).val(0);
+		jQuery('#rtbiz-contact-count-imported' ).val(0);
+	});
+
+	function rtbiz_ajaxcall_contacts( offset, nonce ){
+		imported = jQuery('#rtbiz-contact-count-imported' );
+		countselect= jQuery('#rtbiz-contact-count-proceed' );
+
 		var param = {
 			action: 'rtbiz_export_all_contacts',
-			nonce: nonce
+			nonce: nonce,
+			offset: offset
 		};
-		jQuery('#rtbiz-import-spinner' ).show();
-		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
-			if ( data.status ) {
-				jQuery( '#rtbiz-import-message' ).html( data.message );
-				jQuery( '#rtbiz-import-message' ).removeClass( 'rtbiz-error' ).addClass( 'rtbiz-success' );
+		jQuery.post( rtbiz_ajax_url_admin, param ,function( data ){
+			if ( data.complete ){
+				jQuery('#rtbiz-import-spinner' ).hide();
 			}
-			else{
-				jQuery( '#rtbiz-import-message' ).html( 'Error: Import not success!' );
-				jQuery( '#rtbiz-import-message' ).removeClass( 'rtbiz-success').addClass( 'rtbiz-error' );
+			else {
+				rtbiz_ajaxcall_contacts( data.offset, nonce );
 			}
-			jQuery('#rtbiz-import-spinner' ).hide();
-		}, 'json');
-	});
+			countselect.text( parseInt(data.contact_processed) + parseInt(countselect.text()) ); // jshint ignore:line
+			imported.text( parseInt(data.count) + parseInt(imported.text()) ); // jshint ignore:line
+		}, 'json' );
+    }
 
 });
