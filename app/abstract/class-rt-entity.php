@@ -794,7 +794,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 			return $entity->posts;
 		}
-		
 		/**
 		 * Remove single connection from registered post type to Rt_Entity
 		 * @param unknown $post_type
