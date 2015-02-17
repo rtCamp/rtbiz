@@ -210,21 +210,113 @@ Connects a rtBiz Contact to a WP User.
 @uses P2P_Connection_Type_Factory::disconnect() - P2P Core. Removes connection between two entities for given objects/IDs.
 ```
 
+##### `edit_view_filters( $views )`
+
+This method shows filter links on top of rtBiz Contacts List Table based on User Categories defined for them.
+
+``` php
+@param $views array - An array of different filter views based on Post Statuses of Contact.
+
+@return @views array - Updated list of filter views based on User Categories.
+
+@uses get_terms() - WordPress Core. Fetch all the user category terms for rtBiz Contact.
+@uses WP_Query() - WordPress core. To query for the contact count for particular user category.
+```
+
+##### `register_tax()`
+
+Registers new taxonomy for User Category.
+
+``` php
+@uses rt_biz_get_access_role_cap() - rtBiz Core. To check for ACL.
+@uses register_taxonomy() - WordPress Core. To register new taxonomy.
+@uses rt_biz_get_contact_post_type() - WordPress core. To get the contact post type slug.
+```
+
+##### `add_defualt_categories_on_activate()`
+
+Adds up default terms for User category for Contact on plugin activation. It will check for terms. If they don't exists then it will create new terms.
+
+``` php
+@uses wp_insert_term() - WordPress Core. Inserts new terms if default term doesn't exist.
+```
+
 ##### `setup_meta_fields()`
 
-This method defines all the meta fields needed for `Person` entity.
+This method defines all the meta fields needed for `Contact` entity.
+
+``` php
+@uses apply_filters() - WordPress core. To define custom WP filter hook for other plugin/theme to change the meta fields for rtBiz Contact.
+
+@defined rt_biz_contact_meta_fields - WP Custom Filter to change meta fields for rtBiz Contact.
+```
+
+*Example*
+
+``` php
+add_filter( 'rt_biz_contact_meta_fields', 'my_custom_contact_meta_field' );
+
+function my_custom_contact_meta_field( $fields ) {
+
+	$fields[] = array(
+		'key' => 'contact_blog',
+		'text' => __( 'Enter your Blog Website URL' ),
+		'label' => __( 'Blog Website' ),
+		'is_multiple' => true,
+		'type' => 'text',
+		'name' => 'contact_meta[contact_blog][]',
+		'class' => 'input-multiple',
+		'description' => __( 'Blog Website URL.' ),
+		'category' => 'Social',
+	);
+
+	return $fields;
+}
+```
 
 ##### `print_metabox_js()`
 
-Overriden from `Rt_Entity` parent class.
+This includes, different kind of JS codes that are required in meta fields functionality. It is overriden from `Rt_Entity` parent class.
+
+##### `primary_email_empty()`
+
+This method displays admin notice for empty primary email error.
+
+``` php
+@uses _e() - WordPress Core. Internationalization method.
+```
+
+##### `primary_email_not_unique()`
+
+This method displays admin notice for duplicate primary email error.
+
+``` php
+@uses _e() - WordPress Core. Internationalization method.
+```
 
 ##### `save_meta_values()`
 
-Overriden from `Rt_Entity` parent class.
+This method saves all additional meta fields values for rtBiz contact. It is overriden from `Rt_Entity` parent class.
+
+``` php
+@uses update_user_meta() - WordPress Core. Updates user meta value.
+@uses get_current_user_id() - WordPress Core. Gets User ID of current logged in user.
+@uses delete_user_meta() - WordPress core. deletes user meta value.
+@uses biz_is_primary_email_unique() - WordPress Core. Checks for primary email.
+@uses Rt_Entity::get_meta() - rtBiz core. Get rtBiz Contact Meta.
+@uses Rt_Entity::delete_meta() - rtBiz core. Delete rtBiz Contact Meta.
+@uses Rt_Entity::add_meta() - rtBiz core. Add rtBiz Contact Meta.
+@uses Rt_Entity::update_meta() - rtBiz core. Update rtBiz Contact Meta.
+@uses Rt_Entity::save_meta_values() - rtBiz core. Calling parent class method to save meta fields.
+```
 
 ##### `post_table_columns()`
 
 Adds additional columns for Person list table. ( Phone Number, Country & Organization ). Overriden from `Rt_Entity` parent class.
+
+``` php
+@uses Rt_Entity::post_table_columns() - rtBiz Core. Calling parent class method to add up extra columns.
+```
 
 ##### `manage_post_table_columns()`
 

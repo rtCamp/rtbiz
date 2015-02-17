@@ -704,7 +704,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				),
 			);
 
-			$this->meta_fields = apply_filters( 'rt_biz_person_meta_fields', $this->meta_fields );
+			$this->meta_fields = apply_filters( 'rt_biz_contact_meta_fields', $this->meta_fields );
 		}
 
 		/**
@@ -976,11 +976,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function add_contact( $name, $description = '', $email = '' ) {
 			$contact_id = wp_insert_post( array(
-				                              'post_title'   => $name,
-				                              'post_content' => $description,
-				                              'post_type'    => $this->post_type,
-				                              'post_status'  => 'publish',
-			                              ) );
+				'post_title'   => $name,
+				'post_content' => $description,
+				'post_type'    => $this->post_type,
+				'post_status'  => 'publish',
+			) );
 			if ( ! empty( $email ) ){
 				rt_biz_update_entity_meta( $contact_id, $this->primary_email_key, $email );
 			}
@@ -995,13 +995,13 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function get_by_email( $email ) {
 			return ( ! empty( $email ) ) ? get_posts( array(
-				                                          'meta_key'    => self::$meta_key_prefix . $this->primary_email_key,
-				                                          // primary email
-				                                          'meta_value'  => $email,
-				                                          'post_type'   => $this->post_type,
-				                                          'post_status' => 'any',
-				                                          'nopaging'    => true,
-			                                          ) ) : array();
+				'meta_key'    => self::$meta_key_prefix . $this->primary_email_key,
+				// primary email
+				'meta_value'  => $email,
+				'post_type'   => $this->post_type,
+				'post_status' => 'any',
+				'nopaging'    => true,
+			) ) : array();
 		}
 
 		/**
@@ -1013,12 +1013,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function get_contact_for_wp_user( $user_id ) {
 			return get_posts( array(
-				                  'connected_type'  => $this->post_type . '_to_user',
-				                  'connected_items' => $user_id,
-				                  'post_type'       => $this->post_type,
-				                  'post_status'     => 'any',
-				                  'nopaging'        => true,
-			                  ) );
+				'connected_type'  => $this->post_type . '_to_user',
+				'connected_items' => $user_id,
+				'post_type'       => $this->post_type,
+				'post_status'     => 'any',
+				'nopaging'        => true,
+			) );
 		}
 
 		/**
