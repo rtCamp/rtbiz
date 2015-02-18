@@ -94,7 +94,11 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					<div id="rtmailbox-container<?php echo $rCount; ?>">
 						<div>
 							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
-							<strong><?php if ( isset( $ac->email_data['name'] ) ) { echo $ac->email_data['name']; } ?> <br/><a href='mailto:<?php echo $email ?>'><?php echo $email ?></a></strong>
+							<strong><?php if ( isset( $ac->email_data['name'] ) ) { echo $ac->email_data['name'].'<br/>'; } ?><a href='mailto:<?php echo $email ?>'><?php echo $email ?></a></strong>
+							<br>
+							<p class="description field-desc rtMailbox-folder-info">
+								Please click on `Show` button and select at least one folder.
+							</p>
 							<div class="rtmailbox-maillist-action">
 								<?php if ( $login_successful ) { ?>
 									<a class="button rtMailbox-hide-mail-folders mailbox_show_hide" href="#"><?php echo __( 'Show' ); ?></a>
@@ -102,6 +106,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								<a class='button remove-google-ac remove-mailbox' data-mailboxid="<?php echo $rCount; ?>" data-email="<?php echo $email; ?>" data-module="<?php echo $modules; ?>" href="javascript:;"><?php echo __( 'Remove A/C' ); ?></a>
 								<img id="remove-mailbox-spinner<?php echo $rCount; ?>" class="rtmailbox-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
 							</div>
+							<p id="rtMailbox-folder-info<?php echo $rCount; ?>" class="description field-desc rtMailbox-folder-error">
+							</p>
 						</div>
 						<?php if ( $login_successful ) { ?>
 							<table class="rtmailbox-hide-row">
@@ -111,6 +117,26 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 										<?php if ( ! is_null( $all_folders ) ) { ?>
 											<div id="mail_folder_container">
 												<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id ); ?>
+												<?php 
+												$validation_script .= "												
+															jQuery('#rtmailbox-container".$rCount."').find('input[type=\"checkbox\"]').each(function() {
+																if( jQuery(this).is(':checked') ) {
+																	count++;
+																}
+															});
+															if( count <= 0 ) {
+																jQuery('#rtMailbox-folder-info".$rCount."').html('Please select at least one mail folder for this account.');
+		 														jQuery('#rtMailbox-folder-info".$rCount."').show();
+																jQuery(window).scrollTop(jQuery('#rtmailbox-container".$rCount."').offset().top);
+																event.preventDefault();
+																return false;
+															}
+															else {
+																jQuery('#rtMailbox-folder-info".$rCount."').hide();
+															}
+															count = 0;
+												";
+													?>
 											</div>
 										<?php } else { ?>
 											<p class="description"><?php _e( 'No Folders found.' ); ?></p>
@@ -123,6 +149,18 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					</div>
 						<hr class="rt-mailbox-hr">
 				<?php } ?>
+				<?php if( $validation_script != '') : ?>
+					<script type="text/javascript">
+						jQuery(document).ready(function() {
+
+							jQuery('.rtmailbox_submit_enable_reply_by_email, #redux_save').click(function(event) {
+								var count = 0;
+								<?php echo $validation_script; ?>
+								return true;
+							});
+						});
+					</script>
+				<?php endif; ?>
 				<?php } ?>
 				<?php if ( $is_empty_mailbox_check ){
 					?>
@@ -186,7 +224,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			if ( isset( $_POST['module_to_register'] ) && ! empty( $_POST['module_to_register'] ) ){
 				$module = $_POST['module_to_register'];
 			}
-			if ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'Save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) {
+			if ( ( isset( $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) && 'Save' == $_REQUEST['rtmailbox_submit_enable_reply_by_email'] ) || ( isset( $_REQUEST['redux_save'] ) && 'Save Changes' == $_REQUEST['redux_save'] ) ) {
 				if ( isset( $_POST['mail_ac'] ) ) {
 					foreach ( $_POST['mail_ac'] as $mail_ac ) {
 						if ( ! is_email( $mail_ac ) ){
