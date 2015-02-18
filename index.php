@@ -302,9 +302,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$settings = biz_get_redux_settings();
 			$this->menu_order[] = 'edit.php?post_type=' . rt_biz_get_company_post_type();
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
-			}
+			$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 
 			if ( ! empty( self::$access_control_slug ) ) {
 				$this->menu_order[] = self::$access_control_slug;
@@ -397,19 +395,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+			$offering_plugin   = $settings['offering_plugin'];
+			$to_register_posttype = array();
+			foreach ( Rt_Access_Control::$modules as $key => $value ){
 
-				$offering_plugin   = $settings['offering_plugin'];
-				$to_register_posttype = array();
-				foreach ( Rt_Access_Control::$modules as $key => $value ){
-
-					if ( ! empty( $value['offering_support'] ) ) {
-						$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
-					}
+				if ( ! empty( $value['offering_support'] ) ) {
+					$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
 				}
-
-				$rtbiz_offerings = new Rt_Offerings( $offering_plugin, $terms_caps, $to_register_posttype );
 			}
+
+			$rtbiz_offerings = new Rt_Offerings( $offering_plugin, $terms_caps, $to_register_posttype );
 		}
 
 		function init_help() {
@@ -452,16 +447,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 				// guide Tour
 				add_filter( 'rt_guide_tour_list', array( $this, 'rtbiz_quide_tour' ) );
-
-				add_filter( 'admin_notices', array( $this, 'rtbiz_admin_notices' ) );
-				add_action( 'wp_ajax_rtbiz_hide_offering_notice', array( $this, 'rtbiz_hide_offering_notice' ), 10 );
 			}
-		}
-
-		function rtbiz_hide_offering_notice(){
-			update_option( 'rtbiz_hide-offering-notice', true );
-			echo 'true';
-			die();
 		}
 
 		function rtbiz_quide_tour( $pointers ){
@@ -660,17 +646,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			return $pointers;
 		}
 
-		function rtbiz_admin_notices(){
-			$settings = biz_get_redux_settings();
-			if ( ( ! isset( $settings['offering_plugin'] ) || 'none' == $settings['offering_plugin'] ) && ! get_option( 'rtbiz_hide-offering-notice' ) ) {
-				$setting_url = admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug );
-				echo '<div class="updated rtbiz-offering-notice" style="padding: 10px 10px 10px;"><div style="display: inline;">You need to select store for Offerings from <a href="' . esc_url( $setting_url ) . '">settings</a>';
-				echo '</div><a href="#" class="rtbiz_offering_dissmiss">x</a></div>';
-			} else {
-				delete_option( 'rtbiz_hide-offering-notice' );
-			}
-		}
-
 		function plugin_action_links( $links ) {
 			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rt_Biz::$dashboard_slug ) . '">' . __( 'Get Started', RT_BIZ_TEXT_DOMAIN ) . '</a>';
 			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=' . Rt_Biz::$settings_slug ) . '">' . __( 'Settings', RT_BIZ_TEXT_DOMAIN ) . '</a>';
@@ -739,9 +714,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_dashboard->add_screen_id( self::$dashboard_screen );
 			$rt_biz_dashboard->setup_dashboard();
 			$settings = biz_get_redux_settings();
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( 'Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
-			}
+			add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( 'Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
 			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			add_submenu_page( self::$dashboard_slug, __( 'User Groups' ), __( '--- Contact Groups' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() );
