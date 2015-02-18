@@ -1,6 +1,7 @@
 # Summary
 
 * [Developers](README.md)
+* [Dashboard](dashboard/index.md)
 * [Entity](entity/index.md)
    * [Contact](entity/contact/index.md)
    * [Company](entity/company/index.md)
