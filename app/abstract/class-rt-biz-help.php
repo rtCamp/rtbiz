@@ -179,7 +179,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'taxonomy' => Rt_Contact::$user_category_taxonomy,
 					),
 				),
-					) );
+			) );
 
 			$documentation_link = apply_filters( 'rt_biz_help_documentation_link', '#' );
 			$support_forum_link = apply_filters( 'rt_biz_help_support_forum_link', '#' );
