@@ -119,3 +119,10 @@ form#frm-replay-by-email div.form-body{
 table#rtmailbox-container th, table#rtmailbox-container td {
 	padding: 5px !important;
 }
+.rtMailbox-folder-info {
+	display: inline-block;
+}
+.rtMailbox-folder-error {
+	display: none;
+	color: #cd0a0a !important;
+}
