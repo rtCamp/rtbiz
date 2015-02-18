@@ -43,7 +43,6 @@ class Test_Rt_Biz extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->rtbiz, 'init_importer' ), 'method init_importer does not exist in rtbiz');
 		$this->assertTrue( method_exists( $this->rtbiz, 'hooks' ), 'method hooks does not exist in rtbiz');
 		$this->assertTrue( method_exists( $this->rtbiz, 'rtbiz_quide_tour' ), 'method rtbiz_quide_tour does not exist in rtbiz');
-		$this->assertTrue( method_exists( $this->rtbiz, 'rtbiz_admin_notices' ), 'method rtbiz_admin_notices does not exist in rtbiz');
 		$this->assertTrue( method_exists( $this->rtbiz, 'plugin_action_links' ), 'method plugin_action_links does not exist in rtbiz');
 		$this->assertTrue( method_exists( $this->rtbiz, 'plugin_row_meta' ), 'method plugin_row_meta does not exist in rtbiz');
 		$this->assertTrue( method_exists( $this->rtbiz, 'load_styles_scripts' ), 'method load_styles_scripts does not exist in rtbiz');
