@@ -117,7 +117,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 										<?php if ( ! is_null( $all_folders ) ) { ?>
 											<div id="mail_folder_container">
 												<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id ); ?>
-												<?php 
+												<?php
 												$validation_script .= "												
 															jQuery('#rtmailbox-container".$rCount."').find('input[type=\"checkbox\"]').each(function() {
 																if( jQuery(this).is(':checked') ) {
@@ -149,7 +149,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					</div>
 						<hr class="rt-mailbox-hr">
 				<?php } ?>
-				<?php if( $validation_script != '') : ?>
+				<?php if ( $validation_script != '' ) { ?>
 					<script type="text/javascript">
 						jQuery(document).ready(function() {
 
@@ -160,7 +160,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							});
 						});
 					</script>
-				<?php endif; ?>
+                                <?php } ?>
 				<?php } ?>
 				<?php if ( $is_empty_mailbox_check ){
 					?>
