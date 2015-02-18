@@ -24,11 +24,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			add_action( 'init', array( $this, 'setup_schedule' ) );
 			register_deactivation_hook( $plugin_path_for_deactivate_cron, array( $this, 'disable_cron_on_deactivation' ) );
 
-			global $rt_mail_accounts_model ;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
-			foreach ( $modules as $module ) {
-				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
-			}
 			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 		function deregister_cron_for_module( $module ) {
@@ -69,6 +64,13 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function setup_schedule() {
 			//  Migration remove old cron, changed one cron for one module which can have multiple mailbox setup
 			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
+
+			global $rt_mail_accounts_model ;
+			$modules = $rt_mail_accounts_model->get_unique_modules();
+			foreach ( $modules as $module ) {
+				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
+			}
+
 			// end of migration
 			global $rt_mail_accounts_model ;
 			$modules = $rt_mail_accounts_model->get_unique_modules();
