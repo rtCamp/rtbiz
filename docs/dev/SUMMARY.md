@@ -8,6 +8,7 @@
 * [Access Control](access-control/index.md)
 * [Attributes](attributes/index.md)
 * [Mailbox](mailbox/index.md)
+* [Contextual Help](contextual-help/index.md)
 * [Internal Architecture](internal-architecture/index.md)
 * [Database](database/index.md)
 * [Contribute](contribute/index.md)
