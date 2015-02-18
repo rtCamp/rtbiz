@@ -70,6 +70,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 						$token = $ac->outh_token;
 						$is_empty_mailbox_check = false;
+						$validation_script = '';
 						if ( isset( $ac->email_data['picture'] ) ){
 							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 							$personMarkup = "<img src='$img?sz=96'>";
@@ -118,7 +119,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<div id="mail_folder_container">
 												<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $ac->id ); ?>
 												<?php
-												$validation_script .= "												
+												$validation_script .= "
 															jQuery('#rtmailbox-container".$rCount."').find('input[type=\"checkbox\"]').each(function() {
 																if( jQuery(this).is(':checked') ) {
 																	count++;
