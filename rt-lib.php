@@ -3,11 +3,11 @@
   Plugin Name: rtLib
   Plugin URI: http://rtcamp.com/
   Description: This plugin contains common libs that are used in many rtcamp plugins
-  Version: 1.2
+  Version: 1.3
   Author: rtcamp
   Author URI: http://rtcamp.com/
  */
-$rt_lib_version = '1.2';
+$rt_lib_version = '1.3';
 $rt_lib_path = __FILE__;
 
 #. '/rt-wp-autoloader/class-rt-wp-autoload.php';
