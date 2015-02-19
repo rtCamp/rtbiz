@@ -63,6 +63,10 @@ Great! There are several ways you can get involved to help make Stream better:
 
 == Changelog ==
 
+= 1.3 =
+Mailbox Library Refactor
+Importer Library Refactor
+
 = 1.2 =
 Mailbox Library
 
