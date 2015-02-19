@@ -87,9 +87,9 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		function get_email_acc( $email ) {
+		function get_email_acc( $email, $module ) {
 			global $rt_mail_accounts_model;
-			$emails = $rt_mail_accounts_model->get_mail_account( array( 'email' => $email ) );
+			$emails = $rt_mail_accounts_model->get_mail_account( array( 'email' => $email, 'module' => $module ) );
 			$email  = false;
 			if ( ! empty( $emails ) ) {
 				$email = $emails[0];
@@ -105,9 +105,9 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function get_user_google_ac( $args = array() ) {
+		public function get_user_google_ac( $module ) {
 			global $rt_mail_accounts_model;
-			return $rt_mail_accounts_model->get_mail_account( $args );
+			return $rt_mail_accounts_model->get_mail_account( array( 'module' => $module, ) );
 		}
 
 		/**
@@ -295,14 +295,14 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function delete_user_google_ac( $email, $user_id = - 1 ) {
+		public function delete_user_google_ac( $email, $module, $user_id = - 1 ) {
 			if ( $user_id == - 1 ) {
 				$user_id = get_current_user_id();
 			}
 			global $rt_mail_accounts_model;
 			$result = $rt_mail_accounts_model->remove_mail_account( array(
 				                                                        'email' => $email,
-				                                                        //'user_id' => $user_id,
+																		'module' => $module,
 			                                                        ) );
 			$this->update_gmail_ac_count();
 			return $result;
@@ -491,6 +491,19 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			return $rows_affected;
 		}
 
+		/**
+		 * Get all mailbox
+		 *
+		 * @return mixed
+		 *
+		 */
+		public function get_all_mailbox() {
+			global $rt_mail_accounts_model;
+			return $rt_mail_accounts_model->get_all_mail_accounts();
+		}
+
+
+
 	}
 
 }
@@ -499,17 +512,19 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
  * returns all system emails
  * @return array
  */
-function rt_get_all_system_emails( $args = array() ) {
+function rt_get_mpdule_mailbox_emails( $module ) {
 	global $rt_mail_settings;
 
 	$emails   = array();
-	$google_acs = $rt_mail_settings->get_user_google_ac( $args );
+	$google_acs = $rt_mail_settings->get_user_google_ac( $module );
 
 	foreach ( $google_acs as $ac ) {
 		$ac->email_data = unserialize( $ac->email_data );
 		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-		$emails[] = $ac_email;
+		$hdZendEmail = new Rt_Zend_Mail();
+		if ( $hdZendEmail->try_imap_login( $ac_email, $ac->outh_token, $ac->type, $ac->imap_server ) ) {
+			$emails[] = $ac_email;
+		}
 	}
-
 	return $emails;
 }

@@ -24,11 +24,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			add_action( 'init', array( $this, 'setup_schedule' ) );
 			register_deactivation_hook( $plugin_path_for_deactivate_cron, array( $this, 'disable_cron_on_deactivation' ) );
 
-			global $rt_mail_accounts_model ;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
-			foreach ( $modules as $module ) {
-				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
-			}
 			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 		function deregister_cron_for_module( $module ) {
@@ -69,6 +64,13 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function setup_schedule() {
 			//  Migration remove old cron, changed one cron for one module which can have multiple mailbox setup
 			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
+
+			global $rt_mail_accounts_model ;
+			$modules = $rt_mail_accounts_model->get_unique_modules();
+			foreach ( $modules as $module ) {
+				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
+			}
+
 			// end of migration
 			global $rt_mail_accounts_model ;
 			$modules = $rt_mail_accounts_model->get_unique_modules();
@@ -90,10 +92,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function rt_parse_email( $module ) {
 
 			global $rt_mail_settings, $rt_mail_accounts_model ;
-			$val = Rt_Mailbox::get_enable_by_reply_email();
-			if ( empty( $val ) || 'yes' != $val ) {
-				return;
-			}
+
 			//			$emailRow = $rt_mail_settings->get_email_for_sync();
 			$emails = $rt_mail_accounts_model->get_mail_account( array( 'module' => $module ) );
 			foreach ( $emails as $emailRow ) {
@@ -128,12 +127,8 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 				$access_token = $rt_mail_settings->get_accesstoken_from_email( $email, $signature, $email_type, $imap_server );
 
 				$rtZendEmail = new Rt_Zend_Mail();
-				//System Mail
-				$isSystemMail = false;
-				if ( rt_is_system_email( $email ) ) {
-					$isSystemMail = true;
-				}
-				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $isSystemMail, $signature );
+
+				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $module, $signature );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 			}

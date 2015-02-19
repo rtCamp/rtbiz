@@ -30,12 +30,12 @@ Inspired from https://github.com/zendframework/zf2/tree/master/library/Zend/
 
 To add it in your plugin/theme
 ```
-git subtree add --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
+git subtree add --prefix app/lib https://github.com/rtCamp/rt-lib.git master --squash
 ```
 
 To update the library
 ```
-git subtree pull --prefix app/lib https://github.com/rtCamp/rt-lib.git master  --squash
+git subtree pull --prefix app/lib https://github.com/rtCamp/rt-lib.git master --squash
 ```
 
 Add following line in plugin loader file
@@ -62,6 +62,10 @@ Great! There are several ways you can get involved to help make Stream better:
 2. **Suggest New Features:** Have an awesome idea? Please share it! Simply [create a new topic](https://github.com/rtCamp/rt-lib/issues) in the issure tracker to express your thoughts on why the feature should be included and get a discussion going around your idea.
 
 == Changelog ==
+
+= 1.3 =
+Mailbox Library Refactor
+Importer Library Refactor
 
 = 1.2 =
 Mailbox Library

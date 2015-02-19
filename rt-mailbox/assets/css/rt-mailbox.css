@@ -9,7 +9,7 @@
 }
 
 .tab-body-wrapper{
-	margin-top: 30px;
+	margin: 12px 0px;
 }
 
 .sub-nav-tab-wrapper{
@@ -26,6 +26,11 @@ div#rtmailbox_email_acc_type_container table{
 
 div#rtmailbox_email_acc_type_container table th,div#rtmailbox_email_acc_type_container table td{
 	padding: 5px 0px;
+}
+
+.rt_mailbox_error{
+	color: #cd0a0a;
+	margin-top: 10px;
 }
 
 
@@ -88,4 +93,36 @@ form#frm-replay-by-email div.form-body{
 
 .imap_table tr td,.imap_table tr th{
 	padding: 5px;
+}
+
+.rtmailbox-maillist-action{
+	display: inline-block;
+	float: right;
+}
+
+.rtmailbox-severtype-container{
+	margin: 10px 0px;
+}
+
+.rtmailbox-spinner {
+	display: none;
+}
+
+.rt-mailbox-hr{
+	margin-top: 30px;
+}
+
+.rtmailbox_submit_enable_reply_by_email{
+	display: inline;
+}
+
+table#rtmailbox-container th, table#rtmailbox-container td {
+	padding: 5px !important;
+}
+.rtMailbox-folder-info {
+	display: inline-block;
+}
+.rtMailbox-folder-error {
+	display: none;
+	color: #cd0a0a !important;
 }

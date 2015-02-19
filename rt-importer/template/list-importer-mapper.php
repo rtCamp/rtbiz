@@ -8,7 +8,7 @@
 				class="sorting-indicator"></span></th>
 		<th scope='col' id='rtlib_create_date' class='manage-column column-rtlib_create_date' style="">
 			<span>Create Date</span></th>
-		<th scope='col' id='rtlib_enable' class='manage-column column-rtlib_enable' style=""><span>Enable\Disable</span>
+		<th scope='col' id='rtlib_enable' class='manage-column column-rtlib_enable' style=""><span>Enable</span>
 		</th>
 		<th scope='col' id='rtlib_delete' class='manage-column column-rtlib_delete' style=""><span>Delete</span></th>
 	</tr>
@@ -22,7 +22,7 @@
 				class="sorting-indicator"></span></th>
 		<th scope='col' id='rtlib_create_date' class='manage-column column-rtlib_create_date' style="">
 			<span>Create Date</span></th>
-		<th scope='col' id='rtlib_enable' class='manage-column column-rtlib_enable' style=""><span>Enable\Disable</span>
+		<th scope='col' id='rtlib_enable' class='manage-column column-rtlib_enable' style=""><span>Enable</span>
 		</th>
 		<th scope='col' id='rtlib_delete' class='manage-column column-rtlib_delete' style=""><span>Delete</span></th>
 	</tr>
@@ -38,10 +38,13 @@
 				<td class='rtlib_enable column-rtlib_enable aligncenter'><input
 						id="cb-select-<?php echo esc_attr( $gravity_field->id ); ?>" class="rtlib_enable_mapping"
 						type="checkbox"  <?php echo esc_attr( isset( $gravity_field->enable ) && $gravity_field->enable == 'yes' ? 'checked="checked"' : '' ) ?>
-						data-mapping-id="<?php echo esc_attr( $gravity_field->id ); ?>" value="yes"/></td>
+						data-mapping-id="<?php echo esc_attr( $gravity_field->id ); ?>" value="yes"/>
+					<img class="rt-lib-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
+				</td>
 				<td class='rtlib_delete column-rtlib_delete aligncenter'><a
 						id="rtlib-delete--<?php echo esc_attr( $gravity_field->id ); ?>" class="rtlib_delete_mapping"
 						style="color: red; cursor: pointer" data-mapping-id="<?php echo esc_attr( $gravity_field->id ); ?>">X</a>
+					<img class="rt-lib-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
 				</td>
 			</tr>
 		<?php

@@ -20,6 +20,8 @@ jQuery( document ).ready( function() {
 		},
 		initMapSubmit: function(){
 			jQuery( '#map_submit' ).click( function () {
+				jQuery(this ).next('.rt-lib-spinner' ).show();
+				var that = this;
 				var data = {
 					action: 'rtlib_import',
 					type: 'gravity',
@@ -32,6 +34,8 @@ jQuery( document ).ready( function() {
 					failCount = 0;
 					forceImport = false;
 					jQuery( '#mapping-form' ).html( response );
+					jQuery(that ).next('.rt-lib-spinner' ).hide();
+
 				} );
 			} );
 		},
@@ -110,7 +114,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' ); // jshint ignore:line
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -125,11 +129,11 @@ jQuery( document ).ready( function() {
 									postdata[mapping.value].push( tmpObj );
 								} else {
 									//multiple not allowed
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = jQuery( jQuery( '#' + mapping.name ).parent().next().children( 'input,select' ) ).val();
 									if ( arr_map_fields[mapping.value].type !== undefined && arr_map_fields[mapping.value].type === 'defined' ) {
-										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' ); // jshint ignore:line
 										if ( arrMapSelects.length < 1 ) {
 											errorFlag = true;
 											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name );
@@ -137,7 +141,7 @@ jQuery( document ).ready( function() {
 											jQuery( '#' + mapping.name ).focus();
 											return false;
 										} else {
-											var tObj = {};
+											var tObj = {}; // jshint ignore:line
 											jQuery.each( arrMapSelects, function ( indx, obj ) {
 												tObj[jQuery( obj ).data( 'map-value' )] = jQuery( this ).val();
 											} );
@@ -145,7 +149,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' ); // jshint ignore:line
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -162,11 +166,11 @@ jQuery( document ).ready( function() {
 
 							} else {
 								if ( arr_map_fields[mapping.value].multiple ) {
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = jQuery( jQuery( '#' + mapping.name ).parent().next().children( 'input,select' ) ).val();
 									if ( arr_map_fields[mapping.value].type !== undefined && arr_map_fields[mapping.value].type === 'defined' ) {
-										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'table' ).find( 'select' ); // jshint ignore:line
 										if ( arrMapSelects.length < 1 ) {
 											errorFlag = true;
 											alert( 'Maping not Defined for ' + arr_map_fields[mapping.value].display_name );
@@ -174,7 +178,7 @@ jQuery( document ).ready( function() {
 											jQuery( '#' + mapping.name ).focus();
 											return false;
 										} else {
-											var tObj = {};
+											var tObj = {}; // jshint ignore:line
 											jQuery.each( arrMapSelects, function ( indx, obj ) {
 												tObj[jQuery( obj ).data( 'map-value' )] = jQuery( this ).val();
 											} );
@@ -182,7 +186,7 @@ jQuery( document ).ready( function() {
 										}
 
 									} else if ( arr_map_fields[mapping.value].type === 'key' ) {
-										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' );
+										var arrMapSelects = jQuery( '#' + this.name ).siblings( 'select' ); // jshint ignore:line
 										if ( arrMapSelects.length > 0 ) {
 											tmpObj.keyname = jQuery( arrMapSelects ).val();
 										} else {
@@ -216,13 +220,13 @@ jQuery( document ).ready( function() {
 							} else if ( postdata[mapping.value] === undefined ) {
 								if ( arr_map_fields[mapping.value].multiple ) {
 									postdata[mapping.value] = Array();
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 
 									postdata[mapping.value].push( tmpObj );
 								} else {
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 									postdata[mapping.value] = tmpObj;
@@ -230,7 +234,7 @@ jQuery( document ).ready( function() {
 
 							} else {
 								if ( arr_map_fields[mapping.value].multiple ) {
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 									tmpObj.fieldName = mapping.name;
 									tmpObj.defaultValue = '';
 									postdata[mapping.value].push( tmpObj );
@@ -250,7 +254,7 @@ jQuery( document ).ready( function() {
 
 						} else {
 							if ( jQuery( '[name=' + mapping.name + ']' ).parent().parent().css( 'display' ) !== 'none' ) {
-									var tmpObj = {};
+									var tmpObj = {}; // jshint ignore:line
 								tmpObj.fieldName = mapping.value;
 								tmpObj.defaultValue = '';
 								if ( postdata[mapping.name] === undefined ) {
@@ -320,7 +324,7 @@ jQuery( document ).ready( function() {
 						map_data: postdata,
 						map_form_id: jQuery( '#mapSource' ).val(),
 						map_row_index: rCount,
-						gravity_lead_id: parseInt( arr_lead_id[rCount].id ),
+						gravity_lead_id: parseInt( arr_lead_id[rCount].id, 10 ),
 						forceimport: forceImport,
 						trans_id: transaction_id,
 						rthd_module: jQuery( '#rthd_module' ).val()
@@ -536,11 +540,11 @@ jQuery( document ).ready( function() {
 
 
 				} else {
-					var source = jQuery( '#defined_filed-option' ).html();
-					var template = Handlebars.compile( source );
+					var source = jQuery( '#defined_filed-option' ).html(); // jshint ignore:line
+					var template = Handlebars.compile( source ); // jshint ignore:line
 
-					var tmpStr = '<select name="default-' + field_name + '">';
-					var tmpArr = window[arr_map_fields[field_name].definedsource];
+					var tmpStr = '<select name="default-' + field_name + '">'; // jshint ignore:line
+					var tmpArr = window[arr_map_fields[field_name].definedsource]; // jshint ignore:line
 
 					tmpStr += template( tmpArr ) + '</select>';
 					jQuery( this ).parent().next().html( tmpStr );
@@ -567,6 +571,7 @@ jQuery( document ).ready( function() {
 		initEnableMapping: function(){
 			jQuery( '.rtlib_enable_mapping' ).on( 'change', function ( e ) {
 				e.preventDefault();
+				jQuery(this ).next('.rt-lib-spinner' ).show();
 				var update_mapping_id = jQuery( this ).data( 'mapping-id' );
 				var that = this;
 				jQuery.ajax( {
@@ -585,9 +590,11 @@ jQuery( document ).ready( function() {
 						        } else {
 							        alert( 'error in updating mapping from server' );
 						        }
+						        jQuery(that ).next('.rt-lib-spinner' ).hide();
 					        },
 					        error: function ( xhr, textStatus, errorThrown ) {
-						        alert( 'error in update ' );
+						        alert( 'error in update while communicating to server' );
+						        jQuery(that ).next('.rt-lib-spinner' ).hide();
 					        }
 
 				        } );
@@ -601,6 +608,7 @@ jQuery( document ).ready( function() {
 					e.preventDefault();
 					return false;
 				}
+				jQuery(this ).next('.rt-lib-spinner' ).show();
 				var del_mapping_id = jQuery( this ).data( 'mapping-id' );
 				var that = this;
 				jQuery.ajax( {
@@ -613,6 +621,7 @@ jQuery( document ).ready( function() {
 					        },
 					        success: function ( data ) {
 						        if ( data.status ) {
+							        jQuery(that ).next('.rt-lib-spinner' ).hide();
 							        jQuery( '#mapping_' + del_mapping_id ).fadeOut( 500, function () {
 								        jQuery( this ).remove();
 							        } );
@@ -622,6 +631,7 @@ jQuery( document ).ready( function() {
 					        },
 					        error: function ( xhr, textStatus, errorThrown ) {
 						        alert( 'error in remove ' );
+						        jQuery(that ).next('.rt-lib-spinner' ).hide();
 					        }
 
 				        } );
