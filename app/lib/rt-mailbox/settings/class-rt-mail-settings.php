@@ -512,7 +512,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
  * returns all system emails
  * @return array
  */
-function rt_get_mpdule_mailbox_emails( $module ) {
+function rt_get_module_mailbox_emails( $module ) {
 	global $rt_mail_settings;
 
 	$emails   = array();
