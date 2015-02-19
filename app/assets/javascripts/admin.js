@@ -112,8 +112,8 @@ jQuery(document).ready(function($) {
 		jQuery('#rtbiz-import-spinner' ).show();
 		jQuery('.contact-update' ).show();
 		jQuery('.contact-update' ).addClass('updated');
-		jQuery('#rtbiz-contact-count-proceed' ).val(0);
-		jQuery('#rtbiz-contact-count-imported' ).val(0);
+		jQuery('#rtbiz-contact-count-proceed' ).text(0);
+		jQuery('.contact-synced' ).hide();
 		jQuery('#rtbiz-contact-importer-bar' ).progressbar({
 			                                max: parseInt(contacts_counts,10)
 		                                });
