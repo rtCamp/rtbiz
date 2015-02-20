@@ -636,7 +636,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Roles' ) ),
-					'content'   => sprintf( '<p>%s</p>', esc_html__( "Please click on 'Help' menu on the top left of the screen to know about the ACL roles." ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( "Please click on 'Help' menu on the top right of the screen to know about the ACL roles." ) ),
 					'anchor_id' => '#screen-meta-links #contextual-help-link',
 					'edge'      => 'top',
 					'align'     => 'right',
