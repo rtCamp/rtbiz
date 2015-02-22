@@ -53,20 +53,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
-			$this->labels = apply_filters( 'rt_biz_contact_labels', array(
-				'name' => __( 'Contacts' ),
-				'singular_name' => __( 'Contact' ),
-				'menu_name' => __( 'Contact' ),
-				'all_items' => __( 'All Contacts' ),
-				'add_new' => __( 'Add New' ),
-				'add_new_item' => __( 'Add Contact' ),
-				'edit_item' => __( 'Edit Contact' ),
-				'new_item' => __( 'New Contact' ),
-				'view_item' => __( 'View Contact' ),
-				'search_items' => __( 'Search Contact' ),
-				'not_found' => __( 'No Contact found' ),
-				'not_found_in_trash' => __( 'No Contact found in Trash' ),
-			) );
+
+			add_action( 'init', array( $this, 'init_labels' ), 9 );
+
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
 
@@ -108,6 +97,22 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			// end
 		}
 
+		function init_labels() {
+			$this->labels = apply_filters( 'rt_biz_contact_labels', array(
+				'name' => __( 'Contacts' ),
+				'singular_name' => __( 'Contact' ),
+				'menu_name' => __( 'Contact' ),
+				'all_items' => __( 'All Contacts' ),
+				'add_new' => __( 'Add New' ),
+				'add_new_item' => __( 'Add Contact' ),
+				'edit_item' => __( 'Edit Contact' ),
+				'new_item' => __( 'New Contact' ),
+				'view_item' => __( 'View Contact' ),
+				'search_items' => __( 'Search Contact' ),
+				'not_found' => __( 'No Contact found' ),
+				'not_found_in_trash' => __( 'No Contact found in Trash' ),
+			) );
+		}
 
 		/**
 		 * admin notice for exported users
@@ -397,7 +402,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function register_tax(){
 
-			$labels = array(
+			$labels = apply_filters( 'rt_contact_groups_labels', array(
 				'name'                       => __( 'Contact Groups' ),
 				'singular_name'              => __( 'Contact Group' ),
 				'menu_name'                  => __( 'Contact Groups' ),
@@ -411,7 +416,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				'separate_items_with_commas' => __( 'Separate Contact Groups with commas' ),
 				'add_or_remove_items'        => __( 'Add or remove Contact Groups' ),
 				'choose_from_most_used'      => __( 'Choose from the most popular Contact Groups' ),
-			);
+			) );
 
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
 			$caps = array(

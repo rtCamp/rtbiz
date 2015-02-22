@@ -26,6 +26,14 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		 */
 		public function __construct() {
 			parent::__construct( 'rt_account' );
+
+			add_action( 'init', array( $this, 'init_labels' ), 9 );
+
+			$this->setup_meta_fields();
+			add_action( 'init', array( $this, 'init_entity' ) );
+		}
+
+		function init_labels() {
 			$this->labels = apply_filters( 'rt_biz_company_labels', array(
 				'name' => __( 'Companies' ),
 				'singular_name' => __( 'Company' ),
@@ -40,9 +48,8 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 				'not_found' => __( 'No Companies found' ),
 				'not_found_in_trash' => __( 'No Companies found in Trash' ),
 			) );
-			$this->setup_meta_fields();
-			add_action( 'init', array( $this, 'init_entity' ) );
 		}
+
 		/**
 		 *  Init Meta Fields
 		 */
