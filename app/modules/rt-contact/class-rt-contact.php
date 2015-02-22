@@ -53,7 +53,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		public function __construct() {
 			parent::__construct( 'rt_contact' );
-			$this->labels = array(
+			$this->labels = apply_filters( 'rt_biz_contact_labels', array(
 				'name' => __( 'Contacts' ),
 				'singular_name' => __( 'Contact' ),
 				'menu_name' => __( 'Contact' ),
@@ -66,7 +66,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				'search_items' => __( 'Search Contact' ),
 				'not_found' => __( 'No Contact found' ),
 				'not_found_in_trash' => __( 'No Contact found in Trash' ),
-			);
+			) );
 			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
 

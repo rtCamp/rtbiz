@@ -675,7 +675,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * @param array $labels
 		 */
 		function register_post_type( $name, $labels = array() ) {
-			$args = array(
+			$args = apply_filters( 'rt_entity_register_post_type_args', array(
 				'labels' => $labels,
 				'public' => false,
 				'publicly_queryable' => false,
@@ -687,7 +687,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				'capability_type' => $name,
 				'map_meta_cap'       => true, //Required For ACL Without map_meta_cap Cap ACL isn't working.
 				//Default WordPress check post capability on admin page so we need to map custom post type capability with post capability.
-			);
+			), $name );
 			register_post_type( $name, $args );
 		}
 
