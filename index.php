@@ -59,7 +59,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/** Singleton *************************************************************/
 
 		/**
-		 * @var WP_Time_Is The one true Rt_Biz
+		 * @var Rt_Biz The one true Rt_Biz
 		 * @since 0.1
 		 */
 		private static $instance;
@@ -245,7 +245,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				// Look in global /wp-content/languages/wp_ti folder
 				load_textdomain( RT_BIZ_TEXT_DOMAIN, $mofile_global );
 			} elseif ( file_exists( $mofile_local ) ) {
-				// Look in local /wp-content/plugins/wp-time-is/languages/ folder
+				// Look in local /wp-content/plugins/rtbiz/languages/ folder
 				load_textdomain( RT_BIZ_TEXT_DOMAIN, $mofile_local );
 			} else {
 				// Load the default language files
