@@ -208,12 +208,16 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			/**
 			 *
 			 *  Filter for other addons to register.
-			 *  Array Structure is array( 'module_slug' => 'label' )
+			 *  Array Structure is array( 'module_slug' => array() )
 			 *
 			 *  $biz_module = array(
 			 *		RT_BIZ_TEXT_DOMAIN => array(
-			 *			'label' => __( 'rtBiz' ),
-			 *			'post_types' => array( 'post', 'page', 'rt_contact', 'rt_lead', ),
+			 *			'label' => __( 'rtBiz' ),                                                                   // module label
+			 *			'post_types' => array( 'post', 'page', 'rt_contact', 'rt_lead', ),                          // array of post type for given module
+			 *          'department_support' => array( 'rt_contact', 'rt_ticket' ),                                 // array of post types for which department taxonomy is to be registered
+			 *          'offering_support' => array( 'rt_contact', 'rt_ticket' ),                                   // array of post types for which offerings taxonomy is to be registered
+			 *          'setting_option_name' => 'redux_biz_settings',                                              // redux opions Name, if used
+			 *          'setting_page_url' => 'http://rtbiz.rtcamp.net/wp-admin/admin.php?page=rt-biz-settings',    // Settings Page URL, if Mailbox module is used.
 			 *		),
 			 *  );
 			 */
