@@ -196,6 +196,15 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode( "', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
 				}
 
+				/**
+				 * Backward compatibility Fix
+				 * Ticket Reference : https://core.trac.wordpress.org/ticket/30999
+				 * Changeset : https://core.trac.wordpress.org/changeset/31525
+				 */
+				if ( is_object( $taxonomy ) ) {
+					$taxonomy = $taxonomy->name;
+				}
+
 				do_action( 'edit_term_taxonomy', $term, $taxonomy );
 				$wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
 				do_action( 'edited_term_taxonomy', $term, $taxonomy );
