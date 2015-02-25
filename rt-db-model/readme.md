@@ -133,6 +133,22 @@ Deletes existing rows from database table.
 
 ### Example
 
-```php
-$obj_table_model = new RT_DB_Model( $table_name );
+``` php
+$table_name = 'wp_attributes';
+
+/**
+ * false because the table string is without prefix.
+ * so library will prepend the prefix on its own.
+ */
+$is_tablename_with_prefix = false;
+
+$per_page = 10;
+
+/**
+ * false Bacause, this table needs to be created for each sub-site in MU setup.
+ * Not a common single table for all sub-sites.
+ */
+$mu_single_table = false;
+
+$obj_table_model = new RT_DB_Model( $table_name, $is_tablename_with_prefix, $per_page, $mu_single_table );
 ```
