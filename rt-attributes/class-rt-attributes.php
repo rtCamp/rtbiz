@@ -21,7 +21,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 	class RT_Attributes {
 
 		/**
-		 * @var $module_id - unique module id for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
+		 * @var $module_name - unique module name for which this class is called. This can be either plugin slug or plugin name or any unique identifier that will be used to know which plugin or module is calling the library class. And accordingly that can be mapped to attributes.
 		 */
 		var $module_name;
 
@@ -194,6 +194,15 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 				if ( $object_types ) {
 					$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode( "', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+				}
+
+				/**
+				 * Backward compatibility Fix
+				 * Ticket Reference : https://core.trac.wordpress.org/ticket/30999
+				 * Changeset : https://core.trac.wordpress.org/changeset/31525
+				 */
+				if ( is_object( $taxonomy ) ) {
+					$taxonomy = $taxonomy->name;
 				}
 
 				do_action( 'edit_term_taxonomy', $term, $taxonomy );

@@ -18,13 +18,13 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @var string
 		 *
-		 * $table_name - database table linked to the model.
-		 *                All the queries will be fired on that table or with the join in this table.
-		 * $per_page - number of rows per page to be displayed
+		 * $table_name - database table linked to the model. All the queries will be fired on that table or with the join in this table.
 		 */
 		public $table_name;
 		/**
 		 * @var int
+		 *
+		 * $per_page - number of rows per page to be displayed
 		 */
 		public $per_page;
 		/**
