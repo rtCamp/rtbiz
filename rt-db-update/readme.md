@@ -142,5 +142,19 @@ Set db current and installed version and also plugin info.
 Database schema updater class, Just add following code in `register_activation_hook`
 
 ```
-$rt_db_update = new RT_DB_Update( $plugin_loader_file_path , $schema_path , $mu_single_table );
+register_activation_hook( __FILE__, 'myplugin_activate' );
+
+function myplugin_activate() {
+	// index file of the plugin.
+	$plugin_path = __FILE__;
+	// schema folder containing all the schema files for db tables.
+	// NOTE: schema file should have extension ".schema"
+	// NOTE: Each table defination must have one column named "id" and that should be primary key of the table. Otherwise this library won't work with your DB tables along with `RT_DB_Model`.
+	$schema_path = trailingslashit( dirname( __FILE__ ) ) . 'schema/';
+	// Common Single table for all sub-sites in Multisite or not.
+	$mu_single_table = false;
+	// Current version which is latest. If not passed, library will take it from plugin/theme information.
+	$current_version = false;
+	$rt_db_update = new RT_DB_Update( $plugin_path , $schema_path , $mu_single_table, $current_version );
+}
 ```
