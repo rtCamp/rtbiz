@@ -1,15 +1,15 @@
-RT Product Sync
-===============
+RT Offerings
+============
 
 This class gives a special attribute to link it with other Custom Post Types.
 
 Many a times, we want to link our Custom Post Types with the products in our E-commerce Store such as WooCommerce or EasyDigitalDownload.
 
-This class takes all the existing products from either a WC or EDD store and synchronize them with the terms of this special attribute taxonomy "Products".
+This class takes all the existing products from either a WC or EDD store and synchronize them with the terms of this special attribute taxonomy "Offerings".
 
 So that we can assign these products to any custom post types that are registered with this taxonomy.
 
-## How to use
+### How to use
 
     $terms_caps = array(
         'manage_terms' => true,//$editor_cap,
@@ -22,4 +22,6 @@ So that we can assign these products to any custom post types that are registere
 
     $post_types = array( 'ticket', 'lead' ); /* Post Types to provide Product Sync Support to */
 
-    $rtbiz_product_sync = new Rt_Offerings( $product_plugin, $terms_caps, $post_types );
+    $rtbiz_offerings = new Rt_Offerings( $product_plugin, $terms_caps, $post_types );
+
+### class Rt_Offerings
