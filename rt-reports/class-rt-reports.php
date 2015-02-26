@@ -22,28 +22,44 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 
 		/**
 		 * Data Source for the Charts
+		 *
+		 * @var array
 		 */
 		var $data_source;
 
 		/**
 		 * Chart Rendering Opitons
+		 *
+		 * @var array
 		 */
 		var $options;
 
 		/**
 		 * Dom Target element where the chart is to be displayed
+		 *
+		 * @var string
 		 */
 		var $dom_element;
 
 		/**
 		 * Supported Chart Types
+		 *
+		 * @var array
 		 */
 		var $chart_types;
 
+		/**
+		 * Page slugs on which Reports needs to be displayed.
+		 *
+		 * @var array
+		 */
 		var $page_slugs;
 
 		/**
+		 * Constructor method for the class.
+		 * It initializes all the required attributes and defined the necessary hook methods.
 		 *
+		 * @param array $page_slugs
 		 */
 		public function __construct( $page_slugs = array() ) {
 			$this->chart_types = array(
@@ -92,6 +108,9 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 			}
 		}
 
+		/**
+		 * Enqueue the Google Chart Script and the custom JS script.
+		 */
 		function enqueue_scripts() {
 			if ( isset( $_REQUEST['page'] ) && in_array( $_REQUEST['page'], $this->page_slugs ) ) {
 				$protocol = is_ssl() ? 'https' : 'http';
@@ -102,6 +121,9 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 			}
 		}
 
+		/**
+		 * Prints necessary JS script that would load Google Charts and initializes the charting library from Google.
+		 */
 		function print_scripts() {
 			if ( isset( $_REQUEST['page'] ) && in_array( $_REQUEST['page'], $this->page_slugs ) ) {
 				$charts = $this->chart_types;
@@ -125,14 +147,18 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 
 		/**
 		 * Render Charts
+		 *
+		 * @param $charts
 		 */
 		function render_chart( $charts ) {
 		?>
 		<script type="text/javascript">
 			var rt_reports_charts = <?php echo json_encode( $charts ); ?>;
 
+			// Google Chart library callback when google library is loaded and ready to use.
 			google.setOnLoadCallback(rt_reports_draw_charts);
 
+			// Validation method for the data source provided.
 			function rt_reports_validate_data_source(chart, chart_type) {
 				if( chart.data_source === null )
 					return false;
@@ -154,6 +180,8 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 				return true;
 			}
 
+			// Draws a single chart for the given options.
+			// This is the actual method that will set all the required arguments for google charts library and draws the chart.
 			function rt_reports_draw_single_chart( chart ) {
 				try {
 					switch( chart.chart_type ) {
@@ -291,6 +319,7 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 				}
 			}
 
+			// Callback function to draw all the charts.
 			function rt_reports_draw_charts() {
 
 				if(jQuery(rt_reports_charts).length > 0) {
