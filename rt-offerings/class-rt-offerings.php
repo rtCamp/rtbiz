@@ -10,7 +10,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 	/**
 	 * Description of class-rt-offering
-	 * To sync WooCommerce Product With Rt_Offerings taxonomy
+	 * To sync WooCommerce/EDD Product With Rt_Offerings taxonomy
 	 *
 	 * @author dipesh
 	 */
@@ -33,7 +33,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		var $post_types;
 
 		/**
-		 * Product taxonomy Sync enable
+		 * Offering taxonomy Sync enable
 		 * @var array
 		 */
 		var $isSync;
@@ -43,29 +43,6 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		var $caps = array();
 		var $pluginName;
-
-		function is_woocommerce_active(){
-			if ( 'woocommerce' === $this->pluginName && class_exists( 'WooCommerce' ) ) {
-				return true;
-			}
-			return false;
-		}
-
-		function is_edd_active(){
-			if ( 'edd' === $this->pluginName && class_exists( 'Easy_Digital_Downloads' ) ) {
-				return true;
-			}
-			return false;
-		}
-
-		function get_post_type(){
-			if ( $this->is_woocommerce_active( ) ) {
-				return 'product';
-			} else if ( $this->is_edd_active( ) ) {
-				return 'download';
-			}
-			return '';
-		}
 
 		/**
 		 * construct
@@ -96,6 +73,29 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			$this->hooks();
 		}
 
+		function is_woocommerce_active(){
+			if ( 'woocommerce' === $this->pluginName && class_exists( 'WooCommerce' ) ) {
+				return true;
+			}
+			return false;
+		}
+
+		function is_edd_active(){
+			if ( 'edd' === $this->pluginName && class_exists( 'Easy_Digital_Downloads' ) ) {
+				return true;
+			}
+			return false;
+		}
+
+		function get_post_type(){
+			if ( $this->is_woocommerce_active( ) ) {
+				return 'product';
+			} else if ( $this->is_edd_active( ) ) {
+				return 'download';
+			}
+			return '';
+		}
+
 		/**
 		 * Auto loader for model classes
 		 */
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
-		 * Get Lable of Product taxonomy
+		 * Get Lable of Offerings taxonomy
 		 * @return array
 		 */
 		public function get_label(){
@@ -143,7 +143,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				//'rewrite' 				=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 				'rewrite'                   => true,
 			);
-			$supports = apply_filters( 'rtlib_product_support', $this->post_types );
+			$supports = apply_filters( 'rtlib_offerings_support', $this->post_types );
 			register_taxonomy( self::$offering_slug, $supports, $arg );
 		}
 
