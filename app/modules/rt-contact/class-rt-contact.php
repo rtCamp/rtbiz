@@ -48,6 +48,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		static $vendor_category_slug = 'vendors';
 
 		/**
+		 * Labels array for Contact Group Taxonomy
+		 *
 		 * @var array
 		 */
 		public $contact_group_labels;
