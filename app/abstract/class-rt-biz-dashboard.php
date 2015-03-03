@@ -345,8 +345,11 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					case 'trackback' :
 						$type = __( 'Trackback' );
 						break;
+					case 'rt_bot' :
+						$type = __( 'Bot Comment' );
+						break;
 					default :
-						$type = ucwords( $comment->comment_type );
+						$type = apply_filters( 'rt_biz_dashboard_recent_comments_row_comment_type', $comment->comment_type );
 				}
 				$type = esc_html( $type );
 				?>
