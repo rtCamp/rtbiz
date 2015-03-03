@@ -174,13 +174,17 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'fields'      => $general_fields,
 			);
 
-			$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to Contacts</div>' );
-			$contact_importer_subtitle .= __( 'Use this tool to import all current users to rtBiz Contacts. You can also import selected users from ' );
+			$contact_labels = rt_biz_get_contact_labels();
+			$settings = biz_get_redux_settings();
+			$rtbiz_label = $settings['menu_label'];
+
+			$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to ' . $contact_labels['name'] . '</div>' );
+			$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
 			$contact_importer_subtitle .= '<a href="' . admin_url( 'users.php' ) . '">WP users</a> page.';
-			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as Contacts.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing contacts is a heavy process. So please be patient.</span></p><br/>' );
+			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as ' . $contact_labels['name'] . '.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing ' . $contact_labels['name'] . ' is a heavy process. So please be patient.</span></p><br/>' );
 			$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
 			$this->sections[]   = array(
-				'title'       => __( 'Contact Importer' ),
+				'title'       => $contact_labels['singular_name'] . ' ' . __( 'Importer' ),
 				'icon'        => 'el-icon-list-alt',
 				'permissions' => $editor_cap,
 				//'subsection'  => true,

@@ -12,7 +12,7 @@ rtBiz - WordPress 4 Business!
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
-[![Build Status](https://travis-ci.org/rtCamp/rtbiz.png?branch=master)](https://travis-ci.org/rtCamp/rtbiz) 
+[![Build Status](https://travis-ci.org/desaiuditd/rtbiz.png?branch=master)](https://travis-ci.org/desaiuditd/rtbiz) 
 
 ## Description ##
 
