@@ -140,6 +140,11 @@ function rt_biz_get_company_labels() {
 	return $rt_company->labels;
 }
 
+function rt_biz_get_contact_group_labels() {
+	global $rt_contact;
+	return $rt_contact->contact_group_labels;
+}
+
 /**
  * Returns contact post type
  *
@@ -651,6 +656,7 @@ function rtbiz_export_wp_users_to_contacts(){
 function rtbiz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 	$nonce = wp_create_nonce( 'rt-biz-export-all' );
 	$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => 1 ) );
+	$contact_labels = rt_biz_get_contact_labels();
 	?>
 	<div class="rtbiz-exporter-container">
 		<?php if ( empty( $btnhtml ) ){ ?>
@@ -660,11 +666,11 @@ function rtbiz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 		<input id="rtbiz-contact-import-nonce" type="hidden" value="<?php echo $nonce ?>" />
 		<span id="rtbiz-import-message" class="rtbiz-exporter-message"></span>
 		<div class="contact-update" style="display: none;">
-			<p> <?php _e( 'Syncing contacts :' ); ?> <span
+			<p> <?php echo __( 'Syncing' ) . ' ' . $contact_labels['name'] . ' :'; ?> <span
 					id='rtbiz-contact-count-proceed'>0</span></p>
 		</div>
 		<div class="contact-synced" style="display: none;">
-			<p> <?php _e( 'All contact synced!' ); ?> </p>
+			<p> <?php _e( 'All ' . $contact_labels['name'] . ' synced!' ); ?> </p>
 		</div>
 		<div id="rtbiz-contact-importer-bar"></div>
 

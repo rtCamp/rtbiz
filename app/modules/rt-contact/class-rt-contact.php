@@ -47,6 +47,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		static $vendor_category_slug = 'vendors';
 
+		/**
+		 * Labels array for Contact Group Taxonomy
+		 *
+		 * @var array
+		 */
+		public $contact_group_labels;
 
 		/**
 		 *
@@ -304,7 +310,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * Create Contact user p2p connection defination
 		 */
-		function contact_user_p2p(){
+		function contact_user_p2p() {
+			$contact_labels = $this->labels;
 			p2p_register_connection_type( array(
 				'name' => $this->post_type . '_to_user',
 				'from' => $this->post_type,
@@ -315,7 +322,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'column_title' => 'User',
 				),
 				'to_labels' => array(
-					'column_title' => 'Contact',
+					'column_title' => $contact_labels['singular_name'],
 				),
 			) );
 		}
@@ -402,7 +409,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function register_tax(){
 
-			$labels = apply_filters( 'rt_contact_groups_labels', array(
+			$this->contact_group_labels = apply_filters( 'rt_contact_groups_labels', array(
 				'name'                       => __( 'Contact Groups' ),
 				'singular_name'              => __( 'Contact Group' ),
 				'menu_name'                  => __( 'Contact Groups' ),
@@ -429,7 +436,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				self::$user_category_taxonomy,
 				rt_biz_get_contact_post_type(),
 				array(
-					'labels' => $labels,
+					'labels' => $this->contact_group_labels,
 					'rewrite' => array( 'slug' => self::$user_category_taxonomy ),
 					'hierarchical' => true,
 					'show_admin_column' => true,

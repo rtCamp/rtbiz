@@ -242,7 +242,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$mofile_global = WP_LANG_DIR . '/' . RT_BIZ_TEXT_DOMAIN . '/' . $mofile;
 
 			if ( file_exists( $mofile_global ) ) {
-				// Look in global /wp-content/languages/wp_ti folder
+				// Look in global /wp-content/languages/rt_biz folder
 				load_textdomain( RT_BIZ_TEXT_DOMAIN, $mofile_global );
 			} elseif ( file_exists( $mofile_local ) ) {
 				// Look in local /wp-content/plugins/rtbiz/languages/ folder
