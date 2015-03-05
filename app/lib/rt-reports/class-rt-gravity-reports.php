@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 /**
+ * A Helper class for Reporting library.
+ * This class helps in converting GravityForms data into Google Charts compatible data source array.
+ *
  * Description of Rt_Gravity_Reports
  *
  * @author udit
@@ -20,6 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 	class Rt_Gravity_Reports {
 
+		/**
+		 * Data Type mapping between Google Chart data types and GravityForms data types.
+		 *
+		 * @var array
+		 */
 		static $data_type_map = array(
 			'text' => 'string',
 			'email' => 'string',
@@ -32,10 +40,20 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			'list' => 'string',
 		);
 
+		/**
+		 * Constructor method
+		 */
 		public function __construct() {
 
 		}
 
+		/**
+		 * Get input values from a GravityForm Field
+		 *
+		 * @param $field
+		 *
+		 * @return array
+		 */
 		static function get_field_inputs( $field ) {
 			$inputs = array();
 			if ( isset( $field['inputs'] ) && ! empty( $field['inputs'] ) ) {
@@ -44,6 +62,14 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			return $inputs;
 		}
 
+		/**
+		 * Extract a field for given ID from the array of all fields
+		 *
+		 * @param $id
+		 * @param $fields
+		 *
+		 * @return bool
+		 */
 		static function get_field_by_id( $id, $fields ) {
 			foreach ( $fields as $field ) {
 				if ( $field['id'] == $id ) {
@@ -53,6 +79,13 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			return false;
 		}
 
+		/**
+		 * Get choices from a GravityForm Field
+		 *
+		 * @param $field
+		 *
+		 * @return array
+		 */
 		static function get_field_choices( $field ) {
 			$choices = array();
 			if ( isset( $field['choices'] ) && ! empty($field['choices']) ) {
@@ -61,6 +94,65 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			return $choices;
 		}
 
+		/**
+		 * Marge arrays recursively and distinct
+		 *
+		 * Merges any number of arrays / parameters recursively, replacing
+		 * entries with string keys with values from latter arrays.
+		 * If the entry or the next value to be assigned is an array, then it
+		 * auto-magically treats both arguments as an array.
+		 * Numeric entries are appended, not replaced, but only if they are
+		 * unique
+		 *
+		 * @param  array ...     Variable list of arrays to recursively merge.
+		 *
+		 * @link   http://www.php.net/manual/en/function.array-merge-recursive.php#96201
+		 * @author Mark Roduner <mark.roduner@gmail.com>
+		 *
+		 * @return array|mixed
+		 */
+		static function array_merge_recursive_distinct() {
+			$arrays = func_get_args();
+			$base = array_shift( $arrays );
+
+			if ( ! is_array( $base ) ) {
+				$base = empty( $base ) ? array() : array( $base );
+			}
+
+			foreach ( $arrays as $append ) {
+				if ( ! is_array( $append ) ) {
+					$append = array( $append );
+				}
+				foreach ( $append as $key => $value ) {
+					if ( ! array_key_exists( $key, $base ) and ! is_numeric( $key ) ) {
+						$base[ $key ] = $append[ $key ];
+						continue;
+					}
+					if ( is_array( $value ) or is_array( $base[ $key ] ) ) {
+						$base[ $key ] = self::array_merge_recursive_distinct( $base[ $key ], $append[ $key ] );
+					} else if ( is_numeric( $key ) ) {
+						if ( ! in_array( $value, $base ) ) {
+							$base[] = $value;
+						}
+					} else {
+						$base[ $key ] = $value;
+					}
+				}
+			}
+
+			return $base;
+		}
+
+		/**
+		 * Generate the data source array for a given form with form ID which is compatible with Google Charts.
+		 *
+		 * @param       $form_id
+		 * @param       $chart_type
+		 * @param       $selected_fields
+		 * @param array $labels
+		 *
+		 * @return array|null
+		 */
 		static function generate_data_source( $form_id, $chart_type, $selected_fields, $labels = array() ) {
 			// save user options
 			// generate data source - make a query
@@ -138,7 +230,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								case 'checkbox':
 									$choices = self::get_field_choices( $field );
 									$inputs = self::get_field_inputs( $field );
-									$options = rtbp_kpi_array_merge_recursive_distinct( $choices, $inputs );
+									$options = self::array_merge_recursive_distinct( $choices, $inputs );
 									foreach ( $options as $option ) {
 										$val = ( isset( $lead[ strval( $option['id'] ) ] ) ) ? $lead[ strval( $option['id'] ) ] : '';
 										if ( isset( $option['value'] ) && $val == $option['value'] ) {
@@ -237,7 +329,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 						case 'checkbox':
 							$choices = self::get_field_choices( $field );
 							$inputs = self::get_field_inputs( $field );
-							$options = rtbp_kpi_array_merge_recursive_distinct( $choices, $inputs );
+							$options = self::array_merge_recursive_distinct( $choices, $inputs );
 							foreach ( $options as $option ) {
 								$counts[] = array(
 									'id' => $option['id'],
@@ -284,7 +376,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								case 'checkbox':
 									$choices = self::get_field_choices( $label );
 									$inputs = self::get_field_inputs( $label );
-									$options = rtbp_kpi_array_merge_recursive_distinct( $choices, $inputs );
+									$options = self::array_merge_recursive_distinct( $choices, $inputs );
 									foreach ( $options as $option ) {
 										$counts[] = array(
 											'id' => $option['id'],
@@ -473,7 +565,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								$cols[] = __( 'Count' );
 								$choices = self::get_field_choices( $field );
 								$inputs = self::get_field_inputs( $field );
-								$options = rtbp_kpi_array_merge_recursive_distinct( $choices, $inputs );
+								$options = self::array_merge_recursive_distinct( $choices, $inputs );
 								foreach ( $options as $option ) {
 									$counts[] = array(
 										'id' => $option['id'],
