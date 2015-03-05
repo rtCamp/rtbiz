@@ -146,7 +146,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</tr>
 							</table>
 						<?php } else {
-							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
+							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credentials or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
 						<hr class="rt-mailbox-hr">
 				<?php } ?>
