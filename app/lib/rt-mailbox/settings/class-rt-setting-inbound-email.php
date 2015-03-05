@@ -245,7 +245,10 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$email_data = null;
 						if ( isset( $_POST['mail_folders'] ) && ! empty( $_POST['mail_folders'] ) && is_array( $_POST['mail_folders'] ) && ! empty( $email_ac ) ) {
 							$email_data                 = maybe_unserialize( $email_ac->email_data );
-							$email_data['mail_folders'] = implode( ',', $_POST['mail_folders'][ $mail_ac ] );
+							if ( empty ( $_POST['mail_folders'][ $mail_ac ]  ) ) {
+								$_POST['mail_folders'][ $mail_ac ] = array();
+							}
+							$email_data['mail_folders'] = implode( ',', array_filter( $_POST['mail_folders'][ $mail_ac ] ) );
 						}
 						$rt_mail_settings->update_mail_acl( $mail_ac, $token, maybe_serialize( $email_data ), $imap_server );
 					}
