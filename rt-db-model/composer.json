@@ -1,0 +1,12 @@
+{
+    "name": "rtcamp/rt-db-model",
+    "description": "description_text",
+    "minimum-stability": "stable",
+    "license": "GPL V2",
+    "authors": [
+        {
+            "name": "Faishal Saiyed",
+            "email": "faishal.saiyed@rtcamp.com"
+        }
+    ]
+}
