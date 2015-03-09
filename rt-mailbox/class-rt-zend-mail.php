@@ -647,21 +647,21 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 									$tContentType = strtok( $tPart->contentType, ';' );
 									if ( 'text/plain' == $tContentType ) {
 										$txtBody = $this->get_decoded_message( $tPart );
-                                        $htmlBody = $txtBody;
+										$htmlBody = $txtBody;
 									} else {
 										if ( 'text/html' == $tContentType ) {
 											$htmlBody = $this->get_decoded_message( $tPart );
-                                            $txtBody  = strip_tags( $htmlBody );
+											$txtBody  = strip_tags( $htmlBody );
 										}
 									}
 								}
 							} else if ( 'text/plain' == $ContentType ) {
 								$txtBody = $this->get_decoded_message( $part );
-                                $htmlBody = $txtBody;
+								$htmlBody = $txtBody;
 							} else {
 								if ( 'text/html' == $ContentType ) {
 									$htmlBody = $this->get_decoded_message( $part );
-                                    $txtBody  = strip_tags( $htmlBody );
+									$txtBody  = strip_tags( $htmlBody );
 								} else {
 									try {
 										$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
