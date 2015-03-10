@@ -286,18 +286,11 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 								isStacked = false;
 							}
 
-							vAxisMin = false;
-							if ( chart.options !== null && chart.options !== undefined && chart.options.vAxisMin !== undefined && chart.options.vAxisMin !== null ) {
-								vAxisMin = chart.options.vAxisMin;
-							} else {
-								vAxisMin = false;
-							}
-
 							jQuery('#'+chart.dom_element).parent().siblings('.rt-report-actions').children('.rt-report-title').remove();
 							jQuery('#'+chart.dom_element).parent().siblings('.rt-report-actions').prepend('<span class="rt-report-title">'+chart_title+'</span>');
 
 							options = {
-								vAxis: { title: chart.data_source.cols[0], viewWindow: {min: vAxisMin} },
+								vAxis: { title: chart.data_source.cols[0] },
 								width: '100%',
 								isStacked: isStacked
 							};
