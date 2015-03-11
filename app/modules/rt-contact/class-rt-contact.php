@@ -24,7 +24,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * @var string
 		 */
-		public $primary_email_key   = 'contact_primary_email';
+		static $primary_email_key   = 'contact_primary_email';
 		/**
 		 * @var string
 		 */
@@ -836,7 +836,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @param $post_id
 		 */
 		function save_meta_values( $post_id ) {
-			if ( isset( $_POST['contact_meta'][ $this->primary_email_key ] ) && empty( $_POST['contact_meta'][ $this->primary_email_key ] ) ){
+			if ( isset( $_POST['contact_meta'][ self::$primary_email_key ] ) && empty( $_POST['contact_meta'][ self::$primary_email_key ] ) ){
 				update_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'], true );
 			}
 			else {
@@ -844,7 +844,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			}
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['contact_meta'][ $field['key'] ] ) && ! empty( $_POST['contact_meta'][ $field['key'] ] ) ) {
-					if ( $field['key'] == $this->primary_email_key ) {
+					if ( $field['key'] == self::$primary_email_key ) {
 						if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ], $_POST['post_ID'] ) ) {
 							update_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_POST['post_ID'], true );
 							continue;
@@ -937,7 +937,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					break;
 
 				case 'contact_email':
-					$val = self::get_meta( $post_id, $this->primary_email_key );
+					$val = self::get_meta( $post_id, self::$primary_email_key );
 					if ( ! empty( $val ) ) {
 						$emails = array();
 						foreach ( $val as $e ) {

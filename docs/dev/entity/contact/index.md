@@ -11,7 +11,7 @@ This class is inherited from `Rt_Entity`.
 
 This meta key is used to store contact email in meta table.
 
-##### `public $primary_email_key = 'contact_primary_email';`
+##### `static $primary_email_key = 'contact_primary_email';`
 
 This meta key is for primary email of a contact.
 
