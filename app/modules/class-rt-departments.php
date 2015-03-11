@@ -77,7 +77,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => true,'show_ui'=> false, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
+			$arg = array( 'public' => true, 'show_ui' => false, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_department_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
