@@ -630,7 +630,7 @@ function biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(
 		array(
-			'key'   => Rt_Entity::$meta_key_prefix . $rt_contact->primary_email_key,
+            'key'   => Rt_Entity::$meta_key_prefix . Rt_Contact::$primary_email_key,
 			'value' => $email,
 		),
 	);

@@ -46,7 +46,7 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->Rt_Contact->add_contact( 'John Watson' );
 		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
 		$this->assertEquals( 2, sizeof( $posts ) ) ;
-		update_post_meta( $posts[1]->ID, Rt_Entity::$meta_key_prefix.$this->Rt_Contact->primary_email_key, '221b_backer@street.com' );
+		update_post_meta( $posts[1]->ID, Rt_Entity::$meta_key_prefix.Rt_Contact::$primary_email_key, '221b_backer@street.com' );
 		$contact = rt_biz_get_contact_by_email('221b_backer@street.com');
 		$this->assertEquals( 'sherlock holmes', $contact[0]->post_title ) ;
 	}

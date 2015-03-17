@@ -240,7 +240,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$post_id = null;
 			$meta_query_args = array(
 				array(
-					'key'   => Rt_Entity::$meta_key_prefix . $this->primary_email_key,
+					'key'   => Rt_Entity::$meta_key_prefix . self::$primary_email_key,
 					'value' => $email,
 				),
 			);
@@ -984,7 +984,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				'post_status'  => 'publish',
 			) );
 			if ( ! empty( $email ) ){
-				rt_biz_update_entity_meta( $contact_id, $this->primary_email_key, $email );
+				rt_biz_update_entity_meta( $contact_id, self::$primary_email_key, $email );
 			}
 			return $contact_id;
 		}
@@ -997,7 +997,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function get_by_email( $email ) {
 			return ( ! empty( $email ) ) ? get_posts( array(
-				'meta_key'    => self::$meta_key_prefix . $this->primary_email_key,
+				'meta_key'    => self::$meta_key_prefix . self::$primary_email_key,
 				// primary email
 				'meta_value'  => $email,
 				'post_type'   => $this->post_type,
@@ -1075,7 +1075,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$check_exist_contact = get_posts(
 				array(
 					'post_type' 	=> $this->post_type,
-					'meta_key' 		=> self::$meta_key_prefix.$this->primary_email_key,
+					'meta_key' 		=> self::$meta_key_prefix.self::$primary_email_key,
 					'meta_value' 	=> $user->user_email,
 				)
 			);
@@ -1086,7 +1086,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$contact_id = $this->add_contact( $user->display_name );
 			}
 			$this->connect_contact_to_user( $contact_id, $user_id );
-			Rt_Contact::update_meta( $contact_id, $this->primary_email_key, $user->user_email );
+			Rt_Contact::update_meta( $contact_id, self::$primary_email_key, $user->user_email );
 			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
