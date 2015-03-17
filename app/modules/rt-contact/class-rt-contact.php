@@ -247,7 +247,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$args = array( 'post_type' => rt_biz_get_contact_post_type(), 'meta_query' => $meta_query_args );
 			$posts = get_posts( $args );
 
-			if ( biz_is_primary_email_unique( $email ) && empty( $posts ) ) {
+			if ( rtbiz_is_primary_email_unique( $email ) && empty( $posts ) ) {
 				$post_id = rt_biz_add_contact( $user->display_name, '',$email );
 			} else if ( ! empty( $posts ) ) {
 				$post_id = $posts[0]->ID;
@@ -845,7 +845,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['contact_meta'][ $field['key'] ] ) && ! empty( $_POST['contact_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == self::$primary_email_key ) {
-						if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ], $_POST['post_ID'] ) ) {
+						if ( ! rtbiz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ], $_POST['post_ID'] ) ) {
 							update_user_meta( get_current_user_id(), Rt_Entity::$meta_key_prefix . 'unique_primary_email_' . $_POST['post_ID'], true );
 							continue;
 						}

@@ -64,7 +64,7 @@ Overriden from `Rt_Entity` parent class. Here all the meta values will be saved 
 ``` php
 @param $post_id int - WordPress Post ID
 
-@uses biz_is_primary_email_unique_company() - rtBiz Core. Checks for unique email.
+@uses rtbiz_is_primary_email_unique_company() - rtBiz Core. Checks for unique email.
 @uses Rt_Entity::get_meta()					- rtBiz core. Gets meta value of Company for given meta key.
 @uses Rt_Entity::delete_meta()				- rtBiz Core. deletes meta value of company for given key.
 @uses Rt_Entity::add_meta()					- rtBiz Core. add meta value for company with given key and value.

@@ -94,7 +94,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
-				$settings = biz_get_redux_settings();
+				$settings = rtbiz_get_redux_settings();
 				if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 					add_filter( 'manage_edit-'.Rt_Offerings::$offering_slug .'_columns', array( $this, 'edit_offering_columns' ) );
 					add_filter( 'manage_'.Rt_Offerings::$offering_slug .'_custom_column', array( $this, 'add_offering_column_content' ), 10, 3 );
@@ -219,13 +219,13 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				}
 
 				if ( 'contact_primary_email' == $field['key'] ) {
-					if ( ! biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
+					if ( ! rtbiz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
 
 				if ( $field['key'] == Rt_Company::$primary_email ){
-					if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
+					if ( ! rtbiz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
@@ -257,7 +257,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( $flag ) {
 				$user = wp_get_current_user();
 				$body = 'Updated by <strong>'.$user->display_name. '</strong> <br/>' .$body;
-				$settings  = biz_get_redux_settings();
+				$settings  = rtbiz_get_redux_settings();
 				$label             = $settings['menu_label'];
 				$data = array(
 					'comment_post_ID' => $post_id,

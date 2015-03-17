@@ -259,7 +259,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['account_meta'][ $field['key'] ] ) && ! empty( $_POST['account_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == self::$primary_email ) {
-						if ( ! biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
+						if ( ! rtbiz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
 							continue;
 						}
 					}
