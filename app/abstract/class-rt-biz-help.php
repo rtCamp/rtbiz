@@ -372,7 +372,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'dashboard_overview':
-					$settings  = rtbiz_get_redux_settings();
+					$settings  = rt_biz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<p>
@@ -439,7 +439,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'acl_roles':
-					$settings  = rtbiz_get_redux_settings();
+					$settings  = rt_biz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<ul>
@@ -469,7 +469,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'settings_overview':
-					$settings  = rtbiz_get_redux_settings();
+					$settings  = rt_biz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<p>

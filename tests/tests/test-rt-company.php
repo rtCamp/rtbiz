@@ -32,8 +32,8 @@ class Test_Rt_company extends RT_WP_TestCase {
 		$this->Rt_Company->add_company('Spy');
 		$posts = $this->Rt_Company->get_company();
 		update_post_meta( $posts[0]->ID, Rt_Entity::$meta_key_prefix.Rt_Company::$primary_email, '221b_backer@street.com' );
-		$this->assertEquals( false, rtbiz_is_primary_email_unique_company( '221b_backer@street.com' ) );
-		$this->assertEquals( true, rtbiz_is_primary_email_unique_company( 'james_moriart@woman.com' ) );
+		$this->assertEquals( false, rt_biz_is_primary_email_unique_company( '221b_backer@street.com' ) );
+		$this->assertEquals( true, rt_biz_is_primary_email_unique_company( 'james_moriart@woman.com' ) );
 	}
 }
 

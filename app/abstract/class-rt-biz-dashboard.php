@@ -129,7 +129,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function rtbiz_welcome_panel() {
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			$settings = rtbiz_get_redux_settings();
+			$settings = rt_biz_get_redux_settings();
 			$welcome_label = $settings['menu_label'];
 			$contact_labels = rt_biz_get_contact_labels();
 			$company_labels = rt_biz_get_company_labels();
@@ -223,7 +223,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		function add_dashboard_widgets() {
-			$settings  = rtbiz_get_redux_settings();
+			$settings  = rt_biz_get_redux_settings();
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
 			$contact_labels = rt_biz_get_contact_labels();
 			$contact_group_labels = rt_biz_get_contact_group_labels();

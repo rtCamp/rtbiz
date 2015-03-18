@@ -94,7 +94,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
-				$settings = rtbiz_get_redux_settings();
+				$settings = rt_biz_get_redux_settings();
 				if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 					add_filter( 'manage_edit-'.Rt_Offerings::$offering_slug .'_columns', array( $this, 'edit_offering_columns' ) );
 					add_filter( 'manage_'.Rt_Offerings::$offering_slug .'_custom_column', array( $this, 'add_offering_column_content' ), 10, 3 );
@@ -186,16 +186,16 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			$post = get_post( $post_id );
 			if ( $_POST['post_title'] != $post->post_title ){
 				$body = '<strong>'.__( 'Contact Title' ).'</strong> : ';
-				$body .= rtbiz_text_diff( $post->post_title , $_POST['post_title'] );
+				$body .= rt_biz_text_diff( $post->post_title , $_POST['post_title'] );
 			}
 			if ( $_POST['content'] != $post->post_content ){
 				$body = '<strong>'.__( 'Contact Content' ).'</strong> : ';
-				$body .= rtbiz_text_diff( $post->post_content, $_POST['content'] );
+				$body .= rt_biz_text_diff( $post->post_content, $_POST['content'] );
 			}
 
 			if ( isset( $_POST['tax_input'] ) ) {
 				foreach ( $_POST['tax_input'] as $key => $val ){
-					$tmp = rtbiz_get_tex_diff( $post_id, $key );
+					$tmp = rt_biz_get_tex_diff( $post_id, $key );
 					if ( $tmp != '' ){
 						$body .= $tmp;
 						$flag = true;
@@ -225,7 +225,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				}
 
 				if ( $field['key'] == Rt_Company::$primary_email ){
-					if ( ! rtbiz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
+					if ( ! rt_biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
@@ -236,7 +236,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$filerpost = array_filter( $_POST[ $meta_key ][ $field['key'] ] );
 					$diff      = array_diff( $filerval, $filerpost );
 					$diff2 = array_diff( $filerpost, $filerval );
-					$difftxt = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
+					$difftxt = rt_biz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
 					if ( ! empty( $difftxt ) || $difftxt != '' ) {
 						$skip_enter = str_replace( 'Enter', '', $field['label'] );
 						$body .= "<strong>{ $skip_enter }</strong> : ".$difftxt;
@@ -247,7 +247,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$val    = self::get_meta( $post_id, $field['key'], true );
 					$newval = $_POST[ $meta_key ][ $field['key'] ];
 					if ( $val != $newval ){
-						$difftxt = rtbiz_text_diff( $val, $newval );
+						$difftxt = rt_biz_text_diff( $val, $newval );
 						$skip_enter = str_replace( 'Enter','',$field['label'] );
 						$body .= "<strong>{ $skip_enter }</strong> : ".$difftxt;
 						$flag = true;
@@ -257,7 +257,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( $flag ) {
 				$user = wp_get_current_user();
 				$body = 'Updated by <strong>'.$user->display_name. '</strong> <br/>' .$body;
-				$settings  = rtbiz_get_redux_settings();
+				$settings  = rt_biz_get_redux_settings();
 				$label             = $settings['menu_label'];
 				$data = array(
 					'comment_post_ID' => $post_id,

@@ -1100,7 +1100,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$results = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
 			$arrReturn = array();
 			foreach ( $results as $author ) {
-				$arrReturn[] = array( 'id' => $author->ID, 'label' => $author->display_name, 'imghtml' => get_avatar( $author->user_email, 25 ), 'editlink' => rtbiz_get_contact_edit_link( $author->user_email ) );
+				$arrReturn[] = array( 'id' => $author->ID, 'label' => $author->display_name, 'imghtml' => get_avatar( $author->user_email, 25 ), 'editlink' => rt_biz_get_contact_edit_link( $author->user_email ) );
 			}
 			header( 'Content-Type: application/json' );
 			echo json_encode( $arrReturn );
