@@ -638,7 +638,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$txtBody      = '';
 					$attachements = array();
 					if ( $message->isMultiPart() ) {
+                        $part_index = 0;
 						foreach ( $message as $part ) {
+                            $part_index = $part_index + 1; // append with filename
 							$ContentType = strtok( $part->contentType, ';' );
 							if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ) {
 								$totParts = $part->countParts();
@@ -647,21 +649,21 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 									$tContentType = strtok( $tPart->contentType, ';' );
 									if ( 'text/plain' == $tContentType ) {
 										$txtBody = $this->get_decoded_message( $tPart );
-                                        $htmlBody = $txtBody;
+										$htmlBody = $txtBody;
 									} else {
 										if ( 'text/html' == $tContentType ) {
 											$htmlBody = $this->get_decoded_message( $tPart );
-                                            $txtBody  = strip_tags( $htmlBody );
+											$txtBody  = strip_tags( $htmlBody );
 										}
 									}
 								}
 							} else if ( 'text/plain' == $ContentType ) {
 								$txtBody = $this->get_decoded_message( $part );
-                                $htmlBody = $txtBody;
+								$htmlBody = $txtBody;
 							} else {
 								if ( 'text/html' == $ContentType ) {
 									$htmlBody = $this->get_decoded_message( $part );
-                                    $txtBody  = strip_tags( $htmlBody );
+									$txtBody  = strip_tags( $htmlBody );
 								} else {
 									try {
 										$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
@@ -669,22 +671,26 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 											if ( isset( $matches[1] ) ) {
 												$filename = trim( $matches[1] );
 											} else {
-												$filename = time() . '.' . rt_get_extention( $ContentType );
+												$filename = rt_get_extention( $ContentType );
 											}
 										} else {
-											$filename = time() . '.' . rt_get_extention( $ContentType );
+											$filename = rt_get_extention( $ContentType );
 										}
 									} catch ( Exception $e ) {
 										$e->getTrace();
-										$filename = time() . '.' . rt_get_extention( $ContentType );
+										$filename = rt_get_extention( $ContentType );
 									}
 
 									if ( trim( $filename ) == '' ) {
-										$filename = time() . '.' . rt_get_extention( $ContentType );
+										$filename = rt_get_extention( $ContentType );
 									}
 									$filedata   = $this->get_decoded_message( $part );
 									$upload_dir = wp_upload_dir( null );
-									$filename   = sanitize_file_name( $filename );
+
+                                    /* append current time and part index with file name
+                                       Fixed inline images parse with same name images.png*/
+                                    $filename   = time() . $part_index . '-' . sanitize_file_name( $filename );
+
 									if ( ! file_exists( $upload_dir ['path'] . "/$filename" ) ) {
 										$uploaded = wp_upload_bits( $filename, null, $filedata );
 									} else {
