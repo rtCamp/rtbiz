@@ -177,7 +177,7 @@ This method gets called when a entity is saved from admin panel. It is used to s
 @uses rt_biz_text_diff()                     - rtBiz Core. To generate the text-diff for two values
 @uses rt_biz_get_contact_post_type()        - rtBiz Core. Fetches contact post type
 @uses rt_biz_get_company_post_type()        - rtBiz Core. Fetches company post type
-@uses rtbiz_is_primary_email_unique()         - rtBiz Core. Checks for duplicate email address
+@uses rt_biz_is_primary_email_unique()         - rtBiz Core. Checks for duplicate email address
 @uses rt_biz_is_primary_email_unique_company() - rtBiz Core. Checks for duplicate email address
 @uses Rt_Entity::get_meta()                 - rtBiz Core. fetches meta value for the given key.
 @uses wp_get_current_user()                 - WordPress Core. Gets current logged in use.

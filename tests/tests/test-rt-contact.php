@@ -37,8 +37,8 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->Rt_Contact->add_contact( 'sherlock holmes','','221b_backer@street.com' );
 		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
 		$this->assertEquals( 1, sizeof( $posts ) ) ;
-		$this->assertEquals( false, rtbiz_is_primary_email_unique( '221b_backer@street.com' ) );
-		$this->assertEquals( true, rtbiz_is_primary_email_unique( 'james_moriart@woman.com' ) );
+		$this->assertEquals( false, rt_biz_is_primary_email_unique( '221b_backer@street.com' ) );
+		$this->assertEquals( true, rt_biz_is_primary_email_unique( 'james_moriart@woman.com' ) );
 	}
 
 	function test_get_contact_by_email(){

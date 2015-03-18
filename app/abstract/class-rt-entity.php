@@ -219,7 +219,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				}
 
 				if ( 'contact_primary_email' == $field['key'] ) {
-					if ( ! rtbiz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
+					if ( ! rt_biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}

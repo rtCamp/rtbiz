@@ -626,7 +626,7 @@ function rt_biz_get_redux_settings() {
 	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
-function rtbiz_is_primary_email_unique( $email, $postid = null ) {
+function rt_biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(
 		array(
@@ -646,7 +646,7 @@ function rtbiz_is_primary_email_unique( $email, $postid = null ) {
 	return false;
 }
 
-function rtbiz_export_wp_users_to_contacts(){
+function rt_biz_export_wp_users_to_contacts(){
 	ob_start();
 	rt_biz_export_wp_users_to_contacts_dashborad( '' );
 	return ob_get_clean();

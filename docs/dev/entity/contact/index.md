@@ -118,7 +118,7 @@ This method exports single WP user to rtbiz contact. It will check if contact ex
 
 @uses get_user_by() - WordPress core. Get user object from ID.
 @uses get_posts() - WordPress core. Fetches contacts posts to verify if contact exists or not.
-@uses rtbiz_is_primary_email_unique() - rtBiz Core. To verify unique email.
+@uses rt_biz_is_primary_email_unique() - rtBiz Core. To verify unique email.
 @uses rt_biz_add_contact() - rtBiz core. Adds new contact.
 @uses Rt_Contact::connect_contact_to_user() - connects WP User to rtBiz Contact.
 ```
@@ -302,7 +302,7 @@ This method saves all additional meta fields values for rtBiz contact. It is ove
 @uses update_user_meta() - WordPress Core. Updates user meta value.
 @uses get_current_user_id() - WordPress Core. Gets User ID of current logged in user.
 @uses delete_user_meta() - WordPress core. deletes user meta value.
-@uses rtbiz_is_primary_email_unique() - WordPress Core. Checks for primary email.
+@uses rt_biz_is_primary_email_unique() - WordPress Core. Checks for primary email.
 @uses Rt_Entity::get_meta() - rtBiz core. Get rtBiz Contact Meta.
 @uses Rt_Entity::delete_meta() - rtBiz core. Delete rtBiz Contact Meta.
 @uses Rt_Entity::add_meta() - rtBiz core. Add rtBiz Contact Meta.

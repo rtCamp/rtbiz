@@ -182,7 +182,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
 			$contact_importer_subtitle .= '<a href="' . admin_url( 'users.php' ) . '">WP users</a> page.';
 			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as ' . $contact_labels['name'] . '.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing ' . $contact_labels['name'] . ' is a heavy process. So please be patient.</span></p><br/>' );
-			$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
+			$contact_importer_subtitle .= rt_biz_export_wp_users_to_contacts();
 			$this->sections[]   = array(
 				'title'       => $contact_labels['singular_name'] . ' ' . __( 'Importer' ),
 				'icon'        => 'el-icon-list-alt',
