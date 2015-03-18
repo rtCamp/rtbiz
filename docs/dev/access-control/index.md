@@ -253,7 +253,7 @@ Shows UI for profile level permissions.
 @uses rt_biz_get_modules() - Get all rtBiz modules.
 @uses rt_biz_get_acl_permissions() - Get all rtBiz ACL permissions.
 @uses get_post_meta() - get profile level permission for current contact.
-@uses biz_get_redux_settings() - Get redux settings to get the module label.
+@uses rtbiz_get_redux_settings() - Get redux settings to get the module label.
 ```
 
 ##### `save_profile_level_permission( $post_id )`

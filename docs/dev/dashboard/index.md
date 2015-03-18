@@ -83,7 +83,7 @@ This method renders UI for rtBiz Welcome Widget.
 
 ``` php
 @uses rt_biz_get_access_role_cap() - rtBiz core. Get capability string to check for given role.
-@uses biz_get_redux_settings() - rtBiz core. Get redux settings for label.
+@uses rtbiz_get_redux_settings() - rtBiz core. Get redux settings for label.
 @uses _e() - WordPress core. Internationalization method.
 @uses current_user_can() - WordPress core. Checks for user's capability.
 @uses do_action() - WordPress core. Defines new actin hook.
@@ -143,7 +143,7 @@ This method calls for chart library which would render all the charts in the wid
 Add all the dashboard widget here as a metaboz on the dashboard page.
 
 ``` php
-@uses biz_get_redux_settings() - rtBiz core. Get redux settings for label.
+@uses rtbiz_get_redux_settings() - rtBiz core. Get redux settings for label.
 @uses add_meta_box() - WordPress core. Add metaboxes for dashboard widgets.
 @uses rt_biz_get_contact_post_type() - rtBiz core. Gets rtBiz contact post type
 @uses RT_Attributes_Model() - Attributes model class for DB operations.

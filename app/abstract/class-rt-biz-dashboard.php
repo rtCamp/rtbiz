@@ -129,7 +129,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		function rtbiz_welcome_panel() {
 			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			$settings = biz_get_redux_settings();
+			$settings = rtbiz_get_redux_settings();
 			$welcome_label = $settings['menu_label'];
 			$contact_labels = rt_biz_get_contact_labels();
 			$company_labels = rt_biz_get_company_labels();
@@ -140,7 +140,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				<p class="about-description"><?php _e( 'We&#8217;ve assembled some links to get you started:' ); ?></p>
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
-						<?php if ( current_user_can( $editor_cap ) ): ?>
+						<?php if ( current_user_can( $editor_cap ) ) : ?>
 							<h4><?php _e( 'Get Started' ); ?></h4>
 							<a id="rtbiz-customize-biz" class="button button-primary button-hero" href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php echo $welcome_label . ' ' . __( 'Settings' ); ?></a>
 						<?php endif; ?>
@@ -223,7 +223,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		function add_dashboard_widgets() {
-			$settings  = biz_get_redux_settings();
+			$settings  = rtbiz_get_redux_settings();
 			$menu_label             = ! empty( $settings['menu_label'] ) ? $settings['menu_label'] : __( 'rtBiz' );
 			$contact_labels = rt_biz_get_contact_labels();
 			$contact_group_labels = rt_biz_get_contact_group_labels();

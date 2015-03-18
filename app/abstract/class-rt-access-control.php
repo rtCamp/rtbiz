@@ -467,7 +467,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
-				$settings  = biz_get_redux_settings();
+				$settings  = rtbiz_get_redux_settings();
 				$menu_label = $settings['menu_label'];
 				?>
 				<h3><?php echo $menu_label . __( ' Profile Access' ); ?></h3>

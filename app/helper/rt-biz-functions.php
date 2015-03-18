@@ -619,18 +619,18 @@ function rtbiz_text_diff( $left_string, $right_string, $args = null ) {
 }
 
 // Setting ApI
-function biz_get_redux_settings() {
+function rtbiz_get_redux_settings() {
 	if ( ! isset( $GLOBALS[ Rt_Biz_Setting::$biz_opt ] ) ) {
 		$GLOBALS[ Rt_Biz_Setting::$biz_opt ] = get_option( Rt_Biz_Setting::$biz_opt, array() );
 	}
 	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
-function biz_is_primary_email_unique( $email, $postid = null ) {
+function rtbiz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(
 		array(
-            'key'   => Rt_Entity::$meta_key_prefix . Rt_Contact::$primary_email_key,
+			'key'   => Rt_Entity::$meta_key_prefix . Rt_Contact::$primary_email_key,
 			'value' => $email,
 		),
 	);
@@ -680,7 +680,7 @@ function rtbiz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 <?php
 }
 
-function biz_is_primary_email_unique_company( $email ) {
+function rtbiz_is_primary_email_unique_company( $email ) {
 	$meta_query_args = array(
 		array(
 			'key'     => Rt_Entity::$meta_key_prefix.Rt_Company::$primary_email,

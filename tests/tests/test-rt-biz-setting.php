@@ -10,7 +10,7 @@ class Test_Rt_Biz_Setting extends RT_WP_TestCase  {
 	var $setting;
 	function setUp() {
 		parent::setUp();
-		$this->setting = biz_get_redux_settings();
+		$this->setting = rtbiz_get_redux_settings();
 	}
 	function test_setting_name(){
 	}

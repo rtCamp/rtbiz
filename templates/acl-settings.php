@@ -10,7 +10,7 @@ $department = rt_biz_get_department();
 $modules     = rt_biz_get_modules();
 $permissions = rt_biz_get_acl_permissions();
 $module_permissions = get_site_option( 'rt_biz_module_permissions' );
-$settings  = biz_get_redux_settings();
+$settings  = rtbiz_get_redux_settings();
 $menu_label = $settings['menu_label'];
 ?>
 <div class="wrap">

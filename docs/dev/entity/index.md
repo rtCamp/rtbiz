@@ -72,7 +72,7 @@ Common hooks that are needed to be added for entity
 @uses is_admin()                - WordPress Core. To check for admin section.
 @uses add_action()              - WordPress Core.
 @uses add_filter()              - WordPress Core.
-@uses biz_get_redux_settings()  - rtBiz Core. To check for offerings settings.
+@uses rtbiz_get_redux_settings()  - rtBiz Core. To check for offerings settings.
 @uses do_action()               - WordPress Core. To introduce an action hook.
 
 @defined rt_biz_entity_hooks    - Custom WP Action. This can be used to add extra hooks from other plugins/themes.
@@ -177,11 +177,11 @@ This method gets called when a entity is saved from admin panel. It is used to s
 @uses rtbiz_text_diff()                     - rtBiz Core. To generate the text-diff for two values
 @uses rt_biz_get_contact_post_type()        - rtBiz Core. Fetches contact post type
 @uses rt_biz_get_company_post_type()        - rtBiz Core. Fetches company post type
-@uses biz_is_primary_email_unique()         - rtBiz Core. Checks for duplicate email address
-@uses biz_is_primary_email_unique_company() - rtBiz Core. Checks for duplicate email address
+@uses rtbiz_is_primary_email_unique()         - rtBiz Core. Checks for duplicate email address
+@uses rtbiz_is_primary_email_unique_company() - rtBiz Core. Checks for duplicate email address
 @uses Rt_Entity::get_meta()                 - rtBiz Core. fetches meta value for the given key.
 @uses wp_get_current_user()                 - WordPress Core. Gets current logged in use.
-@uses biz_get_redux_settings()              - rtBiz Core. Fetches Biz settings to get the label.
+@uses rtbiz_get_redux_settings()              - rtBiz Core. Fetches Biz settings to get the label.
 @uses wp_insert_comment()                   - WordPress Core. Inserts rtBot comment.
 ```
 
