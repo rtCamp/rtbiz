@@ -640,13 +640,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					if ( $message->isMultiPart() ) {
 						foreach ( $message as $part ) {
 							$responce = $this->parse_message( $part, $email, $message );
-							if ( isset( $responce['txtBody'] ) & !empty( $responce['txtBody'] ) ){
+							if ( isset( $responce['txtBody'] ) && ! empty( $responce['txtBody'] ) ){
 								$txtBody = $responce['txtBody'];
 							}
-							if ( isset( $responce['htmlBody'] ) & !empty( $responce['htmlBody'] ) ){
+							if ( isset( $responce['htmlBody'] ) && ! empty( $responce['htmlBody'] ) ){
 								$htmlBody = $responce['htmlBody'];
 							}
-							if ( isset( $responce['attachements'] ) & !empty( $responce['attachements'] ) ) {
+							if ( isset( $responce['attachements'] ) && ! empty( $responce['attachements'] ) ) {
 								$attachements = array_merge( $attachements, $responce['attachements'] );
 							}
 						}
@@ -765,29 +765,28 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function parse_message ( $part, $email, $message, $responce = array(), $part_index= 0 ){
+		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ){
 			$part_index = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
-			error_log(var_export( ":ContentType: \n " . $ContentType,true). "\n", 3, "/var/www/devbiz.com/logs/my-errors.log");
 			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ){
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
-			}else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ){
+			} else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ){
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
-			}else if( 'text/plain' == $ContentType ){
+			} else if ( 'text/plain' == $ContentType ){
 				$responce['txtBody'] = $this->get_decoded_message( $part );
 				$responce['htmlBody'] = $responce['txtBody'];
-			}else if( 'text/html' == $ContentType ){
+			} else if ( 'text/html' == $ContentType ){
 				$responce['htmlBody'] = $this->get_decoded_message( $part );
 				$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
-			}else{
+			} else {
 				try {
 					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
 					if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
