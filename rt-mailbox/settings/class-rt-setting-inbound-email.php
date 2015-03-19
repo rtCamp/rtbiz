@@ -57,6 +57,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			<div class="mail_list" >
 				<?php
 				$rCount = 0;
+				$validation_script = '';
 				$is_empty_mailbox_check = true;
 				$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $modules ) );
 				if ( isset( $google_acs ) && ! empty( $google_acs ) ){
@@ -70,7 +71,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 						$token = $ac->outh_token;
 						$is_empty_mailbox_check = false;
-						$validation_script = '';
 						if ( isset( $ac->email_data['picture'] ) ){
 							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 							$personMarkup = "<img src='$img?sz=96'>";
