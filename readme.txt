@@ -74,7 +74,7 @@ Please refer to the documentation.
 * rtBiz helper function prefix updated
 * Filters added for contacts & companies label
 * Docs update
-* Bug fixes
+* Lots of Bug Fixes
 
 = 1.2.7 =
 * Bug fixes
