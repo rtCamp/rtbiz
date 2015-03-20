@@ -98,10 +98,10 @@ Please refer to the documentation.
 * rtBiz helper function prefix updated
 * Filters added for contacts & companies label
 * Docs update
-* Lots of Bug Fixes
+* Bug Fixes
 
 ### 1.2.7 ###
-* Bug fixes
+* Lots of Bug fixes
 
 ### 1.2.6 ###
 * WP User => rtBiz Contact Importer added.
