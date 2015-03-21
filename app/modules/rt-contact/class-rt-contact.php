@@ -1083,10 +1083,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$contact_id = $check_exist_contact[0]->ID;
 			}
 			else {
-				$contact_id = rt_biz_add_contact( $user->display_name );
+				$contact_id = rt_biz_add_contact( $user->display_name, $user->user_email );
 			}
 			$this->connect_contact_to_user( $contact_id, $user_id );
-			Rt_Contact::update_meta( $contact_id, self::$primary_email_key, $user->user_email );
 			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
