@@ -67,6 +67,10 @@ Great! There are several ways you can get involved to help make Stream better:
 
 ## Changelog ##
 
+### 1.4 ###
+Mailbox bug fixes
+Mailbox inline images fix
+
 ### 1.3 ###
 Mailbox Library Refactor
 Importer Library Refactor

@@ -57,6 +57,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			<div class="mail_list" >
 				<?php
 				$rCount = 0;
+				$validation_script = '';
 				$is_empty_mailbox_check = true;
 				$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $modules ) );
 				if ( isset( $google_acs ) && ! empty( $google_acs ) ){
@@ -70,7 +71,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 						$token = $ac->outh_token;
 						$is_empty_mailbox_check = false;
-						$validation_script = '';
 						if ( isset( $ac->email_data['picture'] ) ){
 							$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 							$personMarkup = "<img src='$img?sz=96'>";
@@ -146,7 +146,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 								</tr>
 							</table>
 						<?php } else {
-							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credential or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
+							echo '<p class="long"><strong>'.__( ' Please remove account and enter correct credentials or enable IMAP in your mailbox.' ). '</strong></p>'; }?>
 					</div>
 						<hr class="rt-mailbox-hr">
 				<?php } ?>
@@ -245,7 +245,10 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 						$email_data = null;
 						if ( isset( $_POST['mail_folders'] ) && ! empty( $_POST['mail_folders'] ) && is_array( $_POST['mail_folders'] ) && ! empty( $email_ac ) ) {
 							$email_data                 = maybe_unserialize( $email_ac->email_data );
-							$email_data['mail_folders'] = implode( ',', $_POST['mail_folders'][ $mail_ac ] );
+							if ( empty ( $_POST['mail_folders'][ $mail_ac ]  ) ) {
+								$_POST['mail_folders'][ $mail_ac ] = array();
+							}
+							$email_data['mail_folders'] = implode( ',', array_filter( $_POST['mail_folders'][ $mail_ac ] ) );
 						}
 						$rt_mail_settings->update_mail_acl( $mail_ac, $token, maybe_serialize( $email_data ), $imap_server );
 					}
