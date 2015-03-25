@@ -504,8 +504,14 @@ function rt_biz_search_employees( $query ) {
 	return rt_biz_search_contact( $query, $args );
 }
 
-function rt_biz_is_our_employee( $email ){
-	$args = array(
+/**
+ * check user is staff or not
+ * @param int/object/sting $value : it shoud be userid or user or userEmail
+ *
+ * @return bool
+ */
+function rt_biz_is_our_employee( $value ){
+	/*$args = array(
 		'tax_query' => array(
 			array(
 				'taxonomy' => Rt_Contact::$user_category_taxonomy,
@@ -521,7 +527,20 @@ function rt_biz_is_our_employee( $email ){
 		),
 	);
 	$employee = rt_biz_search_contact( '', $args );
-	return ( count( $employee ) >= 1 ) ? true : false;
+
+	return ( count( $employee ) >= 1 ) ? true : false;*/
+
+	global $rt_contact;
+	if ( is_numeric( $value ) ){
+		$value = get_user_by( 'id', $value );
+	} elseif ( is_string( $value ) ){
+		$value = get_user_by( 'email', $value );
+	} elseif ( ! is_object( $value ) ){
+		return false;
+	}
+
+	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
+	return ( $isEmployee ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -787,4 +806,30 @@ function rt_biz_gravity_importer_mapper_view(){
 function rt_biz_clear_post_connection_to_contact( $post_type, $from, $to ) {
 	global $rt_contact;
 	return $rt_contact->clear_post_connection_to_entity( $post_type, $from, $to );
+}
+
+
+/**
+ *
+ */
+function rt_biz_get_avatar( $id_or_email, $size ){
+	if ( is_numeric($id_or_email) ) {
+		$id = (int) $id_or_email->user_id;
+		$user = get_userdata($id);
+		if ( $user ){
+			$id_or_email = $user->user_email;
+		}
+	} elseif ( is_object($id_or_email) ) {
+		if ( ! empty( $id_or_email->user_id ) ) {
+			$id   = (int) $id_or_email->user_id;
+			$user = get_userdata( $id );
+			if ( $user ) {
+				$id_or_email = $user->user_email;
+			} elseif ( empty( $id_or_email->comment_author_email ) ){
+				$id_or_email = $id_or_email->comment_author_email;
+			}
+		}
+	}
+	$default = RT_BIZ_URL . 'assets/icon-128x128.png';
+	return get_avatar( $id_or_email, $size, $default );
 }
