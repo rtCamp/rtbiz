@@ -813,13 +813,13 @@ function rt_biz_clear_post_connection_to_contact( $post_type, $from, $to ) {
  *
  */
 function rt_biz_get_avatar( $id_or_email, $size ){
-	if ( is_numeric($id_or_email) ) {
+	if ( is_numeric( $id_or_email ) ) {
 		$id = (int) $id_or_email->user_id;
-		$user = get_userdata($id);
+		$user = get_userdata( $id );
 		if ( $user ){
 			$id_or_email = $user->user_email;
 		}
-	} elseif ( is_object($id_or_email) ) {
+	} elseif ( is_object( $id_or_email ) ) {
 		if ( ! empty( $id_or_email->user_id ) ) {
 			$id   = (int) $id_or_email->user_id;
 			$user = get_userdata( $id );
@@ -832,4 +832,19 @@ function rt_biz_get_avatar( $id_or_email, $size ){
 	}
 	$default = RT_BIZ_URL . 'assets/icon-128x128.png';
 	return get_avatar( $id_or_email, $size, $default );
+}
+
+function rt_biz_is_email_template_addon_active(){
+	if ( is_plugin_active( 'rtbiz-email-template/rtbiz-email-template.php' ) ) {
+		return true;
+	}
+	return false;
+}
+
+function rt_biz_is_email_template_setting_on(){
+	$redux = rt_biz_get_redux_settings();
+	if ( isset( $redux['rt_biz_email_template_setting'] ) && 1 == $redux['rt_biz_email_template_setting'] && rt_biz_is_email_template_addon_active() ){
+		return true;
+	}
+	return false;
 }
