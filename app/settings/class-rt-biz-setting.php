@@ -231,12 +231,12 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			);
 			if ( rt_biz_is_email_template_addon_active() ){
 				$this->sections[] = array(
-					'icon'        => 'el-wrench-alt',
+					'icon'        => 'el-icon-adjust-alt',
 					'title'       => __( 'Add-ons' ),
 					'permissions' => $admin_cap,
 				);
 				$this->sections[] = array(
-					'icon'        => 'el-envelope',
+					'icon'        => 'el-icon-wrench',
 					'title'       => __( 'Email Templates' ),
 					'permissions' => $admin_cap,
 					'subsection'  => true,
