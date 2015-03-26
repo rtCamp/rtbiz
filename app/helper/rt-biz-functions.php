@@ -848,3 +848,67 @@ function rt_biz_is_email_template_setting_on(){
 	}
 	return false;
 }
+
+/*
+ * To check attachment type support by google viewer or not
+ * @param $post_mime_type
+ * @param string $extation
+ *
+ * @return bool
+ */
+function rt_bix_is_google_doc_supported_type( $post_mime_type, $extation = '' ){
+	$mime_types = array(
+		// ext		=>	mime_type
+		"ai"		=>	"application/postscript",
+		"doc"		=>	"application/msword",
+		"docx"		=>	"application/vnd.openxmlformats-officedocument.wordprocessingml",
+		"dxf"		=>	"application/dxf",
+		"eps"		=>	"application/postscript",
+		"otf"		=>	"font/opentype",
+		"pages"		=>	"application/x-iwork-pages-sffpages",
+		"pdf"		=>	"application/pdf",
+		"pps"		=>	"application/vnd.ms-powerpoint",
+		"ppt"		=>	"application/vnd.ms-powerpoint",
+		"pptx"		=>	"application/vnd.openxmlformats-officedocument.presentationml",
+		"ps"		=>	"application/postscript",
+		"psd"		=>	"image/photoshop",
+		"rar"		=>	"application/rar",
+		"svg"		=>	"image/svg+xml",
+		"tif"		=>	"image/tiff",
+		"tiff"		=>	"image/tiff",
+		"ttf"		=>	"application/x-font-ttf",
+		"xls"		=>	"application/vnd.ms-excel",
+		"xlsx"		=>	"application/vnd.openxmlformats-officedocument.spreadsheetml",
+		"xps"		=>	"application/vnd.ms-xpsdocument",
+		"zip"		=>	"application/zip",
+		"txt"		=>	"text/plain"
+	);
+
+	if ( ! empty( $extation ) ){
+		return ( array_key_exists( $extation, $mime_types ) || in_array( $post_mime_type, $mime_types ) );
+	}
+	return in_array( $post_mime_type, $mime_types );
+
+}
+
+/*
+ * Get googel doc viewer link
+ */
+function rt_biz_google_doc_viewer_url( $attachment_url ){
+	if( is_ssl() ){
+		$protocol_type = 'https';
+	} else {
+		$protocol_type = 'http';
+	}
+	$attachment_url = $protocol_type . '://docs.google.com/viewer?url=' . urlencode( $attachment_url ) . '&embedded=true';
+	return $attachment_url;
+}
+
+/*
+ * Function to extract extension from url
+ */
+function rt_biz_get_attchment_extension( $guid ){
+	$extn_array = explode( '.', $guid );
+	return $extn_array[ count( $extn_array ) - 1 ];
+}
+
