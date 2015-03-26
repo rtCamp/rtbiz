@@ -126,6 +126,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 		}
 
+		/**
+		 * @return bool
+		 */
 		public function set_sections() {
 			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
@@ -227,6 +230,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					),
 				),
 			);
+			// If email template addon is active then add new tab called addon in redux setting and also add individual addon on/off setting
 			if ( rt_biz_is_email_template_addon_active() ){
 				$this->sections[] = array(
 					'icon'        => 'el-icon-adjust-alt',

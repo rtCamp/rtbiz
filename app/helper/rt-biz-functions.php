@@ -834,6 +834,10 @@ function rt_biz_get_avatar( $id_or_email, $size ){
 	return get_avatar( $id_or_email, $size, $default );
 }
 
+/**
+ * Check if rtbiz email template addon is active or not
+ * @return bool
+ */
 function rt_biz_is_email_template_addon_active(){
 	if ( is_plugin_active( 'rtbiz-email-template/rtbiz-email-template.php' ) ) {
 		return true;
@@ -841,6 +845,10 @@ function rt_biz_is_email_template_addon_active(){
 	return false;
 }
 
+/**
+ * check if rtbiz email template setting is on or not
+ * @return bool
+ */
 function rt_biz_is_email_template_setting_on(){
 	$redux = rt_biz_get_redux_settings();
 	if ( isset( $redux['rt_biz_email_template_setting'] ) && 1 == $redux['rt_biz_email_template_setting'] && rt_biz_is_email_template_addon_active() ){
