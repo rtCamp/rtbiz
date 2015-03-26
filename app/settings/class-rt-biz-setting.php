@@ -175,8 +175,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			);
 
 			$contact_labels = rt_biz_get_contact_labels();
-			$settings = rt_biz_get_redux_settings();
-			$rtbiz_label = $settings['menu_label'];
 
 			$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to ' . $contact_labels['name'] . '</div>' );
 			$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
