@@ -849,9 +849,9 @@ function rt_biz_is_email_template_addon_active(){
  * check if rtbiz email template setting is on or not
  * @return bool
  */
-function rt_biz_is_email_template_setting_on(){
+function rt_biz_is_email_template_setting_on( $cpt ){
 	$redux = rt_biz_get_redux_settings();
-	if ( isset( $redux['rt_biz_email_template_setting'] ) && 1 == $redux['rt_biz_email_template_setting'] && rt_biz_is_email_template_addon_active() ){
+	if ( isset( $redux['rt_biz_email_template_setting_' . $cpt] ) && 1 == $redux['rt_biz_email_template_setting_'. $cpt] && rt_biz_is_email_template_addon_active() ){
 		return true;
 	}
 	return false;
