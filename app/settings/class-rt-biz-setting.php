@@ -231,35 +231,15 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				),
 			);
 			// If email template addon is active then add new tab called addon in redux setting and also add individual addon on/off setting
-			if ( rt_biz_is_email_template_addon_active() ) {
+			$addons = array();
+			$addons = apply_filters( 'rt_biz_add_addon_settings', $addons );
+			if ( ! empty( $addons ) ){
 				$this->sections[] = array(
 					'icon'        => 'el-icon-adjust-alt',
 					'title'       => __( 'Add-ons' ),
 					'permissions' => $admin_cap,
 				);
-				foreach ( Rt_Access_Control::$modules as $key => $value ){
-					if ( ! empty( $value['email_template_support'] ) ) {
-						foreach ( $value['email_template_support'] as $cpt ) {
-							$this->sections[] = array(
-								'icon'        => 'el-icon-wrench',
-								'title'       => __( 'Email Templates' ),
-								'permissions' => $admin_cap,
-								'subsection'  => true,
-								'fields'      => array(
-									array(
-										'id'       => 'rt_biz_email_template_setting_' .$cpt,
-										'type'     => 'switch',
-										'title'    => __( 'Email Template for '.$value['label'] ),
-										'subtitle' => __( 'To enable/disable Email template add-on for '. $cpt ),
-										'default'  => true,
-										'on'       => __( 'On' ),
-										'off'      => __( 'Off' ),
-									),
-								),
-							);
-						}
-					}
-	            }
+				$this->sections = array_merge( $this->sections, $addons );
 			}
 			return true;
 		}
