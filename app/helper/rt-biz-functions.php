@@ -878,7 +878,7 @@ function rt_bix_is_google_doc_supported_type( $post_mime_type, $extation = '' ){
 		'xlsx'		=> 'application/vnd.openxmlformats-officedocument.spreadsheetml',
 		'xps'		=> 'application/vnd.ms-xpsdocument',
 		'zip'		=> 'application/zip',
-		'txt'		=> 'text/plain'
+		'txt'		=> 'text/plain',
 	);
 	if ( ! empty( $extation ) ){
 		return ( array_key_exists( $extation, $mime_types ) || in_array( $post_mime_type, $mime_types ) );
