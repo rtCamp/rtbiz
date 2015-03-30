@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2.8
+Stable tag:        1.2.9
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,12 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.2.9 =
+* Filter added for addon setting
+* Redux version updated
+* Helper Function added for addon
+* Bug Fix
 
 = 1.2.8 =
 * Remove Editor Support from contact and companies and added excerpt support
