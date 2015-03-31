@@ -190,7 +190,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$ssl  = ( isset( $server->incoming_imap_enc ) && ! is_null( $server->incoming_imap_enc ) ) ? $server->incoming_imap_enc : false;
 					$this->imap->connect( $host, $port, $ssl );
 
-					return $this->imap->login( $email, rt_encrypt_decrypt( $accessToken ) );
+					return $this->imap->login( $email, rtmb_encrypt_decrypt( $accessToken ) );
 				default:
 					return false;
 			}
@@ -246,7 +246,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$smtp_args['connection_class']  = 'login';
 					$smtp_args['connection_config'] = array(
 						'username' => $fromemail,
-						'password' => rt_encrypt_decrypt( $accessToken ),
+						'password' => rtmb_encrypt_decrypt( $accessToken ),
 						'ssl'      => $server->outgoing_smtp_enc,
 					);
 					break;
@@ -300,7 +300,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$fileName   = $file_array[ count( $file_array ) - 1 ];
 					$attachment = new MimePart( file_get_contents( $attach ) );
 
-					$attachment->type        = rt_get_mime_type( $attach );
+					$attachment->type        = rtmb_get_mime_type( $attach );
 					$attachment->filename    = $fileName;
 					$attachment->encoding    = Zend\Mime\Mime::ENCODING_BASE64;
 					$attachment->disposition = Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
@@ -575,7 +575,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$this->update_last_mail_uid( $email, $UmailId );
 						continue;
 					}
-					if ( $lastMessageId && rt_check_duplicate_from_message_id( $lastMessageId ) ) {
+					if ( $lastMessageId && rtmb_check_duplicate_from_message_id( $lastMessageId ) ) {
 
 						$dt = new DateTime( $message->date );
 						$this->update_last_mail_uid( $email, $UmailId );
@@ -701,9 +701,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					$subject      = $message->subject;
-					$htmlBody     = rt_force_utf_8( $htmlBody );
-					$subject      = rt_force_utf_8( $subject );
-					$txtBody      = rt_force_utf_8( $txtBody );
+					$htmlBody     = rtmb_force_utf_8( $htmlBody );
+					$subject      = rtmb_force_utf_8( $subject );
+					$txtBody      = rtmb_force_utf_8( $txtBody );
 
 					$htmlBody = balanceTags( $htmlBody, true );
 
@@ -749,8 +749,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					if ( ! isset( $message->subject ) ) {
 						$message->subject = '';
 					}
-					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", 'error-mail-sync.txt' );
-					rt_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", $email . 'error-mail-sync.txt' );
+					rtmb_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", 'error-mail-sync.txt' );
+					rtmb_log( "[Mail Sync Failed]Subject:{$message->subject}; Email: {$email}; MailNo: {$mailId};Message-Id: {$lastMessageId} ", $email . 'error-mail-sync.txt' );
 				}
 			}
 		}
@@ -793,18 +793,18 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						if ( isset( $matches[1] ) ) {
 							$filename = trim( $matches[1] );
 						} else {
-							$filename = rt_get_extention( $ContentType );
+							$filename = rtmb_get_extention( $ContentType );
 						}
 					} else {
-						$filename = rt_get_extention( $ContentType );
+						$filename = rtmb_get_extention( $ContentType );
 					}
 				} catch ( Exception $e ) {
 					$e->getTrace();
-					$filename = rt_get_extention( $ContentType );
+					$filename = rtmb_get_extention( $ContentType );
 				}
 
 				if ( trim( $filename ) == '' ) {
-					$filename = rt_get_extention( $ContentType );
+					$filename = rtmb_get_extention( $ContentType );
 				}
 				$filedata   = $this->get_decoded_message( $part );
 				$upload_dir = wp_upload_dir( null );
@@ -821,7 +821,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$uploaded['url']   = $upload_dir ['url'] . "/$filename";
 				}
 				if ( false == $uploaded['error'] ) {
-					rt_log( "[Attachement Created] File:{$uploaded['file']} ; URL: {$uploaded['url']}", 'mail-attachement.txt' );
+					rtmb_log( "[Attachement Created] File:{$uploaded['file']} ; URL: {$uploaded['url']}", 'mail-attachement.txt' );
 					$file                  = array();
 					$extn_array            = explode( '.', $filename );
 					$extn                  = $extn_array[ count( $extn_array ) - 1 ];
@@ -840,7 +840,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					ob_start();
 					error_log( var_export( $uploaded, true ) );
 					$data = ob_get_clean();
-					rt_log( "[Attachement Failed] Email: {$email};Message-Id: {$message->messageid}; Data : $data ", 'error-mail-attachement.txt' );
+					rtmb_log( "[Attachement Failed] Email: {$email};Message-Id: {$message->messageid}; Data : $data ", 'error-mail-attachement.txt' );
 				}
 			}
 			return $responce;
