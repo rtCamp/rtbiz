@@ -510,7 +510,7 @@ function rt_biz_search_employees( $query ) {
  *
  * @return bool
  */
-function rt_biz_is_our_employee( $value ){
+function rt_biz_is_our_employee( $value, $module ){
 	/*$args = array(
 		'tax_query' => array(
 			array(
@@ -540,7 +540,7 @@ function rt_biz_is_our_employee( $value ){
 	}
 
 	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
-	return ( $isEmployee ) ? true : false;
+	return ( $isEmployee && rt_biz_get_access_role_cap( $module, 'author' ) ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
