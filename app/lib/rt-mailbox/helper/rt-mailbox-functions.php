@@ -1,6 +1,6 @@
 <?php
 
-function rt_encrypt_decrypt( $string ) {
+function rtmb_encrypt_decrypt( $string ) {
 
 	$string_length    = strlen( $string );
 	$encrypted_string = '';
@@ -35,7 +35,7 @@ function rt_encrypt_decrypt( $string ) {
  *
  * @since rt-Helpdesk 0.1
  */
-function rt_check_duplicate_from_message_id( $messageid ) {
+function rtmb_check_duplicate_from_message_id( $messageid ) {
 	global $wpdb;
 	if ( $messageid && trim( $messageid ) == '' ) {
 		return false;
@@ -61,7 +61,7 @@ function rt_check_duplicate_from_message_id( $messageid ) {
  *
  * @return bool
  */
-function rt_is_system_email( $email ) {
+function rtmb_is_system_email( $email ) {
 	global $rt_mail_settings;
 	$google_acs = $rt_mail_settings->get_user_google_ac();
 
@@ -75,7 +75,7 @@ function rt_is_system_email( $email ) {
 	return false;
 }
 
-function rt_force_utf_8( $string ) {
+function rtmb_force_utf_8( $string ) {
 	//			return preg_replace('/[^(\x20-\x7F)]*/','', $string);
 	//			$string = preg_replace( '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
 	//									'|(?<=^|[\x00-\x7F])[\x80-\xBF]+' .
@@ -123,7 +123,7 @@ function rt_force_utf_8( $string ) {
  *
  * @since rt-Helpdesk 0.1
  */
-function rt_log( $msg, $filename = 'error_log.txt' ) {
+function rtmb_log( $msg, $filename = 'error_log.txt' ) {
 	$log_file = '/tmp/mailbox' . $filename;
 	if ( $fp = fopen( $log_file, 'a+' ) ) {
 		fwrite( $fp, "\n" . '[' . date( DATE_RSS ) . '] ' . $msg . "\n" );
@@ -143,7 +143,7 @@ function rt_log( $msg, $filename = 'error_log.txt' ) {
  *
  * @since rt-Helpdesk 0.1
  */
-function rt_get_extention( $file ) {
+function rtmb_get_extention( $file ) {
 
 	foreach ( Rt_Mailbox::$rt_mime_types as $key => $mime ) {
 		if ( $mime == $file ) {
@@ -164,7 +164,7 @@ function rt_get_extention( $file ) {
  *
  * @since rt-Helpdesk 0.1
  */
-function rt_get_mime_type( $file ) {
+function rtmb_get_mime_type( $file ) {
 
 	// our list of mime types
 
@@ -174,6 +174,36 @@ function rt_get_mime_type( $file ) {
 	} else {
 		return 'application/octet-stream';
 	}
+}
+
+/**
+ * returns all system emails
+ * @return array
+ */
+function rtmb_get_module_mailbox_emails( $module ) {
+	global $rt_mail_settings;
+
+	$emails   = array();
+	$google_acs = $rt_mail_settings->get_user_google_ac( $module );
+
+	foreach ( $google_acs as $ac ) {
+		$ac->email_data = unserialize( $ac->email_data );
+		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+		$hdZendEmail = new Rt_Zend_Mail();
+		if ( $hdZendEmail->try_imap_login( $ac_email, $ac->outh_token, $ac->type, $ac->imap_server ) ) {
+			$emails[] = $ac_email;
+		}
+	}
+	return $emails;
+}
+
+/**
+ * returns all system emails
+ * @return array
+ */
+function rtmb_get_module_mailbox_email( $email, $module ) {
+	global $rt_mail_settings;
+	return $rt_mail_settings->get_email_acc( $email, $module );
 }
 
 ?>

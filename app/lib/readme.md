@@ -67,29 +67,33 @@ Great! There are several ways you can get involved to help make Stream better:
 
 ## Changelog ##
 
+### 1.4 ###
+* Mailbox bug fixes
+* Mailbox inline images fix
+
 ### 1.3 ###
-Mailbox Library Refactor
-Importer Library Refactor
+* Mailbox Library Refactor
+* Importer Library Refactor
 
 ### 1.2 ###
-Mailbox Library
+* Mailbox Library
 
 ### 0.9 ###
-Rt_Offerings Refactor & Bug Fixes
+* Rt_Offerings Refactor & Bug Fixes
 
 ### 0.8 ###
-RT Product Sync Library Added
-Travis Config updated for WordPress Coding Standards
-User Group Bug Fixes & additional method added to get users by term id.
+* RT Product Sync Library Added
+* Travis Config updated for WordPress Coding Standards
+* User Group Bug Fixes & additional method added to get users by term id.
 
 ### 0.7 ###
-A Few bug fixes for RT_LIB_FILE constant
-DB Update Key changed for User Groups
+* A Few bug fixes for RT_LIB_FILE constant
+* DB Update Key changed for User Groups
 
 ### 0.6 ###
-Test Cases updated & Code Sniffer Config updated & pre-commit hook updated
+* Test Cases updated & Code Sniffer Config updated & pre-commit hook updated
 
 ### 0.5 ###
-Initial Basic Libraries.
+* Initial Basic Libraries.
 
 
