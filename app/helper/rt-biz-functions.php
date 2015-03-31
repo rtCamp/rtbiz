@@ -540,7 +540,7 @@ function rt_biz_is_our_employee( $value, $module ){
 	}
 
 	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
-	return ( $isEmployee && rt_biz_get_access_role_cap( $module, 'author' ) ) ? true : false;
+	return ( $isEmployee && current_user_can( rt_biz_get_access_role_cap( $module, 'author' ) ) ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
