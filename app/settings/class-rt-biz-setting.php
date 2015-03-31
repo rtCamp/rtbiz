@@ -126,6 +126,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 		}
 
+		/**
+		 * @return bool
+		 */
 		public function set_sections() {
 			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
@@ -175,8 +178,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			);
 
 			$contact_labels = rt_biz_get_contact_labels();
-			$settings = rt_biz_get_redux_settings();
-			$rtbiz_label = $settings['menu_label'];
 
 			$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to ' . $contact_labels['name'] . '</div>' );
 			$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
@@ -229,7 +230,17 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					),
 				),
 			);
-
+			// If email template addon is active then add new tab called addon in redux setting and also add individual addon on/off setting
+			$addons = array();
+			$addons = apply_filters( 'rt_biz_add_addon_settings', $addons );
+			if ( ! empty( $addons ) ){
+				$this->sections[] = array(
+					'icon'        => 'el-icon-adjust-alt',
+					'title'       => __( 'Add-ons' ),
+					'permissions' => $admin_cap,
+				);
+				$this->sections = array_merge( $this->sections, $addons );
+			}
 			return true;
 		}
 

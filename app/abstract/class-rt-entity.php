@@ -99,10 +99,57 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					add_filter( 'manage_edit-'.Rt_Offerings::$offering_slug .'_columns', array( $this, 'edit_offering_columns' ) );
 					add_filter( 'manage_'.Rt_Offerings::$offering_slug .'_custom_column', array( $this, 'add_offering_column_content' ), 10, 3 );
 				}
+				add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_entity_update_messages' ), 10, 2 );
+				add_filter( 'post_updated_messages', array( $this, 'entity_updated_messages' ), 10, 2 );
 			}
 			add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 			add_filter( 'comment_feed_where', array( $this, 'skip_feed_comments' ) );
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+
+		/**
+		 * Filter the bulk action updated messages for '. $singular .'.
+		 * @param $bulk_messages
+		 * @param $bulk_counts
+		 *
+		 * @return $bulk_messages
+		 */
+		function bulk_entity_update_messages( $bulk_messages, $bulk_counts ){
+			$singular = strtolower( $this->labels['singular_name'] );
+			$plural = strtolower( $this->labels['name'] );
+			$bulk_messages[ $this->post_type ] = array(
+				'updated'   => _n( '%s '. $singular .' updated.', '%s '. $plural .' updated.', $bulk_counts['updated'] ),
+				'locked'    => _n( '%s '. $singular .' not updated, somebody is editing it.', '%s '. $plural .' not updated, somebody is editing them.', $bulk_counts['locked'] ),
+				'deleted'   => _n( '%s '. $singular .' permanently deleted.', '%s '. $plural .' permanently deleted.', $bulk_counts['deleted'] ),
+				'trashed'   => _n( '%s '. $singular .' moved to the Trash.', '%s '. $plural .' moved to the Trash.', $bulk_counts['trashed'] ),
+				'untrashed' => _n( '%s '. $singular .' restored from the Trash.', '%s '. $plural .' restored from the Trash.', $bulk_counts['untrashed'] ),
+			);
+			return $bulk_messages;
+		}
+
+		/**
+		 * Added message when entity update
+		 * @param $messages
+		 *
+		 * @return mixed
+		 */
+		function entity_updated_messages( $messages ){
+			$singular = $this->labels['singular_name'];
+			$messages[ $this->post_type ] = array(
+				0  => '', // Unused. Messages start at index 1.
+				1  => __( $singular .' updated.', RT_BIZ_TEXT_DOMAIN ),
+				2  => __( 'Custom field updated.', RT_BIZ_TEXT_DOMAIN ),
+				3  => __( 'Custom field deleted.', RT_BIZ_TEXT_DOMAIN ),
+				4  => __( $singular .' updated.', RT_BIZ_TEXT_DOMAIN ),
+				/* translators: %s: date and time of the revision */
+				5  => isset( $_GET['revision'] ) ? sprintf( __( $singular .' restored to revision from %s', RT_BIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6  => __( $singular .' published.', RT_BIZ_TEXT_DOMAIN ),
+				7  => __( $singular .' saved.', RT_BIZ_TEXT_DOMAIN ),
+				8  => __( $singular .' submitted.', RT_BIZ_TEXT_DOMAIN ),
+				10 => __( $singular .' draft updated.', RT_BIZ_TEXT_DOMAIN )
+			);
+
+			return $messages;
 		}
 
 		function edit_offering_columns( $offering_columns ){
@@ -188,9 +235,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$body = '<strong>'.__( 'Contact Title' ).'</strong> : ';
 				$body .= rt_biz_text_diff( $post->post_title , $_POST['post_title'] );
 			}
-			if ( $_POST['content'] != $post->post_content ){
+			if ( $_POST['excerpt'] != $post->post_content ){
 				$body = '<strong>'.__( 'Contact Content' ).'</strong> : ';
-				$body .= rt_biz_text_diff( $post->post_content, $_POST['content'] );
+				$body .= rt_biz_text_diff( $post->post_content, $_POST['excerpt'] );
 			}
 
 			if ( isset( $_POST['tax_input'] ) ) {

@@ -504,8 +504,14 @@ function rt_biz_search_employees( $query ) {
 	return rt_biz_search_contact( $query, $args );
 }
 
-function rt_biz_is_our_employee( $email ){
-	$args = array(
+/**
+ * check user is staff or not
+ * @param int/object/sting $value : it shoud be userid or user or userEmail
+ *
+ * @return bool
+ */
+function rt_biz_is_our_employee( $value ){
+	/*$args = array(
 		'tax_query' => array(
 			array(
 				'taxonomy' => Rt_Contact::$user_category_taxonomy,
@@ -521,7 +527,20 @@ function rt_biz_is_our_employee( $email ){
 		),
 	);
 	$employee = rt_biz_search_contact( '', $args );
-	return ( count( $employee ) >= 1 ) ? true : false;
+
+	return ( count( $employee ) >= 1 ) ? true : false;*/
+
+	global $rt_contact;
+	if ( is_numeric( $value ) ){
+		$value = get_user_by( 'id', $value );
+	} elseif ( is_string( $value ) ){
+		$value = get_user_by( 'email', $value );
+	} elseif ( ! is_object( $value ) ){
+		return false;
+	}
+
+	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
+	return ( $isEmployee ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -788,3 +807,104 @@ function rt_biz_clear_post_connection_to_contact( $post_type, $from, $to ) {
 	global $rt_contact;
 	return $rt_contact->clear_post_connection_to_entity( $post_type, $from, $to );
 }
+
+
+/**
+ *
+ */
+function rt_biz_get_avatar( $id_or_email, $size ){
+	if ( is_numeric( $id_or_email ) ) {
+		$id = (int) $id_or_email->user_id;
+		$user = get_userdata( $id );
+		if ( $user ){
+			$id_or_email = $user->user_email;
+		}
+	} elseif ( is_object( $id_or_email ) ) {
+		if ( ! empty( $id_or_email->user_id ) ) {
+			$id   = (int) $id_or_email->user_id;
+			$user = get_userdata( $id );
+			if ( $user ) {
+				$id_or_email = $user->user_email;
+			} elseif ( empty( $id_or_email->comment_author_email ) ){
+				$id_or_email = $id_or_email->comment_author_email;
+			}
+		}
+	}
+	$default = RT_BIZ_URL . 'assets/icon-128x128.png';
+	return get_avatar( $id_or_email, $size, $default );
+}
+
+/**
+ * Check if rtbiz email template addon is active or not
+ * @return bool
+ */
+function rt_biz_is_email_template_addon_active(){
+	if ( is_plugin_active( 'rtbiz-email-template/rtbiz-email-template.php' ) ) {
+		return true;
+	}
+	return false;
+}
+
+
+/*
+ * To check attachment type support by google viewer or not
+ * @param $post_mime_type
+ * @param string $extation
+ *
+ * @return bool
+ */
+function rt_bix_is_google_doc_supported_type( $post_mime_type, $extation = '' ){
+	$mime_types = array(
+		// ext		=>	mime_type
+		'ai'		=> 'application/postscript',
+		'doc'		=> 'application/msword',
+		'docx'		=> 'application/vnd.openxmlformats-officedocument.wordprocessingml',
+		'dxf'		=> 'application/dxf',
+		'eps'		=> 'application/postscript',
+		'otf'		=> 'font/opentype',
+		'pages'		=> 'application/x-iwork-pages-sffpages',
+		'pdf'		=> 'application/pdf',
+		'pps'		=> 'application/vnd.ms-powerpoint',
+		'ppt'		=> 'application/vnd.ms-powerpoint',
+		'pptx'		=> 'application/vnd.openxmlformats-officedocument.presentationml',
+		'ps'		=> 'application/postscript',
+		'psd'		=> 'image/photoshop',
+		'rar'		=> 'application/rar',
+		'svg'		=> 'image/svg+xml',
+		'tif'		=> 'image/tiff',
+		'tiff'		=> 'image/tiff',
+		'ttf'		=> 'application/x-font-ttf',
+		'xls'		=> 'application/vnd.ms-excel',
+		'xlsx'		=> 'application/vnd.openxmlformats-officedocument.spreadsheetml',
+		'xps'		=> 'application/vnd.ms-xpsdocument',
+		'zip'		=> 'application/zip',
+		'txt'		=> 'text/plain',
+	);
+	if ( ! empty( $extation ) ){
+		return ( array_key_exists( $extation, $mime_types ) || in_array( $post_mime_type, $mime_types ) );
+	}
+	return in_array( $post_mime_type, $mime_types );
+
+}
+
+/*
+ * Get googel doc viewer link
+ */
+function rt_biz_google_doc_viewer_url( $attachment_url ){
+	if ( is_ssl() ){
+		$protocol_type = 'https';
+	} else {
+		$protocol_type = 'http';
+	}
+	$attachment_url = $protocol_type . '://docs.google.com/viewer?url=' . urlencode( $attachment_url ) . '&embedded=true';
+	return $attachment_url;
+}
+
+/*
+ * Function to extract extension from url
+ */
+function rt_biz_get_attchment_extension( $guid ){
+	$extn_array = explode( '.', $guid );
+	return $extn_array[ count( $extn_array ) - 1 ];
+}
+
