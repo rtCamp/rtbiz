@@ -333,7 +333,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @param string $to
 		 */
 		function connect_contact_to_user( $from = '', $to = '' ) {
-			if ( ! p2p_connection_exists( $this->post_type . '_to_user', array( 'from' => $from, 'to' => $to ) ) ) {
+			if ( ! p2p_connection_exists( $this->post_type . '_to_user', array( 'from' => $from, 'to' => $to ) ) && is_object( p2p_type( $this->post_type . '_to_user' ) ) ) {
 				p2p_type( $this->post_type . '_to_user' )->connect( $from, $to, array(
 					'date' => current_time( 'mysql' )
 				) );
