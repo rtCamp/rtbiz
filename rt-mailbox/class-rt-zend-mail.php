@@ -783,18 +783,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			} else {
 				try {
 					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
-					if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
-						if ( isset( $matches[1] ) ) {
-							$filename = trim( $matches[1] );
-						} else {
-							$filename = rtmb_get_extention( $ContentType );
-						}
-					} else {
-						$filename = rtmb_get_extention( $ContentType );
-					}
 				} catch ( Exception $e ) {
-					$e->getTrace();
-					$filename = rtmb_get_extention( $ContentType );
+					$filename = '';
 				}
 
 				if ( 'text/plain' == $ContentType && empty( $filename ) ){
@@ -804,6 +794,22 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce['htmlBody'] = $this->get_decoded_message( $part );
 					$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
 				} else {
+
+					try {
+						$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
+						if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
+							if ( isset( $matches[1] ) ) {
+								$filename = trim( $matches[1] );
+							} else {
+								$filename = rtmb_get_extention( $ContentType );
+							}
+						} else {
+							$filename = rtmb_get_extention( $ContentType );
+						}
+					} catch ( Exception $e ) {
+						$e->getTrace();
+						$filename = rtmb_get_extention( $ContentType );
+					}
 
 					if ( trim( $filename ) == '' ) {
 						$filename = rtmb_get_extention( $ContentType );
