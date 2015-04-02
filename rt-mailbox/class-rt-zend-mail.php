@@ -786,7 +786,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			} else if ( 'text/html' == $ContentType ){
 				$responce['htmlBody'] = $this->get_decoded_message( $part );
 				$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
-			} else{
+			} else {
 				try {
 					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
 					if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
