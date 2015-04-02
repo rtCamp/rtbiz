@@ -780,12 +780,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$tPart = $part->getPart( $rCount );
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
-			} else if ( 'text/plain' == $ContentType ){
-				$responce['txtBody'] = $this->get_decoded_message( $part );
-				$responce['htmlBody'] = $responce['txtBody'];
-			} else if ( 'text/html' == $ContentType ){
-				$responce['htmlBody'] = $this->get_decoded_message( $part );
-				$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
 			} else {
 				try {
 					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
