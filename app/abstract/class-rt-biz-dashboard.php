@@ -35,7 +35,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		function setup_defaults() {
-			if ( ! empty( $_REQUEST['page'] ) && $_REQUEST['page'] = Rt_Biz::$dashboard_slug && ! metadata_exists( 'user', get_current_user_id(), 'show_rtbiz_welcome_panel' ) ) {
+			if ( ! empty( $_REQUEST['page'] ) && $_REQUEST['page'] == Rt_Biz::$dashboard_slug && ! metadata_exists( 'user', get_current_user_id(), 'show_rtbiz_welcome_panel' ) ) {
 				update_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', 1 );
 			}
 		}
