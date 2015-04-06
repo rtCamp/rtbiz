@@ -462,8 +462,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 		function profile_level_permission( $post ) {
 			global $rt_contact;
-			$current_user = new WP_User( get_current_user_id() );
-			if ( $current_user->has_cap( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID ) ) ) {
+			if ( current_user_can( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID ) ) ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
