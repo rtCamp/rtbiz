@@ -113,12 +113,13 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		}
 
 		function register_attribute_mappings() {
-			$relations = $this->attributes_relationship_model->get_all_relations();
+			global $wpdb;
+			$querystr =$wpdb->prepare( 'SELECT attr.* FROM ' . $this->attributes_relationship_model->table_name . ' as attr_rel, ' . $this->attributes_db_model->table_name . " as attr where 2=2 and attr_rel.attr_id=attr.id and attr.module_name = '%s' and attr.attribute_store_as = '%s' ORDER BY attr.id desc", $this->module_name, 'taxonomy' );
+			$relations = $this->attributes_relationship_model->get_attributes_by_query( $querystr );
 			foreach ( $relations as $relation ) {
-				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				$label = ( isset( $attr->attribute_label ) && $attr->attribute_label ) ? $attr->attribute_label : $attr->attribute_name;
-				if ( 'taxonomy' === $attr->attribute_store_as && $attr->module_name == $this->module_name && taxonomy_exists( $label ) ) {
-					$this->register_taxonomy( $relation->post_type, $attr, $this->attr_cap );
+				$label = ( isset( $relation->attribute_label ) && $relation->attribute_label ) ? $relation->attribute_label : $relation->attribute_name;
+				if ( ! taxonomy_exists( $label ) ) {
+					$this->register_taxonomy( $relation->post_type, $relation, $this->attr_cap );
 				}
 			}
 		}

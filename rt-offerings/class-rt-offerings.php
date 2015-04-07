@@ -209,7 +209,10 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		public function hooks() {
 			if ( true === $this->isSync ) {
-				add_action( 'init', array( $this, 'existing_offerings_sync' ) );
+				$isSyncOpt = get_option( 'rtbiz_offering_plugin_synx' );
+				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ){
+					add_action( 'init', array( $this, 'bulk_insert_offerings' ) );
+				}
 				add_action( 'save_post', array( $this, 'insert_offerings' ) );
 			}
 			add_action( 'delete_term', array( $this, 'cleanup_meta_after_term_deletion' ), 10, 4 );
@@ -217,18 +220,6 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 		function cleanup_meta_after_term_deletion( $term, $tt_id, $taxonomy, $deleted_term ) {
 			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term, self::$term_meta_key );
-		}
-
-		/**
-		 * old_offerings_synchronization_enabled function.
-		 *
-		 * @access public
-		 * @return void
-		 */
-		public function existing_offerings_sync() {
-			if ( true === $this->isSync && ( $this->is_edd_active() || $this->is_woocommerce_active() ) ) {
-				$this->bulk_insert_offerings();
-			}
 		}
 
 		/**
@@ -330,6 +321,10 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		public function bulk_insert_offerings() {
 
+			if ( !$this->is_edd_active() && ! $this->is_woocommerce_active() ) {
+				return false;
+			}
+
 			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'any' );
 			$offerings_array = get_posts( $args ); // Get Woo Commerce post object
 
@@ -343,6 +338,8 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					}
 				}
 			}
+			update_option( 'rtbiz_offering_plugin_synx', 'false' );
+
 		}
 
 		/**
