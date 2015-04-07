@@ -465,14 +465,15 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			);
 
 			foreach ( $default_categories as $category ) {
-
-				wp_insert_term(
-					$category['name'], // the term
-					self::$user_category_taxonomy, // the taxonomy
-					array(
-						'slug' => $category['slug'],
-					)
-				);
+				if ( ! term_exists( $category['name'], self::$user_category_taxonomy ) ){
+					wp_insert_term(
+						$category['name'], // the term
+						self::$user_category_taxonomy, // the taxonomy
+						array(
+							'slug' => $category['slug'],
+						)
+					);
+				}
 			}
 
 		}

@@ -42,7 +42,6 @@ if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
 
 include_once RT_BIZ_PATH . 'app/lib/rt-lib.php';
 include_once RT_BIZ_PATH . 'app/helper/rt-biz-functions.php';
-include_once RT_BIZ_PATH . 'app/vendor/taxonomy-metadata.php';
 
 /**
  * Description of class-rt-biz
@@ -195,6 +194,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->init_help();
 
 			self::$instance->init_tour();
+
+			self::$instance->init_taxonomy_metadata();
 
 			self::$instance->register_company_contact_connection();
 
@@ -379,9 +380,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function init_department() {
 			global $rtbiz_department;
 			$rtbiz_department = new RT_Departments();
-
-			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
-			$taxonomy_metadata->activate();
 		}
 
 		function init_wc_product_taxonomy() {
@@ -422,14 +420,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_importer = new Rt_Importer( null, null, false );
 		}
 
-		function init_configuration(){
-			/*global $rt_configuration;
-			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
-			$arg = array(
-				'parent_slug' => Rt_Biz::$dashboard_slug,
-				'page_capability' => $editor_cap,
-			);
-			$rt_configuration = new RT_BIZ_Configuration( $arg );*/
+		function init_taxonomy_metadata(){
+			global $taxonomy_metadata;
+			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
+				include_once RT_BIZ_PATH . 'app/lib/rt-offerings/taxonomy-metadata.php';
+			}
+
+			if ( ! is_object( $taxonomy_metadata ) ){
+				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
+				$taxonomy_metadata->activate();
+			}
 		}
 
 		/**
