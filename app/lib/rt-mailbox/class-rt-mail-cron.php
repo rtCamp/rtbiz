@@ -62,8 +62,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		}
 
 		function setup_schedule() {
-			//  Migration remove old cron, changed one cron for one module which can have multiple mailbox setup
-			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
 
 			global $rt_mail_accounts_model ;
 			$modules = $rt_mail_accounts_model->get_unique_modules();
@@ -71,9 +69,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
 			}
 
-			// end of migration
-			global $rt_mail_accounts_model ;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
 			foreach ( $modules as $module ){
 				if ( ! wp_next_scheduled( 'rt_parse_email_cron_'.$module, array( $module ) ) ) {
 					wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron_'.$module, array( $module ) );
