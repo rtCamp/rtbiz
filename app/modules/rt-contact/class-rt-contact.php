@@ -449,34 +449,36 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 *
 		 */
 		function add_defualt_categories_on_activate(){
+			$isSyncOpt = get_option( 'rtbiz_contact_category_default' );
+			if ( empty( $isSyncOpt ) || 'true' === $isSyncOpt ){
+				$default_categories = array(
+					array(
+						'name' => 'Employees',
+						'slug' => self::$employees_category_slug,
+					),
+					array(
+						'name' => 'Customers',
+						'slug' => self::$customer_category_slug,
+					),
+					array(
+						'name' => 'Vendors',
+						'slug' => self::$vendor_category_slug,
+					),
+				);
 
-			$default_categories = array(
-				array(
-					'name' => 'Employees',
-					'slug' => self::$employees_category_slug,
-				),
-				array(
-					'name' => 'Customers',
-					'slug' => self::$customer_category_slug,
-				),
-				array(
-					'name' => 'Vendors',
-					'slug' => self::$vendor_category_slug,
-				),
-			);
-
-			foreach ( $default_categories as $category ) {
-				if ( ! term_exists( $category['name'], self::$user_category_taxonomy ) ){
-					wp_insert_term(
-						$category['name'], // the term
-						self::$user_category_taxonomy, // the taxonomy
-						array(
-							'slug' => $category['slug'],
-						)
-					);
+				foreach ( $default_categories as $category ) {
+					if ( ! term_exists( $category['name'], self::$user_category_taxonomy ) ){
+						wp_insert_term(
+							$category['name'], // the term
+							self::$user_category_taxonomy, // the taxonomy
+							array(
+								'slug' => $category['slug'],
+							)
+						);
+					}
 				}
+				update_option( 'rtbiz_contact_category_default', 'false' );
 			}
-
 		}
 		/**
 		 *  Init Meta Fields
