@@ -321,7 +321,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		public function bulk_insert_offerings() {
 
-			if ( !$this->is_edd_active() && ! $this->is_woocommerce_active() ) {
+			if ( ! $this->is_edd_active() && ! $this->is_woocommerce_active() ) {
 				return false;
 			}
 
