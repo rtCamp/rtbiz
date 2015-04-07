@@ -62,8 +62,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 			add_action( 'init', array( $this, 'init_labels' ), 9 );
 
-			$this->setup_meta_fields();
 			add_action( 'init', array( $this, 'init_entity' ) );
+
+			add_action( 'init', array( $this, 'setup_meta_fields' ) );
 
 			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
 

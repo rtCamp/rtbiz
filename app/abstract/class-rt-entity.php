@@ -418,6 +418,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				.add-gap-div{
 					margin-top: 10px;
 				}
+
+				.pure-control-group input[type="checkbox"]{
+					width: auto;
+				}
 			</style>
 			<div class="pure-g pure-form">
 
@@ -493,11 +497,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				} else if ( isset( $field['type'] ) && 'textarea' == $field['type'] ) {
 					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
-						<?php if ( isset( $field['label'] ) ) { ?>
-						<div class="pure-u-1-2 pure-control-group">
+					<div class="pure-u-1-2 pure-control-group">
+					<?php if ( isset( $field['label'] ) ) { ?>
 						<div class="pure-u-1-1">
-						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label><?php } ?>
-						</div>
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label> </div><?php } ?>
 					<div class="pure-u-1-1 form-input">
 					<textarea <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?>><?php echo $values; ?></textarea>
 						<br /><span></span>
@@ -516,6 +519,22 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 <!--						--><?php //echo ( isset( $field[ 'description' ] ) ) ? '<p class="description">' . $field[ 'description' ] . '</p>' : ''; ?>
 					</div>
 					<?php
+				} else if ( isset( $field['type'] ) && 'checkbox' == $field['type'] ) {
+					$values = self::get_meta( $post->ID, $field['key'], true );
+					?>
+					<div class="pure-u-1-2 pure-control-group">
+					<?php if ( isset( $field['label'] ) ) { ?>
+							<div class="pure-u-1-1">
+								<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label>
+							</div>
+					<?php } ?>
+					<div class="pure-u-1-1 form-input">
+						<input value='yes' <?php echo ( 'yes' == $values )?'checked':''; ?> type='checkbox' <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?> />
+						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['text']; ?></label>
+						<br />
+								<span></span>
+							</div>
+						</div> <?php
 				} else {
 					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
@@ -851,7 +870,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		}
 		/**
 		 * Remove single connection from registered post type to Rt_Entity
-		 * @param unknown $post_type
+		 * @param string $post_type
 		 * @param mixed $from
 		 * @param mixed $to
 		 */
