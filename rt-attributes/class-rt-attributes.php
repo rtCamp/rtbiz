@@ -116,14 +116,21 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			$relations = $this->attributes_relationship_model->get_all_relations();
 			foreach ( $relations as $relation ) {
 				$attr = $this->attributes_db_model->get_attribute( $relation->attr_id );
-				if ( 'taxonomy' === $attr->attribute_store_as && $attr->module_name == $this->module_name ) {
-					$this->register_taxonomy( $relation->post_type, $relation->attr_id, $this->attr_cap );
+				$label = ( isset( $attr->attribute_label ) && $attr->attribute_label ) ? $attr->attribute_label : $attr->attribute_name;
+				if ( 'taxonomy' === $attr->attribute_store_as && $attr->module_name == $this->module_name && taxonomy_exists( $label ) ) {
+					$this->register_taxonomy( $relation->post_type, $attr, $this->attr_cap );
 				}
 			}
 		}
 
-		function register_taxonomy( $post_type, $attr_id, $caps ) {
-			$tax = $this->attributes_db_model->get_attribute( $attr_id );
+		function register_taxonomy( $post_type, $attr_attr_id, $caps ) {
+
+			if ( ! is_object( $attr_attr_id ) ){
+				$tax = $this->attributes_db_model->get_attribute( $attr_attr_id );
+			}else{
+				$tax = $attr_attr_id;
+			}
+
 			$name = $this->get_taxonomy_name( $tax->attribute_name );
 			$hierarchical = true;
 			$show_admin_column = true;
