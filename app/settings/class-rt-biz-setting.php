@@ -32,9 +32,18 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			// init because can not get Biz ACL before that.
 			add_action( 'p2p_init', array( $this, 'init_settings' ), 30 );
 
+			//after redux setting saved
+			add_action("redux/options/" . self::$biz_opt . "/saved",  array( $this, 'rt_on_redux_save' ), 10, 2 );
 		}
 
-
+		public  function rt_on_redux_save( $setting, $new_setting ){
+			//removed offering sync option
+			if ( isset( $new_setting['offering_plugin'] ) && in_array( $new_setting['offering_plugin'], array( 'woocommerce', 'edd' ) ) ){
+				update_option( 'rtbiz_offering_plugin_synx', 'true' );
+			} else {
+				update_option( 'rtbiz_offering_plugin_synx', 'false' );
+			}
+		}
 
 
 		public function init_settings() {
