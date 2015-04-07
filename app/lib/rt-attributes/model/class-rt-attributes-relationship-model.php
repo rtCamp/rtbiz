@@ -46,6 +46,11 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 			return parent::get( array() );
 		}
 
+		function get_attributes_by_query( $querystr ) {
+			global $wpdb;
+			return $wpdb->get_results( $querystr );
+		}
+
 		function add_relation( $data ) {
 			return parent::insert( $data );
 		}
