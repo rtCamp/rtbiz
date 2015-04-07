@@ -51,6 +51,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @param       $plugin_name
 		 */
 		public function __construct( $plugin_name, $cap = array(), $post_types = array() ) {
+
+			global $taxonomy_metadata;
+
 			$this->pluginName = $plugin_name;
 
 			$this->post_types = $post_types;
@@ -68,8 +71,11 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			//Register Product taxonomy
 			add_action( 'init', array( $this, 'register_offering_taxonomy' ), 5 );
 
-			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
-			$taxonomy_metadata->activate();
+			if ( ! is_object( $taxonomy_metadata ) ){
+				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
+				$taxonomy_metadata->activate();
+			}
+
 			$this->hooks();
 		}
 
