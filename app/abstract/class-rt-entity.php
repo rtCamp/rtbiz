@@ -523,11 +523,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 					$values = self::get_meta( $post->ID, $field['key'], true );
 					?>
 					<div class="pure-u-1-2 pure-control-group">
-					<?php if ( isset( $field['label'] ) ) { ?>
-							<div class="pure-u-1-1">
-								<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['label']; ?></label>
-							</div>
-					<?php } ?>
 					<div class="pure-u-1-1 form-input">
 						<input value='yes' <?php echo ( 'yes' == $values )?'checked':''; ?> type='checkbox' <?php echo ( isset( $field['name'] ) ) ? 'name="' . $field['name'] . '"' : ''; ?> <?php echo ( isset( $field['id'] ) ) ? 'id="' . $field['id'] . '"' : ''; ?> <?php echo ( isset( $field['class'] ) ) ? 'class="' . $field['class'] . '"' : ''; ?> />
 						<label for="<?php echo  ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php echo $field['text']; ?></label>
