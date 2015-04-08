@@ -33,7 +33,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			add_action( 'p2p_init', array( $this, 'init_settings' ), 30 );
 
 			//after redux setting saved
-			add_action("redux/options/" . self::$biz_opt . "/saved",  array( $this, 'rt_on_redux_save' ), 10, 2 );
+			add_action( 'redux/options/' . self::$biz_opt . '/saved',  array( $this, 'rt_on_redux_save' ), 10, 2 );
 		}
 
 		public  function rt_on_redux_save( $setting, $new_setting ){
