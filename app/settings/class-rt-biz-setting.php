@@ -36,9 +36,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			add_action( 'redux/options/' . self::$biz_opt . '/saved',  array( $this, 'rt_on_redux_save' ), 10, 2 );
 		}
 
-		public  function rt_on_redux_save( $setting, $new_setting ){
+		public  function rt_on_redux_save( $setting, $old_setting ){
 			//removed offering sync option
-			if ( isset( $new_setting['offering_plugin'] ) && in_array( $new_setting['offering_plugin'], array( 'woocommerce', 'edd' ) ) ){
+			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) && $setting['offering_plugin'] != $old_setting['offering_plugin'] && in_array( $setting['offering_plugin'], array( 'woocommerce', 'edd' ) ) ){
 				update_option( 'rtbiz_offering_plugin_synx', 'true' );
 			} else {
 				update_option( 'rtbiz_offering_plugin_synx', 'false' );
