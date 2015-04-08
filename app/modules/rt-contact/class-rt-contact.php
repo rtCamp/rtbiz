@@ -86,8 +86,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			 * Add ACL meta box
 			 */
 			global $rt_access_control;
-			if ( ! empty( $_REQUEST[ 'post' ] ) ){
-				$_REQUEST['post_type'] = get_post_type( $_REQUEST[ 'post' ] );
+			if ( ! empty( $_REQUEST['post'] ) ){
+				$_REQUEST['post_type'] = get_post_type( $_REQUEST['post'] );
 			}
 			if ( ! empty( $_REQUEST['post_type'] ) && $_REQUEST['post_type'] = $this->post_type && current_user_can( 'create_users' ) ){
 				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_meta_boxes' ) );
