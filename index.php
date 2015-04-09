@@ -393,7 +393,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = rt_biz_get_redux_settings();
-			$offering_plugin   = $settings['offering_plugin'];
+			$offering_plugin   = ! empty ( $settings['offering_plugin'] ) ? $settings['offering_plugin'] : '';
 			$to_register_posttype = array();
 			foreach ( Rt_Access_Control::$modules as $key => $value ){
 
