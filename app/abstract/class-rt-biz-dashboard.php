@@ -49,7 +49,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			add_action( 'rtbiz_after_dashboard', array( $this, 'render_google_charts' ) );
 
 			/* Metaboxes for dashboard widgets */
-			add_action( 'add_meta_boxes', array( $this, 'add_dashboard_widgets' ) );
+			add_action( 'rtbiz_dashboard_add_meta_boxes', array( $this, 'add_dashboard_widgets' ) );
 
 			add_action( 'rtbiz_welcome_panel', array( $this, 'rtbiz_welcome_panel' ) );
 
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 			if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === Rt_Biz::$dashboard_slug ) {
 				do_action( 'add_meta_boxes_' . $this->screen_id, null );
-				do_action( 'add_meta_boxes', $this->screen_id, null );
+				do_action( 'rtbiz_dashboard_add_meta_boxes', $this->screen_id, null );
 
 				/* Enqueue WordPress' script for handling the metaboxes */
 				wp_enqueue_script( 'postbox' );
