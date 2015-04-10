@@ -68,7 +68,7 @@ Please refer to the documentation.
 
 == Changelog ==
 = 1.2.12 =
-* EDD related bug Fixed
+* Bug Edd 'New Download Product' Draft Fixed
 
 = 1.2.11 =
 * Offering sync updated
