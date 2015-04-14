@@ -65,5 +65,16 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		function remove_acl( $where ) {
 			return parent::delete( $where );
 		}
+
+		/**
+		 * get acl records
+		 * @param $querystr
+		 *
+		 * @return mixed
+		 */
+		function get_result_by_query( $querystr ) {
+			global $wpdb;
+			return $wpdb->get_results( $querystr );
+		}
 	}
 }
