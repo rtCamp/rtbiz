@@ -446,7 +446,63 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			if ( ! isset( $_POST['rt_biz_module_permissions'] ) || ! is_array( $_POST['rt_biz_module_permissions'] ) ) {
 				return;
 			}
+
+			//update acl custom table
+			global $rt_biz_acl_model;
+
+			$old_module_permissions = get_site_option( 'rt_biz_module_permissions' );
 			$module_permissions = $_POST['rt_biz_module_permissions'];
+
+			// New Module added
+			$Module_added = array_diff_key( $module_permissions, $old_module_permissions );
+			if ( !empty( $Module_added ) ){
+				foreach ( $Module_added as $module_Key=>$dept_permission ){
+					foreach( $dept_permission as $groupid=>$permissoin ){
+						$where = array(
+							'groupid'    => $groupid,
+						);
+						$users = $rt_biz_acl_model->get_acl( $where );
+						if ( !empty( $users ) ){
+							$users = array_unique( wp_list_pluck( $users, 'userid' ) );
+							foreach( $users as $user ){
+								$data = array(
+									'userid'     => $user,
+									'module'     => $module_Key,
+									'groupid'    => $groupid,
+									'permission' => $permissoin,
+								);
+								$rt_biz_acl_model->add_acl( $data );
+							}
+						}
+
+					}
+				}
+			}
+
+			// existing module removed
+			$Module_removed = array_diff_key( $old_module_permissions, $module_permissions );
+
+			// existing module permission updated
+			foreach ( $module_permissions as $module_Key=>$dept_permission ){
+
+				// new group permission added
+				$dept_added = array_diff_key( $dept_permission, $old_module_permissions[ $module_Key ] );
+				// existing group removed
+				$dept_removed = array_diff_key( $old_module_permissions[ $module_Key ], $dept_permission );
+
+				// existing group permission updated
+				$permission_diff = array_diff_assoc( $dept_permission, $old_module_permissions[ $module_Key ] );
+				foreach( $permission_diff as $groupid=>$permissoin ){
+					$data = array(
+						'permission' => $permissoin,
+					);
+					$where = array(
+						'module'     => $module_Key,
+						'groupid'    => $groupid,
+					);
+					$rt_biz_acl_model->update_acl( $data, $where );
+				}
+			}
 			update_site_option( 'rt_biz_module_permissions', $module_permissions );
 		}
 
@@ -479,7 +535,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 									<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
-									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
+									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
 									<?php } ?>
 								</select>
 							</td>
@@ -493,19 +549,179 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			}
 		}
 
-		function save_profile_level_permission( $post_id ) {
+		function save_profile_level_permission( $contact_id ) {
 
 			if ( current_user_can( 'create_users' ) ) {
 				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
-					foreach ( $_REQUEST['rt_biz_profile_permissions'] as $mkey => $p ) {
-						if ( 0 == strlen( $p ) ) {
-							unset( $_REQUEST['rt_biz_profile_permissions'][ $mkey ] );
+
+					//update acl custom table
+					global $rt_biz_acl_model;
+
+					// if user is not connected with contact then acl not stored
+					$user = rt_biz_get_wp_user_for_contact( $contact_id );
+					if ( empty( $user ) ){
+						return;
+					}
+
+					$departments = wp_get_post_terms( $contact_id, RT_Departments::$slug );
+					$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+
+					$profile_permissions = $_REQUEST['rt_biz_profile_permissions'];
+					$old_profile_permissions = get_post_meta( $contact_id, 'rt_biz_profile_permissions', true );
+
+					foreach ( $profile_permissions as $module_Key => $module_permission  ){
+						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
+						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
+
+						switch( $module_permission  ){
+							case 0:
+								if ( 0 == strlen( $module_permission ) ){
+									// Group Level permission
+									$module_permission = ( ! empty( $module_permissions ) ) ? $module_permissions[ $module_Key ] : array();
+									//check if old permission is group level
+									if ( $isOldPermission && 0 == $old_permission_len ){
+
+										//get old group and its old permission from custom table
+										$where = array(
+											'userid'     => $user[0]->ID,
+											'module'     => $module_Key,
+										);
+										$old_group_permission = $rt_biz_acl_model->get_acl( $where );
+										if ( ! empty( $old_group_permission ) ){
+											$old_group = array_unique( wp_list_pluck( $old_group_permission, 'groupid' ) );
+											$old_group_permission = array_unique( wp_list_pluck( $old_group_permission, 'permission' ) );
+										}else{
+											$old_group = array();
+											$old_group_permission = array();
+										}
+
+										foreach ( $departments as $department ) {
+											// find index is current group exist in old group list
+											$position = in_array( $department->term_id, $old_group_permission );
+
+											//check if group permission is already exist or not
+											if ( $position ){
+												// check id group permission update or not
+												if ( $module_permission[ $department->term_id ] != $old_group_permission[ $position ] ){
+													// update group level permission
+													$data = array(
+														'permission' => $module_permission[ $department->term_id ],
+													);
+													$where = array(
+														'userid'     => $user[0]->ID,
+														'module'     => $module_Key,
+														'groupid'    => $department->term_id,
+													);
+													$rt_biz_acl_model->update_acl( $data, $where );
+												}
+											}else{
+												// add new group level permission
+												$data = array(
+													'userid'     => $user[0]->ID,
+													'module'     => $module_Key,
+													'groupid'    => $department->term_id,
+													'permission' => $module_permission[ $department->term_id ],
+												);
+												$rt_biz_acl_model->add_acl( $data );
+											}
+										}
+
+										//if group remove remove its acl
+										if ( ! empty( $departments ) ){
+											$new_group = array_unique( wp_list_pluck( $departments, 'term_id' ) );
+										} else {
+											$new_group = array();
+										}
+										$group_removed = array_diff( $old_group, $new_group );
+										//any group remove from customer profile remove access
+										if ( ! empty( $group_removed ) ){
+											// remove group level acl
+											foreach( $group_removed as $group ){
+												$where = array(
+													'userid'     => $user[0]->ID,
+													'groupid'    => $group,
+													'module'     => $module_Key,
+												);
+												$rt_biz_acl_model->remove_acl( $where );
+											}
+										}
+									}else {
+										//check if old permission is profile level permission
+										if ( $isOldPermission && 0 != $old_permission_len ){
+											// remove old profile level permission
+											$where = array(
+												'userid'     => $user[0]->ID,
+												'module'     => $module_Key,
+											);
+											$rt_biz_acl_model->remove_acl( $where );
+										}
+										// Add new group level permission
+										foreach ( $departments as $department ) {
+											$data = array(
+												'userid'     => $user[0]->ID,
+												'module'     => $module_Key,
+												'groupid'    => $department->term_id,
+												'permission' => $module_permission[ $department->term_id ],
+											);
+											$rt_biz_acl_model->add_acl( $data );
+										}
+									}
+								} else {
+									// No Role
+
+									//remove all permission
+									if ( $isOldPermission ){
+										$where = array(
+											'userid'     => $user[0]->ID,
+											'module'     => $module_Key,
+										);
+										$rt_biz_acl_model->remove_acl( $where );
+									}
+								}
+								break;
+							case 10:
+							case 20:
+							case 30:
+								//check if old permission is profile level permission || 0 != $old_permission_len means profile level permission already set
+								if ( $isOldPermission && 0 != $old_permission_len && 0 != $old_profile_permissions[ $module_Key ] ) {
+									//check if profile level permission changed
+									if( $module_permission != $old_profile_permissions[ $module_Key ] ){
+										$data = array(
+											'permission' => $module_permission ,
+										);
+										$where = array(
+											'userid'     => $user[0]->ID,
+											'module'     => $module_Key,
+											'groupid'    => 0,
+										);
+										$rt_biz_acl_model->update_acl( $data, $where );
+									}
+								}else{
+									// remove old group level permission if already set
+									if ( $isOldPermission && 0 == $old_permission_len ){
+										$where = array(
+											'userid'     => $user[0]->ID,
+											'module'     => $module_Key,
+										);
+										$rt_biz_acl_model->remove_acl( $where );
+									}
+									// Add new profile level permission
+									$data = array(
+										'userid'     => $user[0]->ID,
+										'module'     => $module_Key,
+										'groupid'    => 0,
+										'permission' => $module_permission ,
+									);
+									$rt_biz_acl_model->add_acl( $data );
+								}
+								break;
 						}
 					}
-					update_post_meta( $post_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
+					update_post_meta( $contact_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
 				}
 			}
 		}
+
 		function add_department_support( $supports ){
 
 	        foreach ( self::$modules as $key => $value ){
