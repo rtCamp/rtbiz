@@ -177,6 +177,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			self::$instance->load_textdomain();
 
 			add_action( 'init', array( self::$instance, 'hooks' ), 11 );
+
+			add_action( 'admin_init', array( self::$instance, 'update_database' ) );
+
 			add_action( 'admin_init', array( self::$instance, 'welcome' ) );
 			add_filter( 'rt_biz_modules', array( self::$instance, 'register_rt_biz_module' ) );
 
@@ -184,6 +187,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			self::$instance->init_access_control();
 			self::$instance->init_modules();
+
+			self::$instance->init_models();
 
 			self::$instance->init_department();
 
@@ -208,18 +213,29 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			add_action( 'after_setup_theme', array( self::$instance, 'init_rt_mailbox' ),20 );
 			add_action( 'after_setup_theme', array( self::$instance, 'init_importer' ),21 );
 
+			add_action( 'after_setup_theme', array( self::$instance, 'init_migration' ),21 );
+
 			do_action( 'rt_biz_init' );
 		}
 
 		function includes() {
 			require_once plugin_dir_path( __FILE__ ) . 'app/vendor/' . 'redux/ReduxCore/framework.php';
-			global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_reports_autoload, $rtb_helper_autoload;
+			global $rtb_app_autoload, $rtb_models_autoload, $rtb_abstract_autoload, $rtb_modules_autoload, $rtb_settings_autoload, $rtb_reports_autoload, $rtb_helper_autoload, $rtb_migration_autoload;
 			$rtb_app_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/' );
 			$rtb_models_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/models/' );
 			$rtb_abstract_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/abstract/' );
 			$rtb_modules_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/modules/' );
 			$rtb_settings_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/settings/' );
 			$rtb_helper_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/helper/' );
+			$rtb_migration_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'app/migration/' );
+		}
+
+		/**
+		 * database update
+		 */
+		function update_database() {
+			$updateDB = new RT_DB_Update( trailingslashit( RT_BIZ_PATH ) . 'index.php', trailingslashit( RT_BIZ_PATH . 'app/schema/' ) );
+			$updateDB->do_upgrade();
 		}
 
 		/**
@@ -418,6 +434,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		function init_importer(){
 			global $rt_importer;
 			$rt_importer = new Rt_Importer( null, null, false );
+		}
+
+		function init_migration(){
+			global $rt_migration;
+			$rt_migration = new Rt_Biz_Migration( );
 		}
 
 		function init_taxonomy_metadata(){
@@ -937,6 +958,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			global $rt_contact, $rt_company;
 			$rt_contact = new Rt_Contact();
 			$rt_company = new Rt_Company();
+		}
+
+		/**
+		 * Initialize models
+		 */
+		function init_models(){
+			global $rt_biz_acl_model;
+			$rt_biz_acl_model = new RT_Biz_ACL_Model();
 		}
 
 		/**
