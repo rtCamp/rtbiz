@@ -353,16 +353,16 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 			// New Module added
 			$Module_added = array_diff_key( $module_permissions, $old_module_permissions );
-			if ( !empty( $Module_added ) ){
-				foreach ( $Module_added as $module_Key=>$dept_permission ){
-					foreach( $dept_permission as $groupid=>$permissoin ){
+			if ( ! empty( $Module_added ) ){
+				foreach ( $Module_added as $module_Key => $dept_permission ){
+					foreach( $dept_permission as $groupid => $permissoin ){
 						$where = array(
 							'groupid'    => $groupid,
 						);
 						$users = $rt_biz_acl_model->get_acl( $where );
-						if ( !empty( $users ) ){
+						if ( ! empty( $users ) ){
 							$users = array_unique( wp_list_pluck( $users, 'userid' ) );
-							foreach( $users as $user ){
+							foreach( $users as $user ) {
 								$data = array(
 									'userid'     => $user,
 									'module'     => $module_Key,
@@ -372,7 +372,6 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 								$rt_biz_acl_model->add_acl( $data );
 							}
 						}
-
 					}
 				}
 			}
@@ -381,7 +380,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			$Module_removed = array_diff_key( $old_module_permissions, $module_permissions );
 
 			// existing module permission updated
-			foreach ( $module_permissions as $module_Key=>$dept_permission ){
+			foreach ( $module_permissions as $module_Key=>$dept_permission ) {
 
 				// new group permission added
 				$dept_added = array_diff_key( $dept_permission, $old_module_permissions[ $module_Key ] );
@@ -390,7 +389,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 				// existing group permission updated
 				$permission_diff = array_diff_assoc( $dept_permission, $old_module_permissions[ $module_Key ] );
-				foreach( $permission_diff as $groupid=>$permissoin ){
+				foreach( $permission_diff as $groupid => $permissoin ) {
 					$data = array(
 						'permission' => $permissoin,
 					);
@@ -471,7 +470,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
 						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
 
-						switch( $module_permission  ){
+						switch( $module_permission ) {
 							case 0:
 								if ( 0 == strlen( $module_permission ) ){
 									// Group Level permission
@@ -486,10 +485,10 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 										);
 										$old_group_permission = $rt_biz_acl_model->get_acl( $where );
 
-										if ( ! empty( $old_group_permission ) ){
+										if ( ! empty( $old_group_permission ) ) {
 											$old_group = array_unique( wp_list_pluck( $old_group_permission, 'groupid' ) );
 											$old_group_permission = array_unique( wp_list_pluck( $old_group_permission, 'permission' ) );
-										}else{
+										} else {
 											$old_group = array();
 											$old_group_permission = array();
 										}
@@ -498,7 +497,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 											// find index is current group exist in old group list
 											$position = array_search( $department->term_id, $old_group );
 											//check if group permission is already exist or not
-											if ( strlen( $position ) > 0 ){
+											if ( strlen( $position ) > 0 ) {
 												// check id group permission update or not
 												if ( $module_permission[ $department->term_id ] != $old_group_permission[ $position ] ){
 													// update group level permission
@@ -512,7 +511,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 													);
 													$rt_biz_acl_model->update_acl( $data, $where );
 												}
-											}else{
+											} else {
 												// add new group level permission
 												$data = array(
 													'userid'     => $user[0]->ID,
@@ -534,7 +533,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 										//any group remove from customer profile remove access
 										if ( ! empty( $group_removed ) ){
 											// remove group level acl
-											foreach( $group_removed as $group ){
+											foreach( $group_removed as $group ) {
 												$where = array(
 													'userid'     => $user[0]->ID,
 													'groupid'    => $group,
@@ -583,9 +582,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 								//check if old permission is profile level permission || 0 != $old_permission_len means profile level permission already set
 								if ( $isOldPermission && 0 != $old_permission_len && 0 != $old_profile_permissions[ $module_Key ] ) {
 									//check if profile level permission changed
-									if( $module_permission != $old_profile_permissions[ $module_Key ] ){
+									if( $module_permission != $old_profile_permissions[ $module_Key ] ) {
 										$data = array(
-											'permission' => $module_permission ,
+											'permission' => $module_permission,
 										);
 										$where = array(
 											'userid'     => $user[0]->ID,
@@ -594,9 +593,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 										);
 										$rt_biz_acl_model->update_acl( $data, $where );
 									}
-								}else{
+								} else {
 									// remove old group level permission if already set
-									if ( $isOldPermission && 0 == $old_permission_len ){
+									if ( $isOldPermission && 0 == $old_permission_len ) {
 										$where = array(
 											'userid'     => $user[0]->ID,
 											'module'     => $module_Key,
@@ -608,7 +607,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 										'userid'     => $user[0]->ID,
 										'module'     => $module_Key,
 										'groupid'    => 0,
-										'permission' => $module_permission ,
+										'permission' => $module_permission,
 									);
 									$rt_biz_acl_model->add_acl( $data );
 								}

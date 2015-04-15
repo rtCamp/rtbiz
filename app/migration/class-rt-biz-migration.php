@@ -24,7 +24,7 @@ if ( ! class_exists( 'Rt_Biz_Migration' ) ) {
 		 * load current migration class
 		 */
 		public function init() {
-			if ( strcmp (RT_BIZ_VERSION , '1.2.12') < 1 ){
+			if( strcmp (RT_BIZ_VERSION , '1.2.12') < 1 ) {
 				$acl_migration = new Rt_Biz_ACL_Migration();
 			}
 		}
