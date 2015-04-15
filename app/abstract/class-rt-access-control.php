@@ -362,7 +362,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 						$users = $rt_biz_acl_model->get_acl( $where );
 						if ( ! empty( $users ) ){
 							$users = array_unique( wp_list_pluck( $users, 'userid' ) );
-							foreach( $users as $user ) {
+							foreach ( $users as $user ) {
 								$data = array(
 									'userid'     => $user,
 									'module'     => $module_Key,
