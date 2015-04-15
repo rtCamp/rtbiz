@@ -41,7 +41,7 @@ if ( ! class_exists( 'Rt_Biz_ACL_Migration' ) ) {
 						$user = rt_biz_get_wp_user_for_contact( $contact->ID );
 						foreach ( $modules as $module_Key => $module ) {
 							if ( 0 != strlen( $profile_permissions[ $module_Key ] ) ) {
-								switch( $profile_permissions[ $module_Key ] ) {
+								switch ( $profile_permissions[ $module_Key ] ) {
 									case 10:
 									case 20:
 									case 30:
