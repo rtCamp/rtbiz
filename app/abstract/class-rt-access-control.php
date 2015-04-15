@@ -312,54 +312,25 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 		function get_module_users( $module_key, $category_slug = '' ) {
 
-			global $wpdb;
-			$module_key_length = strlen( $module_key );
+			global $rt_biz_acl_model;
 
-			/**
-			 *	Include All the admins
-			 */
-			$users = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
+			// Include All the admins
+			$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
+
+			// include other module user
+			$sql = "select DISTINCT( userid ) from $rt_biz_acl_model->table_name where module = '$module_key' and permission > 0";
+			$results = $rt_biz_acl_model->get_result_by_query( $sql );
+			if ( ! empty( $results ) ){
+				$user_ids = wp_list_pluck( $results,'userid' );
+				$module_user = array_merge( $module_user, $user_ids );
+			}
+			$module_user = array_unique( $module_user );
+
+			// get user object from user ids
 			$user_obj = array();
-			foreach ( array_unique( $users ) as $id ) {
-				$user_obj[] = new WP_User( $id );
+			if ( ! empty( $module_user ) ){
+				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC', ) );
 			}
-
-			/**
-			 *	Include All Profile Access Level Users
-			 */
-			$contacts = array();
-			$contact_meta = $wpdb->get_results( "SELECT * from {$wpdb->postmeta} WHERE meta_key = 'rt_biz_profile_permissions' and meta_value REGEXP 's:{$module_key_length}:\"{$module_key}\";s:[0-9]*:\"[0-9]*\"'" );
-			// $cm - user_meta single
-			foreach ( $contact_meta as $cm ) {
-
-				$pp = get_post_meta( $cm->post_id, 'rt_biz_profile_permissions', true );
-				if ( isset( $pp[ $module_key ] ) && 0 == intval( $pp[ $module_key ] )  ) {
-					continue;
-				}
-				if ( $category_slug == '' || has_term( $category_slug, Rt_Contact::$user_category_taxonomy, $cm->post_id ) ){
-					$contacts[] = $cm->post_id;
-				}
-			}
-			if ( ! empty( $contacts ) ){
-				$user_obj = array_merge( $user_obj, rt_biz_get_wp_user_for_contact( $contacts ) );
-			}
-
-			/**
-			 *	Include All Group Access Level Users
-			 */
-			$department = rt_biz_get_department();
-			$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-			// $ug - user_group single
-			if ( ! $department instanceof WP_Error ) {
-				foreach ( $department as $ug ) {
-					if ( isset( $module_permissions[ $module_key ][ $ug->term_id ] ) && 0 != intval( $module_permissions[ $module_key ][ $ug->term_id ] ) ) {
-						$user_obj = array_merge( $user_obj, rt_biz_get_module_department_users( $ug->term_id, $category_slug, $module_key ) );
-					}
-				}
-			}
-
-			$user_obj = array_unique( $user_obj, SORT_REGULAR );
-
 			return $user_obj;
 		}
 
