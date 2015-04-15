@@ -289,7 +289,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// Set a different name for your global variable other than the opt_name
 				'dev_mode'           => false,
 				// Show the time the page took to load, etc
-				'customizer'         => true,
+				'customizer'         => false,
 				// Enable basic customizer support
 				//'open_expanded'     => true,                    // Allow you to start the panel in an expanded way initially.
 				//'disable_save_warn' => true,                    // Disable the save warning when a user changes a field
