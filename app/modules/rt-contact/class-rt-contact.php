@@ -985,7 +985,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function add_contact( $name, $description = '', $email = '' ) {
 			$contact_id = wp_insert_post( array(
 				'post_title'   => $name,
-				'post_content' => $description,
+				'post_excerpt' => $description,
 				'post_type'    => $this->post_type,
 				'post_status'  => 'publish',
 			) );
@@ -1089,7 +1089,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				$contact_id = $check_exist_contact[0]->ID;
 			}
 			else {
-				$contact_id = rt_biz_add_contact( $user->display_name, $user->user_email );
+				$contact_id = rt_biz_add_contact( $user->display_name, '', $user->user_email );
 			}
 			$this->connect_contact_to_user( $contact_id, $user_id );
 			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );
