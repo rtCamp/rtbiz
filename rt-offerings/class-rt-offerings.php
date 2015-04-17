@@ -255,6 +255,10 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				return;
 			}
 
+			if ( $_POST['post_status'] != 'publish' ) {
+				return;
+			}
+
 			// If this isn't a 'product' or 'download' post, don't update it.
 			if ( ! ( ( $this->is_woocommerce_active() && 'product' === $_POST['post_type'] ) || ( $this->is_edd_active() && 'download' === $_POST['post_type'] ) ) ) {
 				return;
