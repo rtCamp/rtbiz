@@ -230,8 +230,11 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @return mixed
 		 */
 		function manage_offering_column_header( $columns ) {
+			unset( $columns['posts'] );
+			unset( $columns['slug'] );
+			$columns['offering_count'] = __( 'Count', RT_HD_TEXT_DOMAIN );
 			$columns['product_detail'] = __( 'Product', RT_HD_TEXT_DOMAIN );
-			return $columns;
+			return apply_filters( 'rt_biz_offerings_columns' , $columns );
 		}
 
 		/**
@@ -244,18 +247,34 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @return type
 		 */
 		function manage_offering_column_body( $display, $column, $term_id ) {
+			$t = get_term( $term_id, Rt_Offerings::$offering_slug );
 			switch ( $column ) {
 				case 'product_detail':
 					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
 					$product_plugin =  Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
 					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ){
-						echo '<span>' . strtoupper( $product_plugin ) . '</span> :- ';
-						edit_post_link( '#' . $product_id, '<span>', '</span>', $product_id );
+						$content = '<span>' . strtoupper( $product_plugin ) . '</span> :- ';
+						$content .= '<a class="post-edit-link" href="' . edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
 					} else{
 						echo '-';
 					}
+					break;
+				case 'offering_count':
+					foreach( $this->post_types as $posttype ){
+						$posts = new WP_Query( array(
+							'post_type' => $posttype,
+							'post_status' => 'any',
+							'nopaging' => true,
+							Rt_Offerings::$offering_slug  => $t->slug,
+						) );
+						$posttype_lable = explode( '_', $posttype );
+						$posttype_lable = $posttype_lable[ count($posttype_lable)-1 ];
+						$content = strtoupper( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+					}
+
+					break;
 			}
-			return;
+			return apply_filters( 'rt_biz_offering_column_content', $content, $column, $term_id );
 		}
 
 		/**
