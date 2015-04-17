@@ -94,11 +94,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 
 				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
 
-				$settings = rt_biz_get_redux_settings();
-				if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-					add_filter( 'manage_edit-'.Rt_Offerings::$offering_slug .'_columns', array( $this, 'edit_offering_columns' ) );
-					add_filter( 'manage_'.Rt_Offerings::$offering_slug .'_custom_column', array( $this, 'add_offering_column_content' ), 10, 3 );
-				}
 				add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_entity_update_messages' ), 10, 2 );
 				add_filter( 'post_updated_messages', array( $this, 'entity_updated_messages' ), 10, 2 );
 			}
@@ -150,40 +145,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			);
 
 			return $messages;
-		}
-
-		function edit_offering_columns( $offering_columns ){
-			unset($offering_columns['posts']);
-			$offering_columns[ rt_biz_get_contact_post_type() ] = 'Contact';
-			$offering_columns[ rt_biz_get_company_post_type() ] = 'Company';
-			return apply_filters( 'rt_biz_offerings_columns' , $offering_columns, $this );
-		}
-
-		function add_offering_column_content( $content, $column_name, $term_id ){
-			$t = get_term( $term_id, Rt_Offerings::$offering_slug );
-			$company = rt_biz_get_company_post_type();
-			$contact = rt_biz_get_contact_post_type();
-			switch ( $column_name ){
-				case $company:
-					$posts = new WP_Query( array(
-						                       'post_type' => $company,
-						                       'post_status' => 'any',
-						                       'nopaging' => true,
-						                       Rt_Offerings::$offering_slug  => $t->slug,
-					                       ) );
-					$content = "<a href='edit.php?post_type=$company&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a>';
-					break;
-				case $contact:
-					$posts = new WP_Query( array(
-						                       'post_type' => $contact,
-						                       'post_status' => 'any',
-						                       'nopaging' => true,
-						                       Rt_Offerings::$offering_slug  => $t->slug,
-					                       ) );
-					$content = "<a href='edit.php?post_type=$contact&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a>';
-					break;
-			}
-			return apply_filters( 'rt_biz_offering_column_content', $content, $column_name, $term_id );
 		}
 
 		/**

@@ -27,6 +27,10 @@ if ( ! class_exists( 'Rt_Biz_Migration' ) ) {
 			if ( strcmp( RT_BIZ_VERSION , '1.2.13' ) < 1 ) {
 				$acl_migration = new Rt_Biz_ACL_Migration();
 			}
+
+			if ( strcmp( RT_BIZ_VERSION , '1.2.14' ) < 1 ) {
+				$offering_migration = new Rt_Biz_Offering_Migration();
+			}
 		}
 	}
 }
