@@ -22,7 +22,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		static $offering_slug = 'rt-offering';
 
-		static $term_meta_key = '_offering_id';
+		static $term_product_id_meta_key = '_offering_id';
+
+		static $term_product_from_meta_key = '_offering_import_from';
 
 		/**
 		 * Product taxonomy labels
@@ -208,6 +210,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @return void
 		 */
 		public function hooks() {
+
 			if ( true === $this->isSync ) {
 				$isSyncOpt = get_option( 'rtbiz_offering_plugin_synx' );
 				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ){
@@ -216,10 +219,55 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				add_action( 'save_post', array( $this, 'insert_offerings' ) );
 			}
 			add_action( 'delete_term', array( $this, 'cleanup_meta_after_term_deletion' ), 10, 4 );
+			add_action( 'manage_' . self::$offering_slug . '_custom_column', array( $this, 'manage_offering_column_body' ), 10, 3 );
+			add_filter( 'manage_edit-' . self::$offering_slug . '_columns', array( $this, 'manage_offering_column_header' ) );
 		}
 
+		/**
+		 * dd column heading on offering list page
+		 * @param $columns
+		 *
+		 * @return mixed
+		 */
+		function manage_offering_column_header( $columns ) {
+			$columns['product_detail'] = __( 'Product', RT_HD_TEXT_DOMAIN );
+			return $columns;
+		}
+
+		/**
+		 * UI for group List View custom Columns for offerings
+		 *
+		 * @param type $display
+		 * @param type $column
+		 * @param type $term_id
+		 *
+		 * @return type
+		 */
+		function manage_offering_column_body( $display, $column, $term_id ) {
+			switch ( $column ) {
+				case 'product_detail':
+					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
+					$product_plugin =  Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
+					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ){
+						echo '<span>' . strtoupper( $product_plugin ) . '</span> :- ';
+						edit_post_link( '#' . $product_id, '<span>', '</span>', $product_id );
+					} else{
+						echo '-';
+					}
+			}
+			return;
+		}
+
+		/**
+		 * Delete taxonomy meta if taxonomy deleted
+		 * @param $term
+		 * @param $tt_id
+		 * @param $taxonomy
+		 * @param $deleted_term
+		 */
 		function cleanup_meta_after_term_deletion( $term, $tt_id, $taxonomy, $deleted_term ) {
-			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term, self::$term_meta_key );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term, self::$term_product_id_meta_key );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term, self::$term_product_from_meta_key );
 		}
 
 		/**
@@ -231,7 +279,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		public function get_taxonomy( $post_id ){
 			global $wpdb;
-			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_meta_key."' AND meta_value = $post_id " );
+			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_product_id_meta_key."' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
 				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$offering_slug );
 			}
@@ -247,8 +295,6 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @return void
 		 */
 		public function insert_offerings( $post_id ) {
-
-			$key    = self::$term_meta_key;
 
 			// If this is just a revision, don't.
 			if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) || empty( $_POST['post_type'] ) ) {
@@ -301,7 +347,10 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				}
 				if ( is_array( $term ) ) {
 					$term_id = $term['term_id'];
-					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $key, $post_id, true );
+					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_id_meta_key, $post_id, true );
+					if ( ! empty( $this->pluginName ) ){
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_from_meta_key, $this->pluginName, true );
+					}
 				}
 			}
 
@@ -338,7 +387,10 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				if ( empty( $term ) ) {
 					$new_term = wp_insert_term( $offering->post_title, self::$offering_slug, array( 'slug' => $offering->post_name ) );
 					if ( ! $new_term instanceof WP_Error ) {
-						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_meta_key, $offering->ID, true );
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_id_meta_key, $offering->ID, true );
+						if ( ! empty( $this->pluginName ) ){
+							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->pluginName, true );
+						}
 					}
 				}
 			}
@@ -356,7 +408,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @return void
 		 */
 		public function delete_offerings_meta( $term_id ) {
-			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Offerings::$term_meta_key );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Offerings::$term_product_id_meta_key );
 		}
 
 	}
