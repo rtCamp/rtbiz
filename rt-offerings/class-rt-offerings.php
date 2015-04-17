@@ -224,6 +224,23 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
+		 * Filter offering as per store select
+		 */
+		public function offering_filter( $terms, $taxonomies, $args  ){
+			if ( in_array( self::$offering_slug, $taxonomies ) ){
+				$terms_filter = array();
+				foreach( $terms as $term ){
+					$product_plugin =  Rt_Lib_Taxonomy_Metadata\get_term_meta( $term->term_id, self::$term_product_from_meta_key, true );
+					if ( empty( $product_plugin ) || $product_plugin == $this->pluginName ){
+						$terms_filter[] = $term;
+					}
+				}
+				$terms = $terms_filter;
+			}
+			return $terms;
+		}
+
+		/**
 		 * dd column heading on offering list page
 		 * @param $columns
 		 *
