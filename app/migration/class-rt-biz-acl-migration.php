@@ -23,7 +23,7 @@ if ( ! class_exists( 'Rt_Biz_ACL_Migration' ) ) {
 		}
 
 		public function migrate(){
-			$isMigrated = get_option( 'rtbiz_acl_migration_' . RT_BIZ_VERSION );
+			$isMigrated = get_option( 'rtbiz_acl_migration_1.2.13' );
 			if ( empty( $isMigrated ) ||  'false' === $isMigrated ){
 				global $rt_biz_acl_model;
 				$modules            = Rt_Access_Control::$modules;
@@ -73,7 +73,7 @@ if ( ! class_exists( 'Rt_Biz_ACL_Migration' ) ) {
 					}
 					update_post_meta( $contact->ID, 'rt_biz_profile_permissions', $profile_permissions );
 				}
-				update_option( 'rtbiz_acl_migration_' . RT_BIZ_VERSION, 'true' );
+				update_option( 'rtbiz_acl_migration_1.2.13', 'true' );
 			}
 
 		}
