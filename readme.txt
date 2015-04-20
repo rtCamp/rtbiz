@@ -69,6 +69,7 @@ Please refer to the documentation.
 == Changelog ==
 = 1.2.14 =
 * offering Library updated
+* Docs move to docs.rtcamp.com
 
 = 1.2.13 =
 * Acl code optimization
