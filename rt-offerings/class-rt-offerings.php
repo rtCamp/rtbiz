@@ -213,7 +213,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		public function hooks() {
 
 			if ( true === $this->isSync ) {
-				$isSyncOpt = get_option( 'rtbiz_offering_plugin_synx' );
+				$isSyncOpt = get_option( 'rtbiz_offering_plugin_sync' );
 				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ){
 					add_action( 'init', array( $this, 'bulk_insert_offerings' ) );
 				}
@@ -448,7 +448,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					}
 				}
 			}
-			update_option( 'rtbiz_offering_plugin_synx', 'false' );
+			update_option( 'rtbiz_offering_plugin_sync', 'false' );
 
 		}
 
