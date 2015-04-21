@@ -194,7 +194,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 				$url = add_query_arg( $queryArgs, $url );
 			}
 
-			$result = wp_remote_get( $url, $options );
+			$result = wp_remote_get( esc_url_raw( $url ), $options );
 			//Try to parse the response
 			$pluginInfo = null;
 			if ( ! is_wp_error( $result ) && isset( $result['response']['code'] ) && ( $result['response']['code'] == 200 ) && ! empty( $result['body'] ) ){
@@ -489,7 +489,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 
 				$linkText = apply_filters( 'puc_manual_check_link-' . $this->slug, __( 'Check for updates', 'rtmedia' ) );
 				if ( ! empty( $linkText ) ){
-					$pluginMeta[] = sprintf( '<a href="%s">%s</a>', esc_attr( $linkUrl ), $linkText );
+					$pluginMeta[] = sprintf( '<a href="%s">%s</a>', esc_url( $linkUrl ), $linkText );
 				}
 			}
 
@@ -510,7 +510,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ){
 			if ( $shouldCheck ){
 				$update = $this->check_for_updates();
 				$status = ( $update === null ) ? 'no_update' : 'update_available';
-				wp_redirect( add_query_arg( array( 'puc_update_check_result' => $status, 'puc_slug' => $this->slug, ), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'puc_update_check_result' => $status, 'puc_slug' => $this->slug, ), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ) ) );
 			}
 		}
 
