@@ -645,6 +645,11 @@ function rt_biz_get_redux_settings() {
 	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
+function rt_biz_set_redux_setting( $key, $val ){
+	global $rt_biz_setttings;
+	$rt_biz_setttings->ReduxFramework->set( $key, $val );
+}
+
 function rt_biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(

@@ -67,6 +67,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'init', array( $this, 'setup_meta_fields' ) );
 
 			add_action( 'wp_ajax_seach_user_from_name', array( $this, 'get_user_from_name' ) );
+			add_action( 'wp_ajax_search_user_from_name', array( $this, 'get_user_from_name' ) );
 
 			/**
 			 * New User Creation Sync With Person. Whenever a WP_User is created a new contact person will also be created.
@@ -741,7 +742,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 									dataType: "json",
 									type: 'post',
 									data: {
-										action: "seach_user_from_name",
+										action: "search_user_from_name",
 										maxRows: 10,
 										query: request.term
 									},
