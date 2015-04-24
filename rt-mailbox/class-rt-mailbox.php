@@ -274,7 +274,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<div class="rtmailbox-row">
 						<label></label>
 						<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
-						<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect" type="submit">
+						<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect" type="button">
 					</div>
 
 					<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
@@ -468,7 +468,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							<div class="rtmailbox-row">
 								<label></label>
 								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update" type="hidden">
-								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary" value="Save" type="submit">
+								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary" value="Save" type="button">
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
