@@ -295,8 +295,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function init_rt_mailbox(){
-			//global $rt_MailBox ;
-			//$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', '', false, self::$dashboard_slug);
+			global $rt_MailBox ;
+			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php' );
 		}
 
 		function init_attributes() {
@@ -328,10 +328,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			if ( class_exists( 'Rt_Biz_Attributes' ) ) {
 				$this->menu_order[] = Rt_Biz_Attributes::$attributes_page_slug;
-			}
-
-			if ( class_exists( 'Rt_Mailbox' ) ) {
-				$this->menu_order[] = Rt_Mailbox::$page_name;
 			}
 
 			if ( class_exists( 'Rt_Importer' ) ) {
