@@ -13,13 +13,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
-		/**
-		 * @var $page_slug - Page slug for Mailbox Page
-		 */
-		static $page_slug = 'mailbox';
-
-		static $page_name = 'Mailbox';
-
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
 			'exe'  => 'application/octet-stream',
@@ -56,29 +49,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		static $auto_loader;
 
 		/**
-		 * @var $parent_page_slug -
-		 *
-		 * Page slug under which the Mailbox page is to be shown.
-		 * If null / empty then an individual Menu Page will be added
-		 */
-		var $parent_page_slug;
-
-		/**
-		 * @var $page_cap
-		 *
-		 * Capability for Mailbox setup Page;
-		 * if not passed, default cap will be 'manage_options'
-		 */
-		var $page_cap;
-
-		/**
-		 * @var $pageflag
-		 *
-		 * Flag for register page for mailbox or not
-		 */
-		var $pageflag;
-
-		/**
 		 * @var $default_imap_servers
 		 *
 		 * Default imap server array
@@ -105,8 +75,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 */
 		var $outgoing_tls_port = 587;
 
-		var $module = '';
-
 		/**
 		 * Constructor to initialized rt-mailbox
 		 *
@@ -124,14 +92,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * Capability for Mailbox setup Page;
 		 * Default: manage_options
 		 */
-		function __construct( $plugin_path_for_deactivate_cron, $module='', $admin_menu = false, $parent_slug = '', $cap = 'manage_options' ) {
-			$this->pageflag = $admin_menu;
-			if ( $this->pageflag ) {
-				$this->parent_page_slug = $parent_slug;
-				$this->page_cap = $cap;
-				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
-			}
-			$this->module = $module;
+		function __construct( $plugin_path_for_deactivate_cron ) {
 
 			$this->default_imap_servers = array(
 				array(
@@ -159,17 +120,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			add_action( 'init', array( $this, 'rtmailbox_ajax' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 999 );
-		}
-
-		/**
-		 * Register rt-mailbox setup page
-		 */
-		function register_attribute_menu() {
-			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'render_mailbox_setting_page' ) );
-			} else {
-				add_menu_page( __( ucfirst( self::$page_name ) ), __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'render_mailbox_setting_page' ) );
-			}
 		}
 
 		/**
@@ -203,18 +153,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * init global rt-mailbox class
 		 */
 		function inti_global(  ){
-			global $rt_mailbox_help;
-			$rt_mailbox_help = new Rt_Mailbox_Help();
-
 			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model;
 			$rt_imap_server_model           = new Rt_IMAP_Server_Model();
 			$rt_mail_accounts_model         = new Rt_Mail_Accounts_Model();
 			$rt_mail_message_model          = new Rt_Mail_Message_Model();
 			$rt_outbound_model        = new Rt_Mail_Outbound_Model();
 
-			global $rt_setting_inbound_email, $rt_setting_imap_server, $rt_mail_settings;
-			$rt_setting_inbound_email   = new RT_Setting_Inbound_Email( );
-			$rt_setting_imap_server     = new RT_Setting_Imap_Server();
+			global $rt_mail_settings;
 			$rt_mail_settings           = new Rt_Mail_Settings();
 		}
 
@@ -241,13 +186,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 */
 		function init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron ){
 			global $rt_mail_crons;
-			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_deactivate_cron, $this->module );
+			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_deactivate_cron );
 		}
 
 		/**
 		 * render mailbox setup page
 		 */
-		function render_mailbox_setting_page( ){
+		function render_mailbox_setting_page( $module ){
 
 			global $rt_imap_server_model;
 
@@ -256,7 +201,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			?>
 			<div id="rtmailbox-wrap" class="wrap">
 				<form id="rtmailbox-imap-connect-form" method="post">
-					<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $this->module; ?>" type="hidden">
+					<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
 					<input id="rtmailbox-incoming_ssl_port" name="rtmailbox[incoming_ssl_port]" value="<?php echo $this->incoming_ssl_port; ?>" type="hidden">
 					<input id="rtmailbox-incoming_tls_port" name="rtmailbox[incoming_tls_port]" value="<?php echo $this->incoming_tls_port; ?>" type="hidden">
 					<input id="rtmailbox-outgoing_ssl_port" name="rtmailbox[outgoing_ssl_port]" value="<?php echo $this->outgoing_ssl_port; ?>" type="hidden">
@@ -291,7 +236,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 										<label for="rtmailbox-provider-<?php echo $server->id; ?>"><?php echo $server->server_name; ?></label>
 									</li>
 								<?php }
-							}?>
+							} ?>
 							<li>
 								<input title="<?php _e( 'custom' ) ?>" class="rtmailbox_provider" id="rtmailbox-provider-<?php _e( 'custom' ) ?>" name="rtmailbox[provider]" value="<?php _e( 'custom' ) ?>" type="radio">
 								<label for="rtmailbox-provider-<?php _e( 'custom' ) ?>"><?php _e( 'custom' ) ?></label>
@@ -329,7 +274,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<div class="rtmailbox-row">
 						<label></label>
 						<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
-						<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect" type="submit">
+						<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect" type="button">
 					</div>
 
 					<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
@@ -355,11 +300,11 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 			$obj_data = $obj_data['rtmailbox'];
 			if ( 'rtmailbox_connect_imap' == $obj_data['action'] ){
-				if ( 'custom'  == $obj_data['provider'] ) {
-					$response= $this->rtmailbox_create_imap_server( $obj_data );
+				if ( 'custom' == $obj_data['provider'] ) {
+					$response = $this->rtmailbox_create_imap_server( $obj_data );
 					if ( is_array( $response ) && true == $response['status'] ){
 						$obj_data['provider'] = $response['server_id'];
-					}else{
+					} else {
 						$result['error'] = $response['error'];
 						die();
 					}
@@ -368,7 +313,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				if ( is_array( $response ) && true == $response['status'] ){
 					$result['html'] = $response['html_imap_folder'];
 					$result['status'] = true;
-				}else{
+				} else {
 					$result['error'] = $response['error'];
 				}
 			}
@@ -403,7 +348,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			try {
 				$hdZendEmail = new Rt_Zend_Mail();
 				$ssl  = ( isset( $incoming_enc ) && ! is_null( $incoming_enc ) ) ? $incoming_enc : false;
-				$hdZendEmail->try_imap_connect( $obj_data['incoming_server'], (int)$obj_data['incoming_port'], $ssl );
+				$hdZendEmail->try_imap_connect( $obj_data['incoming_server'], (int) $obj_data['incoming_port'], $ssl );
 				$args = array(
 					'server_name'          => $obj_data['provider_name'],
 					'incoming_imap_server' => $obj_data['incoming_server'],
@@ -413,12 +358,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_port'   => $obj_data['outgoing_port'],
 					'outgoing_smtp_enc'    => $outgoing_enc,
 				);
-				$server_id =  $rt_imap_server_model->add_server( $args );
+				$server_id = $rt_imap_server_model->add_server( $args );
 				if ( empty( $server_id ) ){
 					$result['server_id'] = $server_id;
 					$result['status'] = true;
-				}else{
-					$result['error'] = "Error: problem occurs while adding server";
+				} else {
+					$result['error'] = 'Error: problem occurs while adding server';
 				}
 			} catch (Exception $e) {
 				$result['error'] = 'Caught exception: ' .  $e->getMessage();
@@ -452,7 +397,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$hdZendEmail = new Rt_Zend_Mail();
 				try {
 					if ( ! $hdZendEmail->try_imap_login( $email, rtmb_encrypt_decrypt( $password ), $email_type, $imap_server ) ) {
-						$result['error'] = "Error: login failed. Please enter correct credential or enable IMAP in your mailbox";
+						$result['error'] = 'Error: login failed. Please enter correct credential or enable IMAP in your mailbox';
 					} else {
 						$rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
 						ob_start();
@@ -467,10 +412,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			return $result;
 		}
 
-		function rtmailbox_mailbox_folder_ui( ){
+		function rtmailbox_mailbox_folder_ui( $module ){
 			global $rt_mail_settings;
 
-			$mailboxes = $rt_mail_settings->get_user_google_ac( array( 'module' => $this->module ) );
+			$mailboxes = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
 			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ){
 				foreach ( $mailboxes as $mailbox ){
 					$mailbox->email_data = unserialize( $mailbox->email_data );
@@ -506,7 +451,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						}
 						?>
 						<form id="rtmailbox-imap-folder-form" method="post">
-							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $this->module; ?>" type="hidden">
+							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
 							<input id="rtmailbox-email" name="rtmailbox[email]" value="<?php echo $email; ?>" type="hidden">
 							<?php wp_nonce_field( 'rtmailbox_folder_update' );
 							do_action( 'rt_mailbox_folder_view_before' ); ?>
@@ -523,7 +468,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							<div class="rtmailbox-row">
 								<label></label>
 								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update" type="hidden">
-								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary" value="Save" type="submit">
+								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary" value="Save" type="button">
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
@@ -576,118 +521,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 			echo json_encode( $_REQUEST );
 			die();
-		}
-
-		/**
-		 * render mailbox setup page
-		 */
-		function render_mailbox_setting_page_ui(){
-			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
-			<div class="wrap">
-			<?php
-			echo '<' . $title_ele . '>' . __( 'Mailbox Setting' ) . '</' . $title_ele . '>';
-			if ( ! isset( $_REQUEST['type'] ) ){
-				$_REQUEST['type'] = 'mailbox'; // remove when csv is active
-			}
-			$this->mailbox_tabs( $_REQUEST['tab'] );
-
-			if ( isset( $_REQUEST['tab'] ) && 'imap' == $_REQUEST['tab'] ) {
-				echo $this->imap_view();
-			} else if ( isset( $_REQUEST['tab'] ) && self::$page_slug == $_REQUEST['tab'] ){
-				$module_key = rt_biz_sanitize_module_key( RT_BIZ_TEXT_DOMAIN );
-				$this->mailbox_view( $module_key );
-			}
-			do_action( 'rt_mailbox_randed_view_after' );
-			?> </div> <?php
-
-		}
-
-		/**
-		 * Render tab for mailbox setting ui
-		 *
-		 * @param string $active_tab
-		 */
-		function mailbox_tabs( $active_tab = 'mailbox' ){
-			// Declare local variables
-			$tabs_html    = '';
-			$idle_class   = 'nav-tab';
-			$active_class = 'nav-tab nav-tab-active';
-
-			// Setup core admin tabs
-			$tabs = array(
-				array(
-					'href' => 'mailbox',
-					'name' => __( ucfirst( self::$page_name ), self::$page_name ),
-					'slug' => 'mailbox',
-				), array(
-					'href' => 'imap',
-					'name' => __( 'IMAP', self::$page_name ),
-					'slug' => 'imap',
-				),
-			);
-			$filterd_tab = apply_filters( 'rt_mailbox_add_tab', $tabs );
-
-			if ( ! empty( $filterd_tab ) ){
-				if ( $this->pageflag ) {
-
-					$idle_class   = 'nav-tab';
-					$active_class = 'nav-tab nav-tab-active';
-
-					$tabs_html .= '<div class="nav-tab-wrapper" >';
-					// Loop through tabs and build navigation
-					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $active_tab );
-						$tab_class  = $is_current ? $active_class : $idle_class;
-
-						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
-							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
-						}
-						$tabs_html .= '<a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>';
-					}
-					$tabs_html .= '</div>';
-				} else {
-					$idle_class   = '';
-					$active_class = 'current';
-					$tabs_html .= '<div class="sub-nav-tab-wrapper" ><ul class="subsubsub">';
-					foreach ( array_values( $filterd_tab ) as $i => $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == $active_tab );
-						$tab_class  = $is_current ? $active_class : $idle_class;
-
-						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
-							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
-						}
-						$separator = $i != ( count( $filterd_tab ) - 1 ) ? ' | ' : '';
-						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>'. $separator .'</li>';
-					}
-					$tabs_html .= '</ul></div>';
-				}
-			}
-
-			// Output the tabs
-			echo $tabs_html;
-		}
-
-		/**
-		 * @param $module
-		 */
-		function mailbox_view( $module ){
-			global $rt_setting_inbound_email;
-			do_action( 'rt_mailbox_randed_mailbox_view_before' ); ?>
-			<fieldset class="tab-body-wrapper">
-					<?php $rt_setting_inbound_email->rt_reply_by_email_view( null, null, $module ); ?>
-			</fieldset> <?php
-			do_action( 'rt_mailbox_randed_mailbox_view_after' );
-		}
-
-		function imap_view(){
-			global $rt_setting_imap_server;
-			do_action( 'rt_mailbox_randed_imap_view_before' ); ?>
-			<div class="imap_servers">
-				<h3><?php echo __( 'Available IMAP Servers:' ); ?></h3>
-				<?php $rt_setting_imap_server->rt_imap_servers( null, null ); ?>
-				<input class="button button-primary" type="submit" value="Save">
-			</div> <?php
-			do_action( 'rt_mailbox_randed_imap_view_after' );
 		}
 	}
 }

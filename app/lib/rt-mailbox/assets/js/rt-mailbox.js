@@ -39,9 +39,9 @@ jQuery( document ).ready(function(){
         },
         imap_connect_ajax: function(){
             //imap connect ajax request
-            jQuery( "#rtmailbox-imap-connect-form" ).submit(function( event ) {
+            jQuery('#rtmailbox-connect').click(function(){
                 var requestArray = {};
-                requestArray.data =  jQuery(this).serialize();
+                requestArray.data =  jQuery( '#rtmailbox-wrap input' ).serialize();
                 requestArray.action = 'rtmailbox_imap_connect';
 
                 jQuery.ajax({
@@ -54,7 +54,7 @@ jQuery( document ).ready(function(){
                     },
                     success: function(data) {
                         if (data.status) {
-                            jQuery( "#rtmailbox-wrap" ).html( data.html);
+                            jQuery( '#rtmailbox-wrap' ).html( data.html);
                         }else{
                             alert( data.error );
                         }
@@ -68,9 +68,9 @@ jQuery( document ).ready(function(){
         },
         imap_folder_ajax: function(){
             //imap connect ajax request
-            jQuery(document).on('submit', '#rtmailbox-imap-folder-form', function( event ) {
+            jQuery(document).on('click', '#rtmailbox-save', function( event ) {
                 var requestArray = {};
-                requestArray.data =  jQuery(this).serialize();
+                requestArray.data =  jQuery( '#rtmailbox-wrap input' ).serialize();
                 requestArray.action = 'rtmailbox_folder_update';
 
                 jQuery.ajax({
@@ -91,7 +91,7 @@ jQuery( document ).ready(function(){
                 event.preventDefault();
             });
         }
-    }
+    };
 
     rtmailbox.init();
 });
