@@ -291,6 +291,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 					break;
 			}
+			if ( empty( $content ) ){
+				$content = '';
+			}
 			return apply_filters( 'rt_biz_offering_column_content', $content, $column, $term_id );
 		}
 
@@ -406,10 +409,16 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * bulk_insert_offerings function.
 		 *
 		 * @access public
-		 * @return void
+		 *
+		 * @param string $plugin active plugin name
+		 *
+		 * @return bool
 		 */
-		public function bulk_insert_offerings() {
+		public function bulk_insert_offerings( $plugin = '' ) {
 
+			if ( ! empty( $plugin ) ){
+				$this->pluginName = $plugin;
+			}
 			if ( ! $this->is_edd_active() && ! $this->is_woocommerce_active() ) {
 				return false;
 			}
