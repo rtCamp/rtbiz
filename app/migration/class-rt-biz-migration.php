@@ -24,11 +24,11 @@ if ( ! class_exists( 'Rt_Biz_Migration' ) ) {
 		 * load current migration class
 		 */
 		public function init() {
-			if ( strcmp( RT_BIZ_VERSION , '1.2.13' ) < 1 ) {
+			if ( strcmp( RT_BIZ_VERSION , '1.2.13' ) >= 0 ) {
 				$acl_migration = new Rt_Biz_ACL_Migration();
 			}
 
-			if ( strcmp( RT_BIZ_VERSION , '1.2.14' ) < 1 ) {
+			if ( strcmp( RT_BIZ_VERSION , '1.2.14' ) >= 0 ) {
 				$offering_migration = new Rt_Biz_Offering_Migration();
 			}
 		}

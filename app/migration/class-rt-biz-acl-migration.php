@@ -17,7 +17,7 @@ if ( ! class_exists( 'Rt_Biz_ACL_Migration' ) ) {
 		 * construct
 		 */
 		public function __construct() {
-			if ( strcmp( RT_BIZ_VERSION , '1.2.13' ) < 1 ) {
+			if ( strcmp( RT_BIZ_VERSION , '1.2.13' ) >= 0 ) {
 				add_action( 'admin_init', array( $this, 'migrate' ), 20 );
 			}
 		}

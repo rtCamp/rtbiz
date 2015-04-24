@@ -791,7 +791,7 @@ function rt_biz_get_department_contacts( $department_id ) {
 	return $contacts;
 }
 
-function rt_biz_mailbox_setup_view( $module ){
+/*function rt_biz_mailbox_setup_view( $module ){
 	global $rt_MailBox ;
 	return $rt_MailBox->mailbox_view( $module );
 }
@@ -799,7 +799,7 @@ function rt_biz_mailbox_setup_view( $module ){
 function rt_biz_imap_setup_view(){
 	global $rt_MailBox ;
 	return $rt_MailBox->imap_view();
-}
+}*/
 
 function rt_biz_gravity_importer_view( $module ){
 	global $rt_importer;

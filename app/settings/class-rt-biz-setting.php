@@ -215,14 +215,14 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 			$Imap_fields = array();
 
-			array_push( $Imap_fields, array(
+			/*array_push( $Imap_fields, array(
 				'id'      => 'rtbiz_imap_server_setup',
 				'type'    => 'callback',
 				'title'   => 'IMAP Server Setup',
 				'subtitle' => __( 'Configured IMAP Server(s)' ),
 				'desc'    => 'Following servers used into Mailbox',
 				'callback' => 'rt_biz_imap_setup_view',
-			) );
+			) );*/
 
 			$this->sections[] = array(
 				'icon'        => 'el-icon-cogs',
