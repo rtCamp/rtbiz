@@ -68,7 +68,7 @@ jQuery( document ).ready(function(){
         },
         imap_folder_ajax: function(){
             //imap connect ajax request
-            jQuery(document).on('click', 'rtmailbox-save', function( event ) {
+            jQuery(document).on('click', '#rtmailbox-save', function( event ) {
                 var requestArray = {};
                 requestArray.data =  jQuery( '#rtmailbox-wrap input' ).serialize();
                 requestArray.action = 'rtmailbox_folder_update';
@@ -91,7 +91,7 @@ jQuery( document ).ready(function(){
                 event.preventDefault();
             });
         }
-    }
+    };
 
     rtmailbox.init();
 });
