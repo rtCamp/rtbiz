@@ -234,9 +234,9 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 			add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RT_BIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column3' );
 
-			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-				add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column5' );
-			}
+			//			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
+			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column5' );
+			//			}
 
 			$rt_biz_attributes_model = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();

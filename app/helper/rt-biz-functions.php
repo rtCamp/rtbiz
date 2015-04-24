@@ -651,6 +651,17 @@ function rt_biz_set_redux_setting( $key, $val ){
 	$GLOBALS[ Rt_Biz_Setting::$biz_opt ] = get_option( Rt_Biz_Setting::$biz_opt, array() );
 }
 
+function rt_biz_get_offering_selection_setting(){
+	$return  = array();
+	$redux = rt_biz_get_redux_settings();
+	foreach ( $redux['offering_plugin'] as $key => $val ){
+		if ( ! empty( $val ) ){
+			$return[] = $key;
+		}
+	}
+	return $return;
+}
+
 function rt_biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(

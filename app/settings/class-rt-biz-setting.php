@@ -38,7 +38,13 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 		public  function rt_on_redux_save( $setting, $old_setting ){
 			//removed offering sync option
-			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) && $setting['offering_plugin'] != $old_setting['offering_plugin'] && in_array( $setting['offering_plugin'], array( 'woocommerce', 'edd' ) ) ){
+			$diff = array();
+			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ){
+				$diff = array_diff( $setting['offering_plugin'], $old_setting['offering_plugin'] );
+				$diff = array_unique( $diff );
+			}
+
+			if ( ! empty( $diff ) ) {
 				update_option( 'rtbiz_offering_plugin_synx', 'true' );
 			} else {
 				update_option( 'rtbiz_offering_plugin_synx', 'false' );
@@ -169,10 +175,10 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					'title'    => __( 'Offering Sync Option' ),
 					'subtitle' => __( 'Select the plugin you want to use for offering sync.' ),
 					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
-					'type'     => 'radio',
+					'type'     => 'checkbox',
 					'options'  => array(
-						'none'         => __( 'None' ),
-						'woocommerce' => __( 'Woocommerce' ),
+						//						'none'         => __( 'None' ),
+						'woocommerce' => __( 'WooCommerce' ),
 						'edd' => __( 'Easy Digital Download' ),
 					),
 					'default'  => 'none',

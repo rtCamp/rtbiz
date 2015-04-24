@@ -309,15 +309,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function init_menu_order() {
 
-			global $rtbiz_offerings;
-
 			$this->menu_order = array(
 				self::$dashboard_slug,
 				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
 				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),
 			);
 
-			$settings = rt_biz_get_redux_settings();
 			$this->menu_order[] = 'edit.php?post_type=' . rt_biz_get_company_post_type();
 			$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 
@@ -408,8 +405,8 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$settings = rt_biz_get_redux_settings();
-			$offering_plugin   = ! empty ( $settings['offering_plugin'] ) ? $settings['offering_plugin'] : '';
+			$settings = rt_biz_get_offering_selection_setting();
+			$offering_plugin   = ! empty ( $settings ) ? $settings : array() ;
 			$to_register_posttype = array();
 			foreach ( Rt_Access_Control::$modules as $key => $value ){
 
