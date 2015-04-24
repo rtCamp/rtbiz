@@ -648,6 +648,7 @@ function rt_biz_get_redux_settings() {
 function rt_biz_set_redux_setting( $key, $val ){
 	global $rt_biz_setttings;
 	$rt_biz_setttings->ReduxFramework->set( $key, $val );
+	$GLOBALS[ Rt_Biz_Setting::$biz_opt ] = get_option( Rt_Biz_Setting::$biz_opt, array() );
 }
 
 function rt_biz_is_primary_email_unique( $email, $postid = null ) {
