@@ -236,7 +236,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 										<label for="rtmailbox-provider-<?php echo $server->id; ?>"><?php echo $server->server_name; ?></label>
 									</li>
 								<?php }
-							}?>
+							} ?>
 							<li>
 								<input title="<?php _e( 'custom' ) ?>" class="rtmailbox_provider" id="rtmailbox-provider-<?php _e( 'custom' ) ?>" name="rtmailbox[provider]" value="<?php _e( 'custom' ) ?>" type="radio">
 								<label for="rtmailbox-provider-<?php _e( 'custom' ) ?>"><?php _e( 'custom' ) ?></label>
@@ -300,11 +300,11 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 			$obj_data = $obj_data['rtmailbox'];
 			if ( 'rtmailbox_connect_imap' == $obj_data['action'] ){
-				if ( 'custom'  == $obj_data['provider'] ) {
-					$response= $this->rtmailbox_create_imap_server( $obj_data );
+				if ( 'custom' == $obj_data['provider'] ) {
+					$response = $this->rtmailbox_create_imap_server( $obj_data );
 					if ( is_array( $response ) && true == $response['status'] ){
 						$obj_data['provider'] = $response['server_id'];
-					}else{
+					} else {
 						$result['error'] = $response['error'];
 						die();
 					}
@@ -313,7 +313,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				if ( is_array( $response ) && true == $response['status'] ){
 					$result['html'] = $response['html_imap_folder'];
 					$result['status'] = true;
-				}else{
+				} else {
 					$result['error'] = $response['error'];
 				}
 			}
@@ -348,7 +348,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			try {
 				$hdZendEmail = new Rt_Zend_Mail();
 				$ssl  = ( isset( $incoming_enc ) && ! is_null( $incoming_enc ) ) ? $incoming_enc : false;
-				$hdZendEmail->try_imap_connect( $obj_data['incoming_server'], (int)$obj_data['incoming_port'], $ssl );
+				$hdZendEmail->try_imap_connect( $obj_data['incoming_server'], (int) $obj_data['incoming_port'], $ssl );
 				$args = array(
 					'server_name'          => $obj_data['provider_name'],
 					'incoming_imap_server' => $obj_data['incoming_server'],
@@ -358,12 +358,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_port'   => $obj_data['outgoing_port'],
 					'outgoing_smtp_enc'    => $outgoing_enc,
 				);
-				$server_id =  $rt_imap_server_model->add_server( $args );
+				$server_id = $rt_imap_server_model->add_server( $args );
 				if ( empty( $server_id ) ){
 					$result['server_id'] = $server_id;
 					$result['status'] = true;
-				}else{
-					$result['error'] = "Error: problem occurs while adding server";
+				} else {
+					$result['error'] = 'Error: problem occurs while adding server';
 				}
 			} catch (Exception $e) {
 				$result['error'] = 'Caught exception: ' .  $e->getMessage();
@@ -397,7 +397,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$hdZendEmail = new Rt_Zend_Mail();
 				try {
 					if ( ! $hdZendEmail->try_imap_login( $email, rtmb_encrypt_decrypt( $password ), $email_type, $imap_server ) ) {
-						$result['error'] = "Error: login failed. Please enter correct credential or enable IMAP in your mailbox";
+						$result['error'] = 'Error: login failed. Please enter correct credential or enable IMAP in your mailbox';
 					} else {
 						$rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
 						ob_start();
