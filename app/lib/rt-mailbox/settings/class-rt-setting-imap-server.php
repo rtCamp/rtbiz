@@ -19,6 +19,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 			add_action( 'init', array( $this, 'save_imap_servers' ) );
 			$updateDB = new RT_DB_Update( RT_LIB_FILE, trailingslashit( dirname( __FILE__ ) . '/../' ) . 'schema/' );
 			add_action( 'rt_db_update_finished_' . str_replace( '-', '_', sanitize_title( $updateDB->rt_plugin_info->name ) ), array( $this, 'default_imap_servers' ) );
+			$this->default_imap_servers();
 		}
 
 		function default_imap_servers() {

@@ -90,7 +90,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 				$url = add_query_arg( $queryArgs, $url );
 			}
 			//Send the request.
-			$result = wp_remote_get( $url, $options );
+			$result = wp_remote_get( esc_url_raw( $url ), $options );
 			//Try to parse the response
 			$themeUpdate = null;
 			$code        = wp_remote_retrieve_response_code( $result );

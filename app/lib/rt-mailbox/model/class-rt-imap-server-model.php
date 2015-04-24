@@ -37,7 +37,7 @@ if ( ! class_exists( 'Rt_IMAP_Server_Model' ) ) {
 		 * @since rt-Helpdesk 0.1
 		 */
 		function get_all_servers() {
-			return parent::get( array() );
+			return parent::get( array(), false, false, 'ID asc' );
 		}
 
 		/**
