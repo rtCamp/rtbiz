@@ -158,7 +158,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 
 			add_action( 'init', array( $this, 'rtmailbox_ajax' ) );
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 999 );
 		}
 
 		/**
@@ -231,7 +231,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 */
 		function enqueue_styles_scripts(){
 			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'assets/css/rt-mailbox.css' );
-			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', '', false, true );
+			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', array( 'jquery' ) , '', true );
 		}
 
 		/**
