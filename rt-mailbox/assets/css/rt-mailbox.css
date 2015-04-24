@@ -1,3 +1,35 @@
+.rtmailbox-row{
+    margin-bottom: 10px;
+}
+.rtmailbox-row>label{
+    display: inline-block;
+    width: 25%;
+    vertical-align:top;
+}
+
+/* provider list css */
+.rtmailbox-row ul.rtmailbox_provider_list{
+    display: inline-block;
+}
+
+.rtmailbox-row ul.rtmailbox_provider_list li{
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.rtmailbox-row div.mailbox-folder-list{
+    display: inline-block;
+}
+.rtmailbox-row div.mailbox-folder-list>ul{
+    margin: 0px;
+}
+
+.rtmailbox-row div.mailbox-folder-list>ul ul{
+    display: inline-block;
+    width: 25%;
+}
+
+/*
 .nav-tab-wrapper{
 	margin-top: 10px;
 	margin-bottom: 30px;
@@ -126,3 +158,30 @@ table#rtmailbox-container th, table#rtmailbox-container td {
 	display: none;
 	color: #cd0a0a !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

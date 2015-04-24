@@ -197,6 +197,20 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		}
 
 		/**
+		 * try imap server connect
+		 *
+		 * @param $host
+		 * @param $port
+		 * @param $ssl
+		 *
+		 * @return string
+		 */
+		function try_imap_connect( $host, $port, $ssl ){
+			$this->imap = new Zend\Mail\Protocol\Imap();
+			return $this->imap->connect( $host, $port, $ssl );
+		}
+
+		/**
 		 * send email
 		 *
 		 * @param        $fromemail

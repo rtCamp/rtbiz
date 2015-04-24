@@ -1,4 +1,116 @@
 jQuery( document ).ready(function(){
+    var rtmailbox = {
+        init: function () {
+            rtmailbox.default_ui();
+            rtmailbox.ui_render();
+            rtmailbox.imap_connect_ajax();
+            rtmailbox.imap_folder_ajax();
+        },
+        default_ui:function(){
+            // hide IMAP form by default
+            jQuery('#rtmailbox-imap-server-container').hide();
+        },
+        ui_render: function(){
+            // provider select
+            jQuery('.rtmailbox_provider').click(function(){
+               if( jQuery(this).val() === 'custom' ){
+                   jQuery('#rtmailbox-imap-server-container').show();
+               }else{
+                   jQuery('#rtmailbox-imap-server-container').hide();
+               }
+            });
+
+            //populate default port
+            jQuery('#rtmailbox-incoming_ssl').click(function(){
+                if( jQuery(this).is(':checked') ){
+                    jQuery('#rtmailbox-incoming_port').val( jQuery('#rtmailbox-incoming_ssl_port').val() );
+                }else{
+                    jQuery('#rtmailbox-incoming_port').val( jQuery('#rtmailbox-incoming_tls_port').val() );
+                }
+            });
+            jQuery('#rtmailbox-outgoing_ssl').click(function(){
+                if( jQuery(this).is(':checked') ){
+                    jQuery('#rtmailbox-outgoing_port').val( jQuery('#rtmailbox-outgoing_ssl_port').val() );
+                }else{
+                    jQuery('#rtmailbox-outgoing_port').val( jQuery('#rtmailbox-outgoing_tls_port').val() );
+                }
+            });
+
+        },
+        imap_connect_ajax: function(){
+            //imap connect ajax request
+            jQuery( "#rtmailbox-imap-connect-form" ).submit(function( event ) {
+                var requestArray = {};
+                requestArray.data =  jQuery(this).serialize();
+                requestArray.action = 'rtmailbox_imap_connect';
+
+                jQuery.ajax({
+                    url: ajaxurl,
+                    dataType: 'json',
+                    type: 'post',
+                    data: requestArray,
+                    beforeSend: function(){
+
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            jQuery( "#rtmailbox-wrap" ).html( data.html);
+                        }else{
+                            alert( data.error );
+                        }
+                    },
+                    error: function(){
+                        alert( 'Something goes wrong. Please try again.' );
+                    }
+                });
+                event.preventDefault();
+            });
+        },
+        imap_folder_ajax: function(){
+            //imap connect ajax request
+            jQuery(document).on('submit', '#rtmailbox-imap-folder-form', function( event ) {
+                var requestArray = {};
+                requestArray.data =  jQuery(this).serialize();
+                requestArray.action = 'rtmailbox_folder_update';
+
+                jQuery.ajax({
+                    url: ajaxurl,
+                    dataType: 'json',
+                    type: 'post',
+                    data: requestArray,
+                    beforeSend: function(){
+                        //alert('before send');
+                    },
+                    success: function(data) {
+                        alert(data);
+                    },
+                    error: function(){
+                        alert( 'Something goes wrong. Please try again.' );
+                    }
+                });
+                event.preventDefault();
+            });
+        }
+    }
+
+    rtmailbox.init();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+jQuery( document ).ready(function(){
 	jQuery( document ).on( 'click', '.rthd-edit-server', function ( e ) {
 		e.preventDefault();
 		var server_id = jQuery( this ).data( 'server-id' );
@@ -118,3 +230,4 @@ jQuery( document ).ready(function(){
 	});
 
 });
+*/
