@@ -82,26 +82,27 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		function is_woocommerce_active(){
-			if ( 'woocommerce' === $this->pluginName && class_exists( 'WooCommerce' ) ) {
+			if ( ! empty( $this->pluginName ) && in_array( 'woocommerce', $this->pluginName ) && class_exists( 'WooCommerce' ) ) {
 				return true;
 			}
 			return false;
 		}
 
 		function is_edd_active(){
-			if ( 'edd' === $this->pluginName && class_exists( 'Easy_Digital_Downloads' ) ) {
+			if ( ! empty( $this->pluginName ) && in_array( 'edd', $this->pluginName ) && class_exists( 'Easy_Digital_Downloads' ) ) {
 				return true;
 			}
 			return false;
 		}
 
 		function get_post_type(){
+			$result = array();
 			if ( $this->is_woocommerce_active( ) ) {
-				return 'product';
+				$result[] = 'product';
 			} else if ( $this->is_edd_active( ) ) {
-				return 'download';
+				$result[] = 'download';
 			}
-			return '';
+			return $result;
 		}
 
 		/**
@@ -231,7 +232,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				$terms_filter = array();
 				foreach ( $terms as $term ) {
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term->term_id, self::$term_product_from_meta_key, true );
-					if ( empty( $product_plugin ) || $product_plugin == $this->pluginName ){
+					if ( empty( $product_plugin ) || in_array( $product_plugin, $this->pluginName ) ){
 						$terms_filter[] = $term;
 					}
 				}
@@ -265,6 +266,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		function manage_offering_column_body( $display, $column, $term_id ) {
 			$t = get_term( $term_id, Rt_Offerings::$offering_slug );
+			$content = '';
 			switch ( $column ) {
 				case 'product_detail':
 					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
@@ -291,9 +293,6 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 					break;
 			}
-			if ( empty( $content ) ){
-				$content = '';
-			}
 			return apply_filters( 'rt_biz_offering_column_content', $content, $column, $term_id );
 		}
 
@@ -314,7 +313,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 *
 		 * @access public
 		 * @param $post_id
-		 * @return void
+		 * @return int/void
 		 */
 		public function get_taxonomy( $post_id ){
 			global $wpdb;
@@ -388,11 +387,21 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					$term_id = $term['term_id'];
 					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_id_meta_key, $post_id, true );
 					if ( ! empty( $this->pluginName ) ){
-						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_from_meta_key, $this->pluginName, true );
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $post_id ), true );
 					}
 				}
 			}
 
+		}
+
+		public function get_product_plugin_by_post( $post_id ){
+			$post_type = get_post_type( $post_id );
+			if ( 'download' == $post_type ){
+				return 'edd';
+			} else if ( 'product' == $post_type ){
+				return 'woocommerce';
+			}
+			return '';
 		}
 
 		public function check_postid_term_exist( $post_id ){
@@ -414,7 +423,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 *
 		 * @return bool
 		 */
-		public function bulk_insert_offerings( $plugin = '' ) {
+		public function bulk_insert_offerings( $plugin = array() ) {
 
 			if ( ! empty( $plugin ) ){
 				$this->pluginName = $plugin;
@@ -434,7 +443,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					if ( ! $new_term instanceof WP_Error ) {
 						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_id_meta_key, $offering->ID, true );
 						if ( ! empty( $this->pluginName ) ){
-							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->pluginName, true );
+							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $offering->ID ), true );
 						}
 					}
 				}
