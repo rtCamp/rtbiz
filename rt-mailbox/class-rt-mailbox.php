@@ -124,7 +124,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * Capability for Mailbox setup Page;
 		 * Default: manage_options
 		 */
-		function __construct( $plugin_path_for_deactivate_cron, $module='', $admin_menu = false, $parent_slug, $cap = 'manage_options' ) {
+		function __construct( $plugin_path_for_deactivate_cron, $module='', $admin_menu = false, $parent_slug = '', $cap = 'manage_options' ) {
 			$this->pageflag = $admin_menu;
 			if ( $this->pageflag ) {
 				$this->parent_page_slug = $parent_slug;
@@ -230,7 +230,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * Register css & js for rt-mailbox
 		 */
 		function enqueue_styles_scripts(){
-			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'/assets/css/rt-mailbox.css' );
+			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'assets/css/rt-mailbox.css' );
 			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', '', false, true );
 		}
 
