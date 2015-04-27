@@ -47,19 +47,19 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 		function get_lables(){
 			$this->labels = array(
-				'name'                       => __( 'Departments' ),
-				'singular_name'              => __( 'Department' ),
-				'menu_name'                  => __( 'Departments' ),
-				'search_items'               => __( 'Search Departments' ),
-				'popular_items'              => __( 'Popular Departments' ),
-				'all_items'                  => __( 'All User Departments' ),
-				'edit_item'                  => __( 'Edit Department' ),
-				'update_item'                => __( 'Update Department' ),
-				'add_new_item'               => __( 'Add New Department' ),
-				'new_item_name'              => __( 'New Department Name' ),
-				'separate_items_with_commas' => __( 'Separate departments with commas' ),
-				'add_or_remove_items'        => __( 'Add or remove departments' ),
-				'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
+				'name'                       => __( 'Teams' ),
+				'singular_name'              => __( 'Team' ),
+				'menu_name'                  => __( 'Teams' ),
+				'search_items'               => __( 'Search Teams' ),
+				'popular_items'              => __( 'Popular Teams' ),
+				'all_items'                  => __( 'All User Teams' ),
+				'edit_item'                  => __( 'Edit Team' ),
+				'update_item'                => __( 'Update Team' ),
+				'add_new_item'               => __( 'Add New Team' ),
+				'new_item_name'              => __( 'New Team Name' ),
+				'separate_items_with_commas' => __( 'Separate Teams with commas' ),
+				'add_or_remove_items'        => __( 'Add or remove Teams' ),
+				'choose_from_most_used'      => __( 'Choose from the most popular Teams' ),
 			);
 			return $this->labels;
 		}
@@ -77,7 +77,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => true, 'show_ui' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
+			$arg = array( 'public' => true, 'show_ui' => false, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_department_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
