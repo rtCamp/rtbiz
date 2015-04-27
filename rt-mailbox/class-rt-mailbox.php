@@ -115,6 +115,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->inti_global();
+            $this->default_imap_servers();
 
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 
@@ -162,6 +163,49 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			global $rt_mail_settings;
 			$rt_mail_settings           = new Rt_Mail_Settings();
 		}
+
+        /**
+         * Default Imap server added
+         */
+        function default_imap_servers() {
+            global $rt_imap_server_model;
+            $default_imap_servers = array(
+                array(
+                    'server_name' => 'Gmail/Google',
+                    'incoming_imap_server' => 'imap.gmail.com',
+                    'incoming_imap_port' => '993',
+                    'incoming_imap_enc' => 'ssl',
+                    'outgoing_smtp_server' => 'smtp.gmail.com',
+                    'outgoing_smtp_port' => '587',
+                    'outgoing_smtp_enc' => 'tls',
+                ),
+                array(
+                    'server_name' => 'Outlook',
+                    'incoming_imap_server' => 'imap-mail.outlook.com',
+                    'incoming_imap_port' => '993',
+                    'incoming_imap_enc' => 'ssl',
+                    'outgoing_smtp_server' => 'smtp-mail.outlook.com',
+                    'outgoing_smtp_port' => '587',
+                    'outgoing_smtp_enc' => 'tls',
+                ),
+                array(
+                    'server_name' => 'Yahoo',
+                    'incoming_imap_server' => 'imap.mail.yahoo.com',
+                    'incoming_imap_port' => '993',
+                    'incoming_imap_enc' => 'ssl',
+                    'outgoing_smtp_server' => 'smtp.mail.yahoo.com',
+                    'outgoing_smtp_port' => '587',
+                    'outgoing_smtp_enc' => 'tls',
+                ),
+            );
+
+            foreach ( $default_imap_servers as $server ) {
+                $existing_server = $rt_imap_server_model->get_servers( array( 'incoming_imap_server' => $server['incoming_imap_server'] ) );
+                if ( empty( $existing_server ) ) {
+                    $rt_imap_server_model->add_server( $server );
+                }
+            }
+        }
 
 		/**
 		 * Ajx request for rtmailbox
@@ -472,8 +516,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
-						<?php wp_nonce_field( 'rtmailbox_connect_imap' );
-						do_action( 'rt_mailbox_randed_view_before' ); ?>
 						<?php
 					}
 				}
@@ -519,7 +561,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$result['status'] = true;
 				}
 			}
-			echo json_encode( $_REQUEST );
+			echo json_encode( $result );
 			die();
 		}
 	}
