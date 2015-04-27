@@ -39,7 +39,7 @@ jQuery( document ).ready(function(){
         },
         imap_connect_ajax: function(){
             //imap connect ajax request
-            jQuery('#rtmailbox-connect').click(function(){
+            jQuery('#rtmailbox-connect').click(function( event ){
                 var requestArray = {};
                 requestArray.data =  jQuery( '#rtmailbox-wrap input' ).serialize();
                 requestArray.action = 'rtmailbox_imap_connect';
