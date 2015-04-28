@@ -9,7 +9,7 @@ jQuery( document ).ready(function(){
         },
         default_ui:function(){
             // hide IMAP form by default
-            if ( 'custom' != jQuery( '.rtmailbox_provider:checked' ).val() ){
+            if ( 'custom' !== jQuery( '.rtmailbox_provider:checked' ).val() ){
                 jQuery('#rtmailbox-imap-server-container').hide();
             }else{
                 jQuery('#rtmailbox-imap-server-container').show();
