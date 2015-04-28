@@ -448,8 +448,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
 							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
 							<strong>
-								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a>
-								<?php if ( isset( $mailbox->email_data['name'] ) ) {
+								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a><?php
+								if ( isset( $mailbox->email_data['name'] ) ) {
 									echo $mailbox->email_data['name'] . '<br/>';
 								} ?>
 								<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
@@ -779,6 +779,5 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			echo json_encode( $result );
 			die();
 		}
-
-    }
+	}
 }
