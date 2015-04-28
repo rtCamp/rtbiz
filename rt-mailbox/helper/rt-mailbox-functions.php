@@ -184,7 +184,7 @@ function rtmb_get_module_mailbox_emails( $module ) {
 	global $rt_mail_settings;
 
 	$emails   = array();
-	$google_acs = $rt_mail_settings->get_user_google_ac( $module );
+	$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
 
 	foreach ( $google_acs as $ac ) {
 		$ac->email_data = unserialize( $ac->email_data );

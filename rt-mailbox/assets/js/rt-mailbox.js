@@ -5,14 +5,20 @@ jQuery( document ).ready(function(){
             rtmailbox.ui_render();
             rtmailbox.imap_connect_ajax();
             rtmailbox.imap_folder_ajax();
+            rtmailbox.mailbox_update_ajax();
         },
         default_ui:function(){
             // hide IMAP form by default
-            jQuery('#rtmailbox-imap-server-container').hide();
+            if ( 'custom' != jQuery( '.rtmailbox_provider:checked' ).val() ){
+                jQuery('#rtmailbox-imap-server-container').hide();
+            }else{
+                jQuery('#rtmailbox-imap-server-container').show();
+            }
+
         },
         ui_render: function(){
-            // provider select
-            jQuery('.rtmailbox_provider').click(function(){
+            // provider
+            jQuery(document).on('click', '.rtmailbox_provider', function( event ) {
                if( jQuery(this).val() === 'custom' ){
                    jQuery('#rtmailbox-imap-server-container').show();
                }else{
@@ -21,14 +27,14 @@ jQuery( document ).ready(function(){
             });
 
             //populate default port
-            jQuery('#rtmailbox-incoming_ssl').click(function(){
+            jQuery(document).on('click', '#rtmailbox-incoming_ssl', function( event ) {
                 if( jQuery(this).is(':checked') ){
                     jQuery('#rtmailbox-incoming_port').val( jQuery('#rtmailbox-incoming_ssl_port').val() );
                 }else{
                     jQuery('#rtmailbox-incoming_port').val( jQuery('#rtmailbox-incoming_tls_port').val() );
                 }
             });
-            jQuery('#rtmailbox-outgoing_ssl').click(function(){
+            jQuery(document).on('click', '#rtmailbox-outgoing_ssl', function( event ) {
                 if( jQuery(this).is(':checked') ){
                     jQuery('#rtmailbox-outgoing_port').val( jQuery('#rtmailbox-outgoing_ssl_port').val() );
                 }else{
@@ -39,7 +45,7 @@ jQuery( document ).ready(function(){
         },
         imap_connect_ajax: function(){
             //imap connect ajax request
-            jQuery('#rtmailbox-connect').click(function( event ){
+            jQuery(document).on('click', '#rtmailbox-connect', function( event ) {
                 var requestArray = {};
                 requestArray.data =  jQuery( '#rtmailbox-wrap input' ).serialize();
                 requestArray.action = 'rtmailbox_imap_connect';
@@ -82,7 +88,46 @@ jQuery( document ).ready(function(){
                         //alert('before send');
                     },
                     success: function(data) {
-                        alert(data);
+                        if (data.status) {
+                            jQuery( '#rtmailbox-wrap' ).html( data.html);
+                            jQuery( '#mailbox-' + data.moduleid ).remove();
+                            jQuery( '#mailbox-list' ).html( data.html_list);
+                            rtmailbox.default_ui();
+                        }else{
+                            alert( data.error );
+                        }
+                    },
+                    error: function(){
+                        alert( 'Something goes wrong. Please try again.' );
+                    }
+                });
+                event.preventDefault();
+            });
+        },
+        mailbox_update_ajax : function(){
+            jQuery(document).on('click', '#rtmailbox-update-mailbox', function( event ) {
+                var requestArray = {};
+                requestArray.mailboxid =  jQuery(this).data('mailboxid');
+                requestArray.email =  jQuery(this).data('email');
+                requestArray.module =  jQuery(this).data('module');
+                requestArray.subaction =  jQuery(this).data('action');
+                requestArray.action = 'rtmailbox_mailbox_update';
+
+                jQuery.ajax({
+                    url: ajaxurl,
+                    dataType: 'json',
+                    type: 'post',
+                    data: requestArray,
+                    beforeSend: function(){
+                        //alert('before send');
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            jQuery( '#rtmailbox-wrap' ).html( data.html);
+                            rtmailbox.default_ui();
+                        }else{
+                            alert( data.error );
+                        }
                     },
                     error: function(){
                         alert( 'Something goes wrong. Please try again.' );
