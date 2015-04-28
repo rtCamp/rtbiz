@@ -107,12 +107,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function get_user_google_ac( $module ) {
 			global $rt_mail_accounts_model;
-            if ( !empty( $module ) ){
-                return $rt_mail_accounts_model->get_mail_account( $module );
-            }else{
-                return $rt_mail_accounts_model->get_mail_account( );
-            }
-
+			if ( ! empty( $module ) ) {
+				return $rt_mail_accounts_model->get_mail_account( $module );
+			} else {
+				return $rt_mail_accounts_model->get_mail_account();
+			}
 		}
 
 		/**
@@ -278,34 +277,34 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function update_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null, $module = null, $moduleid = '' ) {
 			global $rt_mail_accounts_model;
-            $args = array(
-                'email'      => $email,
-                'outh_token' => $outh_token,
-                'type'       => $type,
-                'flag'       => 'Y',
-            );
+			$args = array(
+				'email'      => $email,
+				'outh_token' => $outh_token,
+				'type'       => $type,
+				'flag'       => 'Y',
+			);
 
-            if ( ! empty( $email_data ) ){
-                $args['email_data'] = $email_data;
-            }
+			if ( ! empty( $email_data ) ) {
+				$args['email_data'] = $email_data;
+			}
 
-            if ( $imap_server != null ) {
-                $args['imap_server'] = $imap_server;
-            }
+			if ( $imap_server != null ) {
+				$args['imap_server'] = $imap_server;
+			}
 
-            if ( ! empty( $moduleid ) ){
-                $where         = array(
-                    'id' => $moduleid,
-                    'module' => $module,
-                );
-            }else{
-                $where         = array(
-                    'email' => $email,
-                    'module' => $module,
-                );
-            }
+			if ( ! empty( $moduleid ) ) {
+				$where = array(
+					'id'     => $moduleid,
+					'module' => $module,
+				);
+			} else {
+				$where = array(
+					'email'  => $email,
+					'module' => $module,
+				);
+			}
 
-            return $rt_mail_accounts_model->update_mail_account( $args, $where );
+			return $rt_mail_accounts_model->update_mail_account( $args, $where );
 		}
 
 		/**

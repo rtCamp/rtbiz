@@ -115,7 +115,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->auto_loader();
 			$this->db_upgrade();
 			$this->inti_global();
-            $this->default_imap_servers();
+			$this->default_imap_servers();
 
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 
@@ -167,45 +167,45 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
         /**
          * Default Imap server added
          */
-        function default_imap_servers() {
-            global $rt_imap_server_model;
-            $default_imap_servers = array(
-                array(
-                    'server_name' => 'Gmail/Google',
-                    'incoming_imap_server' => 'imap.gmail.com',
-                    'incoming_imap_port' => '993',
-                    'incoming_imap_enc' => 'ssl',
-                    'outgoing_smtp_server' => 'smtp.gmail.com',
-                    'outgoing_smtp_port' => '587',
-                    'outgoing_smtp_enc' => 'tls',
-                ),
-                array(
-                    'server_name' => 'Outlook',
-                    'incoming_imap_server' => 'imap-mail.outlook.com',
-                    'incoming_imap_port' => '993',
-                    'incoming_imap_enc' => 'ssl',
-                    'outgoing_smtp_server' => 'smtp-mail.outlook.com',
-                    'outgoing_smtp_port' => '587',
-                    'outgoing_smtp_enc' => 'tls',
-                ),
-                array(
-                    'server_name' => 'Yahoo',
-                    'incoming_imap_server' => 'imap.mail.yahoo.com',
-                    'incoming_imap_port' => '993',
-                    'incoming_imap_enc' => 'ssl',
-                    'outgoing_smtp_server' => 'smtp.mail.yahoo.com',
-                    'outgoing_smtp_port' => '587',
-                    'outgoing_smtp_enc' => 'tls',
-                ),
-            );
+		function default_imap_servers() {
+			global $rt_imap_server_model;
+			$default_imap_servers = array(
+				array(
+					'server_name'          => 'Gmail/Google',
+					'incoming_imap_server' => 'imap.gmail.com',
+					'incoming_imap_port'   => '993',
+					'incoming_imap_enc'    => 'ssl',
+					'outgoing_smtp_server' => 'smtp.gmail.com',
+					'outgoing_smtp_port'   => '587',
+					'outgoing_smtp_enc'    => 'tls',
+				),
+				array(
+					'server_name'          => 'Outlook',
+					'incoming_imap_server' => 'imap-mail.outlook.com',
+					'incoming_imap_port'   => '993',
+					'incoming_imap_enc'    => 'ssl',
+					'outgoing_smtp_server' => 'smtp-mail.outlook.com',
+					'outgoing_smtp_port'   => '587',
+					'outgoing_smtp_enc'    => 'tls',
+				),
+				array(
+					'server_name'          => 'Yahoo',
+					'incoming_imap_server' => 'imap.mail.yahoo.com',
+					'incoming_imap_port'   => '993',
+					'incoming_imap_enc'    => 'ssl',
+					'outgoing_smtp_server' => 'smtp.mail.yahoo.com',
+					'outgoing_smtp_port'   => '587',
+					'outgoing_smtp_enc'    => 'tls',
+				),
+			);
 
-            foreach ( $default_imap_servers as $server ) {
-                $existing_server = $rt_imap_server_model->get_servers( array( 'incoming_imap_server' => $server['incoming_imap_server'] ) );
-                if ( empty( $existing_server ) ) {
-                    $rt_imap_server_model->add_server( $server );
-                }
-            }
-        }
+			foreach ( $default_imap_servers as $server ) {
+				$existing_server = $rt_imap_server_model->get_servers( array( 'incoming_imap_server' => $server['incoming_imap_server'] ) );
+				if ( empty( $existing_server ) ) {
+					$rt_imap_server_model->add_server( $server );
+				}
+			}
+		}
 
 		/**
 		 * Ajx request for rtmailbox
@@ -235,207 +235,263 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		}
 
 
-        function render_mailbox_setting_page( $module ){
-            ?>
-            <div class="wrap">
-                <h4>Configured Mailbox:</h4>
-                <div id="mailbox-list">
-                    <?php $this->render_list_mailbox_page( $module ); ?>
-                </div>
-                <div id="rtmailbox-wrap" class="wrap">
-                    <?php $this->render_add_mailbox_page( $module ); ?>
-                </div>
-            </div>
-            <?php
-        }
+		/**
+		 * render mailbox setting ui
+		 * @param $module
+		 *
+		 */
+		function render_mailbox_setting_page( $module ) {
+			?>
+			<div class="wrap">
+				<h4>Configured Mailbox:</h4>
+
+				<div id="mailbox-list">
+					<?php $this->render_list_mailbox_page( $module ); ?>
+				</div>
+				<div id="rtmailbox-wrap" class="wrap">
+					<?php $this->render_add_mailbox_page( $module ); ?>
+				</div>
+			</div>
+		<?php
+		}
 
 
 		/**
-		 * render mailbox setup page
+		 * render mailbox setup page add mailbox
 		 */
-		function render_add_mailbox_page( $module, $mailboxid = '' ){
+		function render_add_mailbox_page( $module, $mailboxid = '' ) {
 
 			global $rt_imap_server_model, $rt_mail_settings;
 
-			$default_servers = $rt_imap_server_model->get_all_servers();
+			$default_servers          = $rt_imap_server_model->get_all_servers();
 			$rtmailbox_default_server = wp_list_pluck( $this->default_imap_servers, 'server_name' );
-	    	if ( ! empty( $mailboxid ) ){
-                $mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module, 'id'=> $mailboxid ) );
-                if ( ! empty( $mailbox ) ){
-                    $mailbox = $mailbox[0];
-                    $server = $rt_imap_server_model->get_servers( array( 'id' => $mailbox->imap_server ) );
-                    if ( ! empty( $server ) ){
-                        $server = $server[0];
-                    }
-                } ?>
-                <h4>Change Mailbox Configuration</h4><?php
-            } else { ?>
-                <h4>Add New Mailbox</h4><?php
-            } ?>
-            <form id="rtmailbox-imap-connect-form" method="post">
-                <input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
-                <input id="rtmailbox-mailbox-id" name="rtmailbox[mailboxid]" value="<?php echo ! empty( $mailbox->id ) ? $mailbox->id : '';?>" type="hidden">
-                <input id="rtmailbox-incoming_ssl_port" name="rtmailbox[incoming_ssl_port]" value="<?php echo $this->incoming_ssl_port; ?>" type="hidden">
-                <input id="rtmailbox-incoming_tls_port" name="rtmailbox[incoming_tls_port]" value="<?php echo $this->incoming_tls_port; ?>" type="hidden">
-                <input id="rtmailbox-outgoing_ssl_port" name="rtmailbox[outgoing_ssl_port]" value="<?php echo $this->outgoing_ssl_port; ?>" type="hidden">
-                <input id="rtmailbox-outgoing_tls_port" name="rtmailbox[outgoing_tls_port]" value="<?php echo $this->outgoing_tls_port; ?>" type="hidden">
+			if ( ! empty( $mailboxid ) ) {
+				$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module, 'id' => $mailboxid ) );
+				if ( ! empty( $mailbox ) ) {
+					$mailbox = $mailbox[0];
+					$server  = $rt_imap_server_model->get_servers( array( 'id' => $mailbox->imap_server ) );
+					if ( ! empty( $server ) ) {
+						$server = $server[0];
+					}
+				} ?>
+				<h4>Change Mailbox Configuration</h4><?php
+			} else { ?>
+				<h4>Add New Mailbox</h4><?php
+			} ?>
+			<form id="rtmailbox-imap-connect-form" method="post">
+			<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
+			<input id="rtmailbox-mailbox-id" name="rtmailbox[mailboxid]"
+			       value="<?php echo ! empty( $mailbox->id ) ? $mailbox->id : '';?>" type="hidden">
+			<input id="rtmailbox-incoming_ssl_port" name="rtmailbox[incoming_ssl_port]"
+			       value="<?php echo $this->incoming_ssl_port; ?>" type="hidden">
+			<input id="rtmailbox-incoming_tls_port" name="rtmailbox[incoming_tls_port]"
+			       value="<?php echo $this->incoming_tls_port; ?>" type="hidden">
+			<input id="rtmailbox-outgoing_ssl_port" name="rtmailbox[outgoing_ssl_port]"
+			       value="<?php echo $this->outgoing_ssl_port; ?>" type="hidden">
+			<input id="rtmailbox-outgoing_tls_port" name="rtmailbox[outgoing_tls_port]"
+			       value="<?php echo $this->outgoing_tls_port; ?>" type="hidden">
 
-                <?php wp_nonce_field( 'rtmailbox_connect_imap' );
-                do_action( 'rt_mailbox_randed_view_before' ); ?>
+			<?php wp_nonce_field( 'rtmailbox_connect_imap' );
+			do_action( 'rt_mailbox_randed_view_before' ); ?>
 
-                <!--<div class="rtmailbox-row">
-                    <label for=""><?php /*_e( 'Mailbox Reading' ); */?></label>
-                    <input data-toggle="switch" title="On" id="rtmailbox-enable" name="rtmailbox[enable]" value="1" type="checkbox">
-                </div>-->
-                <div class="rtmailbox-row">
-                    <label><?php _e( 'Account Type: IMAP' ); ?></label>
-                </div>
-                <div class="rtmailbox-row">
-                    <label for="rtmailbox-email"><?php _e( 'Email' ); ?> </label>
-                    <?php  ?>
-                    <input autocomplete="off" id="rtmailbox-email" name="rtmailbox[email]" placeholder="Email" value="<?php echo ! empty( $mailbox->email ) ? $mailbox->email : '';?>" type="text">
-                </div>
-                <div class="rtmailbox-row">
-                    <label for="rtmailbox-password"><?php _e( 'Password' ); ?> </label>
-                    <input autocomplete="off" id="rtmailbox-password" name="rtmailbox[password]" placeholder="Password" value="" type="password">
-                </div>
-                <div class="rtmailbox-row">
-                    <label for=""><?php _e( 'Provider' ); ?></label>
-                    <ul class="rtmailbox_provider_list">
-                        <?php $provider =  ! empty( $server->server_name ) ?  ( in_array( $server->server_name, $rtmailbox_default_server ) ) ? $server->server_name : 'custom' : 'Gmail/Google';
-                        foreach ( $default_servers as $ser ){
-                            if ( in_array( $ser->server_name, $rtmailbox_default_server ) ) {
-                                $seleted = ( $provider == $ser->server_name )? 'checked' : ''; ?>
-                                <li>
-                                    <input title="<?php echo $ser->server_name; ?>" class="rtmailbox_provider" id="rtmailbox-provider-<?php echo $server->id; ?>" name="rtmailbox[provider]" <?php echo $seleted; ?> value="<?php echo $ser->id; ?>" type="radio">
-                                    <label for="rtmailbox-provider-<?php echo $ser->id; ?>"><?php echo $ser->server_name; ?></label>
-                                </li>
-                            <?php }
-                        } ?>
-                        <li>
-                            <?php  $seleted = ( 'custom' == $provider )? 'checked' : '';?>
-                            <input title="<?php _e( 'custom' ) ?>" class="rtmailbox_provider" id="rtmailbox-provider-<?php _e( 'custom' ) ?>" name="rtmailbox[provider]" <?php echo $seleted; ?> value="<?php _e( 'custom' ) ?>" type="radio">
-                            <label for="rtmailbox-provider-<?php _e( 'custom' ) ?>"><?php _e( 'Custom' ) ?></label>
-                        </li>
-                    </ul>
-                </div>
-                <div id="rtmailbox-imap-server-container">
-                    <input id="rtmailbox-server-id" name="rtmailbox[serverid]" value="<?php echo ( ! empty( $server->id ) && 'custom' == $provider ) ? $server->id : '';?>" type="hidden">
-                    <div class="rtmailbox-row">
-                        <label for="rtmailbox-provider_name"><?php _e( 'Provider Name' ); ?></label>
-                        <input autocomplete="off" id="rtmailbox-provider_name" name="rtmailbox[provider_name]" placeholder="Provider name" value="<?php echo ( ! empty( $server->server_name) && 'custom' == $provider ) ? $server->server_name : '';?>" type="text">
-                    </div>
+			<div class="rtmailbox-row">
+				<label><?php _e( 'Account Type: IMAP' ); ?></label>
+			</div>
+			<div class="rtmailbox-row">
+				<label for="rtmailbox-email"><?php _e( 'Email' ); ?> </label>
+				<?php ?>
+				<input autocomplete="off" id="rtmailbox-email" name="rtmailbox[email]" placeholder="Email"
+				       value="<?php echo ! empty( $mailbox->email ) ? $mailbox->email : '';?>" type="text">
+			</div>
+			<div class="rtmailbox-row">
+				<label for="rtmailbox-password"><?php _e( 'Password' ); ?> </label>
+				<input autocomplete="off" id="rtmailbox-password" name="rtmailbox[password]" placeholder="Password"
+				       value="" type="password">
+			</div>
+			<div class="rtmailbox-row">
+				<label for=""><?php _e( 'Provider' ); ?></label>
+				<ul class="rtmailbox_provider_list">
+					<?php $provider = ! empty( $server->server_name ) ? ( in_array( $server->server_name, $rtmailbox_default_server ) ) ? $server->server_name : 'custom' : 'Gmail/Google';
+					foreach ( $default_servers as $ser ) {
+						if ( in_array( $ser->server_name, $rtmailbox_default_server ) ) {
+							$seleted = ( $provider == $ser->server_name ) ? 'checked' : ''; ?>
+							<li>
+								<input title="<?php echo $ser->server_name; ?>" class="rtmailbox_provider"
+								       id="rtmailbox-provider-<?php echo $server->id; ?>"
+								       name="rtmailbox[provider]" <?php echo $seleted; ?>
+								       value="<?php echo $ser->id; ?>" type="radio">
+								<label
+									for="rtmailbox-provider-<?php echo $ser->id; ?>"><?php echo $ser->server_name; ?></label>
+							</li>
+						<?php }
+					} ?>
+					<li>
+						<?php $seleted = ( 'custom' == $provider ) ? 'checked' : '';?>
+						<input title="<?php _e( 'custom' ) ?>" class="rtmailbox_provider"
+						       id="rtmailbox-provider-<?php _e( 'custom' ) ?>"
+						       name="rtmailbox[provider]" <?php echo $seleted; ?> value="<?php _e( 'custom' ) ?>"
+						       type="radio">
+						<label for="rtmailbox-provider-<?php _e( 'custom' ) ?>"><?php _e( 'Custom' ) ?></label>
+					</li>
+				</ul>
+			</div>
+			<div id="rtmailbox-imap-server-container">
+				<input id="rtmailbox-server-id" name="rtmailbox[serverid]"
+				       value="<?php echo ( ! empty( $server->id ) && 'custom' == $provider ) ? $server->id : '';?>"
+				       type="hidden">
 
-                    <div class="rtmailbox-row">
-                        <label for="rtmailbox-incoming_server"><?php _e( 'Incoming Server' ); ?></label>
-                        <input autocomplete="off" id="rtmailbox-incoming_server" name="rtmailbox[incoming_server]" placeholder="imap.example.com" value="<?php echo ( ! empty( $server->incoming_imap_server ) && 'custom' == $provider ) ? $server->incoming_imap_server : '';?>" type="text">
-                    </div>
-                    <div class="rtmailbox-row">
-                        <label for="rtmailbox-incoming_port"><?php _e( 'Port' ); ?></label>
-                        <input autocomplete="off" id="rtmailbox-incoming_port" name="rtmailbox[incoming_port]" value="<?php echo ! empty( $server->incoming_imap_port ) && 'custom' == $provider ? $server->incoming_imap_port : $this->incoming_ssl_port;?>" type="text">
-                        <input id="rtmailbox-incoming_ssl" name="rtmailbox[incoming_ssl]"  <?php echo !empty( $server->incoming_imap_enc ) && $server->incoming_imap_enc == 'tls'  ? '' : 'checked';?> value="enable" type="checkbox">
-                        <label for="rtmailbox-incoming_ssl"><?php _e( 'Use SSL' ); ?></label>
-                    </div>
+				<div class="rtmailbox-row">
+					<label for="rtmailbox-provider_name"><?php _e( 'Provider Name' ); ?></label>
+					<input autocomplete="off" id="rtmailbox-provider_name" name="rtmailbox[provider_name]"
+					       placeholder="Provider name"
+					       value="<?php echo ( ! empty( $server->server_name ) && 'custom' == $provider ) ? $server->server_name : '';?>"
+					       type="text">
+				</div>
 
-                    <div class="rtmailbox-row">
-                        <label for="rtmailbox-outgoing_server"><?php _e( 'Outgoing Server' ); ?></label>
-                        <input autocomplete="off" id="rtmailbox-outgoing_server" name="rtmailbox[outgoing_server]" placeholder="smtp.example.com" value="<?php echo ! empty( $server->outgoing_smtp_server ) && 'custom' == $provider ? $server->outgoing_smtp_server : '';?>" type="text">
-                    </div>
-                    <div class="rtmailbox-row">
-                        <label for="rtmailbox-outgoing_port"><?php _e( 'Port' ); ?></label>
-                        <input autocomplete="off" id="rtmailbox-outgoing_port" name="rtmailbox[outgoing_port]" value="<?php echo ! empty( $server->outgoing_smtp_port ) && 'custom' == $provider ? $server->outgoing_smtp_port : $this->outgoing_tls_port;?>" type="text">
-                        <input id="rtmailbox-outgoing_ssl" <?php echo !empty( $server->outgoing_smtp_enc ) && $server->outgoing_smtp_enc == 'ssl'  ? 'checked' : '';?> name="rtmailbox[outgoing_ssl]" value="enable" type="checkbox">
-                        <label for="rtmailbox-outgoing_ssl"><?php _e( 'Use SSL' ); ?></label>
-                    </div>
-                </div>
-                <div class="rtmailbox-row">
-                    <label></label>
-                    <input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
-                    <input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect" type="button">
-                </div>
+				<div class="rtmailbox-row">
+					<label for="rtmailbox-incoming_server"><?php _e( 'Incoming Server' ); ?></label>
+					<input autocomplete="off" id="rtmailbox-incoming_server" name="rtmailbox[incoming_server]"
+					       placeholder="imap.example.com"
+					       value="<?php echo ( ! empty( $server->incoming_imap_server ) && 'custom' == $provider ) ? $server->incoming_imap_server : '';?>"
+					       type="text">
+				</div>
+				<div class="rtmailbox-row">
+					<label for="rtmailbox-incoming_port"><?php _e( 'Port' ); ?></label>
+					<input autocomplete="off" id="rtmailbox-incoming_port" name="rtmailbox[incoming_port]"
+					       value="<?php echo ! empty( $server->incoming_imap_port ) && 'custom' == $provider ? $server->incoming_imap_port : $this->incoming_ssl_port;?>"
+					       type="text">
+					<input id="rtmailbox-incoming_ssl"
+					       name="rtmailbox[incoming_ssl]"  <?php echo ! empty( $server->incoming_imap_enc ) && $server->incoming_imap_enc == 'tls' ? '' : 'checked';?>
+					       value="enable" type="checkbox">
+					<label for="rtmailbox-incoming_ssl"><?php _e( 'Use SSL' ); ?></label>
+				</div>
 
-                <?php do_action( 'rt_mailbox_randed_view_after' ); ?>
+				<div class="rtmailbox-row">
+					<label for="rtmailbox-outgoing_server"><?php _e( 'Outgoing Server' ); ?></label>
+					<input autocomplete="off" id="rtmailbox-outgoing_server" name="rtmailbox[outgoing_server]"
+					       placeholder="smtp.example.com"
+					       value="<?php echo ! empty( $server->outgoing_smtp_server ) && 'custom' == $provider ? $server->outgoing_smtp_server : '';?>"
+					       type="text">
+				</div>
+				<div class="rtmailbox-row">
+					<label for="rtmailbox-outgoing_port"><?php _e( 'Port' ); ?></label>
+					<input autocomplete="off" id="rtmailbox-outgoing_port" name="rtmailbox[outgoing_port]"
+					       value="<?php echo ! empty( $server->outgoing_smtp_port ) && 'custom' == $provider ? $server->outgoing_smtp_port : $this->outgoing_tls_port;?>"
+					       type="text">
+					<input
+						id="rtmailbox-outgoing_ssl" <?php echo ! empty( $server->outgoing_smtp_enc ) && $server->outgoing_smtp_enc == 'ssl' ? 'checked' : '';?>
+						name="rtmailbox[outgoing_ssl]" value="enable" type="checkbox">
+					<label for="rtmailbox-outgoing_ssl"><?php _e( 'Use SSL' ); ?></label>
+				</div>
+			</div>
+			<div class="rtmailbox-row">
+				<label></label>
+				<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
+				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect"
+				       type="button">
+			</div>
 
-            </form><?php
+			<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
+
+			</form><?php
 		}
 
-        function render_list_mailbox_page( $module = '', $mailboxid = '' ){
-            global $rt_mail_settings;
-            $args =  array();
-            if ( ! empty( $module ) ){
-                $args['module'] = $module;
-            }
-            if ( ! empty( $mailboxid ) ){
-                $args['id'] = $mailboxid;
-            }
-            $mailboxes = $rt_mail_settings->get_user_google_ac( $args );?>
-            <?php if ( isset( $mailboxes ) && ! empty( $mailboxes ) ){
-                foreach ( $mailboxes as $mailbox ){
-                    $mailbox->email_data = unserialize( $mailbox->email_data );
-                    $email          = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
-                    $email_type     = $mailbox->type;
-                    $imap_server    = $mailbox->imap_server;
-                    $mail_folders   = ( isset( $mailbox->email_data['mail_folders'] ) ) ? $mailbox->email_data['mail_folders'] : '';
-                    $mail_folders   = array_filter( explode( ',', $mail_folders ) );
-                    $token = $mailbox->outh_token;
+		/**
+		 * mailbox list page
+		 *
+		 * @param string $module
+		 * @param string $mailboxid
+		 */
+		function render_list_mailbox_page( $module = '', $mailboxid = '' ) {
+			global $rt_mail_settings;
+			$args = array();
+			if ( ! empty( $module ) ) {
+				$args['module'] = $module;
+			}
+			if ( ! empty( $mailboxid ) ) {
+				$args['id'] = $mailboxid;
+			}
+			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );?>
+			<?php if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
+				foreach ( $mailboxes as $mailbox ) {
+					$mailbox->email_data = unserialize( $mailbox->email_data );
+					$email               = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
+					$email_type          = $mailbox->type;
+					$imap_server         = $mailbox->imap_server;
+					$mail_folders        = ( isset( $mailbox->email_data['mail_folders'] ) ) ? $mailbox->email_data['mail_folders'] : '';
+					$mail_folders        = array_filter( explode( ',', $mail_folders ) );
+					$token               = $mailbox->outh_token;
 
-                    $all_folders = null;
-                    $login_successful = true;
-                    try {
-                        $hdZendEmail = new Rt_Zend_Mail();
-                        if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
-                            $storage     = new ImapStorage( $hdZendEmail->imap );
-                            $all_folders = $storage->getFolders();
-                        } else {
-                            $login_successful = false;
-                        }
-                    } catch ( Exception $e ) {
-                        $login_successful = false;
-                        echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
-                    }
+					$all_folders      = null;
+					$login_successful = true;
+					try {
+						$hdZendEmail = new Rt_Zend_Mail();
+						if ( $hdZendEmail->try_imap_login( $email, $token, $email_type, $imap_server ) ) {
+							$storage     = new ImapStorage( $hdZendEmail->imap );
+							$all_folders = $storage->getFolders();
+						} else {
+							$login_successful = false;
+						}
+					} catch ( Exception $e ) {
+						$login_successful = false;
+						echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
+					}
 
-                    if ( $login_successful ){
-                        // user photo
-                        if ( isset( $mailbox->email_data['picture'] ) ){
-                            $img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
-                            $personMarkup = "<img src='$img?sz=30'>";
-                        } else {
-                            $personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
-                        }
-                        ?>
-                        <div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
-                            <input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
-                            <strong>
-                                <a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a>
-                                <?php if ( isset( $mailbox->email_data['name'] ) ) { echo $mailbox->email_data['name'].'<br/>'; } ?>
-                                <a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
-                            </strong>
-                            <div class="rtmailbox-maillist-action">
-                                <?php if ( $login_successful ) { ?>
-                                    <a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_update"  data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>" data-module="<?php echo $mailbox->module; ?>" href="javascript:;"><?php echo __( 'Update' ); ?></a>
-                                <?php } else { ?>
-                                    <a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_reconfigured" data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>" data-module="<?php echo $mailbox->module; ?>" href="javascript:;"><?php echo __( 'Reconfigured' ); ?></a>
-                                <?php } ?>
-                                <a class='button remove-google-ac remove-mailbox' data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>" data-module="<?php echo $mailbox->module; ?>" href="javascript:;"><?php echo __( 'Remove A/C' ); ?></a>
-                                <img id="remove-mailbox-spinner<?php echo $mailbox->id; ?>" class="rtmailbox-spinner" src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
-                            </div>
-                            <div id="mailbox-folder-<?php echo $mailbox->id; ?>">
-                            </div>
-                        </div>
-                    <?php
-                    }
-                }
-            }else{ ?>
-                <p>No mailbox Found! Please connect mailbox with helpdesk.</p>
-            <?php }
-        }
+					if ( $login_successful ) {
+						// user photo
+						if ( isset( $mailbox->email_data['picture'] ) ) {
+							$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
+							$personMarkup = "<img src='$img?sz=30'>";
+						} else {
+							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
+						}
+						?>
+						<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
+							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
+							<strong>
+								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a>
+								<?php if ( isset( $mailbox->email_data['name'] ) ) {
+									echo $mailbox->email_data['name'] . '<br/>';
+								} ?>
+								<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
+							</strong>
+
+							<div class="rtmailbox-maillist-action">
+								<?php if ( $login_successful ) { ?>
+									<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_update"
+									   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
+									   data-module="<?php echo $mailbox->module; ?>"
+									   href="javascript:;"><?php echo __( 'Update' ); ?></a>
+								<?php } else { ?>
+									<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_reconfigured"
+									   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
+									   data-module="<?php echo $mailbox->module; ?>"
+									   href="javascript:;"><?php echo __( 'Reconfigured' ); ?></a>
+								<?php } ?>
+								<a class='button remove-google-ac remove-mailbox'
+								   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
+								   data-module="<?php echo $mailbox->module; ?>"
+								   href="javascript:;"><?php echo __( 'Remove A/C' ); ?></a>
+								<img id="remove-mailbox-spinner<?php echo $mailbox->id; ?>" class="rtmailbox-spinner"
+								     src="<?php echo admin_url() . 'images/spinner.gif'; ?>"/>
+							</div>
+							<div id="mailbox-folder-<?php echo $mailbox->id; ?>">
+							</div>
+						</div>
+					<?php
+					}
+				}
+			} else { ?>
+				<p>No mailbox Found! Please connect mailbox with helpdesk.</p>
+			<?php }
+		}
 
 		/**
 		 * Ajax method to create mailbox
 		 */
-		function rtmailbox_imap_connect_callback(){
+		function rtmailbox_imap_connect_callback() {
 
-			$result = array();
+			$result           = array();
 			$result['status'] = false;
 
 			$obj_data = array();
@@ -446,20 +502,20 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				die();
 			}
 			$obj_data = $obj_data['rtmailbox'];
-			if ( 'rtmailbox_connect_imap' == $obj_data['action'] ){
+			if ( 'rtmailbox_connect_imap' == $obj_data['action'] ) {
 				if ( 'custom' == $obj_data['provider'] ) {
 					$response = $this->rtmailbox_create_imap_server( $obj_data );
-					if ( is_array( $response ) && true == $response['status'] ){
+					if ( is_array( $response ) && true == $response['status'] ) {
 						$obj_data['provider'] = $response['server_id'];
 					} else {
 						$result['error'] = $response['error'];
-                        echo json_encode( $result );
+						echo json_encode( $result );
 						die();
 					}
 				}
 				$response = $this->rtmailbox_add_mailbox( $obj_data );
-				if ( is_array( $response ) && true == $response['status'] ){
-					$result['html'] = $response['html_imap_folder'];
+				if ( is_array( $response ) && true == $response['status'] ) {
+					$result['html']   = $response['html_imap_folder'];
 					$result['status'] = true;
 				} else {
 					$result['error'] = $response['error'];
@@ -476,26 +532,26 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function rtmailbox_create_imap_server( $obj_data ){
+		function rtmailbox_create_imap_server( $obj_data ) {
 			global $rt_imap_server_model;
 
-			$result = array();
+			$result           = array();
 			$result['status'] = false;
 
-			$incoming_enc = ( isset( $obj_data['incoming_ssl'] ) && $obj_data['incoming_ssl'] == 'enable' )? 'ssl' :'tls';
-			$outgoing_enc = ( isset( $obj_data['outgoing_ssl'] ) && $obj_data['outgoing_ssl'] == 'enable' )? 'ssl' :'tls';
+			$incoming_enc = ( isset( $obj_data['incoming_ssl'] ) && $obj_data['incoming_ssl'] == 'enable' ) ? 'ssl' : 'tls';
+			$outgoing_enc = ( isset( $obj_data['outgoing_ssl'] ) && $obj_data['outgoing_ssl'] == 'enable' ) ? 'ssl' : 'tls';
 
 			// if port empty set default
-			if ( ! isset( $obj_data['incoming_port'] ) || empty( $obj_data['incoming_port'] ) ){
-				$obj_data['incoming_port'] = ( 'ssl' == $incoming_enc ) ? $this->incoming_ssl_port : $this->incoming_tls_port ;
+			if ( ! isset( $obj_data['incoming_port'] ) || empty( $obj_data['incoming_port'] ) ) {
+				$obj_data['incoming_port'] = ( 'ssl' == $incoming_enc ) ? $this->incoming_ssl_port : $this->incoming_tls_port;
 			}
-			if ( ! isset( $obj_data['outgoing_port'] ) || empty( $obj_data['outgoing_port'] ) ){
-				$obj_data['outgoing_port'] = ( 'ssl' == $outgoing_enc ) ? $this->outgoing_ssl_port : $this->outgoing_tls_port ;
+			if ( ! isset( $obj_data['outgoing_port'] ) || empty( $obj_data['outgoing_port'] ) ) {
+				$obj_data['outgoing_port'] = ( 'ssl' == $outgoing_enc ) ? $this->outgoing_ssl_port : $this->outgoing_tls_port;
 			}
 
 			try {
 				$hdZendEmail = new Rt_Zend_Mail();
-				$ssl  = ( isset( $incoming_enc ) && ! is_null( $incoming_enc ) ) ? $incoming_enc : false;
+				$ssl         = ( isset( $incoming_enc ) && ! is_null( $incoming_enc ) ) ? $incoming_enc : false;
 				$hdZendEmail->try_imap_connect( $obj_data['incoming_server'], (int) $obj_data['incoming_port'], $ssl );
 				$args = array(
 					'server_name'          => $obj_data['provider_name'],
@@ -506,21 +562,22 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_port'   => $obj_data['outgoing_port'],
 					'outgoing_smtp_enc'    => $outgoing_enc,
 				);
-                if ( ! empty( $obj_data['serverid'] ) ){
-                    $where = array( 'id' => $obj_data['serverid'] );
-                    $server_id = $rt_imap_server_model->update_server( $args, $where );
-                } else {
-                    $server_id = $rt_imap_server_model->add_server( $args );
-                }
-				if ( ! empty( $server_id ) ){
+				if ( ! empty( $obj_data['serverid'] ) ) {
+					$where     = array( 'id' => $obj_data['serverid'] );
+					$server_id = $rt_imap_server_model->update_server( $args, $where );
+				} else {
+					$server_id = $rt_imap_server_model->add_server( $args );
+				}
+				if ( ! empty( $server_id ) ) {
 					$result['server_id'] = $server_id;
-					$result['status'] = true;
+					$result['status']    = true;
 				} else {
 					$result['error'] = 'Error: problem occurs while adding server';
 				}
-			} catch (Exception $e) {
-				$result['error'] = 'Caught exception: ' .  $e->getMessage();
+			} catch ( Exception $e ) {
+				$result['error'] = 'Caught exception: ' . $e->getMessage();
 			}
+
 			return $result;
 		}
 
@@ -531,21 +588,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 *
 		 * @return bool
 		 */
-		function rtmailbox_add_mailbox( $obj_data ){
+		function rtmailbox_add_mailbox( $obj_data ) {
 			global $rt_mail_settings;
 
-			$result = array();
+			$result           = array();
 			$result['status'] = false;
 
-			if ( ! empty( $obj_data['email'] ) && ! empty( $obj_data['password'] ) && ! empty( $obj_data['provider'] ) ){
+			if ( ! empty( $obj_data['email'] ) && ! empty( $obj_data['password'] ) && ! empty( $obj_data['provider'] ) ) {
 				$email       = $obj_data['email'];
 				$password    = $obj_data['password'];
 				$email_data  = array(
-					'email' => $email,
+					'email'        => $email,
 					'mail_folders' => 'INBOX',
 				);
-				$email_type = 'imap';
-				$module = $obj_data['module'];
+				$email_type  = 'imap';
+				$module      = $obj_data['module'];
 				$imap_server = $obj_data['provider'];
 				$hdZendEmail = new Rt_Zend_Mail();
 
@@ -553,43 +610,49 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					if ( ! $hdZendEmail->try_imap_login( $email, rtmb_encrypt_decrypt( $password ), $email_type, $imap_server ) ) {
 						$result['error'] = 'Error: login failed. Please enter correct credential or enable IMAP in your mailbox';
 					} else {
-                        if ( ! empty( $obj_data['mailboxid'] ) ){
-                            $mailboxid = $rt_mail_settings->update_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, '', '', $email_type, $imap_server, $module, $obj_data['mailboxid']);
-                        } else {
-                            $mailboxid = $rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
-                        }
+						if ( ! empty( $obj_data['mailboxid'] ) ) {
+							$mailboxid = $rt_mail_settings->update_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, '', '', $email_type, $imap_server, $module, $obj_data['mailboxid'] );
+						} else {
+							$mailboxid = $rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
+						}
 						ob_start();
 						$this->rtmailbox_mailbox_folder_ui( $module, $mailboxid );
 						$result['html_imap_folder'] = ob_get_clean();
-						$result['status'] = true;
+						$result['status']           = true;
 					}
-				} catch (Exception $e) {
-					$result['error'] = 'Caught exception: ' .  $e->getMessage();
+				} catch ( Exception $e ) {
+					$result['error'] = 'Caught exception: ' . $e->getMessage();
 				}
 			}
+
 			return $result;
 		}
 
-		function rtmailbox_mailbox_folder_ui( $module, $mailboxid = '' ){
+		/**
+		 * mailbox folder ui
+		 * @param $module
+		 * @param string $mailboxid
+		 */
+		function rtmailbox_mailbox_folder_ui( $module, $mailboxid = '' ) {
 			global $rt_mail_settings;
 
-            $args = array( 'module' => $module );
-            if( !empty( $mailboxid ) ){
-                $args['id'] = $mailboxid;
-            }
+			$args = array( 'module' => $module );
+			if ( ! empty( $mailboxid ) ) {
+				$args['id'] = $mailboxid;
+			}
 			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );
 
-			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ){
-				foreach ( $mailboxes as $mailbox ){
+			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
+				foreach ( $mailboxes as $mailbox ) {
 					$mailbox->email_data = unserialize( $mailbox->email_data );
-					$email          = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
-					$email_type     = $mailbox->type;
-					$imap_server    = $mailbox->imap_server;
-					$mail_folders   = ( isset( $mailbox->email_data['mail_folders'] ) ) ? $mailbox->email_data['mail_folders'] : '';
-					$mail_folders   = array_filter( explode( ',', $mail_folders ) );
-					$token = $mailbox->outh_token;
+					$email               = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
+					$email_type          = $mailbox->type;
+					$imap_server         = $mailbox->imap_server;
+					$mail_folders        = ( isset( $mailbox->email_data['mail_folders'] ) ) ? $mailbox->email_data['mail_folders'] : '';
+					$mail_folders        = array_filter( explode( ',', $mail_folders ) );
+					$token               = $mailbox->outh_token;
 
-					$all_folders = null;
+					$all_folders      = null;
 					$login_successful = true;
 					try {
 						$hdZendEmail = new Rt_Zend_Mail();
@@ -604,19 +667,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
 					}
 
-					if ( $login_successful ){
+					if ( $login_successful ) {
 						// user photo
-						if ( isset( $mailbox->email_data['picture'] ) ){
+						if ( isset( $mailbox->email_data['picture'] ) ) {
 							$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
 							$personMarkup = "<img src='$img?sz=30'>";
 						} else {
 							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
 						}
 						?>
-                        <h4>Update Mailbox Folders</h4>
+						<h4>Update Mailbox Folders</h4>
 						<form id="rtmailbox-imap-folder-form" method="post">
-							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
-							<input id="rtmailbox-email" name="rtmailbox[email]" value="<?php echo $email; ?>" type="hidden">
+							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>"
+							       type="hidden">
+							<input id="rtmailbox-email" name="rtmailbox[email]" value="<?php echo $email; ?>"
+							       type="hidden">
 							<?php wp_nonce_field( 'rtmailbox_folder_update' );
 							do_action( 'rt_mailbox_folder_view_before' ); ?>
 							<div class="rtmailbox-row">
@@ -625,18 +690,21 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							</div>
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Select Folder' ); ?></label>
+
 								<div class="mailbox-folder-list">
 									<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $mailbox->id ); ?>
 								</div>
 							</div>
 							<div class="rtmailbox-row">
 								<label></label>
-								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update" type="hidden">
-								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary" value="Save" type="button">
+								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update"
+								       type="hidden">
+								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary"
+								       value="Save" type="button">
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
-						<?php
+					<?php
 					}
 				}
 			}
@@ -645,11 +713,11 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * Ajax method to save mailbox folder
 		 */
-		function rtmailbox_imap_folder_save_callback(){
+		function rtmailbox_imap_folder_save_callback() {
 
 			global $rt_mail_settings;
 
-			$result = array();
+			$result           = array();
 			$result['status'] = false;
 
 			$obj_data = array();
@@ -661,10 +729,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 
 			$mail_folders = $obj_data['mail_folders'];
-			$obj_data = $obj_data['rtmailbox'];
-			$email = $obj_data['email'];
-			if ( 'rtmailbox_folder_update' == $obj_data['action'] ){
-				if ( ! is_email( $email ) ){
+			$obj_data     = $obj_data['rtmailbox'];
+			$email        = $obj_data['email'];
+			if ( 'rtmailbox_folder_update' == $obj_data['action'] ) {
+				if ( ! is_email( $email ) ) {
 					echo json_encode( 'Email not valid' );
 					die();
 				}
@@ -672,25 +740,28 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$email_data = null;
 				if ( isset( $mail_folders ) && ! empty( $mail_folders ) && is_array( $mail_folders ) && ! empty( $email_ac ) ) {
 					$email_data = maybe_unserialize( $email_ac->email_data );
-					if ( empty ( $mail_folders[ $email ]  ) ) {
+					if ( empty ( $mail_folders[ $email ] ) ) {
 						$mail_folders[ $email ] = array();
 					}
 					$email_data['mail_folders'] = implode( ',', array_filter( $mail_folders[ $email ] ) );
 					$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
-                    ob_start();
-                    $this->render_add_mailbox_page( $obj_data['module'] );
-                    $result['html'] = ob_get_clean();
-                    ob_start();
-                    $this->render_list_mailbox_page( $obj_data['module'], $email_ac->id );
-                    $result['html_list'] = ob_get_clean();
-                    $result['moduleid'] = $email_ac->id;
-					$result['status'] = true;
+					ob_start();
+					$this->render_add_mailbox_page( $obj_data['module'] );
+					$result['html'] = ob_get_clean();
+					ob_start();
+					$this->render_list_mailbox_page( $obj_data['module'], $email_ac->id );
+					$result['html_list'] = ob_get_clean();
+					$result['moduleid']  = $email_ac->id;
+					$result['status']    = true;
 				}
 			}
 			echo json_encode( $result );
 			die();
 		}
 
+		/**
+		 * mailbox update ui
+		 */
         function rtmailbox_mailbox_update_callback(){
             $result = array();
             $result['status'] = false;
