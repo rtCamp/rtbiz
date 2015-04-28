@@ -164,9 +164,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$rt_mail_settings           = new Rt_Mail_Settings();
 		}
 
-        /**
-         * Default Imap server added
-         */
+		/**
+		 * Default Imap server added
+		 */
 		function default_imap_servers() {
 			global $rt_imap_server_model;
 			$default_imap_servers = array(
@@ -411,8 +411,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			if ( ! empty( $mailboxid ) ) {
 				$args['id'] = $mailboxid;
 			}
-			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );?>
-			<?php if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
+			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );
+			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
 				foreach ( $mailboxes as $mailbox ) {
 					$mailbox->email_data = unserialize( $mailbox->email_data );
 					$email               = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
@@ -444,8 +444,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							$personMarkup = "<img src='$img?sz=30'>";
 						} else {
 							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
-						}
-						?>
+						} ?>
 						<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
 							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
 							<strong>
@@ -482,8 +481,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					}
 				}
 			} else { ?>
-				<p>No mailbox Found! Please connect mailbox with helpdesk.</p>
-			<?php }
+				<p>No mailbox Found! Please connect mailbox with helpdesk.</p> <?php
+			}
 		}
 
 		/**
@@ -762,24 +761,24 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * mailbox update ui
 		 */
-        function rtmailbox_mailbox_update_callback(){
-            $result = array();
-            $result['status'] = false;
-            $dataobj = $_POST;
-            if ( 'rtmailbox_reconfigured' == $dataobj['subaction'] ) {
-                ob_start();
-                $this->render_add_mailbox_page( $_POST['module'], $_POST['mailboxid']);
-                $result['html'] = ob_get_clean();
-                $result['status'] = true;
-            } elseif ( 'rtmailbox_update' == $dataobj['subaction'] ) {
-                ob_start();
-                $this->rtmailbox_mailbox_folder_ui( $_POST['module'], $_POST['mailboxid'] );
-                $result['html'] = ob_get_clean();
-                $result['status'] = true;
-            }
-            echo json_encode( $result );
-            die();
-        }
+		function rtmailbox_mailbox_update_callback() {
+			$result           = array();
+			$result['status'] = false;
+			$dataobj          = $_POST;
+			if ( 'rtmailbox_reconfigured' == $dataobj['subaction'] ) {
+				ob_start();
+				$this->render_add_mailbox_page( $_POST['module'], $_POST['mailboxid'] );
+				$result['html']   = ob_get_clean();
+				$result['status'] = true;
+			} elseif ( 'rtmailbox_update' == $dataobj['subaction'] ) {
+				ob_start();
+				$this->rtmailbox_mailbox_folder_ui( $_POST['module'], $_POST['mailboxid'] );
+				$result['html']   = ob_get_clean();
+				$result['status'] = true;
+			}
+			echo json_encode( $result );
+			die();
+		}
 
     }
 }
