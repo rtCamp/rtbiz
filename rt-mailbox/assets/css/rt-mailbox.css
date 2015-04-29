@@ -29,6 +29,15 @@
     width: 25%;
 }
 
+.rtmailbox-maillist-action{
+    display: inline-block;
+    float: right;
+}
+
+.rtmailbox-spinner {
+    display: none;
+}
+
 /*
 .nav-tab-wrapper{
 	margin-top: 10px;
@@ -127,10 +136,6 @@ form#frm-replay-by-email div.form-body{
 	padding: 5px;
 }
 
-.rtmailbox-maillist-action{
-	display: inline-block;
-	float: right;
-}
 
 .rtmailbox-severtype-container{
 	margin: 10px 0px;
