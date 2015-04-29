@@ -246,8 +246,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function render_mailbox_setting_page( $module ) {
 			?>
 			<div id="rtmailbox-page" class="wrap">
-				<h4>Configured Mailbox:</h4>
-
 				<div id="mailbox-list">
 					<?php $this->render_list_mailbox_page( $module ); ?>
 				</div>
@@ -280,8 +278,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				} else {
 					echo '<p>Mailbox not found.</p>';
 				}
-			} else { ?>
-				<h4>Add New Mailbox</h4><?php
+			} else {
+				$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
+				if ( !empty( $mailbox ) ){ ?>
+					<h4>Add Another Mailbox</h4><?php
+				} else { ?>
+					<h4>Add New Mailbox</h4><?php
+				}
 			} ?>
 			<form id="rtmailbox-imap-connect-form" method="post">
 			<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>" type="hidden">
@@ -482,8 +485,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					</div>
 				<?php
 				}
-			} else { ?>
-				<p>No mailbox Found! Please connect mailbox with helpdesk.</p> <?php
 			}
 		}
 
