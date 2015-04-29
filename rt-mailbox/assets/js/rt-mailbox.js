@@ -50,30 +50,30 @@ jQuery( document ).ready(function(){
             jQuery(document).on('click', '#rtmailbox-connect', function( event ) {
 
                 if( rtmailbox.IsEmptyCheck( jQuery('#rtmailbox-email').val() ) ){
-                    alert('please enter email address.')
+                    alert('please enter email address.');
                     return;
                 }
 
                 if( ! rtmailbox.IsEmail( jQuery('#rtmailbox-email').val() ) ){
-                    alert('please enter valid email address.')
+                    alert('please enter valid email address.');
                     return;
                 }
 
                 if( rtmailbox.IsEmptyCheck( jQuery('#rtmailbox-password').val() ) ){
-                    alert('please enter password.')
+                    alert('please enter password.');
                     return;
                 }
 
                 if( jQuery('.rtmailbox_provider').val() === 'custom' ){
                     if( rtmailbox.IsEmptyCheck( jQuery('#rtmailbox-provider_name').val() ) || rtmailbox.IsEmptyCheck( jQuery('#rtmailbox-incoming_server').val() ) || rtmailbox.IsEmptyCheck( jQuery('#rtmailbox-outgoing_server').val() ) ){
-                        alert('please enter server required fields.')
+                        alert('please enter server required fields.');
                         return;
                     }
                 }
 
                 jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
-                requestArray.data =  jQuery( '#rtmailbox-wrap' ).find("select,textarea, input").serialize();
+                requestArray.data =  jQuery( '#rtmailbox-wrap' ).find('select,textarea, input').serialize();
                 requestArray.action = 'rtmailbox_imap_connect';
 
                 jQuery.ajax({
@@ -88,7 +88,7 @@ jQuery( document ).ready(function(){
                         if (data.status) {
                             jQuery( '#rtmailbox-wrap' ).html( data.html);
                             jQuery( '#mailbox-' + data.moduleid ).remove();
-                            if ( jQuery('#mailbox-list>.rtmailbox-row').length == 0 ){
+                            if ( jQuery('#mailbox-list>.rtmailbox-row').length === 0 ){
                                 jQuery( '#mailbox-list' ).html( data.html_list);
                             }else{
                                 jQuery( '#mailbox-list' ).append( data.html_list);
@@ -111,13 +111,13 @@ jQuery( document ).ready(function(){
             jQuery(document).on('click', '#rtmailbox-save', function( event ) {
 
                 if( jQuery('.mailbox-folder-list input:checked').length <= 0 ){
-                    alert('Please select Folder for mailbox reading.')
-                    return
+                    alert('Please select Folder for mailbox reading.');
+                    return;
                 }
 
                 jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
-                requestArray.data =  jQuery( '#rtmailbox-wrap' ).find("select,textarea, input").serialize();
+                requestArray.data =  jQuery( '#rtmailbox-wrap' ).find('select,textarea, input').serialize();
                 requestArray.action = 'rtmailbox_folder_update';
 
                 jQuery.ajax({
@@ -201,7 +201,7 @@ jQuery( document ).ready(function(){
                         success: function (data) {
                             if (data.status) {
                                 jQuery('#mailbox-' + data.moduleid).remove();
-                                if ( jQuery('#mailbox-list>.rtmailbox-row').length == 0 ){
+                                if ( jQuery('#mailbox-list>.rtmailbox-row').length === 0 ){
                                     jQuery('#mailbox-list').html('<p>No mailbox Found! Please connect mailbox with helpdesk.</p>');
                                 }
                             } else {
