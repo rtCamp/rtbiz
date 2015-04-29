@@ -1,32 +1,52 @@
-.rtmailbox-row{
+.clear{
+    clear: both;
+}
+
+#rtmailbox-page #mailbox-list>div{
+    background-color: #F5F5DC;
+    padding: 10px;
+}
+
+#rtmailbox-page #rtmailbox-wrap{
+    background-color: #DCDCDC;
+    padding: 10px;
+}
+
+#rtmailbox-page .rtmailbox-row{
     margin-bottom: 10px;
 }
-.rtmailbox-row>label{
+#rtmailbox-page .rtmailbox-row>label{
     display: inline-block;
     width: 25%;
     vertical-align:top;
 }
 
 /* provider list css */
-.rtmailbox-row ul.rtmailbox_provider_list{
+#rtmailbox-page .rtmailbox-row ul{
     display: inline-block;
 }
 
-.rtmailbox-row ul.rtmailbox_provider_list li{
-    display: inline-block;
+#rtmailbox-page .rtmailbox-row ul.rtmailbox_provider_list li{
     margin-left: 10px;
+    float: left;
 }
 
-.rtmailbox-row div.mailbox-folder-list{
-    display: inline-block;
+#rtmailbox-page div.mailbox-folder-list{
+    float: right;
+    width: 75%;
 }
-.rtmailbox-row div.mailbox-folder-list>ul{
+
+#rtmailbox-page .rtmailbox-row div.mailbox-folder-list>ul{
     margin: 0px;
 }
 
-.rtmailbox-row div.mailbox-folder-list>ul ul{
+#rtmailbox-page .rtmailbox-row div.mailbox-folder-list>ul ul{
     display: inline-block;
-    width: 25%;
+    width: 50%;
+}
+
+#rtmailbox-page .rtmailbox-row div.mailbox-folder-list ul li {
+    padding-bottom: 5px;
 }
 
 .rtmailbox-maillist-action{
@@ -37,6 +57,7 @@
 .rtmailbox-spinner {
     display: none;
 }
+
 
 /*
 .nav-tab-wrapper{
