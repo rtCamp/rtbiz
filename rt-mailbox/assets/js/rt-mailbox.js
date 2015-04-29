@@ -8,6 +8,7 @@ jQuery( document ).ready(function(){
             rtmailbox.mailbox_update_ajax();
             rtmailbox.mailbox_remove_ajax();
             rtmailbox.mailbox_cancel_ajax();
+            rtmailbox.mailbox_add_ajax();
         },
         default_ui:function(){
             // hide IMAP form by default
@@ -149,11 +150,17 @@ jQuery( document ).ready(function(){
             jQuery(document).on('click', '#rtmailbox-update-mailbox', function( event ) {
                 jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
-                requestArray.mailboxid =  jQuery(this).data('mailboxid');
-                requestArray.email =  jQuery(this).data('email');
-                requestArray.module =  jQuery(this).data('module');
-                requestArray.subaction =  jQuery(this).data('action');
-                requestArray.action = 'rtmailbox_mailbox_update';
+
+                if ( 'rtmailbox_folder_update' == jQuery('#rtmailbox-action').val() ){
+                    requestArray.module =  jQuery(this).data('module');
+                    requestArray.action = 'rtmailbox_mailbox_cancel';
+                }else{
+                    requestArray.mailboxid =  jQuery(this).data('mailboxid');
+                    requestArray.email =  jQuery(this).data('email');
+                    requestArray.module =  jQuery(this).data('module');
+                    requestArray.subaction =  jQuery(this).data('action');
+                    requestArray.action = 'rtmailbox_mailbox_update';
+                }
 
                 jQuery.ajax({
                     url: ajaxurl,
@@ -224,6 +231,38 @@ jQuery( document ).ready(function(){
                 var requestArray = {};
                 requestArray.module =  jQuery('#rtmailbox-module').val();
                 requestArray.action = 'rtmailbox_mailbox_cancel';
+
+                jQuery.ajax({
+                    url: ajaxurl,
+                    dataType: 'json',
+                    type: 'post',
+                    data: requestArray,
+                    beforeSend: function(){
+                        //alert('before send');
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            jQuery( '#rtmailbox-wrap' ).html( data.html);
+                            rtmailbox.default_ui();
+                        }else{
+                            alert( data.error );
+                        }
+                        jQuery( 'img#mailbox-spinner').remove();
+                    },
+                    error: function(){
+                        alert( 'Something goes wrong. Please try again.' );
+                        jQuery( 'img#mailbox-spinner').remove();
+                    }
+                });
+                event.preventDefault();
+            });
+        },
+        mailbox_add_ajax:function(){
+            jQuery(document).on('click', '#rtmailbox-add', function( event ) {
+                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                var requestArray = {};
+                requestArray.module =  jQuery( this ).data('module');
+                requestArray.action = 'rtmailbox_mailbox_add';
 
                 jQuery.ajax({
                     url: ajaxurl,
