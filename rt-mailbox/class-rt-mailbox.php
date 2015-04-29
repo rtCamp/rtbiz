@@ -457,7 +457,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
 						$personMarkup = "<img src='$img?sz=30'>";
 					} else {
-						$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
+						$personMarkup = get_avatar( $email, 30 );
 					} ?>
 					<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
 						<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
@@ -717,7 +717,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
 							$personMarkup = "<img src='$img?sz=30'>";
 						} else {
-							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
+							$personMarkup = get_avatar( $email, 30 );
 						}
 						?>
 						<form id="rtmailbox-imap-folder-form" method="post">
