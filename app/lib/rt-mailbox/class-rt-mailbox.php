@@ -800,7 +800,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
 					ob_start();
 					//$this->render_add_mailbox_page( $obj_data['module'] );
-					echo '<input id="rtmailbox-Cancel" name="rtmailbox[Cancel]" class="button" value="Cancel" type="button">';
+					echo '<input id="rtmailbox-add" data-module="' . $obj_data['module'] . '" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button">';
 					$result['html'] = ob_get_clean();
 					$result['status']    = true;
 				}
