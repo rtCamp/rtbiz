@@ -291,7 +291,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function plugin_activation_redirect() {
 			// Add the transient to redirect
-			set_transient( '_rtbiz_activation_redirect', true, 30 );
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+				set_transient( '_rthd_activation_redirect', true, 30 );
+			} else{
+				set_transient( '_rtbiz_activation_redirect', true, 30 );
+			}
 		}
 
 		function init_rt_mailbox(){
