@@ -251,7 +251,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<?php $this->render_list_mailbox_page( $module ); ?>
 				</div>
 				<div id="rtmailbox-wrap">
-					<?php $this->render_add_mailbox_page( $module ); ?>
+					<?php global $rt_mail_settings;
+					$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
+					if ( !empty( $mailbox ) ){ ?>
+						<input id="rtmailbox-add" data-module="<?php echo $module; ?>" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button"><?php
+					} else {
+						$this->render_add_mailbox_page( $module );
+					} ?>
 				</div>
 			</div>
 		<?php
