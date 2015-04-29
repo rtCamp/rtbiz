@@ -222,8 +222,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * Register css & js for rt-mailbox
 		 */
 		function enqueue_styles_scripts(){
-			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'assets/css/rt-mailbox.css', array() );
-			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', array( 'jquery' ) , '', true );
+			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'assets/css/rt-mailbox.css', array(), time() );
+			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', array( 'jquery' ) , time(), true );
 			wp_localize_script( 'mailbox-setting-js', 'adminurl', admin_url() );
 		}
 
@@ -397,7 +397,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				<label></label>
 				<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
 				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button" value="Connect" type="button">
-				<input id="rtmailbox-Cancel" name="rtmailbox[Cancel]" class="button" value="Cancel" type="button">
 			</div>
 
 			<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
