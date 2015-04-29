@@ -317,15 +317,27 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function delete_user_google_ac( $email, $module, $user_id = - 1 ) {
+		public function delete_user_google_ac( $email, $module, $mailboxid =  '', $user_id = ''   ) {
 			if ( $user_id == - 1 ) {
 				$user_id = get_current_user_id();
 			}
+			if ( empty( $email ) && empty( $mailboxid ) ){
+				return false;
+			}
+			$args = array(
+				'module' => $module,
+			);
+
+			if ( ! empty( $email ) ){
+				$args['email'] = $email;
+			}
+
+			if ( ! empty( $mailboxid ) ){
+				$args['id'] = $mailboxid;
+			}
+
 			global $rt_mail_accounts_model;
-			$result = $rt_mail_accounts_model->remove_mail_account( array(
-				                                                        'email' => $email,
-																		'module' => $module,
-			                                                        ) );
+			$result = $rt_mail_accounts_model->remove_mail_account( $args );
 			$this->update_gmail_ac_count();
 			return $result;
 		}

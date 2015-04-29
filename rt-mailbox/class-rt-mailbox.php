@@ -214,6 +214,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			add_action( 'wp_ajax_rtmailbox_imap_connect', array( $this, 'rtmailbox_imap_connect_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_folder_update', array( $this, 'rtmailbox_imap_folder_save_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_update', array( $this, 'rtmailbox_mailbox_update_callback' ) );
+			add_action( 'wp_ajax_rtmailbox_mailbox_remove', array( $this, 'rtmailbox_mailbox_remove_callback' ) );
 		}
 
 		/**
@@ -265,7 +266,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			$default_servers          = $rt_imap_server_model->get_all_servers();
 			$rtmailbox_default_server = wp_list_pluck( $this->default_imap_servers, 'server_name' );
-			if ( ! empty( $mailboxid ) ) {
+			if ( ! empty( $mailboxid ) ) { ?>
+				<h4>Change Mailbox Configuration</h4><?php
 				$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module, 'id' => $mailboxid ) );
 				if ( ! empty( $mailbox ) ) {
 					$mailbox = $mailbox[0];
@@ -273,8 +275,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					if ( ! empty( $server ) ) {
 						$server = $server[0];
 					}
-				} ?>
-				<h4>Change Mailbox Configuration</h4><?php
+				} else {
+					echo '<p>Mailbox not found.</p>';
+				}
 			} else { ?>
 				<h4>Add New Mailbox</h4><?php
 			} ?>
@@ -437,48 +440,46 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						echo '<p class="description">' . esc_html( $e->getMessage() ) . '</p>';
 					}
 
-					if ( $login_successful ) {
-						// user photo
-						if ( isset( $mailbox->email_data['picture'] ) ) {
-							$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
-							$personMarkup = "<img src='$img?sz=30'>";
-						} else {
-							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
-						} ?>
-						<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
-							<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
-							<strong>
-								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a><?php
-								if ( isset( $mailbox->email_data['name'] ) ) {
-									echo $mailbox->email_data['name'] . '<br/>';
-								} ?>
-								<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
-							</strong>
+					// user photo
+					if ( isset( $mailbox->email_data['picture'] ) ) {
+						$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
+						$personMarkup = "<img src='$img?sz=30'>";
+					} else {
+						$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
+					} ?>
+					<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
+						<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
+						<strong>
+							<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a><?php
+							if ( isset( $mailbox->email_data['name'] ) ) {
+								echo $mailbox->email_data['name'] . '<br/>';
+							} ?>
+							<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
+						</strong>
 
-							<div class="rtmailbox-maillist-action">
-								<?php if ( $login_successful ) { ?>
-									<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_update"
-									   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
-									   data-module="<?php echo $mailbox->module; ?>"
-									   href="javascript:;"><?php echo __( 'Update' ); ?></a>
-								<?php } else { ?>
-									<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_reconfigured"
-									   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
-									   data-module="<?php echo $mailbox->module; ?>"
-									   href="javascript:;"><?php echo __( 'Reconfigured' ); ?></a>
-								<?php } ?>
-								<a class='button remove-google-ac remove-mailbox'
+						<div class="rtmailbox-maillist-action">
+							<?php if ( $login_successful ) { ?>
+								<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_update"
 								   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
 								   data-module="<?php echo $mailbox->module; ?>"
-								   href="javascript:;"><?php echo __( 'Remove A/C' ); ?></a>
-								<img id="remove-mailbox-spinner<?php echo $mailbox->id; ?>" class="rtmailbox-spinner"
-								     src="<?php echo admin_url() . 'images/spinner.gif'; ?>"/>
-							</div>
-							<div id="mailbox-folder-<?php echo $mailbox->id; ?>">
-							</div>
+								   href="javascript:;"><?php echo __( 'Update' ); ?></a>
+							<?php } else { ?>
+								<a id="rtmailbox-update-mailbox" class="button" data-action="rtmailbox_reconfigured"
+								   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
+								   data-module="<?php echo $mailbox->module; ?>"
+								   href="javascript:;"><?php echo __( 'Reconfigured' ); ?></a>
+							<?php } ?>
+							<a class='button remove-google-ac remove-mailbox'
+							   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
+							   data-module="<?php echo $mailbox->module; ?>"
+							   href="javascript:;"><?php echo __( 'Remove' ); ?></a>
+							<img id="remove-mailbox-spinner<?php echo $mailbox->id; ?>" class="rtmailbox-spinner"
+							     src="<?php echo admin_url() . 'images/spinner.gif'; ?>"/>
 						</div>
-					<?php
-					}
+						<div id="mailbox-folder-<?php echo $mailbox->id; ?>">
+						</div>
+					</div>
+				<?php
 				}
 			} else { ?>
 				<p>No mailbox Found! Please connect mailbox with helpdesk.</p> <?php
@@ -498,9 +499,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			if ( ! wp_verify_nonce( $obj_data['_wpnonce'], 'rtmailbox_connect_imap' ) ) {
 				$result['error'] = 'Security check false';
+				echo json_encode( $result );
 				die();
 			}
 			$obj_data = $obj_data['rtmailbox'];
+
+			if ( empty( $obj_data['email'] ) || empty( $obj_data['password'] ) || empty( $obj_data['provider'] ) ) {
+				$result['error'] = 'Error: Required mailbox field missing';
+				echo json_encode( $result );
+				die();
+			}
+
 			if ( 'rtmailbox_connect_imap' == $obj_data['action'] ) {
 				if ( 'custom' == $obj_data['provider'] ) {
 					$response = $this->rtmailbox_create_imap_server( $obj_data );
@@ -515,6 +524,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$response = $this->rtmailbox_add_mailbox( $obj_data );
 				if ( is_array( $response ) && true == $response['status'] ) {
 					$result['html']   = $response['html_imap_folder'];
+					$result['html_list']   = $response['html_list'];
+					$result['moduleid']   = $response['moduleid'];
 					$result['status'] = true;
 				} else {
 					$result['error'] = $response['error'];
@@ -536,6 +547,11 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			$result           = array();
 			$result['status'] = false;
+
+			if ( empty( $obj_data['provider_name'] ) || empty( $obj_data['incoming_server'] ) || empty( $obj_data['outgoing_server'] ) ) {
+				$result['error'] = 'Error: Required server field missing.';
+				return $result;
+			}
 
 			$incoming_enc = ( isset( $obj_data['incoming_ssl'] ) && $obj_data['incoming_ssl'] == 'enable' ) ? 'ssl' : 'tls';
 			$outgoing_enc = ( isset( $obj_data['outgoing_ssl'] ) && $obj_data['outgoing_ssl'] == 'enable' ) ? 'ssl' : 'tls';
@@ -564,6 +580,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				if ( ! empty( $obj_data['serverid'] ) ) {
 					$where     = array( 'id' => $obj_data['serverid'] );
 					$server_id = $rt_imap_server_model->update_server( $args, $where );
+					if ( $server_id ){
+						$server_id = $obj_data['serverid'];
+					}
 				} else {
 					$server_id = $rt_imap_server_model->add_server( $args );
 				}
@@ -571,7 +590,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$result['server_id'] = $server_id;
 					$result['status']    = true;
 				} else {
-					$result['error'] = 'Error: problem occurs while adding server';
+					$result['error'] = 'Error: problem occurs while adding/updating server';
 				}
 			} catch ( Exception $e ) {
 				$result['error'] = 'Caught exception: ' . $e->getMessage();
@@ -611,17 +630,35 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					} else {
 						if ( ! empty( $obj_data['mailboxid'] ) ) {
 							$mailboxid = $rt_mail_settings->update_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, '', '', $email_type, $imap_server, $module, $obj_data['mailboxid'] );
+							if ( $mailboxid ){
+								$mailboxid = $obj_data['mailboxid'];
+							}
 						} else {
 							$mailboxid = $rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
 						}
-						ob_start();
-						$this->rtmailbox_mailbox_folder_ui( $module, $mailboxid );
-						$result['html_imap_folder'] = ob_get_clean();
-						$result['status']           = true;
+						if ( ! empty( $mailboxid ) ){
+							ob_start();
+							$this->rtmailbox_mailbox_folder_ui( $module, $mailboxid );
+							$result['html_imap_folder'] = ob_get_clean();
+							ob_start();
+							$this->render_list_mailbox_page( $module, $mailboxid );
+							$result['html_list'] = ob_get_clean();
+							$result['moduleid']  = $mailboxid;
+							$result['status']           = true;
+						}else{
+							if ( ! empty( $obj_data['mailboxid'] ) ) {
+								$result['error'] = 'Error: Mailbox configured not updated';
+							}else{
+								$result['error'] = 'Error: Mailbox not configured';
+							}
+						}
+
 					}
 				} catch ( Exception $e ) {
 					$result['error'] = 'Caught exception: ' . $e->getMessage();
 				}
+			} else {
+				$result['error'] = 'Error: Required mailbox field missing.';
 			}
 
 			return $result;
@@ -640,7 +677,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$args['id'] = $mailboxid;
 			}
 			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );
-
+			?> <h4>Update Mailbox Folders</h4> <?php
 			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
 				foreach ( $mailboxes as $mailbox ) {
 					$mailbox->email_data = unserialize( $mailbox->email_data );
@@ -675,7 +712,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							$personMarkup = get_avatar( 'dipesh.kakadiya111@gmail.com', 30 );
 						}
 						?>
-						<h4>Update Mailbox Folders</h4>
 						<form id="rtmailbox-imap-folder-form" method="post">
 							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>"
 							       type="hidden">
@@ -706,6 +742,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<?php
 					}
 				}
+			}else{
+				echo '<p>Mailbox not found.</p>';
 			}
 		}
 
@@ -732,10 +770,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$email        = $obj_data['email'];
 			if ( 'rtmailbox_folder_update' == $obj_data['action'] ) {
 				if ( ! is_email( $email ) ) {
-					echo json_encode( 'Email not valid' );
+					$result['error'] = 'Error: Email not valid';
+					echo json_encode( $result );
 					die();
 				}
 				$email_ac   = $rt_mail_settings->get_email_acc( $email, $obj_data['module'] );
+				if( empty( $email_ac ) ){
+					$result['error'] = 'Error: Mailbox not found';
+					echo json_encode( $result );
+					die();
+				}
+
 				$email_data = null;
 				if ( isset( $mail_folders ) && ! empty( $mail_folders ) && is_array( $mail_folders ) && ! empty( $email_ac ) ) {
 					$email_data = maybe_unserialize( $email_ac->email_data );
@@ -747,10 +792,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					ob_start();
 					$this->render_add_mailbox_page( $obj_data['module'] );
 					$result['html'] = ob_get_clean();
-					ob_start();
-					$this->render_list_mailbox_page( $obj_data['module'], $email_ac->id );
-					$result['html_list'] = ob_get_clean();
-					$result['moduleid']  = $email_ac->id;
 					$result['status']    = true;
 				}
 			}
@@ -765,16 +806,44 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$result           = array();
 			$result['status'] = false;
 			$dataobj          = $_POST;
-			if ( 'rtmailbox_reconfigured' == $dataobj['subaction'] ) {
-				ob_start();
-				$this->render_add_mailbox_page( $_POST['module'], $_POST['mailboxid'] );
-				$result['html']   = ob_get_clean();
-				$result['status'] = true;
-			} elseif ( 'rtmailbox_update' == $dataobj['subaction'] ) {
-				ob_start();
-				$this->rtmailbox_mailbox_folder_ui( $_POST['module'], $_POST['mailboxid'] );
-				$result['html']   = ob_get_clean();
-				$result['status'] = true;
+			if ( ! empty( $dataobj['email'] ) && is_email( $dataobj['email'] ) && ! empty( $dataobj['module'] )  && ! empty( $dataobj['mailboxid'] ) ) {
+				if ( 'rtmailbox_reconfigured' == $dataobj['subaction'] ) {
+					ob_start();
+					$this->render_add_mailbox_page( $_POST['module'], $_POST['mailboxid'] );
+					$result['html']   = ob_get_clean();
+					$result['status'] = true;
+				} elseif ( 'rtmailbox_update' == $dataobj['subaction'] ) {
+					ob_start();
+					$this->rtmailbox_mailbox_folder_ui( $_POST['module'], $_POST['mailboxid'] );
+					$result['html']   = ob_get_clean();
+					$result['status'] = true;
+				}
+			}else{
+				$result['error'] = 'Error: Required field missing.';
+			}
+
+			echo json_encode( $result );
+			die();
+		}
+
+		/**
+		 * remove mailbox
+		 */
+		function rtmailbox_mailbox_remove_callback(){
+			$result           = array();
+			$result['status'] = false;
+			$dataobj          = $_POST;
+			if ( ! empty( $dataobj['email'] ) && is_email( $dataobj['email'] ) && ! empty( $dataobj['module'] )  && ! empty( $dataobj['mailboxid'] ) ) {
+				global $rt_mail_crons, $rt_mail_settings;
+				$status = $rt_mail_settings->delete_user_google_ac( $dataobj['email'], $dataobj['module'], $dataobj['mailboxid'] );
+				if ( $status ) {
+					$result['status'] = true;
+					$result['moduleid'] = $dataobj['mailboxid'];
+				} else {
+					$result['error'] = 'Error: Mailbox not deleted.';
+				}
+			} else {
+				$result['error'] = 'Error: Required field missing.';
 			}
 			echo json_encode( $result );
 			die();

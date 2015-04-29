@@ -6,6 +6,7 @@ jQuery( document ).ready(function(){
             rtmailbox.imap_connect_ajax();
             rtmailbox.imap_folder_ajax();
             rtmailbox.mailbox_update_ajax();
+            rtmailbox.mailbox_remove_ajax();
         },
         default_ui:function(){
             // hide IMAP form by default
@@ -61,6 +62,12 @@ jQuery( document ).ready(function(){
                     success: function(data) {
                         if (data.status) {
                             jQuery( '#rtmailbox-wrap' ).html( data.html);
+                            jQuery( '#mailbox-' + data.moduleid ).remove();
+                            if ( jQuery('#mailbox-list>.rtmailbox-row').length == 0 ){
+                                jQuery( '#mailbox-list' ).html( data.html_list);
+                            }else{
+                                jQuery( '#mailbox-list' ).append( data.html_list);
+                            }
                         }else{
                             alert( data.error );
                         }
@@ -90,8 +97,6 @@ jQuery( document ).ready(function(){
                     success: function(data) {
                         if (data.status) {
                             jQuery( '#rtmailbox-wrap' ).html( data.html);
-                            jQuery( '#mailbox-' + data.moduleid ).remove();
-                            jQuery( '#mailbox-list' ).html( data.html_list);
                             rtmailbox.default_ui();
                         }else{
                             alert( data.error );
@@ -134,6 +139,41 @@ jQuery( document ).ready(function(){
                     }
                 });
                 event.preventDefault();
+            });
+        },
+        mailbox_remove_ajax : function(){
+            jQuery(document).on('click', '.remove-mailbox', function( event ) {
+                if ( confirm( 'Are you sure you want to remove this mailbox ?' ) ) {
+                    var requestArray = {};
+                    requestArray.mailboxid = jQuery(this).data('mailboxid');
+                    requestArray.email = jQuery(this).data('email');
+                    requestArray.module = jQuery(this).data('module');
+                    requestArray.action = 'rtmailbox_mailbox_remove';
+
+                    jQuery.ajax({
+                        url: ajaxurl,
+                        dataType: 'json',
+                        type: 'post',
+                        data: requestArray,
+                        beforeSend: function () {
+                            //alert('before send');
+                        },
+                        success: function (data) {
+                            if (data.status) {
+                                jQuery('#mailbox-' + data.moduleid).remove();
+                                if ( jQuery('#mailbox-list>.rtmailbox-row').length == 0 ){
+                                    jQuery('#mailbox-list').html('<p>No mailbox Found! Please connect mailbox with helpdesk.</p>');
+                                }
+                            } else {
+                                alert(data.error);
+                            }
+                        },
+                        error: function () {
+                            alert('Something goes wrong. Please try again.');
+                        }
+                    });
+                    event.preventDefault();
+                }
             });
         }
     };
