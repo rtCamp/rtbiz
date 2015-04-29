@@ -215,6 +215,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			add_action( 'wp_ajax_rtmailbox_folder_update', array( $this, 'rtmailbox_imap_folder_save_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_update', array( $this, 'rtmailbox_mailbox_update_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_remove', array( $this, 'rtmailbox_mailbox_remove_callback' ) );
+			add_action( 'wp_ajax_rtmailbox_mailbox_cancel', array( $this, 'rtmailbox_mailbox_cancle_callback' ) );
 		}
 
 		/**
@@ -244,13 +245,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 */
 		function render_mailbox_setting_page( $module ) {
 			?>
-			<div class="wrap">
+			<div id="rtmailbox-page" class="wrap">
 				<h4>Configured Mailbox:</h4>
 
 				<div id="mailbox-list">
 					<?php $this->render_list_mailbox_page( $module ); ?>
 				</div>
-				<div id="rtmailbox-wrap" class="wrap">
+				<div id="rtmailbox-wrap">
 					<?php $this->render_add_mailbox_page( $module ); ?>
 				</div>
 			</div>
@@ -299,16 +300,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			do_action( 'rt_mailbox_randed_view_before' ); ?>
 
 			<div class="rtmailbox-row">
-				<label><?php _e( 'Account Type: IMAP' ); ?></label>
+				<label><?php _e( 'Account Type:' ); ?></label>
+				<spam><?php _e( 'IMAP' ); ?></spam>
 			</div>
 			<div class="rtmailbox-row">
-				<label for="rtmailbox-email"><?php _e( 'Email' ); ?> </label>
+				<label for="rtmailbox-email"><?php _e( 'Email (*)' ); ?> </label>
 				<?php ?>
 				<input autocomplete="off" id="rtmailbox-email" name="rtmailbox[email]" placeholder="Email"
 				       value="<?php echo ! empty( $mailbox->email ) ? $mailbox->email : '';?>" type="text">
 			</div>
 			<div class="rtmailbox-row">
-				<label for="rtmailbox-password"><?php _e( 'Password' ); ?> </label>
+				<label for="rtmailbox-password"><?php _e( 'Password (*)' ); ?> </label>
 				<input autocomplete="off" id="rtmailbox-password" name="rtmailbox[password]" placeholder="Password"
 				       value="" type="password">
 			</div>
@@ -353,7 +355,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				</div>
 
 				<div class="rtmailbox-row">
-					<label for="rtmailbox-incoming_server"><?php _e( 'Incoming Server' ); ?></label>
+					<label for="rtmailbox-incoming_server"><?php _e( 'Incoming Server (*)' ); ?></label>
 					<input autocomplete="off" id="rtmailbox-incoming_server" name="rtmailbox[incoming_server]"
 					       placeholder="imap.example.com"
 					       value="<?php echo ( ! empty( $server->incoming_imap_server ) && 'custom' == $provider ) ? $server->incoming_imap_server : '';?>"
@@ -371,7 +373,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				</div>
 
 				<div class="rtmailbox-row">
-					<label for="rtmailbox-outgoing_server"><?php _e( 'Outgoing Server' ); ?></label>
+					<label for="rtmailbox-outgoing_server"><?php _e( 'Outgoing Server (*)' ); ?></label>
 					<input autocomplete="off" id="rtmailbox-outgoing_server" name="rtmailbox[outgoing_server]"
 					       placeholder="smtp.example.com"
 					       value="<?php echo ! empty( $server->outgoing_smtp_server ) && 'custom' == $provider ? $server->outgoing_smtp_server : '';?>"
@@ -391,8 +393,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			<div class="rtmailbox-row">
 				<label></label>
 				<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
-				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button button-primary" value="Connect"
-				       type="button">
+				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button" value="Connect" type="button">
+				<input id="rtmailbox-Cancel" name="rtmailbox[Cancel]" class="button" value="Cancel" type="button">
 			</div>
 
 			<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
@@ -470,12 +472,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 								   data-module="<?php echo $mailbox->module; ?>"
 								   href="javascript:;"><?php echo __( 'Reconfigured' ); ?></a>
 							<?php } ?>
-							<a class='button remove-google-ac remove-mailbox'
+							<a class='button remove-mailbox'
 							   data-mailboxid="<?php echo $mailbox->id; ?>" data-email="<?php echo $email; ?>"
 							   data-module="<?php echo $mailbox->module; ?>"
 							   href="javascript:;"><?php echo __( 'Remove' ); ?></a>
-							<img id="remove-mailbox-spinner<?php echo $mailbox->id; ?>" class="rtmailbox-spinner"
-							     src="<?php echo admin_url() . 'images/spinner.gif'; ?>"/>
 						</div>
 						<div id="mailbox-folder-<?php echo $mailbox->id; ?>">
 						</div>
@@ -731,12 +731,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 									<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $mailbox->id ); ?>
 								</div>
 							</div>
+							<div class="clear"></div>
 							<div class="rtmailbox-row">
 								<label></label>
 								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update"
 								       type="hidden">
-								<input id="rtmailbox-save" name="rtmailbox[save]" class="button button-primary"
-								       value="Save" type="button">
+								<input id="rtmailbox-save" name="rtmailbox[save]" class="button" value="Save" type="button">
+								<input id="rtmailbox-Cancel" name="rtmailbox[Cancel]" class="button" value="Cancel" type="button">
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
@@ -846,6 +847,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			} else {
 				$result['error'] = 'Error: Required field missing.';
 			}
+			echo json_encode( $result );
+			die();
+		}
+
+		function rtmailbox_mailbox_cancle_callback(){
+			$result           = array();
+			$result['status'] = false;
+			ob_start();
+			$this->render_add_mailbox_page( $_POST['module'] );
+			$result['html']   = ob_get_clean();
+			$result['status'] = true;
 			echo json_encode( $result );
 			die();
 		}
