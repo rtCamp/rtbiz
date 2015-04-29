@@ -316,12 +316,12 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 			// Include All the admins
 			$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
-
+			global $wpdb;
 			// include other module user
-			$sql = "select DISTINCT( userid ) from $rt_biz_acl_model->table_name where module = '$module_key' and permission > 0";
-			$results = $rt_biz_acl_model->get_result_by_query( $sql );
-			if ( ! empty( $results ) ){
-				$user_ids = wp_list_pluck( $results,'userid' );
+			$sql = 'SELECT DISTINCT(acl.userid) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where acl.module =  '".$module_key."' and acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
+			$user_ids = $wpdb->get_col( $sql );
+
+			if ( ! empty( $user_ids ) ){
 				$module_user = array_merge( $module_user, $user_ids );
 			}
 			$module_user = array_unique( $module_user );

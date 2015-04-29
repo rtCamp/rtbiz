@@ -105,6 +105,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'load-users.php', array( $this, 'callback_rtbiz_bulk_action' ) );
 			add_action( 'admin_notices', array( $this, 'exported_admin_notice' ) );
 			// end
+
+			// trash contact
+			//			add_action( 'before_delete_post', array( $this, 'on_contact_delete' ) );
 		}
 
 		function init_labels() {
@@ -357,6 +360,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 
 		/**
 		 * @param $views
+		 *
+		 * @return array
 		 */
 		function edit_view_filters($views){
 
@@ -1111,6 +1116,15 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			header( 'Content-Type: application/json' );
 			echo json_encode( $arrReturn );
 			die( 0 );
+		}
+
+		function on_contact_delete( $post_ID ){
+			// remove acl table entry
+			global $rt_biz_acl_model;
+			$users = $this->get_wp_user_for_contact( $post_ID );
+			if ( ! empty( $users ) ){
+				$rt_biz_acl_model->delete( array( 'userid' => $users->ID ) );
+			}
 		}
 
 	}
