@@ -31,6 +31,10 @@ if ( ! class_exists( 'Rt_Biz_Migration' ) ) {
 			if ( strcmp( RT_BIZ_VERSION , '1.2.14' ) >= 0 ) {
 				$offering_migration = new Rt_Biz_Offering_Migration();
 			}
+
+			if ( strcmp( RT_BIZ_VERSION , '1.2.16' ) >= 0 ) {
+				$mailbox_migration = new Rt_Biz_Mailbox_Migration();
+			}
 		}
 	}
 }

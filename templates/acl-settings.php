@@ -44,10 +44,9 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 				<tbody id="the-list">
 					<?php foreach ( $modules as $mkey => $m ) {
 						if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'rtbiz_hd_ticket' ){
-							continue;
+							$m['label'] = 'People';
 						}
 						?>
-
 					<tr>
 						<td><strong><?php echo $m['label']; ?></strong></td>
 						<?php foreach ( $department as $ug ) { ?>
