@@ -35,7 +35,6 @@ if ( ! class_exists( 'Rt_Biz_Mailbox_Migration' ) ) {
 					'server_name'          => 'Google',
 					'incoming_imap_server' => 'imap.gmail.com',
 				);
-				var_dump($rt_imap_server_model->update_server( $data, $where ) );
 				$data = array(
 					'server_name'          => 'Outlook/Hotmail',
 				);
