@@ -429,10 +429,12 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$settings  = rt_biz_get_redux_settings();
 				$menu_label = $settings['menu_label'];
 				?>
-				<h3><?php echo $menu_label . __( ' Profile Access' ); ?></h3>
 				<table class="form-table">
 					<tbody>
-						<?php foreach ( $modules as $mkey => $m ) { ?>
+						<?php foreach ( $modules as $mkey => $m ) {
+							if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+								$m['label'] = 'People';
+							}?>
 						<tr>
 							<th><?php echo $m['label']; ?></th>
 							<td>
