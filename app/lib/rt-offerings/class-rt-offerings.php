@@ -432,7 +432,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				return false;
 			}
 
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'any' );
+			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'publish' );
 			$offerings_array = get_posts( $args ); // Get Woo Commerce post object
 
 			foreach ( $offerings_array as $offering ) {
