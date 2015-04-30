@@ -76,8 +76,8 @@ if ( ! class_exists( 'Rt_IMAP_Server_Model' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		function update_server( $data, $id ) {
-			return parent::update( $data, array( 'id' => $id ) );
+		function update_server( $data, $where ) {
+			return parent::update( $data, $where );
 		}
 
 		/**

@@ -225,7 +225,7 @@ if ( ! class_exists( 'RT_Setting_Imap_Server' ) ) {
 								'outgoing_smtp_port'   => $new_servers[ $server->id ]['outgoing_smtp_port'],
 								'outgoing_smtp_enc'    => ( ! empty( $new_servers[ $server->id ]['outgoing_smtp_enc'] ) ) ? $new_servers[ $server->id ]['outgoing_smtp_enc'] : '',
 							);
-							$rt_imap_server_model->update_server( $args, $server->id );
+							$rt_imap_server_model->update_server( $args, array( 'id' => $server->id ) );
 
 						} else {
 							$rt_imap_server_model->delete_server( $server->id );
