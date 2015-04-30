@@ -101,7 +101,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_server' => 'smtp.gmail.com',
 				),
 				array(
-					'server_name' => 'Outlook',
+					'server_name' => 'Outlook/Hotmail',
 					'incoming_imap_server' => 'imap-mail.outlook.com',
 					'outgoing_smtp_server' => 'smtp-mail.outlook.com',
 				),
@@ -180,7 +180,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_enc'    => 'tls',
 				),
 				array(
-					'server_name'          => 'Outlook',
+					'server_name'          => 'Outlook/Hotmail',
 					'incoming_imap_server' => 'imap-mail.outlook.com',
 					'incoming_imap_port'   => '993',
 					'incoming_imap_enc'    => 'ssl',
