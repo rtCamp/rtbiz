@@ -392,9 +392,9 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'departments_overview':
 					?>
 					<p>
-						<?php _e( 'This screen is useful when you have to introduce departments within your organization.' ); ?>
-						<?php _e( 'You can create, edit, delete departments & perfom other CRUD operations from here.' ); ?>
-						<?php _e( 'These departments can be later assigned to contacts to further categorize them.' ); ?>
+						<?php _e( 'This screen is useful when you have to introduce teams within your organization.' ); ?>
+						<?php _e( 'You can create, edit, delete teams & perfom other CRUD operations from here.' ); ?>
+						<?php _e( 'These teams can be later assigned to contacts to further categorize them.' ); ?>
 						<?php _e( 'They will also be useful in defining Access Control for the system & its other modules.' ); ?>
 					</p>
 					<?php
@@ -402,10 +402,10 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'departments_screen_content':
 					?>
 					<ul>
-						<li><?php _e( 'Using the left column form, you can create new departments.' ); ?></li>
-						<li><?php _e( 'You can assign an group email address to the department as well, if in use.' ); ?></li>
+						<li><?php _e( 'Using the left column form, you can create new team.' ); ?></li>
+						<li><?php _e( 'You can assign an group email address to the team as well, if in use.' ); ?></li>
 						<li><?php _e( 'You can also assign a color code to the department. It will help you identify the department or the user from which department he is just by the color.' ); ?></li>
-						<li><?php _e( 'On the right column, there will be existing departments listed along with basic information related to the department.' ); ?></li>
+						<li><?php _e( 'On the right column, there will be existing teams listed along with basic information related to the department.' ); ?></li>
 						<li><?php _e( 'You can edit an individual department on the Edit Department Screen.' ); ?></li>
 					</ul>
 					<?php
@@ -414,7 +414,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					?>
 					<p>
 						<?php _e( 'This screen is useful when you have to introduce contact groups within your organization.' ); ?>
-						<?php _e( 'You can create, edit, delete departments & perfom other CRUD operations from here.' ); ?>
+						<?php _e( 'You can create, edit, delete teams & perfom other CRUD operations from here.' ); ?>
 						<?php _e( 'These groups can be later assigned to contacts to further categorize them.' ); ?>
 						<?php _e( 'Once a contact is categorized in particular group, there\'ll be additional information of contact displayed on Edit Contact Screen.' ); ?>
 					</p>
