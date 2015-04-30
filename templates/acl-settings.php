@@ -20,7 +20,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 
 	<div id="icon-options-general" class="icon32"><br></div><h2><?php echo $menu_label . __( ' Access Control' ); ?></h2>
 	<?php if ( empty( $department ) ){ ?>
-		<div id="message" class="error"><p><?php echo 'No departments found, please add a department first to manage ACL'; ?></p></div>
+		<div id="message" class="error"><p><?php echo 'No Team found, please add a department first to manage ACL'; ?></p></div>
 	<?php } ?>
 	<div class="rt-biz-container">
 		<ul class="rt_biz_acl_other_option subsubsub">
