@@ -17,8 +17,6 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 	class Rt_Mail_Cron {
 
-		var $module = '';
-
 		function __construct( $plugin_path_for_deactivate_cron ) {
 
 			add_filter( 'cron_schedules', array( $this, 'register_custom_schedule' ) );
@@ -76,7 +74,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 			global $rt_mail_settings, $rt_mail_accounts_model ;
 
-			$emails = $rt_mail_accounts_model->get_mail_account();
+			$emails = $rt_mail_accounts_model->get_all_mail_accounts();
 			foreach ( $emails as $emailRow ) {
 				if ( ! $emailRow ) {
 					continue;
@@ -110,7 +108,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 				$rtZendEmail = new Rt_Zend_Mail();
 
-				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $this->module, $signature );
+				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $emailRow->module, $signature );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 			}
