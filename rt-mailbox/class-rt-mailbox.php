@@ -730,6 +730,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Connected Email' ); ?></label>
 								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a>
+								<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
 							</div>
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Select Folder' ); ?></label>
