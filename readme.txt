@@ -1,5 +1,5 @@
 === rtBiz ===
-Contributors:      rtcamp, rahul286, desaiuditd, faishal, dipesh.kakadiya, pareshradadiya, utkarshpatel
+Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, faishal, pareshradadiya
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
