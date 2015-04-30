@@ -349,6 +349,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			global $rt_biz_acl_model;
 
 			$old_module_permissions = get_site_option( 'rt_biz_module_permissions' );
+			if( empty( $old_module_permissions ) || ! is_array( $old_module_permissions )){
+				$old_module_permissions = array();
+			}
 			$module_permissions = $_POST['rt_biz_module_permissions'];
 
 			// New Module added
@@ -382,10 +385,14 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			// existing module permission updated
 			foreach ( $module_permissions as $module_Key => $dept_permission ) {
 
+				if( empty( $old_module_permissions[ $module_Key ] ) || ! is_array( $old_module_permissions[ $module_Key ] )){
+					$old_module_permissions[ $module_Key ] = array();
+				}
+
 				// new group permission added
-				$dept_added = array_diff_key( $dept_permission, $old_module_permissions[ $module_Key ] );
+				//$dept_added = array_diff_key( $dept_permission, $old_module_permissions[ $module_Key ] );
 				// existing group removed
-				$dept_removed = array_diff_key( $old_module_permissions[ $module_Key ], $dept_permission );
+				//$dept_removed = array_diff_key( $old_module_permissions[ $module_Key ], $dept_permission );
 
 				// existing group permission updated
 				$permission_diff = array_diff_assoc( $dept_permission, $old_module_permissions[ $module_Key ] );
