@@ -38,7 +38,12 @@ $menu_label = $settings['menu_label'];
 					</tr>
 				</thead>
 				<tbody id="the-list">
-					<?php foreach ( $modules as $mkey => $m ) { ?>
+					<?php foreach ( $modules as $mkey => $m ) {
+						if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && $_GET['post_type']=='rtbiz_hd_ticket' ){
+							continue;
+						}
+						?>
+
 					<tr>
 						<td><strong><?php echo $m['label']; ?></strong></td>
 						<?php foreach ( $department as $ug ) { ?>
