@@ -253,7 +253,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				<div id="rtmailbox-wrap">
 					<?php global $rt_mail_settings;
 					$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
-					if ( !empty( $mailbox ) ){ ?>
+					if ( ! empty( $mailbox ) ){ ?>
 						<input id="rtmailbox-add" data-module="<?php echo $module; ?>" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button"><?php
 					} else {
 						$this->render_add_mailbox_page( $module );
@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				}
 			} else {
 				$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
-				if ( !empty( $mailbox ) ){ ?>
+				if ( ! empty( $mailbox ) ){ ?>
 					<h4>Add Another Mailbox</h4><?php
 				} else { ?>
 					<h4>Add New Mailbox</h4><?php
@@ -314,13 +314,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				<spam><?php _e( 'IMAP' ); ?></spam>
 			</div>
 			<div class="rtmailbox-row">
-				<label for="rtmailbox-email"><?php _e( 'Email (*)' ); ?> </label>
+				<label for="rtmailbox-email"><?php _e( 'Email' ); ?><sup>*</sup></label>
 				<?php ?>
 				<input autocomplete="off" id="rtmailbox-email" name="rtmailbox[email]" placeholder="Email"
 				       value="<?php echo ! empty( $mailbox->email ) ? $mailbox->email : '';?>" type="text">
 			</div>
 			<div class="rtmailbox-row">
-				<label for="rtmailbox-password"><?php _e( 'Password (*)' ); ?> </label>
+				<label for="rtmailbox-password"><?php _e( 'Password' ); ?><sup>*</sup></label>
 				<input autocomplete="off" id="rtmailbox-password" name="rtmailbox[password]" placeholder="Password"
 				       value="" type="password">
 			</div>
@@ -653,14 +653,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							$result['html_list'] = ob_get_clean();
 							$result['moduleid']  = $mailboxid;
 							$result['status']           = true;
-						}else{
+						} else {
 							if ( ! empty( $obj_data['mailboxid'] ) ) {
 								$result['error'] = 'Error: Mailbox configured not updated';
-							}else{
+							} else {
 								$result['error'] = 'Error: Mailbox not configured';
 							}
 						}
-
 					}
 				} catch ( Exception $e ) {
 					$result['error'] = 'Caught exception: ' . $e->getMessage();
@@ -685,7 +684,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$args['id'] = $mailboxid;
 			}
 			$mailboxes = $rt_mail_settings->get_user_google_ac( $args );
-			?> <h4>Select Mailbox Folders</h4> <?php
+			?> <h4>Select Mailbox Folders</h4>
+			<?php
 			if ( isset( $mailboxes ) && ! empty( $mailboxes ) ) {
 				foreach ( $mailboxes as $mailbox ) {
 					$mailbox->email_data = unserialize( $mailbox->email_data );
@@ -752,7 +752,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<?php
 					}
 				}
-			}else{
+			} else {
 				echo '<p>Mailbox not found.</p>';
 			}
 		}
@@ -785,7 +785,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					die();
 				}
 				$email_ac   = $rt_mail_settings->get_email_acc( $email, $obj_data['module'] );
-				if( empty( $email_ac ) ){
+				if ( empty( $email_ac ) ){
 					$result['error'] = 'Error: Mailbox not found';
 					echo json_encode( $result );
 					die();
@@ -829,7 +829,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$result['html']   = ob_get_clean();
 					$result['status'] = true;
 				}
-			}else{
+			} else {
 				$result['error'] = 'Error: Required field missing.';
 			}
 
