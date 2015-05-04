@@ -213,23 +213,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				),
 			);
 
-			$Imap_fields = array();
-
-			/*array_push( $Imap_fields, array(
-				'id'      => 'rtbiz_imap_server_setup',
-				'type'    => 'callback',
-				'title'   => 'IMAP Server Setup',
-				'subtitle' => __( 'Configured IMAP Server(s)' ),
-				'desc'    => 'Following servers used into Mailbox',
-				'callback' => 'rt_biz_imap_setup_view',
-			) );*/
-
-			$this->sections[] = array(
-				'icon'        => 'el-icon-cogs',
-				'title'       => __( 'IMAP' ),
-				'permissions' => $admin_cap,
-				'fields'      => $Imap_fields,
-			);
 			$this->sections[] = array(
 				'icon'        => 'el-icon-envelope',
 				'title'       => __( 'Mailbox List' ),
@@ -372,6 +355,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
  * Display all congigured mailbox(s).
  */
 function rtbiz_mailbox_list_view() {
-	global $rt_setting_inbound_email;
-	$rt_setting_inbound_email->rtmailbox_list_all();
+	global $rt_MailBox;
+	$rt_MailBox->rtmailbox_list_all();
 }
