@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2.16
+Stable tag:        1.2.17
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,16 +68,21 @@ Please refer to the documentation.
 
 == Changelog ==
 
+= 1.2.17 =
+* Filter/Action added
+* Mailbox Code updated
+* Bug fix
+
 = 1.2.16 =
-* mailbox Code improved
+* Mailbox Code improved
 * Bug fix
 
 = 1.2.15 =
-* mailbox Library updated
-* offering Library updated
+* Mailbox Library updated
+* Offering Library updated
 
 = 1.2.14 =
-* offering Library updated
+* Offering Library updated
 * Docs move to docs.rtcamp.com
 
 = 1.2.13 =

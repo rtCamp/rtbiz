@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 1.2.16  
+**Stable tag:** 1.2.17  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -92,16 +92,21 @@ Please refer to the documentation.
 
 ## Changelog ##
 
+### 1.2.17 ###
+* Filter/Action added
+* Mailbox Code updated
+* Bug fix
+
 ### 1.2.16 ###
-* mailbox Code improved
+* Mailbox Code improved
 * Bug fix
 
 ### 1.2.15 ###
-* mailbox Library updated
-* offering Library updated
+* Mailbox Library updated
+* Offering Library updated
 
 ### 1.2.14 ###
-* offering Library updated
+* Offering Library updated
 * Docs move to docs.rtcamp.com
 
 ### 1.2.13 ###
