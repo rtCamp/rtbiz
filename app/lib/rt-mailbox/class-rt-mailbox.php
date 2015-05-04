@@ -860,6 +860,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			die();
 		}
 
+		/**
+		 * mailbox canlce event
+		 */
 		function rtmailbox_mailbox_cancle_callback(){
 			$result           = array();
 			$result['status'] = false;
@@ -871,6 +874,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			die();
 		}
 
+		/**
+		 * mailbox add event
+		 */
 		function rtmailbox_mailbox_add_callback(){
 			$result           = array();
 			$result['status'] = false;
@@ -881,5 +887,56 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			echo json_encode( $result );
 			die();
 		}
+
+
+		/**
+		 * Get mailbox list.
+		 */
+		public function rtmailbox_list_all() {
+			global $rt_mail_settings;
+			$rtbiz_modules = rt_biz_get_modules();
+			$mailbox_list = $rt_mail_settings->get_all_mailbox();
+
+			if ( isset( $mailbox_list ) && ! empty( $mailbox_list ) ) {
+				?>
+				<table id="rtmailbox-container" class="form-table">
+					<tbody>
+					<tr>
+						<th>Mail Account</th>
+						<th>Module</th>
+						<th></th>
+					</tr>
+					<?php
+					foreach ( $mailbox_list as $mailbox ) {
+						$mailbox->email_data = unserialize( $mailbox->email_data );
+						$email = filter_var( $mailbox->email_data['email'], FILTER_SANITIZE_EMAIL );
+						?>
+						<tr>
+							<td>
+								<strong>
+									<?php if ( isset( $mailbox->email_data['name'] ) ) { echo $mailbox->email_data['name'].'<br />'; } ?>
+									<a href='mailto:<?php echo $email ?>'>
+										<?php echo $email ?>
+									</a>
+								</strong>
+							</td>
+							<td>
+								<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['label'] ) ){ echo $rtbiz_modules[ $mailbox->module ]['label'];} else { echo $mailbox->module; } ?>
+							</td>
+							<td class="rtmailbox-maillist-action">
+								<a class='button show-mailbox-settings' href="<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['setting_page_url'] ) ){ echo $rtbiz_modules[ $mailbox->module ]['setting_page_url']; } else { echo 'javascript:;'; } ?>"><?php echo __( 'Settings' ); ?></a>
+							</td>
+						</tr>
+					<?php
+					}
+					?>
+					</tbody>
+				</table>
+			<?php
+			}else{ ?>
+				<div>No Mailbox Found!</div>
+			<?php }
+		}
+
 	}
 }
