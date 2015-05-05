@@ -1006,7 +1006,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Registers Posts 2 Posts relation for Organization - Person
 		 */
 		function register_company_contact_connection() {
-			add_action( 'p2p_init', array( $this, 'company_contact_connection' ) );
+			/*add_action( 'p2p_init', array( $this, 'company_contact_connection' ) );*/
 		}
 
 		/**
