@@ -13,11 +13,11 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->Rt_Contact = new Rt_Contact();
 	}
 
-	function test_tax_exist(){
+	/*function test_tax_exist(){
 		$this->assertEquals( true, taxonomy_exists( Rt_Contact::$user_category_taxonomy ) );
-	}
+	}*/
 
-	function test_tax(){
+	/*function test_tax(){
 		$cust = term_exists( Rt_Contact::$customer_category_slug, Rt_Contact::$user_category_taxonomy );
 		$this->assertTrue( ! empty( $cust  ), 'term customer not exist in user category' );
 
@@ -26,7 +26,7 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 
 		$ven = term_exists( Rt_Contact::$vendor_category_slug, Rt_Contact::$user_category_taxonomy );
 		$this->assertTrue( ! empty( $ven ), 'term vendor not exist in user category' );
-	}
+	}*/
 
 	function test_constructor(){
 		$this->assertTrue( post_type_exists( rt_biz_get_contact_post_type() ), 'Something is wrong in rt_contact check class post type not exist' );

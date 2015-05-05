@@ -168,7 +168,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
 								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new' ) . ' ' . $contact_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup' ) . ' ' . $contact_group_labels['name'] . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
+								<!--<li><?php /*printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup' ) . ' ' . $contact_group_labels['name'] . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() ) ); */?></li>-->
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'Add new' ) . ' ' . $company_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_company_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-networking">' . __( 'Setup Attributes' ) . '</a>', admin_url( 'admin.php?page=' . Rt_Biz_Attributes::$attributes_page_slug ) ); ?></li>
 							<?php } else { ?>
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 			add_meta_box( 'rtbiz-department-by-contacts', $contact_labels['name'] . ' ' . __( 'by Department', RT_BIZ_TEXT_DOMAIN ), array( $this, 'department_by_contacts' ), $this->screen_id, 'column2' );
 
-			add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RT_BIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column3' );
+			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RT_BIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array( $this, 'contact_type_wise_contacts' ), $this->screen_id, 'column3' );*/
 
 			//			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RT_BIZ_TEXT_DOMAIN ), array( $this, 'offering_wise_contacts' ), $this->screen_id, 'column5' );
@@ -509,7 +509,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		<?php }
 
 		function contact_type_wise_contacts( $obj, $args ){
-			$taxonomy    = Rt_Contact::$user_category_taxonomy;
+			/*$taxonomy    = Rt_Contact::$user_category_taxonomy;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
 			$cols        = array( __( 'Contacts type', RT_BIZ_TEXT_DOMAIN ), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
@@ -548,8 +548,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 					'title' => $args['title'],
 				),
 			);
-			?>
-			<div id="<?php echo 'rtbiz_pie_'.$args['id']; ?>"></div>
+			*/?><!--
+			<div id="<?php /*echo 'rtbiz_pie_'.$args['id']; */?>"></div>-->
 		<?php }
 
 		function department_by_contacts( $obj, $args ){

@@ -33,7 +33,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		/**
 		 * @var string
 		 */
-		static $user_category_taxonomy = 'rt-contact-group';
+		/*static $user_category_taxonomy = 'rt-contact-group';*/
 		/**
 		 * @var string
 		 */
@@ -74,14 +74,14 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			 */
 			add_action( 'user_register', array( $this, 'contact_create_for_wp_user' ) );
 
-			add_action( 'init', array( $this, 'register_tax' ), 9 );
+			/*add_action( 'init', array( $this, 'register_tax' ), 9 );*/
 
-			add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );
-			add_filter( 'views_edit-'.$this->post_type, array( $this, 'edit_view_filters' ) );
+			/*add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );*/
+			/*add_filter( 'views_edit-'.$this->post_type, array( $this, 'edit_view_filters' ) );*/
 			add_action( 'p2p_init', array( $this, 'contact_user_p2p' ) );
 
-			add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
-			add_filter( 'manage_edit-' . self::$user_category_taxonomy . '_columns', array( $this, 'manage_contact_column_header' ) );
+			/*add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
+			add_filter( 'manage_edit-' . self::$user_category_taxonomy . '_columns', array( $this, 'manage_contact_column_header' ) );*/
 
 			/**
 			 * Add ACL meta box
@@ -365,7 +365,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function edit_view_filters($views){
 
-			$terms             = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ) );
+			/*$terms             = get_terms( self::$user_category_taxonomy, array( 'hide_empty' => false, ) );
 			$subsubsub         = array();
 			$checkreq          = false;
 			$allflag           = false;
@@ -409,7 +409,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$views = array_merge( $views, $subsubsub );
 
 			// Return new array.
-			return $views;
+			return $views;*/
 		}
 
 
@@ -418,7 +418,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 */
 		function register_tax(){
 
-			$this->contact_group_labels = apply_filters( 'rt_contact_groups_labels', array(
+			/*$this->contact_group_labels = apply_filters( 'rt_contact_groups_labels', array(
 				'name'                       => __( 'Contact Groups' ),
 				'singular_name'              => __( 'Contact Group' ),
 				'menu_name'                  => __( 'Contact Groups' ),
@@ -451,14 +451,14 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'show_admin_column' => true,
 					'capabilities' => $caps,
 				)
-			);
+			);*/
 		}
 
 		/**
 		 *
 		 */
 		function add_defualt_categories_on_activate(){
-			$isSyncOpt = get_option( 'rtbiz_contact_category_default' );
+			/*$isSyncOpt = get_option( 'rtbiz_contact_category_default' );
 			if ( empty( $isSyncOpt ) || 'true' === $isSyncOpt ){
 				$default_categories = array(
 					array(
@@ -487,7 +487,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					}
 				}
 				update_option( 'rtbiz_contact_category_default', 'false' );
-			}
+			}*/
 		}
 		/**
 		 *  Init Meta Fields
@@ -904,7 +904,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$cols = array();
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
-			$cols[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] = $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ];
+			/*$cols[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] = $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ];*/
 			$cols['author'] = $columns['author'];
 			$cols['contact_Assignee'] = __( 'Assigned To' );
 			if ( $rtbiz_offerings ){
@@ -917,7 +917,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$cols['contact_email'] = __( 'Email ID' );
 
 			unset( $columns['title'] );
-			unset( $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] );
+			/*unset( $columns[ 'taxonomy-' . Rt_Contact::$user_category_taxonomy ] );*/
 			unset( $columns['author'] );
 			unset( $columns['date'] );
 			unset( $columns[ 'taxonomy-' . Rt_Offerings::$offering_slug ] );
@@ -1059,7 +1059,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		 * @return mixed
 		 */
 		function get_contact_by_category( $category_slug ) {
-			return get_posts(
+			/*return get_posts(
 				array(
 					'tax_query' => array(
 						array(
@@ -1072,7 +1072,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'post_status' => 'any',
 					'nopaging' => true,
 				)
-			);
+			);*/
 		}
 
 		/**

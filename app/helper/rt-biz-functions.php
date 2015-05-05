@@ -404,9 +404,9 @@ function rt_biz_get_module_department_users( $department_id, $category_slug = ''
 		'nopaging'            => true,
 	);
 
-	if ( ! empty( $category_slug ) ) {
+	/*if ( ! empty( $category_slug ) ) {
 		$args = array_merge( $args, array( Rt_Contact::$user_category_taxonomy => $category_slug ) );
-	}
+	}*/
 
 	$contacts = get_posts( $args );
 
@@ -471,7 +471,7 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 	return Rt_Access_Control::get_capability_from_access_role( $module_key, $role );
 }
 
-function rt_biz_get_employees() {
+/*function rt_biz_get_employees() {
 	global $rt_contact;
 	return $rt_contact->get_contact_by_category( Rt_Contact::$employees_category_slug );
 }
@@ -484,14 +484,14 @@ function rt_biz_get_customers() {
 function rt_biz_get_vendors() {
 	global $rt_contact;
 	return $rt_contact->get_contact_by_category( Rt_Contact::$vendor_category_slug );
-}
+}*/
 
 function rt_biz_get_companies() {
 	global $rt_company;
 	return $rt_company->get_company();
 }
 
-function rt_biz_search_employees( $query ) {
+/*function rt_biz_search_employees( $query ) {
 	$args = array(
 		'tax_query' => array(
 			array(
@@ -502,7 +502,7 @@ function rt_biz_search_employees( $query ) {
 			),
 	);
 	return rt_biz_search_contact( $query, $args );
-}
+}*/
 
 /**
  * check user is staff or not

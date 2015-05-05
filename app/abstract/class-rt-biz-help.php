@@ -166,7 +166,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'content' => '',
 						'taxonomy' => RT_Departments::$slug,
 					),
-					array(
+					/*array(
 						'id' => 'contact_group_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'title' => __( 'Screen Content' ),
 						'content' => '',
 						'taxonomy' => Rt_Contact::$user_category_taxonomy,
-					),
+					),*/
 				),
 			) );
 
