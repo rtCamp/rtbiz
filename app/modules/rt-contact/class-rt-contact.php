@@ -135,7 +135,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				}
 				if ( isset( $_GET['rt_contact_group'] ) && 'staff' == $_GET['rt_contact_group'] ) {
 					$query->set( 'post__in', $contacts );
-				}elseif ( isset( $_GET['rt_contact_group'] ) && 'Customer' == $_GET['rt_contact_group'] ) {
+				}elseif ( isset( $_GET['rt_contact_group'] ) && 'customer' == $_GET['rt_contact_group'] ) {
 					$query->set( 'post__not_in', $contacts );
 				}
 			}

@@ -548,12 +548,12 @@ function rt_biz_get_module_users( $module_key ) {
 	return $rt_access_control->get_module_users( $module_key );
 }
 
-/*function rt_biz_get_module_employee( $module_key ) {
+function rt_biz_get_module_employee( $module_key ) {
 	global $rt_access_control;
-	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$employees_category_slug );
+	return $rt_access_control->get_module_users( $module_key );
 }
 
-function rt_biz_get_module_customer( $module_key  ) {
+/*function rt_biz_get_module_customer( $module_key  ) {
 	global $rt_access_control;
 	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$customer_category_slug );
 }

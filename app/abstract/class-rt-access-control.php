@@ -310,7 +310,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			return $admin_cap;
 		}
 
-		function get_module_users( $module_key, $category_slug = '' ) {
+		function get_module_users( $module_key ) {
 
 			global $rt_biz_acl_model;
 
