@@ -92,7 +92,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 				add_action( 'pre_post_update', array( $this, 'save_old_data' ) );
 
-				add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
+				/*add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );*/
 
 				add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_entity_update_messages' ), 10, 2 );
 				add_filter( 'post_updated_messages', array( $this, 'entity_updated_messages' ), 10, 2 );
@@ -713,7 +713,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				'show_in_nav_menus' => false,
 				'show_in_menu' => Rt_Biz::$dashboard_slug,
 				'show_in_admin_bar' => false,
-				'supports' => array( 'title', 'excerpt', 'author', 'comments', 'thumbnail' ),
+				'supports' => array( 'title', 'comments', 'thumbnail' ),
 				'capability_type' => $name,
 				'map_meta_cap'       => true, //Required For ACL Without map_meta_cap Cap ACL isn't working.
 				//Default WordPress check post capability on admin page so we need to map custom post type capability with post capability.
