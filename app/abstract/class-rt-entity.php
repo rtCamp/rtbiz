@@ -308,7 +308,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * Registers Meta Box for Rt_Entity Meta Fields - Additional Information for Rt_Entity
 		 */
 		function entity_meta_boxes() {
-			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type );
+			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), array( $this, 'render_additional_details_meta_box' ), $this->post_type, 'normal', 'default' );
 			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), array( $this, 'render_assign_to_meta_box' ), $this->post_type, 'side', 'default' );
 			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
