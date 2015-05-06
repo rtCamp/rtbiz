@@ -31,7 +31,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 			add_action( 'admin_print_scripts', array( $this, 'js_includes' ) );
 			add_action( 'admin_print_styles', array( $this, 'css_includes' ) );
-//			add_action( 'admin_head', array( $this, 'colorpicker' ) );
+			//			add_action( 'admin_head', array( $this, 'colorpicker' ) );
 			add_action( 'admin_head', array( $this, 'hide_slug' ) );
 
 			add_action( 'admin_init', array( $this, 'add_remove_department_field' ), 1000 );
@@ -51,7 +51,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 				'singular_name'              => __( 'Team' ),
 				'menu_name'                  => __( 'Teams' ),
 				'search_items'               => __( 'Search Teams' ),
-				'popular_items'              => NULL,
+				'popular_items'              => null,
 				'all_items'                  => __( 'All User Teams' ),
 				'edit_item'                  => __( 'Edit Team' ),
 				'update_item'                => __( 'Update Team' ),
@@ -123,7 +123,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			unset( $columns['posts'], $columns['slug'] );
 
 			$columns['contacts']         = __( 'Contacts', RT_BIZ_TEXT_DOMAIN );
-//			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
+			//			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RT_BIZ_TEXT_DOMAIN );
 
 			return $columns;
@@ -145,12 +145,12 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 					$contacts_count = count( rt_biz_get_department_contacts( $term_id ) );
 					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
-//				case 'color':
-//					$color = $this->get_department_meta( 'group-color', $term_id );
-//					if ( ! empty( $color ) ) {
-//						echo '<div style="width:3.18em; height:3em; background-color:' . esc_attr( $color ) . ';"></div>';
-//					}
-//					break;
+					//				case 'color':
+					//					$color = $this->get_department_meta( 'group-color', $term_id );
+					//					if ( ! empty( $color ) ) {
+					//						echo '<div style="width:3.18em; height:3em; background-color:' . esc_attr( $color ) . ';"></div>';
+					//					}
+					//					break;
 				case 'email_address';
 					$email_address = $this->get_department_meta( 'email_address', $term_id );
 					if ( isset( $email_address ) && ! empty( $email_address ) ) {
@@ -445,9 +445,11 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 		function add_manage_acl_button( $taxonomy ){
 			global $pagenow;
-			if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ){
-				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
-				echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for these Team from <a href="' . esc_url( $acl_url ) . '">Access Control</a></div>';
+			if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+				if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ) {
+					$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
+					echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for these Team from <a href="' . esc_url( $acl_url ) . '">Access Control</a></div>';
+				}
 			}
 		}
 	}
