@@ -644,6 +644,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				p2p_register_connection_type( array(
 					'name' => $post_type . '_to_' . $this->post_type,
 					'from' => $post_type,
+					'title' => ( $this->post_type == rt_biz_get_contact_post_type() ) ? 'Participants (Customers)' : '',
 					'to' => $this->post_type,
 					'admin_column' => 'from',
 					'from_labels' => array(
