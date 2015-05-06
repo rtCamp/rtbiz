@@ -124,15 +124,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		}
 
 		function contact_posts_filter( $query ){
-			global $wpdb;
+			global $wpdb, $rt_biz_acl_model;
 			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && $query->is_main_query() ) {
-				$contacts = array();
-				$results = $wpdb->get_results("SELECT p2p_from
-							FROM ".$wpdb->prefix."p2p
-								WHERE p2p_type = '" . $this->post_type . "_to_user'" );
-				foreach ( $results as $result ){
-					$contacts[] = intval( $result->p2p_from );
-				}
+				$module_where =isset( $_GET['module'] ) ? "acl.module =  '" . $_GET['module'] . "' and" : '';
+				$sql = 'SELECT DISTINCT(posts.ID) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where " . $module_where . " acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
+				$contacts = $wpdb->get_col( $sql );
 				if ( isset( $_GET['rt_contact_group'] ) && 'staff' == $_GET['rt_contact_group'] ) {
 					$query->set( 'post__in', $contacts );
 				}elseif ( isset( $_GET['rt_contact_group'] ) && 'customer' == $_GET['rt_contact_group'] ) {

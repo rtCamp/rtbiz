@@ -313,7 +313,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
 
-
 		function render_assign_to_meta_box( $post ){
 
 			$assigned = rt_biz_get_entity_meta( $post->ID,'assgin_to', true );
