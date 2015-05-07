@@ -1,5 +1,6 @@
-*/.sass-cache/*
-.idea/
-_book
-node_modules
-*.log
+*.DS_Store
+*.swp
+*.bak
+*.idea
+*nbproject*
+*/.sass-cache/
