@@ -403,7 +403,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			<div class="rtmailbox-row">
 				<label></label>
 				<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_connect_imap" type="hidden">
-				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button" value="Connect" type="button">
+				<input id="rtmailbox-connect" name="rtmailbox[connect]" class="button" value="Test Connection" type="button">
 			</div>
 
 			<?php do_action( 'rt_mailbox_randed_view_after' ); ?>
