@@ -311,7 +311,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			<div class="rtmailbox-row">
 				<label><?php _e( 'Account Type:' ); ?></label>
-				<spam><?php _e( 'IMAP' ); ?></spam>
+				<?php _e( 'IMAP' ); ?>
 			</div>
 			<div class="rtmailbox-row">
 				<label for="rtmailbox-email"><?php _e( 'Email' ); ?><sup>*</sup></label>
@@ -325,7 +325,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				       value="" type="password">
 			</div>
 			<div class="rtmailbox-row">
-				<label for=""><?php _e( 'Provider' ); ?></label>
+				<label><?php _e( 'Provider' ); ?></label>
 				<ul class="rtmailbox_provider_list">
 					<?php $provider = ! empty( $server->server_name ) ? ( in_array( $server->server_name, $rtmailbox_default_server ) ) ? $server->server_name : 'custom' : 'Gmail/Google';
 					foreach ( $default_servers as $ser ) {
@@ -333,7 +333,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							$seleted = ( $provider == $ser->server_name ) ? 'checked' : ''; ?>
 							<li>
 								<input title="<?php echo $ser->server_name; ?>" class="rtmailbox_provider"
-								       id="rtmailbox-provider-<?php echo $server->id; ?>"
+								       id="rtmailbox-provider-<?php echo $ser->id; ?>"
 								       name="rtmailbox[provider]" <?php echo $seleted; ?>
 								       value="<?php echo $ser->id; ?>" type="radio">
 								<label
