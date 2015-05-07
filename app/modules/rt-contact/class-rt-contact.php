@@ -123,6 +123,10 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			// add_action( 'before_delete_post', array( $this, 'on_contact_delete' ) );
 		}
 
+		/**
+		 * Filter contact
+		 * @param $query
+		 */
 		function contact_posts_filter( $query ){
 			global $wpdb, $rt_biz_acl_model;
 			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && $query->is_main_query() ) {
