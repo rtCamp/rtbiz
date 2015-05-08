@@ -3,7 +3,7 @@
 }
 
 #rtmailbox-page #mailbox-list>div{
-    background-color: #F5F5DC;
+    background-color: #f9f9f9;
     padding: 10px;
 }
 
@@ -50,6 +50,10 @@
 
 #rtmailbox-page .rtmailbox-row div.mailbox-folder-list ul li {
     padding-bottom: 5px;
+}
+
+.rtmailbox-avtar{
+    display: inline-block;
 }
 
 .rtmailbox-maillist-action{

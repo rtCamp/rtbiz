@@ -72,7 +72,7 @@ jQuery( document ).ready(function(){
                     }
                 }
 
-                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
                 requestArray.data =  jQuery( '#rtmailbox-wrap' ).find('select,textarea, input').serialize();
                 requestArray.action = 'rtmailbox_imap_connect';
@@ -116,7 +116,7 @@ jQuery( document ).ready(function(){
                     return;
                 }
 
-                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
                 requestArray.data =  jQuery( '#rtmailbox-wrap' ).find('select,textarea, input').serialize();
                 requestArray.action = 'rtmailbox_folder_update';
@@ -148,7 +148,7 @@ jQuery( document ).ready(function(){
         },
         mailbox_update_ajax : function(){
             jQuery(document).on('click', '#rtmailbox-update-mailbox', function( event ) {
-                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
 
                 if ( 'rtmailbox_folder_update' == jQuery('#rtmailbox-action').val() && jQuery('#rtmailbox-email').val() == jQuery(this).data('email') ){
@@ -190,7 +190,7 @@ jQuery( document ).ready(function(){
         mailbox_remove_ajax : function(){
             jQuery(document).on('click', '.remove-mailbox', function( event ) {
                 if ( confirm( 'Are you sure you want to remove this mailbox ?' ) ) {
-                    jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                    jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                     var requestArray = {};
                     requestArray.mailboxid = jQuery(this).data('mailboxid');
                     requestArray.email = jQuery(this).data('email');
@@ -227,7 +227,7 @@ jQuery( document ).ready(function(){
         },
         mailbox_cancel_ajax:function(){
             jQuery(document).on('click', '#rtmailbox-Cancel', function( event ) {
-                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
                 requestArray.module =  jQuery('#rtmailbox-module').val();
                 requestArray.action = 'rtmailbox_mailbox_cancel';
@@ -259,7 +259,7 @@ jQuery( document ).ready(function(){
         },
         mailbox_add_ajax:function(){
             jQuery(document).on('click', '#rtmailbox-add', function( event ) {
-                jQuery( this ).after('<img id="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
+                jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
                 requestArray.module =  jQuery( this ).data('module');
                 requestArray.action = 'rtmailbox_mailbox_add';

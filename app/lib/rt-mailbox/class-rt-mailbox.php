@@ -459,15 +459,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					} else {
 						$personMarkup = get_avatar( $email, 30 );
 					} ?>
-					<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row">
+					<div id="mailbox-<?php echo $mailbox->id; ?>" class="rtmailbox-row clearfix">
 						<input type="hidden" name='mail_ac[]' value="<?php echo esc_attr( $email ); ?>"/>
-						<strong>
-							<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a><?php
+						<div class='rtmailbox-avtar'>
+							<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup . '<span>' . $email . '</span>'; ?></a><?php
 							if ( isset( $mailbox->email_data['name'] ) ) {
 								echo $mailbox->email_data['name'] . '<br/>';
 							} ?>
-							<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
-						</strong>
+						</div>
 
 						<div class="rtmailbox-maillist-action">
 							<?php if ( $login_successful ) { ?>
