@@ -247,10 +247,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		function render_mailbox_setting_page( $module ) {
 			?>
 			<div id="rtmailbox-page" class="wrap">
-				<div id="mailbox-list">
+				<div id="mailbox-list" class="mailbox-list">
 					<?php $this->render_list_mailbox_page( $module ); ?>
 				</div>
-				<div id="rtmailbox-wrap">
+				<div id="rtmailbox-wrap" class="rtmailbox-wrap">
 					<?php global $rt_mail_settings;
 					$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
 					if ( ! empty( $mailbox ) ){ ?>
@@ -728,8 +728,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							do_action( 'rt_mailbox_folder_view_before' ); ?>
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Connected Email' ); ?></label>
-								<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup; ?></a>
-								<a href='mailto:<?php echo $email ?>'><?php echo $email ?></a>
+								<div class='rtmailbox-avtar'>
+									<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup . '<span>' . $email . '</span>'; ?></a><?php
+									if ( isset( $mailbox->email_data['name'] ) ) {
+										echo $mailbox->email_data['name'] . '<br/>';
+									} ?>
+								</div>
 							</div>
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Select Folder' ); ?></label>
