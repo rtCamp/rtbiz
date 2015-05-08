@@ -654,9 +654,8 @@ function rt_biz_set_redux_setting( $key, $val ){
 function rt_biz_get_offering_selection_setting(){
 	$return  = array();
 	$redux = rt_biz_get_redux_settings();
-
+	$redux['offering_plugin'] = apply_filters( 'rtbiz_offering_setting', $redux['offering_plugin'] );
 	if ( ! empty( $redux['offering_plugin'] ) && is_array( $redux['offering_plugin'] ) ) {
-		$redux['offering_plugin'] = apply_filters( 'rtbiz_offering_setting', $redux['offering_plugin'] );
 		foreach ( $redux['offering_plugin'] as $key => $val ) {
 			if ( ! empty( $val ) ) {
 				$return[] = $key;
