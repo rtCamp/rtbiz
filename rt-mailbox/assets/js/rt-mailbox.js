@@ -151,7 +151,7 @@ jQuery( document ).ready(function(){
                 jQuery( this ).after('<img id="mailbox-spinner" class="mailbox-spinner" src="' + adminurl + 'images/spinner.gif"/>');
                 var requestArray = {};
 
-                if ( 'rtmailbox_folder_update' == jQuery('#rtmailbox-action').val() && jQuery('#rtmailbox-email').val() == jQuery(this).data('email') ){
+                if ( 'rtmailbox_folder_update' === jQuery('#rtmailbox-action').val() && jQuery('#rtmailbox-email').val() === jQuery(this).data('email') ){
                     requestArray.module =  jQuery(this).data('module');
                     requestArray.action = 'rtmailbox_mailbox_cancel';
                 }else{
