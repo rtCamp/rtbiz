@@ -103,18 +103,15 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'admin_footer-users.php',  array( $this, 'add_export_user_bulk_action' ) );
 			add_action( 'load-users.php', array( $this, 'callback_rtbiz_bulk_action' ) );
 
-
 			add_action( 'pre_get_posts', array( $this, 'contact_posts_filter' ) );
 
 			// ajax for user search
 			add_action( 'wp_ajax_search_user_from_name', array( $this, 'ajax_serch_user' ) );
 
-
 			/*add_action( 'init', array( $this, 'register_tax' ), 9 );*/
 
 			/*add_action( 'init', array( $this, 'add_defualt_categories_on_activate' ), 11 );*/
 			/*add_filter( 'views_edit-'.$this->post_type, array( $this, 'edit_view_filters' ) );*/
-
 
 			/*add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$user_category_taxonomy . '_columns', array( $this, 'manage_contact_column_header' ) );*/
@@ -130,12 +127,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function contact_posts_filter( $query ){
 			global $wpdb, $rt_biz_acl_model;
 			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && $query->is_main_query() ) {
-				$module_where =isset( $_GET['module'] ) ? "acl.module =  '" . $_GET['module'] . "' and" : '';
-				$sql = 'SELECT DISTINCT(posts.ID) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where " . $module_where . " acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
+				$module_where = isset( $_GET['module'] ) ? "acl.module =  '" . $_GET['module'] . "' and" : '';
+				$sql = 'SELECT DISTINCT(posts.ID) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts.' as posts on (p2p.p2p_from = posts.ID )  where ' . $module_where . " acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
 				$contacts = $wpdb->get_col( $sql );
 				$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
 				$admin_contact = rt_biz_get_contact_for_wp_user( $module_user );
-				foreach( $admin_contact as $contact ){
+				foreach ( $admin_contact as $contact ){
 					$contacts[] = $contact->ID;
 				}
 				if ( isset( $_GET['rt_contact_group'] ) && 'staff' == $_GET['rt_contact_group'] ) {
@@ -143,7 +140,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 						$contacts = array( -1 );
 					}
 					$query->set( 'post__in', $contacts );
-				}elseif ( isset( $_GET['rt_contact_group'] ) && 'customer' == $_GET['rt_contact_group'] && !empty( $contacts ) ) {
+				}elseif ( isset( $_GET['rt_contact_group'] ) && 'customer' == $_GET['rt_contact_group'] && ! empty( $contacts ) ) {
 					$query->set( 'post__not_in', $contacts );
 				}
 			}
@@ -627,7 +624,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'hide_for_client' => true,
 					'category' => 'Contact',
 				),
-				array(
+				/*array(
 					'key' => 'contact_tfn',
 					'text' => __( 'Tax File Number' ),
 					'label' => __( 'Tax File Number' ),
@@ -638,7 +635,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Tax File Number.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),
+				),*/
 				array(
 					'key' => 'contact_skype_id',
 					'text' => __( 'Skype' ),
@@ -685,7 +682,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'category' => 'Social',
 
 				),
-				array(
+				/*array(
 					'key' => 'contact_kin_name',
 					'text' => __( 'Next of Kin Name' ),
 					'label' => __( 'Next of Kin Name' ),
@@ -708,8 +705,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Next of Kin Address.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),
-				array(
+				),*/
+				/*array(
 					'key' => 'contact_kin_number',
 					'text' => __( 'Next of Kin Number' ),
 					'label' => __( 'Next of Kin Number' ),
@@ -758,7 +755,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),
+				),*/
 			);
 
 			$this->meta_fields = apply_filters( 'rt_biz_contact_meta_fields', $this->meta_fields );
