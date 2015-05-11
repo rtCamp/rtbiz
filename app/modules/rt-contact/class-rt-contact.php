@@ -624,7 +624,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'hide_for_client' => true,
 					'category' => 'Contact',
 				),
-				/*array(
+				array(
 					'key' => 'contact_tfn',
 					'text' => __( 'Tax File Number' ),
 					'label' => __( 'Tax File Number' ),
@@ -635,7 +635,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Tax File Number.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),*/
+				),
 				array(
 					'key' => 'contact_skype_id',
 					'text' => __( 'Skype' ),
@@ -682,7 +682,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'category' => 'Social',
 
 				),
-				/*array(
+				array(
 					'key' => 'contact_kin_name',
 					'text' => __( 'Next of Kin Name' ),
 					'label' => __( 'Next of Kin Name' ),
@@ -705,8 +705,8 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Next of Kin Address.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),*/
-				/*array(
+				),
+				array(
 					'key' => 'contact_kin_number',
 					'text' => __( 'Next of Kin Number' ),
 					'label' => __( 'Next of Kin Number' ),
@@ -755,7 +755,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'description' => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
 					'category' => 'HR',
-				),*/
+				),
 			);
 
 			$this->meta_fields = apply_filters( 'rt_biz_contact_meta_fields', $this->meta_fields );

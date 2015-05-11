@@ -394,18 +394,32 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			}
 			$cathtml['other']   = '<div class="pure-u-1-1"> <h3> '.__( 'Other information:' ).'</h3> </div>';
 			$other_flag         = false;
-//			$terms              = wp_get_post_terms( $post->ID, Rt_Contact::$user_category_taxonomy );
-//			$is_our_team_mate   = false;
-//			if ( ! empty( $terms ) && is_array( $terms ) ) {
-//				$slug               = wp_list_pluck( $terms, 'slug' );
-//				$is_our_team_mate   = in_array( Rt_Contact::$employees_category_slug, $slug );
-//			}
+			//			$terms              = wp_get_post_terms( $post->ID, Rt_Contact::$user_category_taxonomy );
+			//			if ( ! empty( $terms ) && is_array( $terms ) ) {
+			//				$slug               = wp_list_pluck( $terms, 'slug' );
+			//				$is_our_team_mate   = in_array( Rt_Contact::$employees_category_slug, $slug );
+			//			}
+
+			// find out if it is out team mate then show HR information
+			$is_our_team_mate = false;
+			$postid = $post;
+			if ( is_object( $post ) ){
+				$postid = $post->ID;
+			}
+
+			$wp_user = rt_biz_get_wp_user_for_contact( $postid ); //get wp user
+			$cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
+			if ( ! empty( $wp_user[0] ) ){
+				$is_our_team_mate = user_can( $wp_user[0], $cap );
+			}
 			foreach ( $this->meta_fields as $field ) {
 				ob_start();
 				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
 
-				if ( isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
-					continue;
+				if ( ! $is_our_team_mate ){
+					if ( isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
+						continue;
+					}
 				}
 
 				if ( isset( $field['is_datepicker'] ) && $field['is_datepicker'] ) {
@@ -526,9 +540,9 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				unset ( $cathtml['Social'] );
 			}
 			if ( isset( $cathtml['HR'] ) ) {
-				//if ( $is_our_team_mate ) {
-				$printimpload[] = $cathtml['HR'];
-				//}
+				if ( $is_our_team_mate ) {
+					$printimpload[] = $cathtml['HR'];
+				}
 				unset ( $cathtml['HR'] );
 			}
 
