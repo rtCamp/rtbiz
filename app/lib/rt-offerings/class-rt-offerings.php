@@ -279,6 +279,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					}
 					break;
 				case 'offering_count':
+					$content = '';
 					foreach ( $this->post_types as $posttype ) {
 						$posts = new WP_Query( array(
 							'post_type' => $posttype,
@@ -288,7 +289,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content = strtoupper( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content .= strtoupper( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
 					}
 
 					break;
