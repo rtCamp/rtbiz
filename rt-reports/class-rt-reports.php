@@ -56,7 +56,7 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 					'max_fields' => 1,
 				),
 				'gauge' => array(
-					'label' => __('Gauge Chart'),
+					'label' => __( 'Gauge Chart' ),
 					'max_fields' => 1,
 				),
 				'area' => array(

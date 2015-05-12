@@ -144,7 +144,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ) {
 				$path = $this->schema_path;
 				if ( $handle = opendir( $path ) ) {
 					while ( false !== ( $file_name = readdir( $handle ) ) ) {
-						if ( '.' != $file_name && '..' != $file_name ){
+						if ( '.' != $file_name && '..' != $file_name ) {
 							if ( false !== strpos( $file_name, '.schema' )&& file_exists( $path . '/' . $file_name ) ) {
 								do_action( 'rt_db_update_before_create_table', $file_name );
 								$this->create_table( $this->genrate_sql( $file_name, file_get_contents( $path . '/' . $file_name ) ) );

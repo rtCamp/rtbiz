@@ -360,7 +360,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			if ( null != $email_data ) {
 				$args['email_data'] = $email_data;
 			}
-			if ( null!= $token ) {
+			if ( null != $token ) {
 				$args['outh_token'] = $token;
 			}
 			if ( null != $imap_server ) {
