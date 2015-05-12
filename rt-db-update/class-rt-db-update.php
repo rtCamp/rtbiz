@@ -8,7 +8,7 @@
  *         version 1.1
  */
 
-if ( ! class_exists( 'RT_DB_Update' ) ){
+if ( ! class_exists( 'RT_DB_Update' ) ) {
 	/**
 	 * Class RT_DB_Update
 	 */
@@ -61,27 +61,27 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		public function __construct( $plugin_path = false, $schema_path = false, $mu_single_table = false, $current_version = false )
 		{
 			$this->debugMode = defined( 'WP_DEBUG' ) && WP_DEBUG;
-			if ( false != $schema_path ){
+			if ( false != $schema_path ) {
 				$this->schema_path = $schema_path;
 			} else {
 				$this->schema_path = realpath( dirname( __FILE__ ) . $this->schema_path );
 			}
 
 			if ( ! file_exists( $this->schema_path ) ) {
-				if ( $this->debugMode ){
+				if ( $this->debugMode ) {
 					$message = sprintf( __( 'The Path %s does not point to a valid schema directory.' ) , $this->schema_path );
 					trigger_error( $message, E_USER_WARNING );
 				}
 			}
 
-			if ( false != $plugin_path ){
+			if ( false != $plugin_path ) {
 				$this->plugin_path = $plugin_path;
 			} else {
 				$this->plugin_path = realpath( dirname( __FILE__ ) . $this->plugin_path );
 			}
 
 			if ( ! file_exists( $this->plugin_path ) ) {
-				if ( $this->debugMode ){
+				if ( $this->debugMode ) {
 					$message = sprintf( __( 'The Path %s does not point to a valid plugin.' ) , $this->plugin_path );
 					trigger_error( $message, E_USER_WARNING );
 				}
@@ -94,7 +94,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 			} else {
 				$this->rt_plugin_info = new RT_Plugin_Info( $this->plugin_path );
 			}
-			if ( false == $current_version ){
+			if ( false == $current_version ) {
 				$current_version = $this->rt_plugin_info->version;
 			}
 			$this->db_version             = $current_version;
@@ -140,12 +140,12 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		 */
 		public function do_upgrade()
 		{
-			if ( version_compare( $this->db_version, $this->install_db_version, '>' ) ){
+			if ( version_compare( $this->db_version, $this->install_db_version, '>' ) ) {
 				$path = $this->schema_path;
-				if ( $handle = opendir( $path ) ){
+				if ( $handle = opendir( $path ) ) {
 					while ( false !== ( $file_name = readdir( $handle ) ) ) {
-						if ( $file_name != '.' && $file_name != '..' ){
-							if ( false !== strpos( $file_name, '.schema' )&& file_exists( $path . '/' . $file_name ) ){
+						if ( '.' != $file_name && '..' != $file_name ){
+							if ( false !== strpos( $file_name, '.schema' )&& file_exists( $path . '/' . $file_name ) ) {
 								do_action( 'rt_db_update_before_create_table', $file_name );
 								$this->create_table( $this->genrate_sql( $file_name, file_get_contents( $path . '/' . $file_name ) ) );
 								do_action( 'rt_db_update_after_create_table', $file_name );
@@ -162,7 +162,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		}
 
 		function update_version(){
-			if ( $this->mu_single_table ){
+			if ( $this->mu_single_table ) {
 				update_site_option( $this->db_version_option_name, $this->db_version );
 			} else {
 				update_option( $this->db_version_option_name, $this->db_version );
@@ -180,7 +180,7 @@ if ( ! class_exists( 'RT_DB_Update' ) ){
 		{
 			global $wpdb;
 
-			if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $table_name . '%' ) ) >= 1 ){
+			if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', '%' . $table_name . '%' ) ) >= 1 ) {
 				return true;
 			}
 

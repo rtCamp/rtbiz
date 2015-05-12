@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( !class_exists( 'Rt_Reports' ) ) {
+if ( ! class_exists( 'Rt_Reports' ) ) {
 	class Rt_Reports {
 
 		/**
@@ -48,11 +48,11 @@ if ( !class_exists( 'Rt_Reports' ) ) {
 		public function __construct( $page_slugs = array() ) {
 			$this->chart_types = array(
 				'table' => array(
-					'label' => __('Table Chart'),
+					'label' => __( 'Table Chart' ),
 					'max_fields' => 0,
 				),
 				'pie' => array(
-					'label' => __('Pie Chart'),
+					'label' => __( 'Pie Chart' ),
 					'max_fields' => 1,
 				),
 				'gauge' => array(
@@ -60,23 +60,23 @@ if ( !class_exists( 'Rt_Reports' ) ) {
 					'max_fields' => 1,
 				),
 				'area' => array(
-					'label' => __('Area Chart'),
+					'label' => __( 'Area Chart' ),
 					'max_fields' => 1,
 				),
 				'stepped_area' => array(
-					'label' => __('Stepped Area Chart'),
+					'label' => __( 'Stepped Area Chart' ),
 					'max_fields' => 1,
 				),
 				'bar' => array(
-					'label' => __('Bar Chart'),
+					'label' => __( 'Bar Chart' ),
 					'max_fields' => 1,
 				),
 				'column' => array(
-					'label' => __('Column Chart'),
+					'label' => __( 'Column Chart' ),
 					'max_fields' => 1,
 				),
 				'line' => array(
-					'label' => __('Line Chart'),
+					'label' => __( 'Line Chart' ),
 					'max_fields' => 1,
 				),
 			);
@@ -107,9 +107,9 @@ if ( !class_exists( 'Rt_Reports' ) ) {
 				$charts = $this->chart_types;
 				$core_charts = array( 'pie', 'line', 'bar', 'column', 'area', 'stepped_area' );
 
-				foreach ($charts as $key => $chart) {
+				foreach ( $charts as $key => $chart ) {
 					if ( in_array( $key, $core_charts ) ) {
-						unset($charts[$key]);
+						unset( $charts[ $key ] );
 					}
 				}
 				$packages = array_keys( $charts );
@@ -129,7 +129,7 @@ if ( !class_exists( 'Rt_Reports' ) ) {
 		function render_chart( $charts ) {
 			?>
 			<script type="text/javascript">
-				var rt_reports_charts = <?php echo json_encode($charts); ?>;
+				var rt_reports_charts = <?php echo json_encode( $charts ); ?>;
 
 				google.setOnLoadCallback(rt_reports_draw_charts);
 

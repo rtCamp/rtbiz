@@ -73,7 +73,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			//Register Product taxonomy
 			add_action( 'init', array( $this, 'register_offering_taxonomy' ), 5 );
 
-			if ( ! is_object( $taxonomy_metadata ) ){
+			if ( ! is_object( $taxonomy_metadata ) ) {
 				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 				$taxonomy_metadata->activate();
 			}
@@ -214,7 +214,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 			if ( true === $this->isSync ) {
 				$isSyncOpt = get_option( 'rtbiz_offering_plugin_sync' );
-				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ){
+				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ) {
 					add_action( 'init', array( $this, 'bulk_insert_offerings' ) );
 				}
 				add_action( 'save_post', array( $this, 'insert_offerings' ) );
@@ -227,12 +227,12 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		/**
 		 * Filter offering as per store select
 		 */
-		public function offering_filter( $terms, $taxonomies, $args  ){
-			if ( in_array( self::$offering_slug, $taxonomies ) ){
+		public function offering_filter( $terms, $taxonomies, $args  ) {
+			if ( in_array( self::$offering_slug, $taxonomies ) ) {
 				$terms_filter = array();
 				foreach ( $terms as $term ) {
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term->term_id, self::$term_product_from_meta_key, true );
-					if ( empty( $product_plugin ) || in_array( $product_plugin, $this->pluginName ) ){
+					if ( empty( $product_plugin ) || in_array( $product_plugin, $this->pluginName ) ) {
 						$terms_filter[] = $term;
 					}
 				}
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				case 'product_detail':
 					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
-					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ){
+					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ) {
 						$content = '<span>' . strtoupper( $product_plugin ) . '</span> :- ';
 						$content .= '<a class="post-edit-link" href="' . edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
 					} else {
@@ -348,7 +348,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				return;
 			}
 
-			if ( false !== $this->get_taxonomy( $post_id ) ){
+			if ( false !== $this->get_taxonomy( $post_id ) ) {
 				return;
 			}
 
@@ -386,7 +386,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				if ( is_array( $term ) ) {
 					$term_id = $term['term_id'];
 					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_id_meta_key, $post_id, true );
-					if ( ! empty( $this->pluginName ) ){
+					if ( ! empty( $this->pluginName ) ) {
 						Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $post_id ), true );
 					}
 				}
@@ -396,9 +396,9 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 		public function get_product_plugin_by_post( $post_id ){
 			$post_type = get_post_type( $post_id );
-			if ( 'download' == $post_type ){
+			if ( 'download' == $post_type ) {
 				return 'edd';
-			} else if ( 'product' == $post_type ){
+			} else if ( 'product' == $post_type ) {
 				return 'woocommerce';
 			}
 			return '';
@@ -425,7 +425,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 */
 		public function bulk_insert_offerings( $plugin = array() ) {
 
-			if ( ! empty( $plugin ) ){
+			if ( ! empty( $plugin ) ) {
 				$this->pluginName = $plugin;
 			}
 			if ( ! $this->is_edd_active() && ! $this->is_woocommerce_active() ) {
@@ -442,7 +442,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					$new_term = wp_insert_term( $offering->post_title, self::$offering_slug, array( 'slug' => $offering->post_name ) );
 					if ( ! $new_term instanceof WP_Error ) {
 						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_id_meta_key, $offering->ID, true );
-						if ( ! empty( $this->pluginName ) ){
+						if ( ! empty( $this->pluginName ) ) {
 							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $offering->ID ), true );
 						}
 					}

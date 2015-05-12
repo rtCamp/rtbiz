@@ -237,7 +237,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function add_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null, $module = null ) {
 			global $rt_mail_accounts_model;
-			if ( $user_id == - 1 ) {
+			if ( - 1 == $user_id ) {
 				$user_id = get_current_user_id();
 			}
 
@@ -250,11 +250,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'flag'       => 'Y',
 			);
 
-			if ( ! empty( $module ) ){
+			if ( ! empty( $module ) ) {
 				$args['module'] = $module;
 			}
 
-			if ( $imap_server != null ) {
+			if ( null != $imap_server ) {
 				$args['imap_server'] = $imap_server;
 			}
 
@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				$args['email_data'] = $email_data;
 			}
 
-			if ( $imap_server != null ) {
+			if ( null != $imap_server ) {
 				$args['imap_server'] = $imap_server;
 			}
 
@@ -318,21 +318,21 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 * @since rt-Helpdesk 0.1
 		 */
 		public function delete_user_google_ac( $email, $module, $mailboxid =  '', $user_id = ''   ) {
-			if ( $user_id == - 1 ) {
+			if ( -1 == $user_id ) {
 				$user_id = get_current_user_id();
 			}
-			if ( empty( $email ) && empty( $mailboxid ) ){
+			if ( empty( $email ) && empty( $mailboxid ) ) {
 				return false;
 			}
 			$args = array(
 				'module' => $module,
 			);
 
-			if ( ! empty( $email ) ){
+			if ( ! empty( $email ) ) {
 				$args['email'] = $email;
 			}
 
-			if ( ! empty( $mailboxid ) ){
+			if ( ! empty( $mailboxid ) ) {
 				$args['id'] = $mailboxid;
 			}
 
@@ -357,13 +357,13 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			global $rt_mail_accounts_model;
 
 			$args = array();
-			if ( $email_data != null ) {
+			if ( null != $email_data ) {
 				$args['email_data'] = $email_data;
 			}
-			if ( $token != null ) {
+			if ( null!= $token ) {
 				$args['outh_token'] = $token;
 			}
-			if ( $imap_server != null ) {
+			if ( null != $imap_server ) {
 				$args['imap_server'] = $imap_server;
 			}
 

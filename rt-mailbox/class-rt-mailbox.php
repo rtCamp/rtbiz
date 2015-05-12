@@ -253,7 +253,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				<div id="rtmailbox-wrap" class="rtmailbox-wrap">
 					<?php global $rt_mail_settings;
 					$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
-					if ( ! empty( $mailbox ) ){ ?>
+					if ( ! empty( $mailbox ) ) { ?>
 						<input id="rtmailbox-add" data-module="<?php echo $module; ?>" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button"><?php
 					} else {
 						$this->render_add_mailbox_page( $module );
@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				}
 			} else {
 				$mailbox = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
-				if ( ! empty( $mailbox ) ){ ?>
+				if ( ! empty( $mailbox ) ) { ?>
 					<h4>Add Another Mailbox</h4><?php
 				} else { ?>
 					<h4>Add New Mailbox</h4><?php
@@ -560,8 +560,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				return $result;
 			}
 
-			$incoming_enc = ( isset( $obj_data['incoming_ssl'] ) && $obj_data['incoming_ssl'] == 'enable' ) ? 'ssl' : 'tls';
-			$outgoing_enc = ( isset( $obj_data['outgoing_ssl'] ) && $obj_data['outgoing_ssl'] == 'enable' ) ? 'ssl' : 'tls';
+			$incoming_enc = ( isset( $obj_data['incoming_ssl'] ) && 'enable' == $obj_data['incoming_ssl'] ) ? 'ssl' : 'tls';
+			$outgoing_enc = ( isset( $obj_data['outgoing_ssl'] ) && 'enable' == $obj_data['outgoing_ssl'] ) ? 'ssl' : 'tls';
 
 			// if port empty set default
 			if ( ! isset( $obj_data['incoming_port'] ) || empty( $obj_data['incoming_port'] ) ) {
@@ -587,7 +587,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				if ( ! empty( $obj_data['serverid'] ) ) {
 					$where     = array( 'id' => $obj_data['serverid'] );
 					$server_id = $rt_imap_server_model->update_server( $args, $where );
-					if ( $server_id ){
+					if ( $server_id ) {
 						$server_id = $obj_data['serverid'];
 					}
 				} else {
@@ -637,13 +637,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					} else {
 						if ( ! empty( $obj_data['mailboxid'] ) ) {
 							$mailboxid = $rt_mail_settings->update_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, '', '', $email_type, $imap_server, $module, $obj_data['mailboxid'] );
-							if ( $mailboxid ){
+							if ( $mailboxid ) {
 								$mailboxid = $obj_data['mailboxid'];
 							}
 						} else {
 							$mailboxid = $rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
 						}
-						if ( ! empty( $mailboxid ) ){
+						if ( ! empty( $mailboxid ) ) {
 							ob_start();
 							$this->rtmailbox_mailbox_folder_ui( $module, $mailboxid );
 							$result['html_imap_folder'] = ob_get_clean();
@@ -788,7 +788,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					die();
 				}
 				$email_ac   = $rt_mail_settings->get_email_acc( $email, $obj_data['module'] );
-				if ( empty( $email_ac ) ){
+				if ( empty( $email_ac ) ) {
 					$result['error'] = 'Error: Mailbox not found';
 					echo json_encode( $result );
 					die();
@@ -924,10 +924,10 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 								</strong>
 							</td>
 							<td>
-								<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['label'] ) ){ echo $rtbiz_modules[ $mailbox->module ]['label'];} else { echo $mailbox->module; } ?>
+								<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['label'] ) ) { echo $rtbiz_modules[ $mailbox->module ]['label'];} else { echo $mailbox->module; } ?>
 							</td>
 							<td class="rtmailbox-maillist-action">
-								<a class='button show-mailbox-settings' href="<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['setting_page_url'] ) ){ echo $rtbiz_modules[ $mailbox->module ]['setting_page_url']; } else { echo 'javascript:;'; } ?>"><?php echo __( 'Settings' ); ?></a>
+								<a class='button show-mailbox-settings' href="<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['setting_page_url'] ) ) { echo $rtbiz_modules[ $mailbox->module ]['setting_page_url']; } else { echo 'javascript:;'; } ?>"><?php echo __( 'Settings' ); ?></a>
 							</td>
 						</tr>
 					<?php
@@ -936,7 +936,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					</tbody>
 				</table>
 			<?php
-			}else{ ?>
+			} else { ?>
 				<div>No Mailbox Found!</div>
 			<?php }
 		}

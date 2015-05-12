@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									}
 									break;
 								default:
-									$temp[] = isset( $lead[ $field['id'] ] ) ? ( $field['type'] == 'number' ) ? floatval( $lead[ $field['id'] ] ) : $lead[ $field['id'] ] : 'NA';
+									$temp[] = isset( $lead[ $field['id'] ] ) ? ( 'number' == $field['type'] ) ? floatval( $lead[ $field['id'] ] ) : $lead[ $field['id'] ] : 'NA';
 									break;
 							}
 						}

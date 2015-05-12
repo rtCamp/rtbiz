@@ -6,7 +6,7 @@
  *
  * @author faishal
  */
-if ( ! class_exists( 'RT_Plugin_Update' ) ){
+if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 	/**
 	 * Class RT_Plugin_Update
 	 */
@@ -57,7 +57,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ){
 			//we can parse the update JSON as if it was a plugin info string, then copy over
 			//the parts that we care about.
 			$pluginInfo = RT_Plugin_Update_Info::from_json( $json, $triggerErrors );
-			if ( $pluginInfo != null ){
+			if ( null != $pluginInfo ) {
 				return self::from_plugin_info( $pluginInfo );
 			} else {
 				return null;
@@ -131,7 +131,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ){
 			$update->new_version = $this->version;
 			$update->url         = $this->homepage;
 			$update->package     = $this->download_url;
-			if ( ! empty( $this->upgrade_notice ) ){
+			if ( ! empty( $this->upgrade_notice ) ) {
 				$update->upgrade_notice = $this->upgrade_notice;
 			}
 
