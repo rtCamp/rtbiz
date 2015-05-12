@@ -270,7 +270,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 							self::delete_meta( $post_id, $field['key'], $ometa );
 						}
 						foreach ( $account_meta[ $field['key'] ] as $nmeta ) {
-							if ( $nmeta == '' ){
+							if ( '' == $nmeta ) {
 								continue;
 							}
 							self::add_meta( $post_id, $field['key'], $nmeta );
@@ -302,7 +302,7 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
 			global $rtbiz_offerings;
-			if ( isset( $rtbiz_offerings ) ){
+			if ( isset( $rtbiz_offerings ) ) {
 				$cols[ 'taxonomy-'.Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ];
 			}
 			$cols['author'] = $columns['author'];

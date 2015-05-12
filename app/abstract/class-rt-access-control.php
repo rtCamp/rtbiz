@@ -2,7 +2,7 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) ){
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -98,7 +98,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				}
 
 				$valid_caps = array();
-				foreach ( $module_permissions as $mkey => $valid_role_value ){
+				foreach ( $module_permissions as $mkey => $valid_role_value ) {
 					$valid_role_key = self::get_role_key( $valid_role_value );
 					// rtbiz role capability
 					foreach ( self::$permissions as $ap ) {
@@ -321,14 +321,14 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			$sql = 'SELECT DISTINCT(acl.userid) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where acl.module =  '".$module_key."' and acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
 			$user_ids = $wpdb->get_col( $sql );
 
-			if ( ! empty( $user_ids ) ){
+			if ( ! empty( $user_ids ) ) {
 				$module_user = array_merge( $module_user, $user_ids );
 			}
 			$module_user = array_unique( $module_user );
 
 			// get user object from user ids
 			$user_obj = array();
-			if ( ! empty( $module_user ) ){
+			if ( ! empty( $module_user ) ) {
 				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC', ) );
 			}
 			return $user_obj;
@@ -349,21 +349,21 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			global $rt_biz_acl_model;
 
 			$old_module_permissions = get_site_option( 'rt_biz_module_permissions' );
-			if( empty( $old_module_permissions ) || ! is_array( $old_module_permissions )){
+			if ( empty( $old_module_permissions ) || ! is_array( $old_module_permissions ) ) {
 				$old_module_permissions = array();
 			}
 			$module_permissions = $_POST['rt_biz_module_permissions'];
 
 			// New Module added
 			$Module_added = array_diff_key( $module_permissions, $old_module_permissions );
-			if ( ! empty( $Module_added ) ){
+			if ( ! empty( $Module_added ) ) {
 				foreach ( $Module_added as $module_Key => $dept_permission ) {
 					foreach ( $dept_permission as $groupid => $permissoin ) {
 						$where = array(
 							'groupid'    => $groupid,
 						);
 						$users = $rt_biz_acl_model->get_acl( $where );
-						if ( ! empty( $users ) ){
+						if ( ! empty( $users ) ) {
 							$users = array_unique( wp_list_pluck( $users, 'userid' ) );
 							foreach ( $users as $user ) {
 								$data = array(
@@ -385,7 +385,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			// existing module permission updated
 			foreach ( $module_permissions as $module_Key => $dept_permission ) {
 
-				if( empty( $old_module_permissions[ $module_Key ] ) || ! is_array( $old_module_permissions[ $module_Key ] )){
+				if( empty( $old_module_permissions[ $module_Key ] ) || ! is_array( $old_module_permissions[ $module_Key ] )) {
 					$old_module_permissions[ $module_Key ] = array();
 				}
 
@@ -432,7 +432,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				<table class="form-table">
 					<tbody>
 						<?php foreach ( $modules as $mkey => $m ) {
-							if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+							if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 								continue;
 							}?>
 						<tr>
@@ -440,7 +440,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 							<td>
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 
-									<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){ ?>
+									<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
 										<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
 									<?php } ?>
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
@@ -468,7 +468,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 					// if user is not connected with contact then acl not stored
 					$user = rt_biz_get_wp_user_for_contact( $contact_id );
-					if ( empty( $user ) ){
+					if ( empty( $user ) ) {
 						return;
 					}
 
@@ -479,22 +479,22 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 					$old_profile_permissions = get_post_meta( $contact_id, 'rt_biz_profile_permissions', true );
 
 					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
-					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 						$profile_permissions[ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_HD_TEXT_DOMAIN ];
 						$_REQUEST['rt_biz_profile_permissions'][ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_BIZ_TEXT_DOMAIN ] ;
 					}
 
-					foreach ( $profile_permissions as $module_Key => $module_permission  ){
+					foreach ( $profile_permissions as $module_Key => $module_permission  ) {
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
 						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
 
 						switch ( $module_permission ) {
 							case 0:
-								if ( 0 == strlen( $module_permission ) ){
+								if ( 0 == strlen( $module_permission ) ) {
 									// Group Level permission
 									$module_permission = ( ! empty( $module_permissions ) ) ? $module_permissions[ $module_Key ] : array();
 									//check if old permission is group level
-									if ( $isOldPermission && 0 == $old_permission_len ){
+									if ( $isOldPermission && 0 == $old_permission_len ) {
 
 										//get old group and its old permission from custom table
 										$where = array(
@@ -517,7 +517,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 											//check if group permission is already exist or not
 											if ( strlen( $position ) > 0 ) {
 												// check id group permission update or not
-												if ( $module_permission[ $department->term_id ] != $old_group_permission[ $position ] ){
+												if ( $module_permission[ $department->term_id ] != $old_group_permission[ $position ] ) {
 													// update group level permission
 													$data = array(
 														'permission' => $module_permission[ $department->term_id ],
@@ -542,14 +542,14 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 										}
 
 										//if group remove remove its acl
-										if ( ! empty( $departments ) ){
+										if ( ! empty( $departments ) ) {
 											$new_group = array_unique( wp_list_pluck( $departments, 'term_id' ) );
 										} else {
 											$new_group = array();
 										}
 										$group_removed = array_diff( $old_group, $new_group );
 										//any group remove from customer profile remove access
-										if ( ! empty( $group_removed ) ){
+										if ( ! empty( $group_removed ) ) {
 											// remove group level acl
 											foreach ( $group_removed as $group ) {
 												$where = array(
@@ -560,9 +560,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 												$rt_biz_acl_model->remove_acl( $where );
 											}
 										}
-									}else {
+									} else {
 										//check if old permission is profile level permission
-										if ( $isOldPermission && 0 != $old_permission_len ){
+										if ( $isOldPermission && 0 != $old_permission_len ) {
 											// remove old profile level permission
 											$where = array(
 												'userid'     => $user[0]->ID,
@@ -585,7 +585,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 									// No Role
 
 									//remove all permission
-									if ( $isOldPermission ){
+									if ( $isOldPermission ) {
 										$where = array(
 											'userid'     => $user[0]->ID,
 											'module'     => $module_Key,
@@ -639,7 +639,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 		function add_department_support( $supports ){
 
-	        foreach ( self::$modules as $key => $value ){
+	        foreach ( self::$modules as $key => $value ) {
 		        if ( ! empty( $value['department_support'] ) ) {
 			        $supports = array_merge( $supports, $value['department_support'] );
 		        }

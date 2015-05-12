@@ -2,7 +2,7 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) ){
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -26,7 +26,7 @@ if ( ! class_exists( 'Rt_Biz_Mailbox_Migration' ) ) {
 		public function migrate(){
 			global $rt_imap_server_model;
 			$isMigrated = get_option( 'rtbiz_mailbox_migration_1.2.16' );
-			if ( empty( $isMigrated ) ||  'false' === $isMigrated ){
+			if ( empty( $isMigrated ) ||  'false' === $isMigrated ) {
 
 				$data = array(
 					'server_name'          => 'Gmail/Google',

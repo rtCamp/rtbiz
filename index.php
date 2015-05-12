@@ -30,7 +30,7 @@ if ( ! defined( 'RT_BIZ_PATH' ) ) {
 if ( ! defined( 'RT_BIZ_URL' ) ) {
 	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
 }
-if ( ! defined( 'RT_BIZ_BASE_NAME' ) ){
+if ( ! defined( 'RT_BIZ_BASE_NAME' ) ) {
 	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
 }
 if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
@@ -291,9 +291,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function plugin_activation_redirect() {
 			// Add the transient to redirect
-			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) )  {
 				set_transient( '_rthd_activation_redirect', true, 30 );
-			} else{
+			} else {
 				set_transient( '_rtbiz_activation_redirect', true, 30 );
 			}
 		}
@@ -408,7 +408,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$settings = rt_biz_get_offering_selection_setting();
 			$offering_plugin   = ! empty ( $settings ) ? $settings : array() ;
 			$to_register_posttype = array();
-			foreach ( Rt_Access_Control::$modules as $key => $value ){
+			foreach ( Rt_Access_Control::$modules as $key => $value ) {
 
 				if ( ! empty( $value['offering_support'] ) ) {
 					$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
@@ -444,7 +444,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				include_once RT_BIZ_PATH . 'app/lib/rt-offerings/taxonomy-metadata.php';
 			}
 
-			if ( ! is_object( $taxonomy_metadata ) ){
+			if ( ! is_object( $taxonomy_metadata ) ) {
 				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 				$taxonomy_metadata->activate();
 			}
@@ -671,7 +671,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
-			if ( $plugin_file == RT_BIZ_BASE_NAME ) {
+			if ( RT_BIZ_BASE_NAME == $plugin_file ) {
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/docs' . '">' . __( 'Documentation', RT_BIZ_TEXT_DOMAIN ) . '</a>';
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RT_BIZ_TEXT_DOMAIN ) . '</a>';
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/support' . '">' . __( 'Support', RT_BIZ_TEXT_DOMAIN ) . '</a>';
@@ -701,7 +701,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
+			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
 				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 					wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 				}
@@ -712,7 +712,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			// Taxonomy menu hack for rtBiz
-			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) )  {
+			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', self::$dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
