@@ -5,7 +5,7 @@
  * Date: 17/02/14
  * Time: 3:40 PM
  */
-if ( ! class_exists( 'RT_WP_Autoload' ) ){
+if ( ! class_exists( 'RT_WP_Autoload' ) ) {
 	/**
 	 * Generic autoloader for classes named in WordPress coding style.
 	 */
@@ -22,7 +22,7 @@ if ( ! class_exists( 'RT_WP_Autoload' ) ){
 		 */
 		function __construct( $dir = '' )
 		{
-			if ( ! empty( $dir ) ){
+			if ( ! empty( $dir ) ) {
 				$this->dir = $dir ;
 			} else {
 				//__DIR__ is actually equivalent to realpath(dirname(__FILE__)) and Added in PHP 5.3.0
@@ -39,12 +39,12 @@ if ( ! class_exists( 'RT_WP_Autoload' ) ){
 		{
 
 			$class_path = trailingslashit( $this->dir ) .  $this->get_class_directory_name( $class_name ) . '/' . $this->get_class_file_name( $class_name );
-			if ( file_exists( $class_path ) ){
+			if ( file_exists( $class_path ) ) {
 				include_once $class_path;
 			}
 			$class_path = trailingslashit( $this->dir ) . $this->get_class_file_name( $class_name );
 
-			if ( file_exists( $class_path ) ){
+			if ( file_exists( $class_path ) ) {
 				include_once $class_path;
 			}
 		}

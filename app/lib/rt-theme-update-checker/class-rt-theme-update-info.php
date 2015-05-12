@@ -6,7 +6,7 @@
  * Time: 7:20 PM
  */
 
-if ( ! class_exists( 'RT_Theme_Update_Info' ) ):
+if ( ! class_exists( 'RT_Theme_Update_Info' ) ) :
 
 	/**
 	 * A simple container class for holding information about an available update.

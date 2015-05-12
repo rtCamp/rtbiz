@@ -6,7 +6,7 @@
  * @author Faishal Saiyed<saiyedfaishal@gmail.com>
  */
 
-if ( ! class_exists( 'RT_Plugin_Info' ) ){
+if ( ! class_exists( 'RT_Plugin_Info' ) ) {
 	/**
 	 * Class RT_Plugin_Info
 	 */
@@ -106,7 +106,7 @@ if ( ! class_exists( 'RT_Plugin_Info' ) ){
 		 */
 		function set_current_plugin_path( $path )
 		{
-			if ( $path != null ){
+			if ( null != $path ) {
 				$this->plugin_path = $path;
 			} else {
 				$this->plugin_path = realpath( plugin_dir_path( __FILE__ ) . '../../index.php' );

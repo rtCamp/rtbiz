@@ -90,7 +90,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		public  function hook(){
 			$this->field_array = apply_filters( 'rtlib_importer_fields', $this->field_array );
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
-			if ( $this->pageflag ){
+			if ( $this->pageflag ) {
 				add_action( 'admin_menu', array( $this, 'register_attribute_menu' ) );
 			}
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -163,14 +163,14 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			);
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
 
-			if ( ! empty( $filterd_tab ) ){
+			if ( ! empty( $filterd_tab ) ) {
 				if ( $this->pageflag ) {
 					$idle_class   = 'nav-tab';
 					$active_class = 'nav-tab nav-tab-active';
 					$tabs_html .= '<div class="nav-tab-wrapper" >';
 					// Loop through tabs and build navigation
 					foreach ( array_values( $filterd_tab ) as $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == 'gravity' );
+						$is_current = (bool) ( $tab_data['slug'] );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
@@ -185,13 +185,13 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					$active_class = 'current';
 					$tabs_html .= '<div class="sub-nav-tab-wrapper"><ul class="subsubsub">';
 					foreach ( array_values( $filterd_tab ) as $i => $tab_data ) {
-						$is_current = (bool) ( $tab_data['slug'] == 'gravity' );
+						$is_current = (bool) ( 'gravity' == $tab_data['slug'] );
 						$tab_class  = $is_current ? $active_class : $idle_class;
 
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
 							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
-						$separator = $i != ( count( $filterd_tab ) - 1 ) ? ' | ' : '';
+						$separator = ( count( $filterd_tab ) - 1 ) != $i ? ' | ' : '';
 						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>'. $separator .'</li>';
 					}
 					$tabs_html .= '</ul></div>';
@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
 			$form_posttype .= '<option value="">' . __( 'Please select attribute' ) . '</option>';
 			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
-				if ( $all_module || $cpt_label['module'] == $module ){
+				if ( $all_module || $cpt_label['module'] == $module ) {
 					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
 						$selected = "selected='selected'";
 						$formname = $form;
@@ -449,7 +449,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					return;
 				}
 				$style = '';
-				if ( empty( $form_count['total'] ) ){
+				if ( empty( $form_count['total'] ) ) {
 					$style = 'style="display:none;"';
 				}
 				?>
@@ -738,7 +738,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				$form_id  = $_REQUEST['map_form_id'];
 				$map_data = maybe_serialize( $_REQUEST['map_data'] );
 				$post_type = $_REQUEST['mapPostType'];
-				if ( isset( $this->post_type[ $post_type ] ) && ! empty( $this->post_type[ $post_type ]['module'] ) ){
+				if ( isset( $this->post_type[ $post_type ] ) && ! empty( $this->post_type[ $post_type ]['module'] ) ) {
 					$module = $this->post_type[ $post_type ]['module'];
 				} else {
 					$module = '';
@@ -825,7 +825,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 			$table_name                     = RGFormsModel::get_lead_meta_table_name();
 			$value                          = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$table_name} WHERE lead_id=%d AND meta_key=%s", $entry_id, $meta_key ) );
-			$meta_value                     = $value == null ? false : maybe_unserialize( $value );
+			$meta_value                     = null == $value ? false : maybe_unserialize( $value );
 			$_gform_lead_meta[ $cache_key ] = $meta_value;
 
 			return $meta_value;

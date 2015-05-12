@@ -681,7 +681,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$select = '';
 			$sum = 0;
 			$allDepartmentCSS = '';
-			if ( isset( $_REQUEST['user-group'] ) && ! empty( $_REQUEST['user-group'] ) ){
+			if ( isset( $_REQUEST['user-group'] ) && ! empty( $_REQUEST['user-group'] ) ) {
 				$activeSlug = $_REQUEST['user-group'];
 			} else {
 				$allDepartmentCSS = 'color:#000;font-weight:bold;';

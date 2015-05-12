@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			if ( ! isset( $_POST['action'] ) || 'rtlib_enable_mapping' != $_POST['action'] || ! isset( $_POST['mapping_id'] ) ) {
 				die( 0 );
 			}
-			$data               = array( 'enable' => isset( $_POST['mapping_enable'] ) ? $_POST['mapping_enable'] == 'true' ? 'yes' : 'no' : 'no' );
+			$data               = array( 'enable' => isset( $_POST['mapping_enable'] ) ? 'true' == $_POST['mapping_enable'] ? 'yes' : 'no' : 'no' );
 			$where              = array( 'id' => $_POST['mapping_id'] );
 			$response['status'] = $rtlib_gravity_fields_mapping_model->update_mapping( $data, $where );
 			echo json_encode( $response );
@@ -135,7 +135,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			);
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
 
-			if ( ! empty( $filterd_tab ) ){
+			if ( ! empty( $filterd_tab ) ) {
 				if ( $this->pageflag ) {
 
 					$idle_class   = 'nav-tab';
@@ -165,7 +165,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 						if ( isset( $tab_data['class'] ) && is_array( $tab_data['class'] ) ) {
 							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
-						$separator = $i != ( count( $filterd_tab ) - 1 ) ? ' | ' : '';
+						$separator = ( count( $filterd_tab ) - 1 ) != $i ? ' | ' : '';
 						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>'. $separator .'</li>';
 					}
 					$tabs_html .= '</ul></div>';
@@ -203,7 +203,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 
 			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
 			<div class="wrap">
-			<?php if ( $this->pageflag ){
+			<?php if ( $this->pageflag ) {
 				echo '<h2>' .  __( 'Importer Mapping List' ) . '</h2>'; }
 
 			//$this->importer_tab();

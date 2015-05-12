@@ -269,7 +269,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 			}
 
 			// Show admin interface
-			if ( ! empty( $_GET['edit'] ) ){
+			if ( ! empty( $_GET['edit'] ) ) {
 				$this->edit_attribute_ui();
 			} else {
 				$this->add_attribute_ui();
