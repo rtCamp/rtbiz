@@ -433,7 +433,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 					<tbody>
 						<?php foreach ( $modules as $mkey => $m ) {
 							if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
-								$m['label'] = 'People';
+								continue;
 							}?>
 						<tr>
 							<th><?php echo $m['label']; ?></th>
@@ -477,6 +477,12 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 					$profile_permissions = $_REQUEST['rt_biz_profile_permissions'];
 					$old_profile_permissions = get_post_meta( $contact_id, 'rt_biz_profile_permissions', true );
+
+					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
+					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ){
+						$profile_permissions[ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_HD_TEXT_DOMAIN ];
+						$_REQUEST['rt_biz_profile_permissions'][ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_BIZ_TEXT_DOMAIN ] ;
+					}
 
 					foreach ( $profile_permissions as $module_Key => $module_permission  ){
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
