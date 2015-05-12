@@ -1169,7 +1169,12 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( !empty( $userid ) ){
 				$userid = $userid[0];
 				do_action( 'rtbiz_before_delete_contact_acl_remove', $contactid, $userid );
-				$rt_biz_acl_model->delete( array( 'userid' => $userid ) );
+				$sql = $wpdb->prepare( "select module, max( permission ) as permission from $rt_biz_acl_model->table_name where userid = %d group by module", $userid );
+				$permissions = $rt_biz_acl_model->get_result_by_query( $sql );
+				//$rt_biz_acl_model->delete( array( 'userid' => $userid ) );
+				foreach( $permissions as $permission ){
+					do_action( 'rtbiz_after_delete_staff_acl_remove-' . $permission->module, $contactid, $userid, $permission->permission );
+				}
 				do_action( 'rtbiz_after_delete_contact_acl_remove', $contactid, $userid );
 			}
 			do_action( 'rtbiz_before_delete_contact', $contactid, $userid );
