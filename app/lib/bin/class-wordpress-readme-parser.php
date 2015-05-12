@@ -118,8 +118,7 @@ class WordPress_Readme_Parser {
 						$filepath = sprintf( 'assets/screenshot-%d.%s', $i + 1, $ext );
 						if ( file_exists( dirname( $this->path ) . DIRECTORY_SEPARATOR . $filepath ) ) {
 							break;
-						}
-						else {
+						} else {
 							$filepath = null;
 						}
 					}

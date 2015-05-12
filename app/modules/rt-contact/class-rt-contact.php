@@ -116,8 +116,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			/*add_action( 'manage_' . self::$user_category_taxonomy . '_custom_column', array( $this, 'manage_contact_column_body' ), 10, 3 );
 			add_filter( 'manage_edit-' . self::$user_category_taxonomy . '_columns', array( $this, 'manage_contact_column_header' ) );*/
 
-			// trash contact
-			// add_action( 'before_delete_post', array( $this, 'on_contact_delete' ) );
+			// Delete contact
+			add_action( 'before_delete_post', array( $this, 'before_contact_deleted' ) );
+			//add_action( 'wp_trash_post', array( $this, 'before_contact_trashed' ) );
 		}
 
 		/**
@@ -1160,13 +1161,18 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			die( 0 );
 		}
 
-		function on_contact_delete( $post_ID ){
+		function before_contact_deleted( $contactid ){
 			// remove acl table entry
-			global $rt_biz_acl_model;
-			$users = $this->get_wp_user_for_contact( $post_ID );
-			if ( ! empty( $users ) ){
-				$rt_biz_acl_model->delete( array( 'userid' => $users->ID ) );
+			global $rt_biz_acl_model, $wpdb;
+			$query = $wpdb->prepare( "SELECT `p2p_to` FROM `wp_p2p` WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
+			$userid = $wpdb->get_col( $query );
+			if ( !empty( $userid ) ){
+				$userid = $userid[0];
+				do_action( 'rtbiz_before_delete_contact_acl_remove', $contactid, $userid );
+				$rt_biz_acl_model->delete( array( 'userid' => $userid ) );
+				do_action( 'rtbiz_after_delete_contact_acl_remove', $contactid, $userid );
 			}
+			do_action( 'rtbiz_before_delete_contact', $contactid, $userid );
 		}
 
 	}

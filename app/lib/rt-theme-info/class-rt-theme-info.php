@@ -6,7 +6,7 @@
  * @author Faishal Saiyed<saiyedfaishal@gmail.com>
  */
 
-if ( ! class_exists( 'RT_Theme_Info' ) ){
+if ( ! class_exists( 'RT_Theme_Info' ) ) {
 	/**
 	 * Class RT_Plugin_Info
 	 */
@@ -106,7 +106,7 @@ if ( ! class_exists( 'RT_Theme_Info' ) ){
 		 */
 		function set_current_theme_path( $path )
 		{
-			if ( $path != null ){
+			if ( null != $path ) {
 				$this->theme_path = $path;
 			} else {
 				$this->theme_path = realpath( plugin_dir_path( __FILE__ ) . '../../index.php' );
