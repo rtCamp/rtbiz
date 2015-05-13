@@ -422,59 +422,60 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 		function profile_level_permission( $post ) {
 			global $rt_contact;
-			if ( current_user_can( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID ) ) ) {
+			//if ( current_user_can( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID ) ) ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
+				$is_staff_member = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
 				$user = rt_biz_get_wp_user_for_contact( $post->ID );
 				if ( in_array( 'administrator', $user[0]->roles ) ){
 					_e( "Admin access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
 					return;
 				}
 				?>
-				<table class="form-table">
-					<tbody>
-						<?php foreach ( $modules as $mkey => $m ) {
-							if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
-								continue;
-							}?>
-						<tr>
-							<th><?php echo $m['label']; ?></th>
-							<td>
-								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
+				<div>
+					<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked' : ''; ?>
+					<label><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected;?>  name="rt_biz_is_staff_member" value="yes"></label>
+				</div>
+				<div id="rtbiz-permission-container" class="rtbiz-hide">
+					<table class="form-table">
+						<tbody>
+							<?php foreach ( $modules as $mkey => $m ) {
+								if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+									continue;
+								}?>
+							<tr>
+								<th><?php echo $m['label']; ?></th>
+								<td>
+									<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 
-									<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
-										<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
-									<?php } ?>
-									<?php foreach ( $permissions as $pkey => $p ) { ?>
-										<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>
-									<?php } ?>
-								</select>
-							</td>
-						</tr>
-						<?php } ?>
-					</tbody>
-				</table>
-				<?php
-			} else {
-				?><div><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </div><?php
-			}
+										<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
+											<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
+										<?php }
+										foreach ( $permissions as $pkey => $p ) {
+											$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
+											<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option>
+										<?php } ?>
+									</select>
+								</td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<p><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </p>
+				</div>
+			<?php
 		}
 
 		function save_profile_level_permission( $contact_id ) {
-
-			if ( current_user_can( 'create_users' ) ) {
+			global $rt_biz_acl_model;
+			$user = rt_biz_get_wp_user_for_contact( $contact_id );
+			if ( empty( $user ) ) {
+				return;
+			}
+			$profile_permissions = array();
+			if ( 'yes' == $_REQUEST['rt_biz_is_staff_member'] ) {
 				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
-
-					//update acl custom table
-					global $rt_biz_acl_model;
-
-					// if user is not connected with contact then acl not stored
-					$user = rt_biz_get_wp_user_for_contact( $contact_id );
-					if ( empty( $user ) ) {
-						return;
-					}
-
 					$departments = wp_get_post_terms( $contact_id, RT_Departments::$slug );
 					$module_permissions = get_site_option( 'rt_biz_module_permissions' );
 
@@ -543,14 +544,13 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 											}
 										}
 
-										//if group remove remove its acl
+										//if group remove from customer profile remove access
 										if ( ! empty( $departments ) ) {
 											$new_group = array_unique( wp_list_pluck( $departments, 'term_id' ) );
 										} else {
 											$new_group = array();
 										}
 										$group_removed = array_diff( $old_group, $new_group );
-										//any group remove from customer profile remove access
 										if ( ! empty( $group_removed ) ) {
 											// remove group level acl
 											foreach ( $group_removed as $group ) {
@@ -634,9 +634,15 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 								break;
 						}
 					}
-					update_post_meta( $contact_id, 'rt_biz_profile_permissions', $_REQUEST['rt_biz_profile_permissions'] );
 				}
+			} else {
+				$where = array(
+					'userid'     => $user[0]->ID,
+				);
+				$rt_biz_acl_model->remove_acl( $where );
 			}
+			update_post_meta( $contact_id, 'rt_biz_profile_permissions', $profile_permissions );
+			update_post_meta( $contact_id, 'rt_biz_is_staff_member', $_REQUEST['rt_biz_is_staff_member'] );
 		}
 
 		function add_department_support( $supports ){
