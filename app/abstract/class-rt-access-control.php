@@ -487,7 +487,10 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 					foreach ( $profile_permissions as $module_Key => $module_permission  ) {
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
 						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
-
+						if( in_array( 'administrator', $user[0]->roles ) ){
+							$module_permission = self::$permissions['admin']['value'];
+							$_REQUEST['rt_biz_profile_permissions'][ $module_Key ] = $module_permission;
+						}
 						switch ( $module_permission ) {
 							case 0:
 								if ( 0 == strlen( $module_permission ) ) {
