@@ -426,8 +426,11 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$modules     = rt_biz_get_modules();
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
-				$settings  = rt_biz_get_redux_settings();
-				$menu_label = $settings['menu_label'];
+				$user = rt_biz_get_wp_user_for_contact( $post->ID );
+				if ( in_array( 'administrator', $user[0]->roles ) ){
+					_e( "Admin access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
+					return;
+				}
 				?>
 				<table class="form-table">
 					<tbody>
@@ -487,10 +490,6 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 					foreach ( $profile_permissions as $module_Key => $module_permission  ) {
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
 						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
-						if( in_array( 'administrator', $user[0]->roles ) ){
-							$module_permission = self::$permissions['admin']['value'];
-							$_REQUEST['rt_biz_profile_permissions'][ $module_Key ] = $module_permission;
-						}
 						switch ( $module_permission ) {
 							case 0:
 								if ( 0 == strlen( $module_permission ) ) {
