@@ -269,17 +269,17 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			$content = '';
 			switch ( $column ) {
 				case 'product_detail':
+					$content = '';
 					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
 					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ) {
-						$content = '<span>' . strtoupper( $product_plugin ) . '</span> :- ';
+						$content = '<span>' . ucfirst( $product_plugin ) . '</span> :- ';
 						$content .= '<a class="post-edit-link" href="' . edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
 					} else {
 						echo '-';
 					}
 					break;
 				case 'offering_count':
-					$content = '';
 					foreach ( $this->post_types as $posttype ) {
 						$posts = new WP_Query( array(
 							'post_type' => $posttype,
@@ -289,7 +289,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content .= strtoupper( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content = ucfirst( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
 					}
 
 					break;
