@@ -429,15 +429,16 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$is_staff_member = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
 				$user = rt_biz_get_wp_user_for_contact( $post->ID );
 				if ( in_array( 'administrator', $user[0]->roles ) ){
-					_e( "Admin access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
+					_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
 					return;
 				}
 				?>
 				<div>
 					<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked' : ''; ?>
-					<label><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected;?>  name="rt_biz_is_staff_member" value="yes"></label>
+					<label><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected;?>  name="rt_biz_is_staff_member" value="yes"><span class="checkbox-title"><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?></span></label>
 				</div>
-				<div id="rtbiz-permission-container" class="rtbiz-hide">
+				<?php $class = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? '' : 'rtbiz-hide'; ?>
+				<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
 					<table class="form-table">
 						<tbody>
 							<?php foreach ( $modules as $mkey => $m ) {
