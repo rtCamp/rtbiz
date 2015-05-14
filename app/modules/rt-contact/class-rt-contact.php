@@ -135,7 +135,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			$custom_order['rt-departmentdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-departmentdiv'];
 			$wp_meta_boxes[ $this->post_type ]['side']['core'] = $custom_order;
 			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'] );
-			unset( $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user'] );
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user' ] );
 			unset( $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] );
 		}
 
