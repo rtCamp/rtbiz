@@ -55,7 +55,6 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'check_primary_email_for_admin_notice' ), 'method setup_meta_fields does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_header' ), 'method print_metabox_js does not exist in rtbiz') ;
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_body' ), 'method post_table_columns does not exist in rtbiz' );
-		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_meta_boxes' ), 'method contact_meta_boxes does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_user_p2p' ), 'method contact_user_p2p does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'connect_contact_to_user' ), 'method connect_contact_to_user does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'remove_contact_to_user' ), 'method remove_contact_to_user does not exist in rtbiz' );
@@ -75,7 +74,6 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_wp_user_for_contact' ), 'method get_wp_user_for_contact does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_contact_by_category' ), 'method get_contact_by_category does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_create_for_wp_user' ), 'method contact_create_for_wp_user does not exist in rtbiz' );
-		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_user_from_name' ), 'method get_user_from_name does not exist in rtbiz' );
 	}
 
 
