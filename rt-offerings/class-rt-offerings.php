@@ -339,7 +339,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				return;
 			}
 
-			if ( 'publish' != $_POST['post_status'] ) {
+			if ( ! isset( $_POST['post_status'] ) || 'publish' != $_POST['post_status'] ) {
 				return;
 			}
 
