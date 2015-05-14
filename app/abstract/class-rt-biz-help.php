@@ -328,11 +328,11 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'person_list_overview':
 					?>
 					<p><?php
-						if ( isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
-							echo __( 'Staff are part of your organization who are responsible to handle customer tickets.' );
-						} else {
-							echo __( 'Customers are the people who have purchased your product and have created a support ticket.' );
-						} ?>
+					if ( isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
+						echo __( 'Staff are part of your organization who are responsible to handle customer tickets.' );
+					} else {
+						echo __( 'Customers are the people who have purchased your product and have created a support ticket.' );
+					} ?>
 					</p>
 					<?php
 					break;
