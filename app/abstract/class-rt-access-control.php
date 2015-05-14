@@ -454,8 +454,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 									<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
 										<option title="<?php _e( 'No Profile Access Override' ); ?>"
-										        value=""><?php _e( 'Use Group Access' ); ?></option><?php
-									}
+										        value=""><?php _e( 'Use Group Access' ); ?></option><?php }
 									foreach ( $permissions as $pkey => $p ) {
 										$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
 										<option title="<?php echo $p['tooltip']; ?>"
