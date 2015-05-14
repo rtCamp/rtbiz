@@ -427,6 +427,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$permissions = rt_biz_get_acl_permissions();
 				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
 				$is_staff_member = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
+				if ( empty( $is_staff_member ) && isset( $_REQUEST['rt_contact_group'] ) && $_REQUEST['rt_contact_group'] == 'staff' ){
+					$is_staff_member = 'yes';
+				}
 				$user = rt_biz_get_wp_user_for_contact( $post->ID );
 				if ( in_array( 'administrator', $user[0]->roles ) ){
 					_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
