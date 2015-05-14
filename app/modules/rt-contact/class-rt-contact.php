@@ -1180,7 +1180,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		function before_contact_deleted( $contactid ){
 			// remove acl table entry
 			global $rt_biz_acl_model, $wpdb;
-			$query = $wpdb->prepare( "SELECT `p2p_to` FROM `wp_p2p` WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
+			$query = $wpdb->prepare( "SELECT `p2p_to` FROM $wpdb->p2p WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
 			$userid = $wpdb->get_col( $query );
 			if ( !empty( $userid ) )  {
 				$userid = $userid[0];
