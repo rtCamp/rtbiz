@@ -90,6 +90,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_acl_meta_boxes' ) );
 				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
 			}
+			add_action('add_meta_boxes_' . $this->post_type , array( $this, 'metabox_rearrenge' ));
 
 			// Admin primary Notice
 			add_action( 'admin_notices', array( $this, 'check_primary_email_for_admin_notice' ) );
@@ -120,6 +121,24 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			add_action( 'before_delete_post', array( $this, 'before_contact_deleted' ) );
 			//add_action( 'wp_trash_post', array( $this, 'before_contact_trashed' ) );
 		}
+
+		/**
+		 * up[date metabox order
+		 */
+		public function metabox_rearrenge(){
+			global $wp_meta_boxes;
+			$custom_order['submitdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['submitdiv'];
+			$custom_order['p2p-from-' . $this->post_type . '_to_user'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-from-' . $this->post_type . '_to_user'];
+			$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
+			$custom_order['rt-offeringdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-offeringdiv'];
+			$custom_order['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] = $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ];
+			$custom_order['rt-departmentdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-departmentdiv'];
+			$wp_meta_boxes[ $this->post_type ]['side']['core'] = $custom_order;
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'] );
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-from-' . $this->post_type . '_to_user'] );
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] );
+		}
+
 
 		/**
 		 * Filter contact
