@@ -90,7 +90,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_acl_meta_boxes' ) );
 				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
 			}
-			add_action('add_meta_boxes_' . $this->post_type , array( $this, 'metabox_rearrenge' ));
+			add_action( 'add_meta_boxes_' . $this->post_type , array( $this, 'metabox_rearrenge' ) );
 
 			// Admin primary Notice
 			add_action( 'admin_notices', array( $this, 'check_primary_email_for_admin_notice' ) );
@@ -128,15 +128,15 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 		public function metabox_rearrenge(){
 			global $wp_meta_boxes;
 			$custom_order['submitdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['submitdiv'];
-			$custom_order['p2p-from-' . $this->post_type . '_to_user'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-from-' . $this->post_type . '_to_user'];
+			$custom_order[ 'p2p-from-' . $this->post_type . '_to_user' ] = $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user' ];
 			$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
 			$custom_order['rt-offeringdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-offeringdiv'];
-			$custom_order['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] = $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ];
+			$custom_order[ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] = $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ];
 			$custom_order['rt-departmentdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-departmentdiv'];
 			$wp_meta_boxes[ $this->post_type ]['side']['core'] = $custom_order;
 			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'] );
-			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-from-' . $this->post_type . '_to_user'] );
-			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] );
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user'] );
+			unset( $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] );
 		}
 
 
@@ -1160,6 +1160,9 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			Rt_Contact::update_meta( $contact_id, $this->website_url_key, $user->user_url );
 		}
 
+		/*
+		 * Search user from name
+		 */
 		function ajax_serch_user() {
 			if ( ! isset( $_POST['query'] ) ) {
 				wp_die( 'Invalid request Data' );
@@ -1177,12 +1180,17 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			die( 0 );
 		}
 
+		/**
+		 * remove acl before contact deleted
+		 *
+		 * @param $contactid
+		 */
 		function before_contact_deleted( $contactid ){
 			// remove acl table entry
 			global $rt_biz_acl_model, $wpdb;
 			$query = $wpdb->prepare( "SELECT `p2p_to` FROM $wpdb->p2p WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
 			$userid = $wpdb->get_col( $query );
-			if ( !empty( $userid ) )  {
+			if ( ! empty( $userid ) ) {
 				$userid = $userid[0];
 				do_action( 'rtbiz_before_delete_contact_acl_remove', $contactid, $userid );
 				$sql = $wpdb->prepare( "select module, max( permission ) as permission from $rt_biz_acl_model->table_name where userid = %d group by module", $userid );

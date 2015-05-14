@@ -542,7 +542,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				unset ( $cathtml['HR'] );
 			}
 
-			foreach ( $cathtml as $key => $value ){
+			foreach ( $cathtml as $key => $value ) {
 				if ( 'other' == $key ) {
 					if ( true == $other_flag ) {
 						$printimpload[] = $value;

@@ -384,11 +384,9 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 			// existing module permission updated
 			foreach ( $module_permissions as $module_Key => $dept_permission ) {
-
-				if( empty( $old_module_permissions[ $module_Key ] ) || ! is_array( $old_module_permissions[ $module_Key ] )) {
+				if ( empty( $old_module_permissions[ $module_Key ] ) || ! is_array( $old_module_permissions[ $module_Key ] )) {
 					$old_module_permissions[ $module_Key ] = array();
 				}
-
 				// new group permission added
 				//$dept_added = array_diff_key( $dept_permission, $old_module_permissions[ $module_Key ] );
 				// existing group removed
@@ -422,52 +420,51 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 
 		function profile_level_permission( $post ) {
 			global $rt_contact;
-			//if ( current_user_can( 'create_users' ) && p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'from' => $post->ID ) ) ) {
-				$modules     = rt_biz_get_modules();
-				$permissions = rt_biz_get_acl_permissions();
-				$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
-				$is_staff_member = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
-				if ( empty( $is_staff_member ) && isset( $_REQUEST['rt_contact_group'] ) && $_REQUEST['rt_contact_group'] == 'staff' ){
-					$is_staff_member = 'yes';
-				}
-				$user = rt_biz_get_wp_user_for_contact( $post->ID );
-				if ( in_array( 'administrator', $user[0]->roles ) ){
-					_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
-					return;
-				}
-				?>
-				<div>
-					<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked' : ''; ?>
-					<label><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected;?>  name="rt_biz_is_staff_member" value="yes"><span class="checkbox-title"><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?></span></label>
-				</div>
-				<?php $class = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? '' : 'rtbiz-hide'; ?>
-				<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
-					<table class="form-table">
-						<tbody>
-							<?php foreach ( $modules as $mkey => $m ) {
-								if ( $mkey == RT_BIZ_TEXT_DOMAIN && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
-									continue;
-								}?>
-							<tr>
-								<th><?php echo $m['label']; ?></th>
-								<td>
-									<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
+			$modules     = rt_biz_get_modules();
+			$permissions = rt_biz_get_acl_permissions();
+			$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
+			$is_staff_member = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
+			if ( empty( $is_staff_member ) && isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
+				$is_staff_member = 'yes';
+			}
+			$user = rt_biz_get_wp_user_for_contact( $post->ID );
+			if ( in_array( 'administrator', $user[0]->roles ) ){
+				_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
+				return;
+			}
+			?>
+			<div>
+				<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked' : ''; ?>
+				<label><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected;?>  name="rt_biz_is_staff_member" value="yes"><span class="checkbox-title"><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?></span></label>
+			</div>
+			<?php $class = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? '' : 'rtbiz-hide'; ?>
+			<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
+				<table class="form-table">
+					<tbody>
+						<?php foreach ( $modules as $mkey => $m ) {
+							if ( RT_BIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+								continue;
+							}?>
+						<tr>
+							<th><?php echo $m['label']; ?></th>
+							<td>
+								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]">
 
-										<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
-											<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
-										<?php }
-										foreach ( $permissions as $pkey => $p ) {
-											$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
-											<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option>
-										<?php } ?>
-									</select>
-								</td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<p><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </p>
-				</div>
+									<?php if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
+										<option title="<?php _e( 'No Profile Access Override' ); ?>" value=""><?php _e( 'Use Group Access' ); ?></option>
+									<?php }
+									foreach ( $permissions as $pkey => $p ) {
+										$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
+										<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<p><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </p>
+			</div>
 			<?php
 		}
 
