@@ -273,7 +273,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
 					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ) {
 						$content = '<span>' . ucfirst( $product_plugin ) . '</span> :- ';
-						$content .= '<a class="post-edit-link" href="' . edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
+						$content .= '<a class="post-edit-link" href="' . get_edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
 					} else {
 						echo '-';
 					}
@@ -339,7 +339,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				return;
 			}
 
-			if ( ! isset( $_POST['post_status'] ) || 'publish' != $_POST['post_status'] ) {
+			if ( 'publish' != $_POST['post_status'] ) {
 				return;
 			}
 
