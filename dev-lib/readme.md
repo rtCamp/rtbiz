@@ -59,12 +59,13 @@ This will greatly speed up the time build time, giving you quicker feedback on y
 
 ## Symlinks
 
-Next, after configuring your `.travis.yml`, symlink the [`.jshintrc`](.jshint), [`.jshintignore`](.jshintignore), and (especially optionally) [`phpcs.ruleset.xml`](phpcs.ruleset.xml):
+Next, after configuring your `.travis.yml`, symlink the [`.jshintrc`](.jshint), [`.jshintignore`](.jshintignore), [`.jscsrc`](.jscsrc), and (especially optionally) [`phpcs.ruleset.xml`](phpcs.ruleset.xml):
 
 ```bash
-ln -s dev-lib/phpunit-plugin.xml . && git add phpunit.xml.dist # (if working with a plugin)
+ln -s dev-lib/phpunit-plugin.xml phpunit.xml.dist && git add phpunit.xml.dist # (if working with a plugin)
 ln -s dev-lib/.jshintrc . && git add .jshintrc
 ln -s dev-lib/.jshintignore . && git add .jshintignore
+ln -s dev-lib/.jscsrc . && git add .jscsrc
 ```
 
 ## PHPUnit Code Coverage
@@ -76,6 +77,30 @@ phpunit --coverage-html code-coverage-report/
 ```
 
 Then you can open up the `index.html` in that directory to learn about your plugin's code coverage.
+
+## Codeception
+
+Bootstrap Codeception by:
+```bash
+wget -O /tmp/codecept.phar http://codeception.com/codecept.phar
+php /tmp/codecept.phar bootstrap
+```
+
+Then update Acceptance tests configuration to reflect your own environment settings:
+```bash
+vim tests/acceptance.suite.yml
+```
+
+You can generate your first test, saved to `tests/acceptance/WelcomeCept.php` by:
+```bash
+php /tmp/codecept.phar generate:cept acceptance Welcome
+```
+
+## Gitter
+
+Create an empty `.gitter` file in the root of your repo and a [Gitter](https://gitter.im) chat badge will be added to your project's README.
+
+[![Join the chat](https://badges.gitter.im/Join%20Chat.svg)](#)
 
 ## Pre-commit Hook
 

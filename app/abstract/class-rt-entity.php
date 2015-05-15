@@ -426,7 +426,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 						</p>
 					<?php
 					} else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-					$values = self::get_meta( $post->ID, $field['key'] );
+						$values = self::get_meta( $post->ID, $field['key'] );
 					?>
 
 					<?php if ( isset( $field['label'] ) ) { ?>
