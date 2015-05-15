@@ -405,7 +405,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'from' => $from,
 					'to' => $to,
 					'meta' => array(
-						'date' => current_time('mysql')
+						'date' => current_time( 'mysql' )
 					)
 				) );
 			}

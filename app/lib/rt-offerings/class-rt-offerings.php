@@ -124,7 +124,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				'singular_name' => __( 'Offering' ),
 				'menu_name' => __( 'Offerings' ),
 				'search_items' => __( 'Search Offerings' ),
-				'popular_items' => __( 'Popular Offerings' ),
+				'popular_items' => null,
 				'all_items' => __( 'All Offerings' ),
 				'edit_item' => __( 'Edit Offering' ),
 				'update_item' => __( 'Update Offering' ),
