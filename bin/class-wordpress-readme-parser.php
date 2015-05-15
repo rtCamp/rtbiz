@@ -23,7 +23,9 @@ class WordPress_Readme_Parser {
 			$this->$key = $value;
 		}
 
+		// @codingStandardsIgnoreStart
 		$this->source = file_get_contents( $this->path );
+		// @codingStandardsIgnoreEnd
 		if ( ! $this->source ) {
 			throw new Exception( 'readme.txt was empty or unreadable' );
 		}
@@ -44,8 +46,8 @@ class WordPress_Readme_Parser {
 			list( $name, $value )  = array_slice( $metadataum_matches, 1, 2 );
 			$this->metadata[ $name ] = $value;
 		}
-		$this->metadata['Contributors'] = preg_split( '/\s*,\s*/', $this->metadata['Contributors'] );
-		$this->metadata['Tags'] = preg_split( '/\s*,\s*/', $this->metadata['Tags'] );
+		$this->metadata['Contributors'] = array_filter( preg_split( '/\s*,\s*/', $this->metadata['Contributors'] ) );
+		$this->metadata['Tags'] = array_filter( preg_split( '/\s*,\s*/', $this->metadata['Tags'] ) );
 
 		$syntax_ok = preg_match_all( '/(?:^|\n)== (.+?) ==\n(.+?)(?=\n== |$)/s', $readme_txt_rest, $section_matches, PREG_SET_ORDER );
 		if ( ! $syntax_ok ) {
@@ -118,7 +120,8 @@ class WordPress_Readme_Parser {
 						$filepath = sprintf( 'assets/screenshot-%d.%s', $i + 1, $ext );
 						if ( file_exists( dirname( $this->path ) . DIRECTORY_SEPARATOR . $filepath ) ) {
 							break;
-						} else {
+						}
+						else {
 							$filepath = null;
 						}
 					}
@@ -137,7 +140,7 @@ class WordPress_Readme_Parser {
 		);
 
 		// Format metadata
-		$formatted_metadata = $this->metadata;
+		$formatted_metadata = array_filter( $this->metadata );
 		$formatted_metadata['Contributors'] = join(
 			', ',
 			array_map(
@@ -149,16 +152,20 @@ class WordPress_Readme_Parser {
 				$this->metadata['Contributors']
 			)
 		);
-		$formatted_metadata['Tags'] = join(
-			', ',
-			array_map(
-				function ( $tag ) {
-					return sprintf( '[%1$s](https://wordpress.org/plugins/tags/%1$s)', $tag );
-				},
-				$this->metadata['Tags']
-			)
-		);
-		$formatted_metadata['License'] = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
+		if ( ! empty( $this->metadata['Tags'] ) ) {
+			$formatted_metadata['Tags'] = join(
+				', ',
+				array_map(
+					function ( $tag ) {
+						return sprintf( '[%1$s](https://wordpress.org/plugins/tags/%1$s)', $tag );
+					},
+					$this->metadata['Tags']
+				)
+			);
+		}
+		if ( isset( $formatted_metadata['License URI'] ) && isset( $formatted_metadata['License'] ) ) {
+			$formatted_metadata['License'] = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
+		}
 		unset( $formatted_metadata['License URI'] );
 		if ( 'trunk' === $this->metadata['Stable tag'] ) {
 			$formatted_metadata['Stable tag'] .= ' (master)';
@@ -181,10 +188,13 @@ class WordPress_Readme_Parser {
 		if ( isset( $params['travis_ci_url'] ) || isset( $params['coveralls_url'] ) ) {
 			$markdown .= "\n";
 			if ( isset( $params['travis_ci_url'] ) ) {
-				$markdown .= sprintf( '[![Build Status](%s.png?branch=master)](%s) ', $params['travis_ci_url'], $params['travis_ci_url'] );
+				$markdown .= sprintf( '[![Build Status](%1$s.png?branch=master)](%1$s) ', $params['travis_ci_url'] );
 			}
 			if ( isset( $params['coveralls_url'] ) ) {
 				$markdown .= sprintf( '[![Build Status](%s?branch=master)](%s) ', $params['coveralls_badge_src'], $params['coveralls_url'] );
+			}
+			if ( isset( $params['gitter_url'] ) ) {
+				$markdown .= sprintf( '[![Join the chat at %1$s](https://badges.gitter.im/Join%20Chat.svg)](%1$s) ', $params['gitter_url'] );
 			}
 			$markdown .= "\n";
 		}
