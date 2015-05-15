@@ -261,37 +261,20 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'edit_person_overview':
 					?>
 					<p>
-						<?php _e( 'From this screen you can add new Person into the system.' ); ?>
-						<?php _e( 'You can fill up optional additional details related to person such as Email, Phone Number, Address etc.' ); ?>
-						<?php _e( 'Those can be updated later on from the Edit Person screen as well.' ); ?>
+						<?php _e( 'Screen to add customer and staff into the Helpdesk system.' ); ?>
 					</p>
 					<?php
 					break;
 				case 'create_person_screen_content':
 				case 'edit_person_screen_content':
 					?>
-					<p><?php _e( 'There are a few sections where you can save essential information about an Person -  ' ); ?></p>
 					<ul>
-						<li><?php _e( 'There is a textbox for the title of a person.' ); ?></li>
-						<li><?php _e( 'You can also put any description/comments related to the person in to the rich text editor provided.' ); ?></li>
-						<li>
-							<?php _e( 'There\'s a metabox to decide whether the person is a team mate or any other contact.' ); ?>
-							<?php _e( 'You can mark the checkbox accordingly for that.' ); ?>
-						</li>
-						<li>
-							<?php _e( 'There might be other extra attributes metaboxes depending upon how you add an attribute from the attributes page' ); ?>
-							<a href="<?php echo add_query_arg( array( 'page' => Rt_Biz_Attributes::$attributes_page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
-						</li>
-						<li>
-							<?php _e( 'You will see a numerous "Connected X" metaboxes in the side colum.' ); ?>
-							<?php _e( 'They are the supportive modules of the system which are connected to the Person.' ); ?>
-							<?php _e( 'E.g., An Organization is connected to a person since a person can be a part of an organization.' ); ?>
-							<?php _e( 'You can select any entity from the metabox to connect it to the person.' ); ?>
-						</li>
-						<li>
-							<?php _e( 'There might be metaboxes visible depending upon the plugins you\'ve activated on the site.' ); ?>
-							<?php _e( 'E.g., If HRM Module is activated then "Documents" metabox & "Leaves" metabox also will be displayed for those who are team mates.' ); ?>
-						</li>
+						<li><strong><?php _e( 'Adding Staff - ' ); ?></strong><?php _e( "Check 'Staff member' box and select Helpdesk role for this new staff member" ); ?></li>
+						<li><strong><?php _e( 'Adding Customer - ' ); ?></strong><?php _e( "Keep the 'Staff member' box unchecked. Customers have no role for Helpdesk backend" ); ?></li>
+						<li><strong><?php _e( 'Connected Users - ' ); ?></strong><?php _e( 'WordPress user account linked to this contact' ); ?></li>
+						<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to' ); ?></li>
+						<li><strong><?php _e( 'Additional Information - ' ); ?></strong><?php _e( 'To add social, contact and HR information' ); ?></li>
+						<li><strong><?php _e( 'Helpdesk information - ' ); ?></strong><?php _e( 'Profile level setting to disable all mails from Helpdesk' ); ?></li>
 					</ul>
 					<?php
 					break;
