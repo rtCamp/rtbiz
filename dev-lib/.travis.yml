@@ -23,10 +23,6 @@ before_script:
     - source $DEV_LIB_PATH/travis.before_script.sh
 
 script:
-    - ls /tmp/
-    - ls /tmp/wordpress-tests/
-    - ls /tmp/wordpress/
-    - ls /tmp/wordpress-tests-lib/
     - $DEV_LIB_PATH/travis.script.sh
 
 after_script:
