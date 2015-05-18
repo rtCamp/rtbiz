@@ -406,7 +406,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			);
 
 			$settings = rt_biz_get_offering_selection_setting();
-			$offering_plugin   = ! empty ( $settings ) ? $settings : array() ;
+			$offering_plugin   = ! empty( $settings ) ? $settings : array() ;
 			$to_register_posttype = array();
 			foreach ( Rt_Access_Control::$modules as $key => $value ) {
 
