@@ -496,17 +496,17 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$printimpload = array();
 				if ( isset( $cathtml['Contact'] ) ) {
 					$printimpload[] = $cathtml['Contact'];
-					unset ( $cathtml['Contact'] );
+					unset( $cathtml['Contact'] );
 				}
 				if ( isset( $cathtml['Social'] ) ) {
 					$printimpload[] = $cathtml['Social'];
-					unset ( $cathtml['Social'] );
+					unset( $cathtml['Social'] );
 				}
 				if ( isset( $cathtml['HR'] ) ) {
 					if ( $is_our_team_mate ) {
 						$printimpload[] = $cathtml['HR'];
 					}
-					unset ( $cathtml['HR'] );
+					unset( $cathtml['HR'] );
 				}
 
 				foreach ( $cathtml as $key => $value ) {
