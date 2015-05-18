@@ -215,7 +215,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			add_action( 'wp_ajax_rtmailbox_folder_update', array( $this, 'rtmailbox_imap_folder_save_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_update', array( $this, 'rtmailbox_mailbox_update_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_remove', array( $this, 'rtmailbox_mailbox_remove_callback' ) );
-			add_action( 'wp_ajax_rtmailbox_mailbox_cancel', array( $this, 'rtmailbox_mailbox_cancle_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_add', array( $this, 'rtmailbox_mailbox_add_callback' ) );
 		}
 
@@ -485,7 +484,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							   data-module="<?php echo $mailbox->module; ?>"
 							   href="javascript:;"><?php echo __( 'Remove' ); ?></a>
 						</div>
-						<div id="mailbox-folder-<?php echo $mailbox->id; ?>">
+						<div id="mailbox-folder-<?php echo $mailbox->id;?>" class="rtmailbox-mail-folder" >
+							<?php $this->rtmailbox_mailbox_folder_ui( $mailbox->module, $mailbox->id ); ?>
 						</div>
 					</div>
 				<?php
@@ -530,7 +530,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				}
 				$response = $this->rtmailbox_add_mailbox( $obj_data );
 				if ( is_array( $response ) && true == $response['status'] ) {
-					$result['html']   = $response['html_imap_folder'];
+					ob_start();
+					echo '<input id="rtmailbox-add" data-module="' . $obj_data['module'] . '" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button">';
+					$result['html'] = ob_get_clean();
 					$result['html_list']   = $response['html_list'];
 					$result['moduleid']   = $response['moduleid'];
 					$result['status'] = true;
@@ -645,9 +647,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 						}
 						if ( ! empty( $mailboxid ) ) {
 							ob_start();
-							$this->rtmailbox_mailbox_folder_ui( $module, $mailboxid );
-							$result['html_imap_folder'] = ob_get_clean();
-							ob_start();
 							$this->render_list_mailbox_page( $module, $mailboxid );
 							$result['html_list'] = ob_get_clean();
 							$result['moduleid']  = $mailboxid;
@@ -711,13 +710,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					}
 
 					if ( $login_successful ) {
-						// user photo
-						if ( isset( $mailbox->email_data['picture'] ) ) {
-							$img          = filter_var( $mailbox->email_data['picture'], FILTER_VALIDATE_URL );
-							$personMarkup = "<img src='$img?sz=30'>";
-						} else {
-							$personMarkup = get_avatar( $email, 30 );
-						}
 						?>
 						<form id="rtmailbox-imap-folder-form" method="post">
 							<input id="rtmailbox-module" name="rtmailbox[module]" value="<?php echo $module; ?>"
@@ -726,15 +718,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							       type="hidden">
 							<?php wp_nonce_field( 'rtmailbox_folder_update' );
 							do_action( 'rt_mailbox_folder_view_before' ); ?>
-							<div class="rtmailbox-row">
-								<label for=""><?php _e( 'Connected Email' ); ?></label>
-								<div class='rtmailbox-avtar'>
-									<a href="mailto:<?php echo $email; ?>"><?php echo $personMarkup . '<span>' . $email . '</span>'; ?></a><?php
-									if ( isset( $mailbox->email_data['name'] ) ) {
-										echo $mailbox->email_data['name'] . '<br/>';
-									} ?>
-								</div>
-							</div>
 							<div class="rtmailbox-row">
 								<label for=""><?php _e( 'Select Folder' ); ?></label>
 
@@ -747,8 +730,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 								<label></label>
 								<input id="rtmailbox-action" name="rtmailbox[action]" value="rtmailbox_folder_update"
 								       type="hidden">
-								<input id="rtmailbox-save" name="rtmailbox[save]" class="button" value="Save" type="button">
-								<input id="rtmailbox-Cancel" name="rtmailbox[Cancel]" class="button" value="Cancel" type="button">
+								<input id="rtmailbox-save" data-mailboxid="<?php echo $mailboxid; ?>" name="rtmailbox[save]" class="button" value="Save" type="button">
 							</div>
 							<?php do_action( 'rt_mailbox_folder_view_after' ); ?>
 						</form>
@@ -802,10 +784,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					}
 					$email_data['mail_folders'] = implode( ',', array_filter( $mail_folders[ $email ] ) );
 					$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
-					ob_start();
-					//$this->render_add_mailbox_page( $obj_data['module'] );
-					echo '<input id="rtmailbox-add" data-module="' . $obj_data['module'] . '" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button">';
-					$result['html'] = ob_get_clean();
 					$result['status']    = true;
 				}
 			}
@@ -859,20 +837,6 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			} else {
 				$result['error'] = 'Error: Required field missing.';
 			}
-			echo json_encode( $result );
-			die();
-		}
-
-		/**
-		 * mailbox canlce event
-		 */
-		function rtmailbox_mailbox_cancle_callback(){
-			$result           = array();
-			$result['status'] = false;
-			ob_start();
-			echo '<input id="rtmailbox-add" data-module="' . $_POST['module'] . '" name="rtmailbox[Cancel]" class="button" value="Add Another Mailbox" type="button">';
-			$result['html'] = ob_get_clean();
-			$result['status'] = true;
 			echo json_encode( $result );
 			die();
 		}

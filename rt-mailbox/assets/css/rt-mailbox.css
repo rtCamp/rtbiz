@@ -17,7 +17,7 @@
 }
 
 /* provider list css */
-.rtmailbox-row ul{
+ul.rtmailbox_provider_list{
     display: inline-block;
 }
 
@@ -46,6 +46,10 @@ div.mailbox-folder-list>ul ul{
 
 div.mailbox-folder-list ul li {
     padding-bottom: 5px;
+}
+
+.rtmailbox-mail-folder{
+    display: none;
 }
 
 .mailbox-list>div{
