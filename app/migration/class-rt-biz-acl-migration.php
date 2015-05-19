@@ -2,7 +2,7 @@
 /**
  * Don't load this file directly!
  */
-if ( ! defined( 'ABSPATH' ) ){
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -24,7 +24,7 @@ if ( ! class_exists( 'Rt_Biz_ACL_Migration' ) ) {
 
 		public function migrate(){
 			$isMigrated = get_option( 'rtbiz_acl_migration_1.2.13' );
-			if ( empty( $isMigrated ) ||  'false' === $isMigrated ){
+			if ( empty( $isMigrated ) ||  'false' === $isMigrated ) {
 				global $rt_biz_acl_model;
 				$modules            = Rt_Access_Control::$modules;
 				$module_permissions = get_site_option( 'rt_biz_module_permissions' );

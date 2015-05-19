@@ -95,10 +95,10 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 			$themeUpdate = null;
 			$code        = wp_remote_retrieve_response_code( $result );
 			$body        = wp_remote_retrieve_body( $result );
-			if ( ( $code == 200 ) && ! empty( $body ) ) {
+			if ( ( 200 == $code ) && ! empty( $body ) ) {
 				$themeUpdate = RT_Theme_Update_Info::from_json( $body );
 				//The update should be newer than the currently installed version.
-				if ( $themeUpdate === null || ( ( $themeUpdate !== null ) && version_compare( $themeUpdate->version, $this->get_installed_version(), '<=' ) ) ) {
+				if ( null === $themeUpdate || ( ( null !== $themeUpdate ) && version_compare( $themeUpdate->version, $this->get_installed_version(), '<=' ) ) ) {
 					$themeUpdate = null;
 				} else {
 					if ( ! empty( $this->details_url ) ) {

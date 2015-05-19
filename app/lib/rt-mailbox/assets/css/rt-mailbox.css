@@ -2,55 +2,75 @@
     clear: both;
 }
 
-#rtmailbox-page #mailbox-list>div{
-    background-color: #F5F5DC;
-    padding: 10px;
-}
-
-#rtmailbox-page #rtmailbox-wrap{
-    padding: 10px;
-}
-
-#rtmailbox-page .rtmailbox-row{
+.rtmailbox-wrap{
     margin-bottom: 10px;
 }
-#rtmailbox-page .rtmailbox-row>label{
+
+.rtmailbox-row{
+    margin-bottom: 10px;
+}
+
+.rtmailbox-row>label{
     display: inline-block;
     width: 25%;
     vertical-align:top;
 }
 
 /* provider list css */
-#rtmailbox-page .rtmailbox-row ul{
+ul.rtmailbox_provider_list{
     display: inline-block;
 }
 
-#rtmailbox-page .rtmailbox-row ul.rtmailbox_provider_list li input{
+ul.rtmailbox_provider_list li input{
     margin-right: 0px;
 }
 
-#rtmailbox-page .rtmailbox-row ul.rtmailbox_provider_list li{
+ul.rtmailbox_provider_list li{
     margin-left: 7px;
     float: left;
 }
 
-#rtmailbox-page div.mailbox-folder-list{
+div.mailbox-folder-list{
     float: right;
     width: 75%;
 }
 
-#rtmailbox-page .rtmailbox-row div.mailbox-folder-list>ul{
+div.mailbox-folder-list>ul{
     margin: 0px;
 }
 
-#rtmailbox-page .rtmailbox-row div.mailbox-folder-list>ul ul{
+div.mailbox-folder-list>ul ul{
     display: inline-block;
     width: 50%;
 }
 
-#rtmailbox-page .rtmailbox-row div.mailbox-folder-list ul li {
+div.mailbox-folder-list ul li {
     padding-bottom: 5px;
 }
+
+.rtmailbox-mail-folder{
+    display: none;
+}
+
+.mailbox-list>div{
+    background-color: #F1F1F1;
+    padding: 10px;
+}
+
+.rtmailbox-avtar{
+    display: inline-block;
+}
+
+.rtmailbox-avtar a{
+    line-height: 30px;
+    text-decoration: none;
+}
+
+.rtmailbox-avtar a img{
+    float: left;
+    margin-right: 10px;
+}
+
 
 .rtmailbox-maillist-action{
     display: inline-block;
@@ -60,6 +80,7 @@
 .rtmailbox-spinner {
     display: none;
 }
+
 
 
 /*

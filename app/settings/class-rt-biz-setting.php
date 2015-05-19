@@ -39,7 +39,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		public  function rt_on_redux_save( $setting, $old_setting ){
 			//removed offering sync option
 			$diff = array();
-			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ){
+			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ) {
 				$diff = array_diff( $setting['offering_plugin'], $old_setting['offering_plugin'] );
 				$diff = array_unique( $diff );
 			}
@@ -231,7 +231,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			// If email template addon is active then add new tab called addon in redux setting and also add individual addon on/off setting
 			$addons = array();
 			$addons = apply_filters( 'rt_biz_add_addon_settings', $addons );
-			if ( ! empty( $addons ) ){
+			if ( ! empty( $addons ) ) {
 				$this->sections[] = array(
 					'icon'        => 'el-icon-adjust-alt',
 					'title'       => __( 'Add-ons' ),
