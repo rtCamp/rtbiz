@@ -76,6 +76,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( is_admin() ) {
 				add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'post_table_columns' ), 10, 1 );
 				add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'manage_post_table_columns' ), 10, 2 );
+				add_action( 'manage_edit-' . $this->post_type . '_columns', array( $this, 'rearrange_columns' ), 20, 1 );
 
 				add_action( 'add_meta_boxes', array( $this, 'entity_meta_boxes' ) );
 				add_action( 'add_meta_boxes', array( $this, 'remove_metabox' ) );
@@ -605,6 +606,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function manage_post_table_columns( $column, $post_id ) {
 			do_action( 'rt_entity_manage_columns', $column, $post_id, $this );
+		}
+
+		/**
+		 * Overridden in Child Classes
+		 * @param $columns
+		 */
+		function rearrange_columns( $columns ){
+			return apply_filters( 'rt_entity_rearrange_columns', $columns, $this );
 		}
 
 		/**
