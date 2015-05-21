@@ -45,6 +45,12 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'post_type' => rt_biz_get_contact_post_type(),
 					),
 					array(
+						'id' => 'create_person_role',
+						'title' => __( 'Role' ),
+						'content' => '',
+						'post_type' => rt_biz_get_contact_post_type(),
+					),
+					array(
 						'id' => 'create_organization_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
@@ -67,6 +73,12 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					array(
 						'id' => 'edit_person_screen_content',
 						'title' => __( 'Screen Content' ),
+						'content' => '',
+						'post_type' => rt_biz_get_contact_post_type(),
+					),
+					array(
+						'id' => 'edit_person_role',
+						'title' => __( 'Role' ),
 						'content' => '',
 						'post_type' => rt_biz_get_contact_post_type(),
 					),
@@ -256,12 +268,19 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 
 		function tab_content( $screen, $tab ) {
 			// Some Extra content with logic
+			$module_name = 'rtBiz';
+			$cpt_name = 'post';
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && ! empty( $_REQUEST['module'] ) && RT_HD_TEXT_DOMAIN == $_REQUEST['module'] ) {
+				$module_name = 'Helpdesk';
+				$cpt_name = 'tickets';
+			}
+
 			switch ( $tab['id'] ) {
 				case 'create_person_overview':
 				case 'edit_person_overview':
 					?>
 					<p>
-						<?php _e( 'Screen to add customer and staff into the Helpdesk system.' ); ?>
+						<?php _e( 'Screen to add customer and staff into the ' . $module_name . ' system.' ); ?>
 					</p>
 					<?php
 					break;
@@ -269,12 +288,25 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'edit_person_screen_content':
 					?>
 					<ul>
-						<li><strong><?php _e( 'Adding Staff - ' ); ?></strong><?php _e( "Check 'Staff member' box and select Helpdesk role for this new staff member" ); ?></li>
-						<li><strong><?php _e( 'Adding Customer - ' ); ?></strong><?php _e( "Keep the 'Staff member' box unchecked. Customers have no role for Helpdesk backend" ); ?></li>
+						<li><strong><?php _e( 'Adding Staff - ' ); ?></strong><?php _e( "Check 'Staff member' box and select " . $module_name . ' role for this new staff member' ); ?></li>
+						<li><strong><?php _e( 'Adding Customer - ' ); ?></strong><?php _e( "Keep the 'Staff member' box unchecked. Customers have no role for " . $module_name . ' backend' ); ?></li>
 						<li><strong><?php _e( 'Connected Users - ' ); ?></strong><?php _e( 'WordPress user account linked to this contact' ); ?></li>
 						<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to' ); ?></li>
 						<li><strong><?php _e( 'Additional Information - ' ); ?></strong><?php _e( 'To add social, contact and HR information' ); ?></li>
-						<li><strong><?php _e( 'Helpdesk information - ' ); ?></strong><?php _e( 'Profile level setting to disable all mails from Helpdesk' ); ?></li>
+						<?php if ( 'Helpdesk' == $module_name ) { ?>
+							<li><strong><?php _e( 'Helpdesk information - ' ); ?></strong><?php _e( 'Profile level setting to disable all mails from Helpdesk' ); ?></li>
+						<?php } ?>
+					</ul>
+					<?php
+					break;
+				case 'create_person_role':
+				case 'edit_person_role':
+					?>
+					<ul>
+						<li><strong><?php _e( 'Admin - ' ); ?></strong><?php _e( 'Can manage all '. $cpt_name .' and ' . $module_name . ' settings.' ); ?></li>
+						<li><strong><?php _e( 'Editor - ' ); ?></strong><?php _e( 'Can manage all the '. $cpt_name .'. No access to settings.' ); ?></li>
+						<li><strong><?php _e( 'Author - ' ); ?></strong><?php _e( 'Can manage only the '. $cpt_name .' assigned to them. No access to settings.' ); ?></li>
+						<li><strong><?php _e( 'No Role - ' ); ?></strong><?php _e( 'No access to Helpdesk backend. Access only to front end of '. $cpt_name .' to which a contact is assigned to.' ); ?></li>
 					</ul>
 					<?php
 					break;
@@ -314,7 +346,11 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					if ( isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
 						echo __( 'Staff are part of your organization who are responsible to handle customer tickets.' );
 					} else {
-						echo __( 'Customers are the people who have purchased your product and have created a support ticket.' );
+						if ( 'Helpdesk' == $module_name ) {
+							echo __( 'Customers are the people who have purchased your product and have created a support ticket.' );
+						} else {
+							echo __( 'Customers are the people who have purchased your product.' );
+						}
 					} ?>
 					</p>
 					<?php
@@ -322,11 +358,12 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				case 'person_list_screen_content':
 					?>
 					<ul>
-						<li><strong><?php _e( 'Offerings - ' ); ?></strong><?php _e( 'The product for which a customer has created ticket.' ); ?></li>
 						<li><strong><?php _e( 'User - ' ); ?></strong><?php _e( 'WordPress user account linked to this contact.' ); ?></li>
 						<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to.' ); ?></li>
-						<li><strong><?php _e( 'Helpdesk Role - ' ); ?></strong><?php _e( "Customer won't have any role for Helpdesk. Staff can have Admin, Editor or Author roles.  Roles can be updated from staff member's Helpdesk profile page. " ); ?></li>
-						<li><strong><?php _e( 'Ticket - ' ); ?></strong><?php _e( 'The number of tickets created by a customer.' ); ?></li>
+						<?php if ( 'Helpdesk' == $module_name ) { ?>
+							<li><strong><?php _e( 'Helpdesk Role - ' ); ?></strong><?php _e( "Customer won't have any role for Helpdesk. Staff can have Admin, Editor or Author roles.  Roles can be updated from staff member's Helpdesk profile page. " ); ?></li>
+							<li><strong><?php _e( 'Ticket - ' ); ?></strong><?php _e( 'The number of tickets created by a customer.' ); ?></li>
+						<?php } ?>
 					</ul>
 					<!--<p><?php /*_e( 'You can customize the display of this screen’s contents in a number of ways - ' ); */?></p>
 					<ul>
@@ -516,9 +553,11 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<ul>
 						<li><?php _e( 'Using the left column form, you can create a new offering and select a default assignee for it.' ); ?></li>
 						<li><?php _e( 'On the right column, there are existing offerings listed.' ); ?></li>
-						<li><strong><?php _e( 'Count - ' ); ?></strong><?php _e( 'The number of tickets created for each offering.' ); ?></li>
-						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an Helpdesk offering is linked to.' ); ?></li>
-						<li><strong><?php _e( 'Helpdesk default assignee - ' ); ?></strong><?php _e( 'Staff member to whom all tickets for that offering will be assigned.' ); ?></li>
+						<li><strong><?php _e( 'Count - ' ); ?></strong><?php _e( 'The number of ' . $cpt_name . ' created for each offering.' ); ?></li>
+						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an ' . $module_name . ' offering is linked to.' ); ?></li>
+						<?php if ( 'Helpdesk' == $module_name ) { ?>
+							<li><strong><?php _e( 'Helpdesk default assignee - ' ); ?></strong><?php _e( 'Staff member to whom all tickets for that offering will be assigned.' ); ?></li>
+						<?php } ?>
 					</ul>
 					<?php
 					break;
