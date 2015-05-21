@@ -554,7 +554,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						<li><?php _e( 'Using the left column form, you can create a new offering and select a default assignee for it.' ); ?></li>
 						<li><?php _e( 'On the right column, there are existing offerings listed.' ); ?></li>
 						<li><strong><?php _e( 'Count - ' ); ?></strong><?php _e( 'The number of ' . $cpt_name . ' created for each offering.' ); ?></li>
-						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an Helpdesk offering is linked to.' ); ?></li>
+						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an ' . $module_name . ' offering is linked to.' ); ?></li>
 						<?php if ( 'Helpdesk' == $module_name ) { ?>
 							<li><strong><?php _e( 'Helpdesk default assignee - ' ); ?></strong><?php _e( 'Staff member to whom all tickets for that offering will be assigned.' ); ?></li>
 						<?php } ?>
