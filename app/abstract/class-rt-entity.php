@@ -66,14 +66,6 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function init_entity() {
 			$this->register_post_type( $this->post_type, $this->labels );
-			add_action( 'admin_menu', array( $this, 'remove_metabox' ) );
-		}
-
-		function remove_metabox(){
-			$metabox_ids = apply_filters( 'rt_entity_remove_meta_box', array( 'commentstatusdiv' ) );
-			foreach ( $metabox_ids as $metabox_id ) {
-				remove_meta_box( $metabox_id, $this->post_type, 'normal' );
-			}
 		}
 
 		/**
@@ -84,8 +76,10 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			if ( is_admin() ) {
 				add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'post_table_columns' ), 10, 1 );
 				add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'manage_post_table_columns' ), 10, 2 );
+				add_action( 'manage_edit-' . $this->post_type . '_columns', array( $this, 'rearrange_columns' ), 20, 1 );
 
 				add_action( 'add_meta_boxes', array( $this, 'entity_meta_boxes' ) );
+				add_action( 'add_meta_boxes', array( $this, 'remove_metabox' ) );
 				add_action( 'admin_init', array( $this, 'entity_meta_boxes' ) );
 				add_action( 'save_post', array( $this, 'save_entity_details' ) );
 
@@ -100,6 +94,17 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			add_filter( 'pre_get_comments' , array( $this, 'preprocess_comment_handler' ) );
 			add_filter( 'comment_feed_where', array( $this, 'skip_feed_comments' ) );
 			do_action( 'rt_biz_entity_hooks', $this );
+		}
+
+
+		/**
+		 * remove metabox of contact
+		 */
+		function remove_metabox(){
+			$metabox_ids = apply_filters( 'rt_entity_remove_meta_box', array( 'commentstatusdiv' ) );
+			foreach ( $metabox_ids as $metabox_id ) {
+				remove_meta_box( $metabox_id[0], $this->post_type, $metabox_id[1] );
+			}
 		}
 
 		/**
@@ -601,6 +606,14 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 */
 		function manage_post_table_columns( $column, $post_id ) {
 			do_action( 'rt_entity_manage_columns', $column, $post_id, $this );
+		}
+
+		/**
+		 * Overridden in Child Classes
+		 * @param $columns
+		 */
+		function rearrange_columns( $columns ){
+			return apply_filters( 'rt_entity_rearrange_columns', $columns, $this );
 		}
 
 		/**

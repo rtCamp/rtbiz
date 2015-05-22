@@ -435,7 +435,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			}
 			?>
 			<div>
-				<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked' : ''; ?>
+				<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked"' : ''; ?>
 				<label><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected; ?>
 				              name="rt_biz_is_staff_member" value="yes"><span
 						class="checkbox-title"><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?></span></label>
@@ -492,7 +492,7 @@ foreach ( $permissions as $pkey => $p ) {
 						$_REQUEST['rt_biz_profile_permissions'][ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_BIZ_TEXT_DOMAIN ] ;
 					}
 
-					foreach ( $profile_permissions as $module_Key => $module_permission  ) {
+					foreach ( $profile_permissions as $module_Key => $module_permission ) {
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
 						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
 						switch ( $module_permission ) {

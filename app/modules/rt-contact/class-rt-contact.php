@@ -389,7 +389,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 					'column_title' => 'User',
 				),
 				'to_labels' => array(
-					'column_title' => $contact_labels['singular_name'],
+					'column_title' => 'Staff / Customer',
 				),
 			) );
 		}
@@ -951,6 +951,11 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 				}
 			}
 			parent::save_meta_values( $post_id );
+		}
+
+		function rearrange_columns( $columns ){
+			$columns = parent::rearrange_columns( $columns );
+			return $columns;
 		}
 
 		/**
