@@ -85,7 +85,7 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			if ( ! empty( $_REQUEST['post'] ) ) {
 				$_REQUEST['post_type'] = get_post_type( $_REQUEST['post'] );
 			}
-			if ( ! empty( $_REQUEST['post_type'] ) && $_REQUEST['post_type'] = $this->post_type && current_user_can( 'create_users' ) ) {
+			if ( ! empty( $_REQUEST['post_type'] ) && $_REQUEST['post_type'] = $this->post_type ) {
 				global $rt_access_control;
 				add_action( 'rt_biz_entity_meta_boxes', array( $this, 'contact_acl_meta_boxes' ) );
 				add_action( 'rt_biz_save_entity_meta', array( $rt_access_control, 'save_profile_level_permission' ) );
@@ -129,7 +129,10 @@ if ( ! class_exists( 'Rt_Contact' ) ) {
 			global $wp_meta_boxes;
 			$custom_order['submitdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['submitdiv'];
 			$custom_order[ 'p2p-from-' . $this->post_type . '_to_user' ] = $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user' ];
-			$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
+			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
+			if ( current_user_can( $admin_cap ) ) {
+				$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
+			}
 			$custom_order['rt-offeringdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-offeringdiv'];
 			$custom_order[ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ] = $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-to-' . Rt_HD_Module::$post_type . '_to_' . $this->post_type ];
 			$custom_order['rt-departmentdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-departmentdiv'];
