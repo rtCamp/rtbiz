@@ -475,7 +475,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$rt_biz_version = 1.0;
 
-			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type ) ) ) {
+			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type ) ) && ! isset( $_REQUEST['module'] ) ) {
 				$pointers['contact_title']      = array(
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,
 					'version'   => $rt_biz_version,
