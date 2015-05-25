@@ -206,7 +206,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 			) );
 
 			$documentation_link = apply_filters( 'rt_biz_help_documentation_link', 'http://docs.rtcamp.com/rtbiz/' );
-			$support_forum_link = apply_filters( 'rt_biz_help_support_forum_link', '#' );
+			$support_forum_link = apply_filters( 'rt_biz_help_support_forum_link', 'https://rtcamp.com/premium-support/' );
 			$this->help_sidebar_content = apply_filters( 'rt_biz_help_sidebar_content', '<p><strong>' . __( 'For More Information -  ' ) . '</strong></p><p><a href="' . $documentation_link . '">' . __( 'Documentation' ) . '</a></p><p><a href="' . $support_forum_link . '">' . __( 'Support Forum' ) . '</a></p>' );
 
 			add_action( 'current_screen', array( $this, 'check_tabs' ) );
