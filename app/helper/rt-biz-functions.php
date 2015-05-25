@@ -511,25 +511,6 @@ function rt_biz_get_companies() {
  * @return bool
  */
 function rt_biz_is_our_employee( $value, $module ){
-	/*$args = array(
-		'tax_query' => array(
-			array(
-				'taxonomy' => Rt_Contact::$user_category_taxonomy,
-				'field'    => 'slug',
-				'terms'    => Rt_Contact::$employees_category_slug,
-				),
-			),
-		'meta_query' => array(
-			array(
-				'key' => Rt_Entity::$meta_key_prefix.'contact_primary_email',
-				'value' => $email,
-			),
-		),
-	);
-	$employee = rt_biz_search_contact( '', $args );
-
-	return ( count( $employee ) >= 1 ) ? true : false;*/
-
 	global $rt_contact;
 	if ( is_numeric( $value ) ) {
 		$value = get_user_by( 'id', $value );
@@ -540,7 +521,7 @@ function rt_biz_is_our_employee( $value, $module ){
 	}
 
 	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
-	return ( $isEmployee && current_user_can( rt_biz_get_access_role_cap( $module, 'author' ) ) ) ? true : false;
+	return ( $isEmployee && ! empty( $value ) && user_can( $value, rt_biz_get_access_role_cap( $module, 'author' ) ) ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
