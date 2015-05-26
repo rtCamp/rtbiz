@@ -779,7 +779,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$email_data = null;
 				if ( isset( $mail_folders ) && ! empty( $mail_folders ) && is_array( $mail_folders ) && ! empty( $email_ac ) ) {
 					$email_data = maybe_unserialize( $email_ac->email_data );
-					if ( empty ( $mail_folders[ $email ] ) ) {
+					if ( empty( $mail_folders[ $email ] ) ) {
 						$mail_folders[ $email ] = array();
 					}
 					$email_data['mail_folders'] = implode( ',', array_filter( $mail_folders[ $email ] ) );
