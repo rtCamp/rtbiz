@@ -1,0 +1,7 @@
+CREATE TABLE %s (
+	userid BIGINT(11) NOT NULL DEFAULT '0',
+	module VARCHAR(200)NOT NULL DEFAULT '',
+	groupid BIGINT(11) NOT NULL DEFAULT '0',
+	permission BIGINT(11) NOT NULL DEFAULT '0',
+	PRIMARY KEY  (userid,module,groupid)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
