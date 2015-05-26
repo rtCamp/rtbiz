@@ -48,7 +48,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ) {
 		 */
 		function parse_guide_tour_list(){
 			$pointers = $this->get_guide_tour_list();
-			if ( empty($pointers) ) { return; }
+			if ( empty( $pointers ) ) { return; }
 			foreach ( $pointers as $i => $pointer ) {
 				$pointer['id'] = "{$pointer['prefix']}{$pointer['version']}_{$i}";
 				$this->tour_list[ $pointer['id'] ] = (object) $pointer;
