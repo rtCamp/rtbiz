@@ -88,7 +88,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 		 */
 		static function get_field_choices( $field ) {
 			$choices = array();
-			if ( isset( $field['choices'] ) && ! empty($field['choices']) ) {
+			if ( isset( $field['choices'] ) && ! empty( $field['choices'] ) ) {
 				$choices = $field['choices'];
 			}
 			return $choices;
