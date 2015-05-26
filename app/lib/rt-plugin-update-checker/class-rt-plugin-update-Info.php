@@ -5,7 +5,7 @@
  *
  * @author faishal
  */
-if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
+if ( ! class_exists( 'RT_Plugin_Update_Info' ) ) {
 	/**
 	 * Class RT_Plugin_Update_Info for parse the metadata file information
 	 */
@@ -93,8 +93,8 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			 * @var StdClass $apiResponse
 			 */
 			$apiResponse = json_decode( $json );
-			if ( empty( $apiResponse ) || ! is_object( $apiResponse ) ){
-				if ( $triggerErrors ){
+			if ( empty( $apiResponse ) || ! is_object( $apiResponse ) ) {
+				if ( $triggerErrors ) {
 					trigger_error( sprintf( __( 'Failed to parse plugin metadata. Try validating your .json file with %s', 'rt-lib' ), 'http://jsonlint.com/' ), E_USER_NOTICE );
 				}
 
@@ -105,8 +105,8 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			 * Very, very basic validation.
 			 */
 			$valid = isset( $apiResponse->name ) && ! empty( $apiResponse->name ) && isset( $apiResponse->version ) && ! empty( $apiResponse->version );
-			if ( ! $valid ){
-				if ( $triggerErrors ){
+			if ( ! $valid ) {
+				if ( $triggerErrors ) {
 					trigger_error( __( "The plugin metadata file does not contain the required 'name' and/or 'version' keys.", 'rt-lib' ), E_USER_NOTICE );
 				}
 
@@ -139,7 +139,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			//as those returned by the native WordPress.org API. These can be assigned directly.
 			$sameFormat = array( 'name', 'slug', 'version', 'requires', 'tested', 'rating', 'upgrade_notice', 'num_ratings', 'downloaded', 'homepage', 'last_updated', );
 			foreach ( $sameFormat as $field ) {
-				if ( isset( $this->$field ) ){
+				if ( isset( $this->$field ) ) {
 					$info->$field = $this->$field;
 				} else {
 					$info->$field = null;
@@ -149,13 +149,13 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ){
 			//Other fields need to be renamed and/or transformed.
 			$info->download_link = $this->download_url;
 
-			if ( ! empty( $this->author_homepage ) ){
+			if ( ! empty( $this->author_homepage ) ) {
 				$info->author = sprintf( '<a href="%s">%s</a>', $this->author_homepage, $this->author );
 			} else {
 				$info->author = $this->author;
 			}
 
-			if ( is_object( $this->sections ) ){
+			if ( is_object( $this->sections ) ) {
 				$info->sections = get_object_vars( $this->sections );
 			} elseif ( is_array( $this->sections ) ) {
 				$info->sections = $this->sections;

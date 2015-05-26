@@ -1,10 +1,10 @@
 === rtBiz ===
-Contributors:      rtcamp, rahul286, desaiuditd, faishal, dipesh.kakadiya, pareshradadiya, utkarshpatel
+Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, faishal, pareshradadiya
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.1
-Stable tag:        1.2.14
+Stable tag:        1.2.20
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,8 +67,39 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.2.20 =
+* Contact Hooks change
+* ACL metabox visible fix for admin
+* lib updated
+
+= 1.2.19 =
+* Fixed : Acl role not changed
+* Add hook for Remove metabox
+* Add hook for manage columns
+* Contact backend update for add-on plugins
+
+= 1.2.18 =
+* Fix wp user not connected with contact issue
+* lib updated
+* UX Changes
+* Bug fix
+
+= 1.2.17 =
+* Filter/Action added
+* Mailbox Code updated
+* Bug fix
+
+= 1.2.16 =
+* Mailbox Code improved
+* Bug fix
+
+= 1.2.15 =
+* Mailbox Library updated
+* Offering Library updated
+
 = 1.2.14 =
-* offering Library updated
+* Offering Library updated
 * Docs move to docs.rtcamp.com
 
 = 1.2.13 =

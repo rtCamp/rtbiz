@@ -12,16 +12,20 @@ $permissions = rt_biz_get_acl_permissions();
 $module_permissions = get_site_option( 'rt_biz_module_permissions' );
 $settings  = rt_biz_get_redux_settings();
 $menu_label = $settings['menu_label'];
+if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type']  ) {
+	$menu_label = 'Helpdesk';
+}
 ?>
 <div class="wrap">
+
 	<div id="icon-options-general" class="icon32"><br></div><h2><?php echo $menu_label . __( ' Access Control' ); ?></h2>
-	<?php if ( empty( $department ) ){ ?>
-		<div id="message" class="error"><p><?php echo 'No departments found, please add a department first to manage ACL'; ?></p></div>
+	<?php if ( empty( $department ) ) { ?>
+		<div id="message" class="error"><p><?php echo 'No Team found, please add a department first to manage ACL'; ?></p></div>
 	<?php } ?>
 	<div class="rt-biz-container">
 		<ul class="rt_biz_acl_other_option subsubsub">
 			<strong>Department:</strong>
-			<?php foreach ( $department as $ug ){ ?>
+			<?php foreach ( $department as $ug ) { ?>
 				<li><a href="<?php echo admin_url( 'edit-tags.php?action=edit&taxonomy=' . RT_Departments::$slug . '&tag_ID=' . $ug->term_id . '&post_type=' . rt_biz_get_contact_post_type() ) ?>" class=""><?php echo $ug->name; ?></a></li> |
 			<?php } ?>
 			<li><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() ); ?>">Add New</a></li>
@@ -33,12 +37,16 @@ $menu_label = $settings['menu_label'];
 					<tr>
 						<th scope="col" class="manage-column">&nbsp;</th>
 						<?php foreach ( $department as $ug ) { ?>
-						<th scope="col" class="manage-column"><strong><?php echo $ug->name; ?></strong></th>
+						<th scope="col" class="manage-column"><strong><?php echo $ug->name.' Team'; ?></strong></th>
 						<?php } ?>
 					</tr>
 				</thead>
 				<tbody id="the-list">
-					<?php foreach ( $modules as $mkey => $m ) { ?>
+					<?php foreach ( $modules as $mkey => $m ) {
+						if ( RT_BIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type'] ) {
+							$m['label'] = 'People';
+						}
+						?>
 					<tr>
 						<td><strong><?php echo $m['label']; ?></strong></td>
 						<?php foreach ( $department as $ug ) { ?>
@@ -57,13 +65,16 @@ $menu_label = $settings['menu_label'];
 					<tr>
 						<th scope="col" class="manage-column">&nbsp;</th>
 						<?php foreach ( $department as $ug ) { ?>
-						<th scope="col" class="manage-column"><strong><?php echo $ug->name; ?></strong></th>
+						<th scope="col" class="manage-column"><strong><?php echo $ug->name.' Team';; ?></strong></th>
 						<?php } ?>
 					</tr>
 				</tfoot>
 			</table>
 			<br />
 			<input type="submit" class="button-primary" value="Save Settings" />
+	<div style="margin-top: 25px">
+			<p class="description"> Access to individual contacts can be updated from their contact profile page. Go to <a target="_blank" href="<?php echo admin_url( 'edit.php?post_type='.rt_biz_get_contact_post_type() ); ?>">People</a> section to find a contact.</p>
+	</div>
 		</form>
 	</div>
 </div>

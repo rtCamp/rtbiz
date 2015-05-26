@@ -197,6 +197,20 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		}
 
 		/**
+		 * try imap server connect
+		 *
+		 * @param $host
+		 * @param $port
+		 * @param $ssl
+		 *
+		 * @return string
+		 */
+		function try_imap_connect( $host, $port, $ssl ){
+			$this->imap = new Zend\Mail\Protocol\Imap();
+			return $this->imap->connect( $host, $port, $ssl );
+		}
+
+		/**
 		 * send email
 		 *
 		 * @param        $fromemail
@@ -640,10 +654,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					if ( $message->isMultiPart() ) {
 						foreach ( $message as $part ) {
 							$responce = $this->parse_message( $part, $email, $message );
-							if ( isset( $responce['txtBody'] ) && ! empty( $responce['txtBody'] ) ){
+							if ( isset( $responce['txtBody'] ) && ! empty( $responce['txtBody'] ) ) {
 								$txtBody = $responce['txtBody'];
 							}
-							if ( isset( $responce['htmlBody'] ) && ! empty( $responce['htmlBody'] ) ){
+							if ( isset( $responce['htmlBody'] ) && ! empty( $responce['htmlBody'] ) ) {
 								$htmlBody = $responce['htmlBody'];
 							}
 							if ( isset( $responce['attachements'] ) && ! empty( $responce['attachements'] ) ) {
@@ -670,7 +684,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					if ( false !== $lastFlags ) {
 						$lastFlag = true;
 						foreach ( $lastFlags as $fl ) {
-							if ( $fl == Zend\Mail\Storage::FLAG_SEEN ) {
+							if ( Zend\Mail\Storage::FLAG_SEEN == $fl ) {
 								$lastFlag = false;
 							}
 						}
@@ -713,12 +727,12 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					$offset = strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' );
-					$visibleText = substr( $htmlBody, 0, ( $offset === false ) ? strlen( $htmlBody ) : $offset );
+					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
 					$originalBody = '';
 					$tmp  = $message->getHeaders();
-					foreach ( $tmp as $header ){
+					foreach ( $tmp as $header ) {
 						$originalBody .= htmlentities( $header->toString() ). '<br/><br/>';
 					}
 					$originalBody .= 'Body: ';
@@ -768,13 +782,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ){
 			$part_index = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
-			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ){
+			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
-			} else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ){
+			} else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
@@ -787,10 +801,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$filename = '';
 				}
 
-				if ( 'text/plain' == $ContentType && empty( $filename ) ){
+				if ( 'text/plain' == $ContentType && empty( $filename ) ) {
 					$responce['txtBody'] = $this->get_decoded_message( $part );
 					$responce['htmlBody'] = $responce['txtBody'];
-				} else if ( 'text/html' == $ContentType && empty( $filename ) ){
+				} else if ( 'text/html' == $ContentType && empty( $filename ) ) {
 					$responce['htmlBody'] = $this->get_decoded_message( $part );
 					$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
 				} else {

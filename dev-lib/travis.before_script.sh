@@ -18,6 +18,11 @@ export YUI_COMPRESSOR_CHECK=1
 export DISALLOW_EXECUTE_BIT=0
 export PATH_INCLUDES=./
 export WPCS_STANDARD=$(if [ -e phpcs.ruleset.xml ]; then echo phpcs.ruleset.xml; else echo WordPress-Core; fi)
+if [ -e .jscsrc ]; then
+	export JSCS_CONFIG=.jscsrc
+elif [ -e .jscs.json ]; then
+	export JSCS_CONFIG=.jscs.json
+fi
 
 # Load a .ci-env.sh to override the above environment variables
 if [ -e .ci-env.sh ]; then
@@ -26,7 +31,7 @@ fi
 
 # Install the WordPress Unit Tests
 if [ -e phpunit.xml ] || [ -e phpunit.xml.dist ]; then
-	wget -O /tmp/install-wp-tests.sh https://raw.githubusercontent.com/wp-cli/wp-cli/master/templates/install-wp-tests.sh
+	wget -O /tmp/install-wp-tests.sh https://raw.githubusercontent.com/wp-cli/wp-cli/v0.18.0/templates/install-wp-tests.sh
 	bash /tmp/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 	cd /tmp/wordpress/wp-content/plugins
 	mv $PLUGIN_DIR $PLUGIN_SLUG
@@ -49,6 +54,11 @@ $PHPCS_DIR/scripts/phpcs --config-set installed_paths $WPCS_DIR
 # Install JSHint
 if ! command -v jshint >/dev/null 2>&1; then
 	npm install -g jshint
+fi
+
+# Install jscs
+if [ -n "$JSCS_CONFIG" ] && [ -e "$JSCS_CONFIG" ] && ! command -v jscs >/dev/null 2>&1; then
+	npm install -g jscs
 fi
 
 # Install Composer

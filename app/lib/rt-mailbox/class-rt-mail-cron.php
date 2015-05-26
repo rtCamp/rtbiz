@@ -22,21 +22,18 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			add_filter( 'cron_schedules', array( $this, 'register_custom_schedule' ) );
 
 			add_action( 'init', array( $this, 'setup_schedule' ) );
+
 			register_deactivation_hook( $plugin_path_for_deactivate_cron, array( $this, 'disable_cron_on_deactivation' ) );
 
-			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 		function deregister_cron_for_module( $module ) {
-			global $rt_mail_accounts_model ;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
-			if ( ! in_array( $module, $modules ) ){
-				wp_clear_scheduled_hook( 'rt_parse_email_cron_'.$module, array( $module ) );
-				remove_action( 'rt_parse_email_cron_'.$module,  array( $this, 'rt_parse_email' ), 10 );
-			}
+			wp_clear_scheduled_hook( 'rt_parse_email_cron', array( $module ) );
+			wp_clear_scheduled_hook( 'rt_send_email_cron' );
+			remove_action( 'rt_parse_email_cron',  array( $this, 'rt_parse_email' ) );
+			remove_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 
 		function register_custom_schedule( $schedules ) {
-
 			// add schedule to the existing set
 			$schedules['every_minute'] = array(
 				'interval' => 60,
@@ -54,25 +51,14 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		 */
 		function disable_cron_on_deactivation() {
 			wp_clear_scheduled_hook( 'rt_send_email_cron' );
-			global $rt_mail_accounts_model;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
-			foreach ( $modules as $module ) {
-				wp_clear_scheduled_hook( 'rt_parse_email_cron_' . $module, array( $module ) );
-			}
+			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
 		}
 
-		function setup_schedule() {
-
-			global $rt_mail_accounts_model ;
-			$modules = $rt_mail_accounts_model->get_unique_modules();
-			foreach ( $modules as $module ) {
-				add_action( 'rt_parse_email_cron_'.$module, array( $this, 'rt_parse_email' ), 10, 1 );
-			}
-
-			foreach ( $modules as $module ){
-				if ( ! wp_next_scheduled( 'rt_parse_email_cron_'.$module, array( $module ) ) ) {
-					wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron_'.$module, array( $module ) );
-				}
+		function setup_schedule(){
+			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
+			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
+			if ( ! wp_next_scheduled( 'rt_parse_email_cron' ) ) {
+				wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron' );
 			}
 			if ( ! wp_next_scheduled( 'rt_send_email_cron' ) ) {
 				wp_schedule_event( time(), 'every_minute', 'rt_send_email_cron' );
@@ -84,12 +70,11 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		 *
 		 * @param $module
 		 */
-		function rt_parse_email( $module ) {
+		function rt_parse_email() {
 
 			global $rt_mail_settings, $rt_mail_accounts_model ;
 
-			//			$emailRow = $rt_mail_settings->get_email_for_sync();
-			$emails = $rt_mail_accounts_model->get_mail_account( array( 'module' => $module ) );
+			$emails = $rt_mail_accounts_model->get_all_mail_accounts();
 			foreach ( $emails as $emailRow ) {
 				if ( ! $emailRow ) {
 					continue;
@@ -123,7 +108,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 				$rtZendEmail = new Rt_Zend_Mail();
 
-				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $module, $signature );
+				$rtZendEmail->reademail( sanitize_email( $email ), $email, $access_token, $email_type, $imap_server, $last_sync_time, $emailRow->user_id, $emailRow->module, $signature );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 			}

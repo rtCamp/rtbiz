@@ -31,7 +31,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 			add_action( 'admin_print_scripts', array( $this, 'js_includes' ) );
 			add_action( 'admin_print_styles', array( $this, 'css_includes' ) );
-			add_action( 'admin_head', array( $this, 'colorpicker' ) );
+			//			add_action( 'admin_head', array( $this, 'colorpicker' ) );
 			add_action( 'admin_head', array( $this, 'hide_slug' ) );
 
 			add_action( 'admin_init', array( $this, 'add_remove_department_field' ), 1000 );
@@ -47,19 +47,19 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 
 		function get_lables(){
 			$this->labels = array(
-				'name'                       => __( 'Departments' ),
-				'singular_name'              => __( 'Department' ),
-				'menu_name'                  => __( 'Departments' ),
-				'search_items'               => __( 'Search Departments' ),
-				'popular_items'              => __( 'Popular Departments' ),
-				'all_items'                  => __( 'All User Departments' ),
-				'edit_item'                  => __( 'Edit Department' ),
-				'update_item'                => __( 'Update Department' ),
-				'add_new_item'               => __( 'Add New Department' ),
-				'new_item_name'              => __( 'New Department Name' ),
-				'separate_items_with_commas' => __( 'Separate departments with commas' ),
-				'add_or_remove_items'        => __( 'Add or remove departments' ),
-				'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
+				'name'                       => __( 'Teams' ),
+				'singular_name'              => __( 'Team' ),
+				'menu_name'                  => __( 'Teams' ),
+				'search_items'               => __( 'Search Teams' ),
+				'popular_items'              => null,
+				'all_items'                  => __( 'All User Teams' ),
+				'edit_item'                  => __( 'Edit Team' ),
+				'update_item'                => __( 'Update Team' ),
+				'add_new_item'               => __( 'Add New Team' ),
+				'new_item_name'              => __( 'New Team Name' ),
+				'separate_items_with_commas' => __( 'Separate Teams with commas' ),
+				'add_or_remove_items'        => __( 'Add or remove Teams' ),
+				'choose_from_most_used'      => __( 'Choose from the most popular Teams' ),
 			);
 			return $this->labels;
 		}
@@ -123,7 +123,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 			unset( $columns['posts'], $columns['slug'] );
 
 			$columns['contacts']         = __( 'Contacts', RT_BIZ_TEXT_DOMAIN );
-			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
+			//			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RT_BIZ_TEXT_DOMAIN );
 
 			return $columns;
@@ -145,12 +145,12 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 					$contacts_count = count( rt_biz_get_department_contacts( $term_id ) );
 					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
-				case 'color':
-					$color = $this->get_department_meta( 'group-color', $term_id );
-					if ( ! empty( $color ) ) {
-						echo '<div style="width:3.18em; height:3em; background-color:' . esc_attr( $color ) . ';"></div>';
-					}
-					break;
+					//				case 'color':
+					//					$color = $this->get_department_meta( 'group-color', $term_id );
+					//					if ( ! empty( $color ) ) {
+					//						echo '<div style="width:3.18em; height:3em; background-color:' . esc_attr( $color ) . ';"></div>';
+					//					}
+					//					break;
 				case 'email_address';
 					$email_address = $this->get_department_meta( 'email_address', $term_id );
 					if ( isset( $email_address ) && ! empty( $email_address ) ) {
@@ -395,18 +395,18 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 								       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 								       value="<?php echo esc_html( $this->get_department_meta( 'email_address' ) ); ?>"/>
 
-								<p class="description"><?php _e( 'Enter a email address for Department', 'rtcamp' ); ?></p>
+								<p class="description"><?php _e( 'Enter a email address for Team', 'rtcamp' ); ?></p>
 							</td>
 						</tr>
-						<tr>
+					<!--	<tr>
 							<th scope="row" valign="top">
-								<label><?php _e( 'Color for the User Group', 'genesis' ); ?></label>
+								<label><?php /*_e( 'Color for the User Group', 'genesis' ); */?></label>
 							</th>
 							<td id="group-color-row">
 								<p>
-									<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[group-color]"
+									<input type="text" name="<?php /*echo esc_attr( self::$slug ); */?>[group-color]"
 									       id="group-color"
-									       value="<?php echo esc_html( $this->get_department_meta( 'group-color' ) ); ?>"/>
+									       value="<?php /*echo esc_html( $this->get_department_meta( 'group-color' ) ); */?>"/>
 									<input type="button" class="button hide-if-no-js" value="Select a Color"
 									       id="pickcolor"/>
 								</p>
@@ -415,7 +415,7 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 								     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 								<div class="clear"></div>
 							</td>
-						</tr>
+						</tr>-->
 					</tbody>
 				</table>
 
@@ -427,11 +427,11 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 						<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 					       id="<?php echo esc_attr( self::$slug ); ?>[email_address]" value="">
 					</p>
-					<p class="description"><?php _e( 'Enter a email address for Department', 'rtcamp' ); ?></p>
+					<p class="description"><?php _e( 'Enter a email address for Team', 'rtcamp' ); ?></p>
 				</div>
-				<div class="form-field">
+				<!--<div class="form-field">
 					<p>
-						<input type="text" style="width:40%" name="<?php echo esc_attr( self::$slug ); ?>[group-color]"
+						<input type="text" style="width:40%" name="<?php /*echo esc_attr( self::$slug ); */?>[group-color]"
 						       id="group-color"
 						       value=""/>
 						<input type="button" style="margin-left:.5em;width:auto!important;" class="button hide-if-no-js"
@@ -439,15 +439,17 @@ if ( ! class_exists( 'RT_Departments' ) ) {
 					</p>
 				</div>
 				<div id="color-picker"
-				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+				     style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>-->
 			<?php }
 		}
 
 		function add_manage_acl_button( $taxonomy ){
 			global $pagenow;
-			if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ){
-				$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
-				echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for these departments from <a href="' . esc_url( $acl_url ) . '">Access Control</a></div>';
+			if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+				if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ) {
+					$acl_url = admin_url( 'admin.php?page=' . Rt_Biz::$access_control_slug );
+					echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for these Team from <a href="' . esc_url( $acl_url ) . '">Access Control</a></div>';
+				}
 			}
 		}
 	}

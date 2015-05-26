@@ -4,11 +4,11 @@
 ![Banner](assets/banner-1544x500.png)
 rtBiz - WordPress 4 Business!
 
-**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel)  
+**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya)  
 **Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.1  
-**Stable tag:** 1.2.14  
+**Stable tag:** 1.2.20  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -92,8 +92,38 @@ Please refer to the documentation.
 
 ## Changelog ##
 
+### 1.2.20 ###
+* Contact Hooks change
+* ACL metabox visible fix for admin
+* lib updated
+
+### 1.2.19 ###
+* Fixed : Acl role not changed
+* Add hook for Remove metabox
+* Add hook for manage columns
+* Contact backend update for add-on plugins
+
+### 1.2.18 ###
+* Fix wp user not connected with contact issue
+* lib updated
+* UX Changes
+* Bug fix
+
+### 1.2.17 ###
+* Filter/Action added
+* Mailbox Code updated
+* Bug fix
+
+### 1.2.16 ###
+* Mailbox Code improved
+* Bug fix
+
+### 1.2.15 ###
+* Mailbox Library updated
+* Offering Library updated
+
 ### 1.2.14 ###
-* offering Library updated
+* Offering Library updated
 * Docs move to docs.rtcamp.com
 
 ### 1.2.13 ###

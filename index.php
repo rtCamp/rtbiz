@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 1.2.14
+  Version: 1.2.20
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '1.2.14' );
+	define( 'RT_BIZ_VERSION', '1.2.20' );
 }
 if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
 	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
@@ -30,7 +30,7 @@ if ( ! defined( 'RT_BIZ_PATH' ) ) {
 if ( ! defined( 'RT_BIZ_URL' ) ) {
 	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
 }
-if ( ! defined( 'RT_BIZ_BASE_NAME' ) ){
+if ( ! defined( 'RT_BIZ_BASE_NAME' ) ) {
 	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
 }
 if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
@@ -291,12 +291,16 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		function plugin_activation_redirect() {
 			// Add the transient to redirect
-			set_transient( '_rtbiz_activation_redirect', true, 30 );
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+				set_transient( '_rthd_activation_redirect', true, 30 );
+			} else {
+				set_transient( '_rtbiz_activation_redirect', true, 30 );
+			}
 		}
 
-		function init_rt_mailbox(){
+		function init_rt_mailbox() {
 			global $rt_MailBox ;
-			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php', Rt_Access_Control::$modules, null, null, false );
+			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'index.php' );
 		}
 
 		function init_attributes() {
@@ -309,15 +313,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		function init_menu_order() {
 
-			global $rtbiz_offerings;
-
 			$this->menu_order = array(
 				self::$dashboard_slug,
 				'edit.php?post_type=' . rt_biz_get_contact_post_type(),
-				'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),
+				/*'edit-tags.php?taxonomy='.Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type(),*/
 			);
 
-			$settings = rt_biz_get_redux_settings();
 			$this->menu_order[] = 'edit.php?post_type=' . rt_biz_get_company_post_type();
 			$this->menu_order[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type();
 
@@ -331,10 +332,6 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			if ( class_exists( 'Rt_Biz_Attributes' ) ) {
 				$this->menu_order[] = Rt_Biz_Attributes::$attributes_page_slug;
-			}
-
-			if ( class_exists( 'Rt_Mailbox' ) ) {
-				$this->menu_order[] = Rt_Mailbox::$page_name;
 			}
 
 			if ( class_exists( 'Rt_Importer' ) ) {
@@ -408,10 +405,10 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$settings = rt_biz_get_redux_settings();
-			$offering_plugin   = ! empty ( $settings['offering_plugin'] ) ? $settings['offering_plugin'] : '';
+			$settings = rt_biz_get_offering_selection_setting();
+			$offering_plugin   = ! empty( $settings ) ? $settings : array() ;
 			$to_register_posttype = array();
-			foreach ( Rt_Access_Control::$modules as $key => $value ){
+			foreach ( Rt_Access_Control::$modules as $key => $value ) {
 
 				if ( ! empty( $value['offering_support'] ) ) {
 					$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
@@ -426,28 +423,28 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_help = new Rt_Biz_Help();
 		}
 
-		function init_tour(){
+		function init_tour() {
 			global $rt_biz_tour;
 			$rt_biz_tour = new RT_Guide_Tour();
 		}
 
-		function init_importer(){
+		function init_importer() {
 			global $rt_importer;
 			$rt_importer = new Rt_Importer( null, null, false );
 		}
 
-		function init_migration(){
+		function init_migration() {
 			global $rt_migration;
 			$rt_migration = new Rt_Biz_Migration( );
 		}
 
-		function init_taxonomy_metadata(){
+		function init_taxonomy_metadata() {
 			global $taxonomy_metadata;
 			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
 				include_once RT_BIZ_PATH . 'app/lib/rt-offerings/taxonomy-metadata.php';
 			}
 
-			if ( ! is_object( $taxonomy_metadata ) ){
+			if ( ! is_object( $taxonomy_metadata ) ) {
 				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 				$taxonomy_metadata->activate();
 			}
@@ -471,14 +468,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 		}
 
-		function rtbiz_quide_tour( $pointers ){
+		function rtbiz_quide_tour( $pointers ) {
 			global $rt_contact, $rt_company;
 
 			// rtbiz version 1.0 guide tour
 
 			$rt_biz_version = 1.0;
 
-			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type ) ) ) {
+			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type ) ) && ! isset( $_REQUEST['module'] ) ) {
 				$pointers['contact_title']      = array(
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,
 					'version'   => $rt_biz_version,
@@ -513,7 +510,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Select Department' ) ),
-					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Departments are the functional units within your organisation, to which employee belongs to. ‘Add New Department’ from here or from ‘Departments’ section in the left pane.' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'Teams are the functional units within your organisation, to which employee belongs to. ‘Add New Department’ from here or from ‘Teams’ section in the left pane.' ) ),
 					'anchor_id' => '#postbox-container-1 #rt-departmentdiv',
 					'edge'      => 'right',
 					'align'     => 'left',
@@ -646,7 +643,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					'prefix'    => RT_BIZ_TEXT_DOMAIN,
 					'version'   => $rt_biz_version,
 					'title'     => sprintf( '<h3>%s</h3>', esc_html__( 'Add this company.' ) ),
-					'content'   => sprintf( '<p>%s</p>', esc_html__( 'You can now start adding the departments and offering if not done as yet.' ) ),
+					'content'   => sprintf( '<p>%s</p>', esc_html__( 'You can now start adding the teams and offering if not done as yet.' ) ),
 					'anchor_id' => '#postbox-container-1 #publish',
 					'edge'      => 'right',
 					'align'     => 'left',
@@ -674,7 +671,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		}
 
 		function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
-			if ( $plugin_file == RT_BIZ_BASE_NAME ) {
+			if ( RT_BIZ_BASE_NAME == $plugin_file ) {
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/docs' . '">' . __( 'Documentation', RT_BIZ_TEXT_DOMAIN ) . '</a>';
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RT_BIZ_TEXT_DOMAIN ) . '</a>';
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/support' . '">' . __( 'Support', RT_BIZ_TEXT_DOMAIN ) . '</a>';
@@ -704,7 +701,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 				}
 			}
 
-			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
+			if ( '/wp-admin/post-new.php' == $_SERVER['SCRIPT_NAME'] && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( $rt_contact->post_type, $rt_company->post_type ) ) ) {
 				if ( ! wp_style_is( 'rt-jquery-ui-css' ) ) {
 					wp_enqueue_style( 'rt-jquery-ui-css', RT_BIZ_URL . 'app/assets/css/jquery-ui-1.9.2.custom.css', false, RT_BIZ_VERSION, 'all' );
 				}
@@ -715,7 +712,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			// Taxonomy menu hack for rtBiz
-			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) )  {
+			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) ) {
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_dashboard_screen', self::$dashboard_screen );
 				wp_localize_script( 'rt-biz-admin', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
@@ -737,9 +734,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$settings = rt_biz_get_redux_settings();
 			add_submenu_page( self::$dashboard_slug, __( 'Offerings' ), __( 'Offerings' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rt_biz_get_contact_post_type() );
 			add_submenu_page( self::$dashboard_slug, __( 'Access Control' ), __( 'Access Control' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' ), self::$access_control_slug, array( $rt_access_control, 'acl_settings_ui' ) );
-			add_submenu_page( self::$dashboard_slug, __( 'Departments' ), __( '--- Departments' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
-			$contact_groups_label = apply_filters( 'rtbiz_contact_groups_menu_item_label', __( 'Contact Groups' ) );
-			add_submenu_page( self::$dashboard_slug, $contact_groups_label, '--- ' . $contact_groups_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() );
+			add_submenu_page( self::$dashboard_slug, __( 'Teams' ), __( '--- Teams' ), rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . RT_Departments::$slug . '&post_type=' . rt_biz_get_contact_post_type() );
+			/*$contact_groups_label = apply_filters( 'rtbiz_contact_groups_menu_item_label', __( 'Contact Groups' ) );
+			add_submenu_page( self::$dashboard_slug, $contact_groups_label, '--- ' . $contact_groups_label, rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() );*/
 		}
 
 		/**
@@ -963,7 +960,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * Initialize models
 		 */
-		function init_models(){
+		function init_models() {
 			global $rt_biz_acl_model;
 			$rt_biz_acl_model = new RT_Biz_ACL_Model();
 		}
@@ -1009,7 +1006,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *  Registers Posts 2 Posts relation for Organization - Person
 		 */
 		function register_company_contact_connection() {
-			add_action( 'p2p_init', array( $this, 'company_contact_connection' ) );
+			/*add_action( 'p2p_init', array( $this, 'company_contact_connection' ) );*/
 		}
 
 		/**

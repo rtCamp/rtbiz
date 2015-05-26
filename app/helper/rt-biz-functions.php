@@ -404,9 +404,9 @@ function rt_biz_get_module_department_users( $department_id, $category_slug = ''
 		'nopaging'            => true,
 	);
 
-	if ( ! empty( $category_slug ) ) {
+	/*if ( ! empty( $category_slug ) ) {
 		$args = array_merge( $args, array( Rt_Contact::$user_category_taxonomy => $category_slug ) );
-	}
+	}*/
 
 	$contacts = get_posts( $args );
 
@@ -442,7 +442,7 @@ function rt_biz_get_department_users( $department_id ) {
 		$contact_ids[] = $contact->ID;
 	}
 
-	if ( ! empty( $contact_ids ) ){
+	if ( ! empty( $contact_ids ) ) {
 		return rt_biz_get_wp_user_for_contact( $contact_ids );
 	}
 	return array();
@@ -471,7 +471,7 @@ function rt_biz_get_access_role_cap( $module_key, $role = 'no_access' ) {
 	return Rt_Access_Control::get_capability_from_access_role( $module_key, $role );
 }
 
-function rt_biz_get_employees() {
+/*function rt_biz_get_employees() {
 	global $rt_contact;
 	return $rt_contact->get_contact_by_category( Rt_Contact::$employees_category_slug );
 }
@@ -484,14 +484,14 @@ function rt_biz_get_customers() {
 function rt_biz_get_vendors() {
 	global $rt_contact;
 	return $rt_contact->get_contact_by_category( Rt_Contact::$vendor_category_slug );
-}
+}*/
 
 function rt_biz_get_companies() {
 	global $rt_company;
 	return $rt_company->get_company();
 }
 
-function rt_biz_search_employees( $query ) {
+/*function rt_biz_search_employees( $query ) {
 	$args = array(
 		'tax_query' => array(
 			array(
@@ -502,7 +502,7 @@ function rt_biz_search_employees( $query ) {
 			),
 	);
 	return rt_biz_search_contact( $query, $args );
-}
+}*/
 
 /**
  * check user is staff or not
@@ -511,36 +511,17 @@ function rt_biz_search_employees( $query ) {
  * @return bool
  */
 function rt_biz_is_our_employee( $value, $module ){
-	/*$args = array(
-		'tax_query' => array(
-			array(
-				'taxonomy' => Rt_Contact::$user_category_taxonomy,
-				'field'    => 'slug',
-				'terms'    => Rt_Contact::$employees_category_slug,
-				),
-			),
-		'meta_query' => array(
-			array(
-				'key' => Rt_Entity::$meta_key_prefix.'contact_primary_email',
-				'value' => $email,
-			),
-		),
-	);
-	$employee = rt_biz_search_contact( '', $args );
-
-	return ( count( $employee ) >= 1 ) ? true : false;*/
-
 	global $rt_contact;
-	if ( is_numeric( $value ) ){
+	if ( is_numeric( $value ) ) {
 		$value = get_user_by( 'id', $value );
-	} elseif ( is_string( $value ) ){
+	} elseif ( is_string( $value ) ) {
 		$value = get_user_by( 'email', $value );
-	} elseif ( ! is_object( $value ) ){
+	} elseif ( ! is_object( $value ) ) {
 		return false;
 	}
 
 	$isEmployee = p2p_connection_exists( $rt_contact->post_type . '_to_user', array( 'to' => $value->ID ) );
-	return ( $isEmployee && current_user_can( rt_biz_get_access_role_cap( $module, 'author' ) ) ) ? true : false;
+	return ( $isEmployee && ! empty( $value ) && user_can( $value, rt_biz_get_access_role_cap( $module, 'author' ) ) ) ? true : false;
 }
 
 function rt_biz_get_module_users( $module_key ) {
@@ -550,10 +531,10 @@ function rt_biz_get_module_users( $module_key ) {
 
 function rt_biz_get_module_employee( $module_key ) {
 	global $rt_access_control;
-	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$employees_category_slug );
+	return $rt_access_control->get_module_users( $module_key );
 }
 
-function rt_biz_get_module_customer( $module_key  ) {
+/*function rt_biz_get_module_customer( $module_key  ) {
 	global $rt_access_control;
 	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$customer_category_slug );
 }
@@ -561,7 +542,7 @@ function rt_biz_get_module_customer( $module_key  ) {
 function rt_biz_get_module_vendor( $module_key  ) {
 	global $rt_access_control;
 	return $rt_access_control->get_module_users( $module_key, Rt_Contact::$vendor_category_slug );
-}
+}*/
 
 function rt_biz_get_contact_for_wp_user( $user_id ) {
 	global $rt_contact;
@@ -645,6 +626,26 @@ function rt_biz_get_redux_settings() {
 	return $GLOBALS[ Rt_Biz_Setting::$biz_opt ];
 }
 
+function rt_biz_set_redux_setting( $key, $val ){
+	global $rt_biz_setttings;
+	$rt_biz_setttings->ReduxFramework->set( $key, $val );
+	$GLOBALS[ Rt_Biz_Setting::$biz_opt ] = get_option( Rt_Biz_Setting::$biz_opt, array() );
+}
+
+function rt_biz_get_offering_selection_setting(){
+	$return  = array();
+	$redux = rt_biz_get_redux_settings();
+	$redux['offering_plugin'] = apply_filters( 'rtbiz_offering_setting', ( ! empty( $redux['offering_plugin'] ) ) ? $redux['offering_plugin'] : '' );
+	if ( ! empty( $redux['offering_plugin'] ) && is_array( $redux['offering_plugin'] ) ) {
+		foreach ( $redux['offering_plugin'] as $key => $val ) {
+			if ( ! empty( $val ) ) {
+				$return[] = $key;
+			}
+		}
+	}
+	return $return;
+}
+
 function rt_biz_is_primary_email_unique( $email, $postid = null ) {
 	global $rt_contact;
 	$meta_query_args = array(
@@ -678,7 +679,7 @@ function rt_biz_export_wp_users_to_contacts_dashborad( $btnhtml = null ){
 	$contact_labels = rt_biz_get_contact_labels();
 	?>
 	<div class="rtbiz-exporter-container">
-		<?php if ( empty( $btnhtml ) ){ ?>
+		<?php if ( empty( $btnhtml ) ) { ?>
 			<button type="button" class="rtbiz-export-button button button-primary"><?php _e( 'Import all' ); ?></button>
 		<?php } else { echo $btnhtml; } ?>
 		<img id="rtbiz-import-spinner" style="display: none;"  src="<?php echo admin_url() . 'images/spinner.gif'; ?>" />
@@ -708,7 +709,7 @@ function rt_biz_is_primary_email_unique_company( $email ) {
 	);
 	$posts = get_posts( array( 'post_type' => 'rt_account', 'meta_query' => $meta_query_args ) );
 	$count = count( $posts );
-	if ( 0 == $count ){
+	if ( 0 == $count ) {
 		return true;
 	}
 	return false;
@@ -716,10 +717,9 @@ function rt_biz_is_primary_email_unique_company( $email ) {
 
 function rt_biz_get_contact_edit_link( $email ){
 	$post = rt_biz_get_contact_by_email( $email );
-	if ( ! empty( $post ) ){
+	if ( ! empty( $post ) ) {
 		return get_edit_post_link( $post[0]->ID );
-	}
-	else {
+	} else {
 		return '#';
 	}
 }
@@ -745,7 +745,7 @@ function rt_biz_get_tex_diff( $post_id, $texonomy ){
 
 	$difftxt = rt_biz_text_diff( implode( ' ', $diff_tax2 ), implode( ' ', $diff_tax1 ) );
 
-	if ( ! empty( $difftxt ) || $difftxt != '' ) {
+	if ( ! empty( $difftxt ) || '' != $difftxt ) {
 		$tax = get_taxonomy( $texonomy );
 		$lable = get_taxonomy_labels( $tax );
 		$body = '<strong>'.__( $lable->name ).'</strong> : ' . $difftxt;
@@ -771,7 +771,7 @@ function rt_biz_get_department_contacts( $department_id ) {
 	return $contacts;
 }
 
-function rt_biz_mailbox_setup_view( $module ){
+/*function rt_biz_mailbox_setup_view( $module ){
 	global $rt_MailBox ;
 	return $rt_MailBox->mailbox_view( $module );
 }
@@ -779,7 +779,7 @@ function rt_biz_mailbox_setup_view( $module ){
 function rt_biz_imap_setup_view(){
 	global $rt_MailBox ;
 	return $rt_MailBox->imap_view();
-}
+}*/
 
 function rt_biz_gravity_importer_view( $module ){
 	global $rt_importer;
@@ -816,7 +816,7 @@ function rt_biz_get_avatar( $id_or_email, $size ){
 	if ( is_numeric( $id_or_email ) ) {
 		$id = (int) $id_or_email->user_id;
 		$user = get_userdata( $id );
-		if ( $user ){
+		if ( $user ) {
 			$id_or_email = $user->user_email;
 		}
 	} elseif ( is_object( $id_or_email ) ) {
@@ -825,7 +825,7 @@ function rt_biz_get_avatar( $id_or_email, $size ){
 			$user = get_userdata( $id );
 			if ( $user ) {
 				$id_or_email = $user->user_email;
-			} elseif ( empty( $id_or_email->comment_author_email ) ){
+			} elseif ( empty( $id_or_email->comment_author_email ) ) {
 				$id_or_email = $id_or_email->comment_author_email;
 			}
 		}
@@ -880,7 +880,7 @@ function rt_bix_is_google_doc_supported_type( $post_mime_type, $extation = '' ){
 		'zip'		=> 'application/zip',
 		'txt'		=> 'text/plain',
 	);
-	if ( ! empty( $extation ) ){
+	if ( ! empty( $extation ) ) {
 		return ( array_key_exists( $extation, $mime_types ) || in_array( $post_mime_type, $mime_types ) );
 	}
 	return in_array( $post_mime_type, $mime_types );
@@ -891,7 +891,7 @@ function rt_bix_is_google_doc_supported_type( $post_mime_type, $extation = '' ){
  * Get googel doc viewer link
  */
 function rt_biz_google_doc_viewer_url( $attachment_url ){
-	if ( is_ssl() ){
+	if ( is_ssl() ) {
 		$protocol_type = 'https';
 	} else {
 		$protocol_type = 'http';

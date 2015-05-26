@@ -426,7 +426,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 						if ( ! isset( $color ) || empty( $color ) ) {
 							$color = '#FFF';
 						}
-						$in[] = sprintf( '%s%s%s', '<input type="hidden" class="rthdgroupslug" value='.$term->slug.'><a style="text-decoration:none; cursor: pointer; border:0; padding:2px 3px; margin:0 .3em .2em 0; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . ';float:left;" href="' . $href . '" title="' . esc_attr( $term->description ) . '">', $term->name, '</a><a class="removeUserGroup" style="margin-left: -15px;margin-top: -10px;position: relative;display: block; float: left; text-align: center; color: '. self::get_text_color( $color ).'; background-color: '.$color.'; border-radius: 100%; padding: 0 5px;box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2); text-decoration: none;">x</a>' );
+						$in[] = sprintf( '%s%s%s', '<input type="hidden" class="rthdgroupslug" value='.$term->slug.'><a style="text-decoration:none; cursor: pointer; border:0; padding:2px 3px; margin:0 .3em .2em 0; border-radius:3px; background-color:' . $color . '; color:' . self::get_text_color( $color ) . ';float:left;" href="' . esc_url( $href ) . '" title="' . esc_attr( $term->description ) . '">', $term->name, '</a><a class="removeUserGroup" style="margin-left: -15px;margin-top: -10px;position: relative;display: block; float: left; text-align: center; color: '. self::get_text_color( $color ).'; background-color: '.$color.'; border-radius: 100%; padding: 0 5px;box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2); text-decoration: none;">x</a>' );
 					}
 
 					return implode( '', $in );
@@ -681,7 +681,7 @@ if ( ! class_exists( 'RT_User_Groups' ) ) {
 			$select = '';
 			$sum = 0;
 			$allDepartmentCSS = '';
-			if ( isset( $_REQUEST['user-group'] ) && ! empty( $_REQUEST['user-group'] ) ){
+			if ( isset( $_REQUEST['user-group'] ) && ! empty( $_REQUEST['user-group'] ) ) {
 				$activeSlug = $_REQUEST['user-group'];
 			} else {
 				$allDepartmentCSS = 'color:#000;font-weight:bold;';

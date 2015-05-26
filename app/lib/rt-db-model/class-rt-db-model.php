@@ -82,16 +82,16 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 */
 		function __call( $name, $arguments )
 		{
-			if ( $arguments && ! empty( $arguments ) ){
+			if ( $arguments && ! empty( $arguments ) ) {
 				$column_name = str_replace( 'get_by_', '', strtolower( $name ) );
 
-				if ( ! isset( $arguments[1] ) ){
+				if ( ! isset( $arguments[1] ) ) {
 					$paging = true;
 				} else {
 					$paging = $arguments[1];
 				}
 
-				if ( ! isset( $arguments[2] ) ){
+				if ( ! isset( $arguments[2] ) ) {
 					$page = 1;
 				} else {
 					$page = $arguments[2];
@@ -102,23 +102,23 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 				$return_array['result'] = false;
 				global $wpdb;
 				$return_array['total'] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE `' . $column_name . '`= %s', $arguments[0] ) ) );
-				if ( $return_array['total'] > 0 ){
+				if ( $return_array['total'] > 0 ) {
 					$other = '';
-					if ( $paging ){
-						if ( intval( $this->per_page ) < 0 ){
+					if ( $paging ) {
+						if ( intval( $this->per_page ) < 0 ) {
 							$this->per_page = 1;
 						}
 
 						$offset = ( $page - 1 ) * $this->per_page;
 
-						if ( ! is_integer( $offset ) ){
+						if ( ! is_integer( $offset ) ) {
 							$offset = 0;
 						}
-						if ( intval( $offset ) < 0 ){
+						if ( intval( $offset ) < 0 ) {
 							$offset = 0;
 						}
 
-						if ( $offset <= $return_array['total'] ){
+						if ( $offset <= $return_array['total'] ) {
 							$other = ' LIMIT ' . $offset . ',' . $this->per_page;
 						} else {
 							return false;
@@ -146,7 +146,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$insertdata = array();
 			foreach ( $data as $key => $val ) {
 				// Remove NULL value
-				if ( $val !== null ){
+				if ( null !== $val ) {
 					$insertdata[ $key ] = $val;
 				}
 			}
@@ -189,13 +189,13 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$select = 'SELECT * FROM ' . $this->table_name ;
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
-				if ( is_array( $colvalue ) ){
-					if ( ! isset( $colvalue['compare'] ) ){
+				if ( is_array( $colvalue ) ) {
+					if ( ! isset( $colvalue['compare'] ) ) {
 						$compare = 'IN';
 					} else {
 						$compare = $colvalue['compare'];
 					}
-					if ( ! isset( $colvalue['value'] ) ){
+					if ( ! isset( $colvalue['value'] ) ) {
 						$colvalue['value'] = $colvalue;
 					}
 					$col_val_comapare = ( $colvalue['value'] ) ? '(\'' . implode( "','", $colvalue['value'] ) . '\')' : '';
@@ -207,7 +207,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 			$sql = $select . $where;
 
 			$sql .= " ORDER BY {$this->table_name}.$order_by";
-			if ( false !== $offset ){
+			if ( false !== $offset ) {
 				if ( ! is_integer( $offset ) ) {
 					$offset = 0;
 				}

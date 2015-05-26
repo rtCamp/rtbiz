@@ -107,7 +107,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function get_user_google_ac( $module ) {
 			global $rt_mail_accounts_model;
-			return $rt_mail_accounts_model->get_mail_account( array( 'module' => $module, ) );
+			if ( ! empty( $module ) ) {
+				return $rt_mail_accounts_model->get_mail_account( $module );
+			} else {
+				return $rt_mail_accounts_model->get_mail_account();
+			}
 		}
 
 		/**
@@ -233,7 +237,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function add_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null, $module = null ) {
 			global $rt_mail_accounts_model;
-			if ( $user_id == - 1 ) {
+			if ( - 1 == $user_id ) {
 				$user_id = get_current_user_id();
 			}
 
@@ -246,18 +250,18 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'flag'       => 'Y',
 			);
 
-			if ( ! empty( $module ) ){
+			if ( ! empty( $module ) ) {
 				$args['module'] = $module;
 			}
 
-			if ( $imap_server != null ) {
+			if ( null != $imap_server ) {
 				$args['imap_server'] = $imap_server;
 			}
 
 			$rows_affected = $rt_mail_accounts_model->add_mail_account( $args );
 			$this->update_gmail_ac_count();
 
-			return ( ! empty( $rows_affected ) );
+			return $rows_affected;
 		}
 
 		/**
@@ -271,18 +275,36 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function update_user_google_ac( $outh_token, $email, $email_data ) {
+		public function update_user_google_ac( $outh_token, $email, $email_data, $user_id = - 1, $type = 'goauth', $imap_server = null, $module = null, $moduleid = '' ) {
 			global $rt_mail_accounts_model;
-			$data          = array(
+			$args = array(
+				'email'      => $email,
 				'outh_token' => $outh_token,
-				'email_data' => $email_data,
+				'type'       => $type,
+				'flag'       => 'Y',
 			);
-			$where         = array(
-				'email' => $email,
-			);
-			$rows_affected = $rt_mail_accounts_model->update_mail_account( $data, $where );
 
-			return ( ! empty( $rows_affected ) );
+			if ( ! empty( $email_data ) ) {
+				$args['email_data'] = $email_data;
+			}
+
+			if ( null != $imap_server ) {
+				$args['imap_server'] = $imap_server;
+			}
+
+			if ( ! empty( $moduleid ) ) {
+				$where = array(
+					'id'     => $moduleid,
+					'module' => $module,
+				);
+			} else {
+				$where = array(
+					'email'  => $email,
+					'module' => $module,
+				);
+			}
+
+			return $rt_mail_accounts_model->update_mail_account( $args, $where );
 		}
 
 		/**
@@ -295,15 +317,27 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function delete_user_google_ac( $email, $module, $user_id = - 1 ) {
-			if ( $user_id == - 1 ) {
+		public function delete_user_google_ac( $email, $module, $mailboxid =  '', $user_id = ''   ) {
+			if ( -1 == $user_id ) {
 				$user_id = get_current_user_id();
 			}
+			if ( empty( $email ) && empty( $mailboxid ) ) {
+				return false;
+			}
+			$args = array(
+				'module' => $module,
+			);
+
+			if ( ! empty( $email ) ) {
+				$args['email'] = $email;
+			}
+
+			if ( ! empty( $mailboxid ) ) {
+				$args['id'] = $mailboxid;
+			}
+
 			global $rt_mail_accounts_model;
-			$result = $rt_mail_accounts_model->remove_mail_account( array(
-				                                                        'email' => $email,
-																		'module' => $module,
-			                                                        ) );
+			$result = $rt_mail_accounts_model->remove_mail_account( $args );
 			$this->update_gmail_ac_count();
 			return $result;
 		}
@@ -323,13 +357,13 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			global $rt_mail_accounts_model;
 
 			$args = array();
-			if ( $email_data != null ) {
+			if ( null != $email_data ) {
 				$args['email_data'] = $email_data;
 			}
-			if ( $token != null ) {
+			if ( null != $token ) {
 				$args['outh_token'] = $token;
 			}
-			if ( $imap_server != null ) {
+			if ( null != $imap_server ) {
 				$args['imap_server'] = $imap_server;
 			}
 

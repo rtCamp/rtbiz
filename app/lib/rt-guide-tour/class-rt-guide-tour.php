@@ -8,7 +8,7 @@
  *         version 1.1
  */
 
-if ( ! class_exists( 'RT_Guide_Tour' ) ){
+if ( ! class_exists( 'RT_Guide_Tour' ) ) {
 	/**
 	 * Class RT_Guide_Tour
 	 */
@@ -48,7 +48,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 		 */
 		function parse_guide_tour_list(){
 			$pointers = $this->get_guide_tour_list();
-			if ( empty($pointers) ) { return; }
+			if ( empty( $pointers ) ) { return; }
 			foreach ( $pointers as $i => $pointer ) {
 				$pointer['id'] = "{$pointer['prefix']}{$pointer['version']}_{$i}";
 				$this->tour_list[ $pointer['id'] ] = (object) $pointer;
@@ -70,26 +70,26 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 			$dismissed = explode( ',', (string) get_user_meta( $uid, 'dismissed_wp_pointers', true ) );
 			$active_ids = array_diff( array_keys( $this->tour_list ), $dismissed );
 			$new_tour_list = array();
-			foreach ( $this->tour_list as $i => $pointer ){
+			foreach ( $this->tour_list as $i => $pointer ) {
 				if ( in_array( $i, $active_ids, true ) // is active
 					&& isset( $pointer->where ) // has where
-				){
+				) {
 					$new_tour_list[] = $pointer;
 				}
 			}
 			$count = count( $new_tour_list );
-			if ( 0 == $count ){ return array(); }
+			if ( 0 == $count ) { return array(); }
 
-			foreach ( array_values( $new_tour_list ) as $i => $pointer ){
+			foreach ( array_values( $new_tour_list ) as $i => $pointer ) {
 				$new_tour_list[ $i ]->prev = ( $i - 1 ) > -1 ? $new_tour_list[ $i - 1 ]->id : '';
 				$new_tour_list[ $i ]->next = ( $i + 1 ) < $count ? $new_tour_list[ $i + 1 ]->id : '';
-				if ( ( $i - 1 ) > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ){
+				if ( ( $i - 1 ) > -1 && ! empty( $new_tour_list[ $i - 1 ]->where ) && $Path != $new_tour_list[ $i - 1 ]->where ) {
 					$new_tour_list[ $i ]->prevurl = $host . $new_tour_list[ $i - 1 ]->where;
 				}
-				if ( ( $i + 1 ) < $count && ! empty( $new_tour_list[ $i + 1 ]->where ) && $Path != $new_tour_list[ $i + 1 ]->where ){
+				if ( ( $i + 1 ) < $count && ! empty( $new_tour_list[ $i + 1 ]->where ) && $Path != $new_tour_list[ $i + 1 ]->where ) {
 					$new_tour_list[ $i ]->nexturl = $host . $new_tour_list[ $i + 1 ]->where;
 				}
-				if ( $Path == $new_tour_list[ $i ]->where ){
+				if ( $Path == $new_tour_list[ $i ]->where ) {
 					unset( $new_tour_list[ $i ]->where );
 				}
 			}
@@ -101,7 +101,7 @@ if ( ! class_exists( 'RT_Guide_Tour' ) ){
 		 */
 		function rt_guide_tour_check() {
 			$admin_pointers = $this->get_guide_tour_list();
-			if ( ! empty( $admin_pointers ) ){
+			if ( ! empty( $admin_pointers ) ) {
 				return true;
 			}
 		}

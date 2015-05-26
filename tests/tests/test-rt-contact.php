@@ -13,11 +13,11 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->Rt_Contact = new Rt_Contact();
 	}
 
-	function test_tax_exist(){
+	/*function test_tax_exist(){
 		$this->assertEquals( true, taxonomy_exists( Rt_Contact::$user_category_taxonomy ) );
-	}
+	}*/
 
-	function test_tax(){
+	/*function test_tax(){
 		$cust = term_exists( Rt_Contact::$customer_category_slug, Rt_Contact::$user_category_taxonomy );
 		$this->assertTrue( ! empty( $cust  ), 'term customer not exist in user category' );
 
@@ -26,7 +26,7 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 
 		$ven = term_exists( Rt_Contact::$vendor_category_slug, Rt_Contact::$user_category_taxonomy );
 		$this->assertTrue( ! empty( $ven ), 'term vendor not exist in user category' );
-	}
+	}*/
 
 	function test_constructor(){
 		$this->assertTrue( post_type_exists( rt_biz_get_contact_post_type() ), 'Something is wrong in rt_contact check class post type not exist' );
@@ -55,7 +55,6 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'check_primary_email_for_admin_notice' ), 'method setup_meta_fields does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_header' ), 'method print_metabox_js does not exist in rtbiz') ;
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_body' ), 'method post_table_columns does not exist in rtbiz' );
-		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_meta_boxes' ), 'method contact_meta_boxes does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_user_p2p' ), 'method contact_user_p2p does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'connect_contact_to_user' ), 'method connect_contact_to_user does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'remove_contact_to_user' ), 'method remove_contact_to_user does not exist in rtbiz' );
@@ -75,7 +74,6 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_wp_user_for_contact' ), 'method get_wp_user_for_contact does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_contact_by_category' ), 'method get_contact_by_category does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_create_for_wp_user' ), 'method contact_create_for_wp_user does not exist in rtbiz' );
-		$this->assertTrue( method_exists( $this->Rt_Contact, 'get_user_from_name' ), 'method get_user_from_name does not exist in rtbiz' );
 	}
 
 

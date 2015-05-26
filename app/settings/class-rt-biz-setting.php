@@ -38,7 +38,13 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 		public  function rt_on_redux_save( $setting, $old_setting ){
 			//removed offering sync option
-			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) && $setting['offering_plugin'] != $old_setting['offering_plugin'] && in_array( $setting['offering_plugin'], array( 'woocommerce', 'edd' ) ) ){
+			$diff = array();
+			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ) {
+				$diff = array_diff( $setting['offering_plugin'], $old_setting['offering_plugin'] );
+				$diff = array_unique( $diff );
+			}
+
+			if ( ! empty( $diff ) ) {
 				update_option( 'rtbiz_offering_plugin_synx', 'true' );
 			} else {
 				update_option( 'rtbiz_offering_plugin_synx', 'false' );
@@ -169,10 +175,10 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					'title'    => __( 'Offering Sync Option' ),
 					'subtitle' => __( 'Select the plugin you want to use for offering sync.' ),
 					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
-					'type'     => 'radio',
+					'type'     => 'checkbox',
 					'options'  => array(
-						'none'         => __( 'None' ),
-						'woocommerce' => __( 'Woocommerce' ),
+						//						'none'         => __( 'None' ),
+						'woocommerce' => __( 'WooCommerce' ),
 						'edd' => __( 'Easy Digital Download' ),
 					),
 					'default'  => 'none',
@@ -207,23 +213,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				),
 			);
 
-			$Imap_fields = array();
-
-			array_push( $Imap_fields, array(
-				'id'      => 'rtbiz_imap_server_setup',
-				'type'    => 'callback',
-				'title'   => 'IMAP Server Setup',
-				'subtitle' => __( 'Configured IMAP Server(s)' ),
-				'desc'    => 'Following servers used into Mailbox',
-				'callback' => 'rt_biz_imap_setup_view',
-			) );
-
-			$this->sections[] = array(
-				'icon'        => 'el-icon-cogs',
-				'title'       => __( 'IMAP' ),
-				'permissions' => $admin_cap,
-				'fields'      => $Imap_fields,
-			);
 			$this->sections[] = array(
 				'icon'        => 'el-icon-envelope',
 				'title'       => __( 'Mailbox List' ),
@@ -242,7 +231,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			// If email template addon is active then add new tab called addon in redux setting and also add individual addon on/off setting
 			$addons = array();
 			$addons = apply_filters( 'rt_biz_add_addon_settings', $addons );
-			if ( ! empty( $addons ) ){
+			if ( ! empty( $addons ) ) {
 				$this->sections[] = array(
 					'icon'        => 'el-icon-adjust-alt',
 					'title'       => __( 'Add-ons' ),
@@ -366,6 +355,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
  * Display all congigured mailbox(s).
  */
 function rtbiz_mailbox_list_view() {
-	global $rt_setting_inbound_email;
-	$rt_setting_inbound_email->rtmailbox_list_all();
+	global $rt_MailBox;
+	$rt_MailBox->rtmailbox_list_all();
 }
