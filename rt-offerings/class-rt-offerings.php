@@ -81,21 +81,21 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			$this->hooks();
 		}
 
-		function is_woocommerce_active(){
+		function is_woocommerce_active() {
 			if ( ! empty( $this->pluginName ) && in_array( 'woocommerce', $this->pluginName ) && class_exists( 'WooCommerce' ) ) {
 				return true;
 			}
 			return false;
 		}
 
-		function is_edd_active(){
+		function is_edd_active() {
 			if ( ! empty( $this->pluginName ) && in_array( 'edd', $this->pluginName ) && class_exists( 'Easy_Digital_Downloads' ) ) {
 				return true;
 			}
 			return false;
 		}
 
-		function get_post_type(){
+		function get_post_type() {
 			$result = array();
 			if ( $this->is_woocommerce_active( ) ) {
 				$result[] = 'product';
@@ -118,7 +118,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * Get Lable of Offerings taxonomy
 		 * @return array
 		 */
-		public function get_label(){
+		public function get_label() {
 			return $this->labels = array(
 				'name' => __( 'Offerings' ),
 				'singular_name' => __( 'Offering' ),
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		/**
 		 * Register Product taxonomy if not-exist
 		 */
-		public function register_offering_taxonomy(){
+		public function register_offering_taxonomy() {
 			$arg = array(
 				'hierarchical' 				=> true,
 				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
@@ -156,7 +156,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			register_taxonomy( self::$offering_slug, $supports, $arg );
 		}
 
-		public function update_post_term_count( $terms, $taxonomy ){
+		public function update_post_term_count( $terms, $taxonomy ) {
 			global $wpdb;
 
 			$object_types = (array) $taxonomy->object_type;
@@ -272,7 +272,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
 					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ) {
-						$content = '<span>' . ucfirst( $product_plugin ) . '</span> :- ';
+						$content = '<span>' . ucfirst( $product_plugin ) . '</span> ';
 						$content .= '<a class="post-edit-link" href="' . get_edit_post_link( $product_id ) . '">#' . $product_id . '</a>';
 					} else {
 						echo '-';
@@ -288,7 +288,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content = ucfirst( $posttype_lable ) . " : <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content = ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
 					}
 
 					break;
@@ -315,7 +315,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 * @param $post_id
 		 * @return int/void
 		 */
-		public function get_taxonomy( $post_id ){
+		public function get_taxonomy( $post_id ) {
 			global $wpdb;
 			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_product_id_meta_key."' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
@@ -394,7 +394,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 
 		}
 
-		public function get_product_plugin_by_post( $post_id ){
+		public function get_product_plugin_by_post( $post_id ) {
 			$post_type = get_post_type( $post_id );
 			if ( 'download' == $post_type ) {
 				return 'edd';
@@ -404,7 +404,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			return '';
 		}
 
-		public function check_postid_term_exist( $post_id ){
+		public function check_postid_term_exist( $post_id ) {
 			global $wpdb;
 			$querystr = 'SELECT taxonomy_id FROM '.$wpdb->prefix.'taxonomymeta WHERE meta_value = '.$post_id.' limit 1';
 			$result = $wpdb -> get_results( $querystr );
