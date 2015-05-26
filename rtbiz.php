@@ -4,7 +4,7 @@
   Plugin Name: rtBiz
   Plugin URI: http://rtcamp.com/rtbiz
   Description: WordPress for Business
-  Version: 1.2.19
+  Version: 1.2.20
   Author: rtCamp
   Author URI: http://rtcamp.com
   License: GPL
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '1.2.19' );
+	define( 'RT_BIZ_VERSION', '1.2.20' );
 }
 if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
 	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
@@ -298,7 +298,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 		}
 
-		function init_rt_mailbox(){
+		function init_rt_mailbox() {
 			global $rt_MailBox ;
 			$rt_MailBox = new Rt_Mailbox( trailingslashit( RT_BIZ_PATH ) . 'rtbiz.php' );
 		}
@@ -423,22 +423,22 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$rt_biz_help = new Rt_Biz_Help();
 		}
 
-		function init_tour(){
+		function init_tour() {
 			global $rt_biz_tour;
 			$rt_biz_tour = new RT_Guide_Tour();
 		}
 
-		function init_importer(){
+		function init_importer() {
 			global $rt_importer;
 			$rt_importer = new Rt_Importer( null, null, false );
 		}
 
-		function init_migration(){
+		function init_migration() {
 			global $rt_migration;
 			$rt_migration = new Rt_Biz_Migration( );
 		}
 
-		function init_taxonomy_metadata(){
+		function init_taxonomy_metadata() {
 			global $taxonomy_metadata;
 			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
 				include_once RT_BIZ_PATH . 'lib/rt-offerings/taxonomy-metadata.php';
@@ -468,7 +468,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 		}
 
-		function rtbiz_quide_tour( $pointers ){
+		function rtbiz_quide_tour( $pointers ) {
 			global $rt_contact, $rt_company;
 
 			// rtbiz version 1.0 guide tour
@@ -954,7 +954,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		/**
 		 * Initialize models
 		 */
-		function init_models(){
+		function init_models() {
 			global $rt_biz_acl_model;
 			$rt_biz_acl_model = new RT_Biz_ACL_Model();
 		}
