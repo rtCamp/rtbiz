@@ -280,7 +280,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					break;
 				case 'offering_count':
 					$posttypes = $this->post_types;
-					if ( in_array( $_GET['post_type'], $posttypes ) ) {
+					if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], $posttypes ) ) {
 						$posttypes = array( $_GET['post_type'] );
 					}
 
