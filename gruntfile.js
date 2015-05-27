@@ -15,17 +15,13 @@ module.exports = function ( grunt ) {
 			js: {
 				files: '<%= jshint.all %>',
 				tasks: [ 'jshint', 'uglify' ]
-			},
-			images: {
-				files: [ 'admin/img/**/*.{png,jpg,gif}' ],
-				tasks: [ 'imagemin' ]
 			}
 		},
 		// sass
 		sass: {
 			dist: {
 				options: {
-					style: 'expanded',
+					style: 'expanded'
 				},
 				files: {
 					'admin/css/biz-admin.css': 'admin/css/scss/biz-admin.scss'
