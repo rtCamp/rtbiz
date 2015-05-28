@@ -149,26 +149,6 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			// ACTUAL DECLARATION OF SECTIONS
 			$general_fields = array(
 				array(
-					'id'          => 'menu_label',
-					'type'        => 'text',
-					'title'       => __( 'Menu Label' ),
-					'subtitle'    => __( 'Menu Label Identity for the Plugin.' ),
-					'desc'        => __( 'This label will be used for the Menu Item label for Biz' ),
-					'default'     => __( 'rtBiz' ),
-					'placeholder' => __( 'rtBiz, Biz, etc.' ),
-				),
-				array(
-					'id'       => 'logo_url',
-					'type'     => 'media',
-					'url'      => true,
-					'title'    => __( 'Logo' ),
-					'desc'     => __( 'This logo will be used for all the Menu, Submenu, Post Types Menu Icons in Biz.' ),
-					'subtitle' => __( 'Upload any logo using the WordPress native uploader, preferably with the size of 16x16.' ),
-					'default'  => array(
-						'url' => RT_BIZ_URL . 'app/assets/img/biz-16X16.png',
-					),
-				),
-				array(
 					'id'       => 'offering_plugin',
 					'title'    => __( 'Offering Sync Option' ),
 					'subtitle' => __( 'Select the plugin you want to use for offering sync.' ),
