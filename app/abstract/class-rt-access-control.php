@@ -428,7 +428,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$is_staff_member = 'yes';
 			}
 			$user = rt_biz_get_wp_user_for_contact( $post->ID );
-			if ( in_array( 'administrator', $user[0]->roles ) ) {
+			if ( ! empty($user[0]) && in_array( 'administrator', $user[0]->roles ) ) {
 				_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
 
 				return;
@@ -649,7 +649,7 @@ foreach ( $permissions as $pkey => $p ) {
 			update_post_meta( $contact_id, 'rt_biz_is_staff_member', $_REQUEST['rt_biz_is_staff_member'] );
 		}
 
-		function add_department_support( $supports ){
+		function add_department_support( $supports ) {
 
 	        foreach ( self::$modules as $key => $value ) {
 		        if ( ! empty( $value['department_support'] ) ) {
