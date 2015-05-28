@@ -100,7 +100,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		/**
 		 * remove metabox of contact
 		 */
-		function remove_metabox(){
+		function remove_metabox() {
 			$metabox_ids = apply_filters( 'rt_entity_remove_meta_box', array( 'commentstatusdiv' ) );
 			foreach ( $metabox_ids as $metabox_id ) {
 				remove_meta_box( $metabox_id[0], $this->post_type, $metabox_id[1] );
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 *
 		 * @return $bulk_messages
 		 */
-		function bulk_entity_update_messages( $bulk_messages, $bulk_counts ){
+		function bulk_entity_update_messages( $bulk_messages, $bulk_counts ) {
 			$singular = strtolower( $this->labels['singular_name'] );
 			$plural = strtolower( $this->labels['name'] );
 			$bulk_messages[ $this->post_type ] = array(
@@ -133,7 +133,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function entity_updated_messages( $messages ){
+		function entity_updated_messages( $messages ) {
 			$singular = $this->labels['singular_name'];
 			$messages[ $this->post_type ] = array(
 				0  => '', // Unused. Messages start at index 1.
@@ -157,7 +157,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * skip rtbot comments from feeds
 		 * @return string
 		 */
-		function skip_feed_comments( $where ){
+		function skip_feed_comments( $where ) {
 			global $wpdb;
 			$where .= $wpdb->prepare( ' AND comment_type != %s', 'rt_bot' );
 			return $where;
@@ -186,7 +186,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			return $commentdata;
 		}
 
-		function save_old_data( $post_id ){
+		function save_old_data( $post_id ) {
 			if ( ! isset( $_POST['post_type'] ) ) {
 				return;
 			}
@@ -314,7 +314,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_entity_meta_boxes', $this->post_type );
 		}
 
-		function render_assign_to_meta_box( $post ){
+		function render_assign_to_meta_box( $post ) {
 
 			$assigned = rt_biz_get_entity_meta( $post->ID,'assgin_to', true );
 			$assignedHTML = '';
@@ -353,7 +353,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 			do_action( 'rt_biz_assign_to_metabox_after', $post, $this->post_type );
 		}
 
-		function save_meta_assign_to( $post ){
+		function save_meta_assign_to( $post ) {
 			if ( isset( $_POST['assign_to'] ) ) {
 				rt_biz_update_entity_meta( $post, 'assgin_to', $_POST['assign_to'] );
 			} else {
@@ -377,6 +377,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 				$cathtml = array();
 				foreach ( $category as $key => $value ) {
 					$cathtml[ $value ]['title'] = '<div><h3 class="rtbiz-category-title">'.__( $value ). __( ' information:' ).' </h3> </div>';
+					$cathtml[ $value ]['fields'] = '';
 				}
 				$cathtml['other']['title']   = '<div><h3 class="rtbiz-category-title">'.__( 'Other information:' ).'</h3></div>';
 				$other_flag         = false;
@@ -612,7 +613,7 @@ if ( ! class_exists( 'Rt_Entity' ) ) {
 		 * Overridden in Child Classes
 		 * @param $columns
 		 */
-		function rearrange_columns( $columns ){
+		function rearrange_columns( $columns ) {
 			return apply_filters( 'rt_entity_rearrange_columns', $columns, $this );
 		}
 
