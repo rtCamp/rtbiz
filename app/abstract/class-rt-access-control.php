@@ -428,7 +428,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 				$is_staff_member = 'yes';
 			}
 			$user = rt_biz_get_wp_user_for_contact( $post->ID );
-			if ( ! empty($user[0]) && in_array( 'administrator', $user[0]->roles ) ) {
+			if ( ! empty( $user[0] ) && in_array( 'administrator', $user[0]->roles ) ) {
 				_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
 
 				return;
