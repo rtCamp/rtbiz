@@ -127,7 +127,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __construct() {
 			$this->plugin_name = RT_BIZ_TEXT_DOMAIN;
-			$this->version     = '1.2.20';
+			$this->version     = RT_BIZ_VERSION;
 		}
 
 		public function init_plugin() {
@@ -349,12 +349,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$rtb_includes_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'includes/' );
 			$rtb_admin_autoload     = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/' );
+			$rtb_admin_autoload     = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/rt-biz-contact/metabox' );
 			$rtb_models_autoload    = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/models/' );
 			$rtb_abstract_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/abstract/' );
-			$rtb_modules_autoload   = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/modules/' );
+			$rtb_abstract_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/abstract/metabox' );
 			$rtb_settings_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/settings/' );
 			$rtb_helper_autoload    = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/helper/' );
-			$rtb_migration_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/migration/' );
+			$rtb_migration_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'includes/migration/' );
 
 			self::$loader = new Rt_Biz_Loader();
 		}
@@ -389,17 +390,25 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			$plugin_admin = new Rt_Biz_Admin( $this->get_plugin_name(), $this->get_version() );
 
-			self::$loader->add_action( 'init', $plugin_admin, 'rt_biz_admin_init', 11 );
+			if ( is_admin() ) {
+				// update menu order of rtbiz menu
+				Rt_Biz::$loader->add_action( 'admin_menu', $plugin_admin, 'rt_biz_register_menu', 1 );
+				Rt_Biz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'rt_biz_custom_pages_order' );
+
+				Rt_Biz::$loader->add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, $plugin_admin, 'rt_biz_plugin_action_links' );
+				Rt_Biz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'rt_biz_plugin_row_meta', 10, 4 );
+			}
+
 			self::$loader->add_action( 'admin_init', $plugin_admin, 'rt_biz_database_update' );
 			self::$loader->add_action( 'admin_init', $plugin_admin, 'rt_biz_welcome' );
-			self::$loader->add_action( 'rt_biz_modules', $plugin_admin, 'rt_biz_module_register' );
+			self::$loader->add_filter( 'rt_biz_modules', $plugin_admin, 'rt_biz_module_register' );
 
-			$plugin_admin->init_admin();
+			$plugin_admin->rt_biz_init_admin();
 
-			self::$loader->add_action( 'after_setup_theme', $plugin_admin, 'init_rtlib', 20 );
+			self::$loader->add_action( 'after_setup_theme', $plugin_admin, 'rt_biz_init_rtlib', 20 );
 
-			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'rt_biz_enqueue_styles' );
+			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'rt_biz_enqueue_scripts' );
 		}
 
 		/**

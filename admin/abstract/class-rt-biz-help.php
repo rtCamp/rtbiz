@@ -126,13 +126,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'dashboard_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Biz::$dashboard_slug,
+						'page' => Rt_Biz_Dashboard::$page_slug,
 					),
 					array(
 						'id' => 'dashboard_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Biz::$dashboard_slug,
+						'page' => Rt_Biz_Dashboard::$page_slug,
 					),
 					array(
 						'id' => 'acl_overview',
@@ -167,16 +167,16 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 				),
 				'edit-tags.php' => array(
 					array(
-						'id' => 'departments_overview',
+						'id' => 'teams_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'taxonomy' => RT_Departments::$slug,
+						'taxonomy' => RT_Biz_Teams::$slug,
 					),
 					array(
-						'id' => 'departments_screen_content',
+						'id' => 'teams_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'taxonomy' => RT_Departments::$slug,
+						'taxonomy' => RT_Biz_Teams::$slug,
 					),
 					array(
 						'id'       => 'rt-offering_overview',
@@ -194,13 +194,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'contact_group_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'taxonomy' => Rt_Contact::$user_category_taxonomy,
+						'taxonomy' => Rt_Biz_Contact::$user_category_taxonomy,
 					),
 					array(
 						'id' => 'contact_group_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'taxonomy' => Rt_Contact::$user_category_taxonomy,
+						'taxonomy' => Rt_Biz_Contact::$user_category_taxonomy,
 					),*/
 				),
 			) );
@@ -270,7 +270,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 			// Some Extra content with logic
 			$module_name = 'rtBiz';
 			$cpt_name = 'post';
-			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && ! empty( $_REQUEST['module'] ) && RT_HD_TEXT_DOMAIN == $_REQUEST['module'] ) {
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && ! empty( $_REQUEST['module'] ) && RT_BIZ_HD_TEXT_DOMAIN == $_REQUEST['module'] ) {
 				$module_name = 'Helpdesk';
 				$cpt_name = 'tickets';
 			}
@@ -432,7 +432,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					</p>
 					<?php
 					break;
-				case 'departments_overview':
+				case 'teams_overview':
 					?>
 					<p>
 						<?php _e( 'This screen is useful when you have to introduce teams within your organization.' ); ?>
@@ -442,7 +442,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					</p>
 					<?php
 					break;
-				case 'departments_screen_content':
+				case 'teams_screen_content':
 					?>
 					<ul>
 						<li><?php _e( 'Using the left column form, you can create new team.' ); ?></li>

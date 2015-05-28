@@ -25,7 +25,7 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		 * @return mixed
 		 *
 		 */
-		function get_acl( $where ) {
+		public function get_acl( $where ) {
 			return parent::get( $where, false, false, 'userid asc' );
 		}
 
@@ -36,7 +36,7 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		 *
 		 * @return int
 		 */
-		function add_acl( $data ) {
+		public function add_acl( $data ) {
 			return parent::insert( $data );
 		}
 
@@ -49,7 +49,7 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		 * @return mixed
 		 *
 		 */
-		function update_acl( $data, $where ) {
+		public function update_acl( $data, $where ) {
 			return parent::update( $data, $where );
 		}
 
@@ -62,7 +62,7 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		function remove_acl( $where ) {
+		public function remove_acl( $where ) {
 			return parent::delete( $where );
 		}
 
@@ -72,9 +72,9 @@ if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function get_result_by_query( $querystr ) {
+		public function get_result_by_query( $query ) {
 			global $wpdb;
-			return $wpdb->get_results( $querystr );
+			return $wpdb->get_results( $query );
 		}
 	}
 }

@@ -30,13 +30,26 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				return;
 			}
 			// init because can not get Biz ACL before that.
-			add_action( 'p2p_init', array( $this, 'init_settings' ), 30 );
+			Rt_Biz::$loader->add_action( 'p2p_init', $this, 'rt_biz_init_settings', 30 );
 
 			//after redux setting saved
-			add_action( 'redux/options/' . self::$biz_opt . '/saved',  array( $this, 'rt_on_redux_save' ), 10, 2 );
+			Rt_Biz::$loader->add_action( 'redux/options/' . self::$biz_opt . '/saved', $this, 'rt_biz_on_redux_save', 10, 2 );
+
+			Rt_Biz::$loader->add_action( 'redux/loaded', $this, 'rt_biz_remove_demo' );
+
+			// Function to test the compiler hook and demo CSS output.
+			// Above 10 is a priority, but 2 in necessary to include the dynamically generated CSS to be sent to the function.
+			// add_filter('redux/options/'.$this->args['opt_name'].'/compiler', array( $this, 'rt_biz_compiler_action' ), 10, 3);
+			// Change the arguments after they've been declared, but before the panel is created
+			// add_filter('redux/options/'.$this->args['opt_name'].'/args', array( $this, 'rt_biz_change_arguments' ) );
+			// Change the default value of a field after it's been set, but before it's been useds
+			// add_filter('redux/options/'.$this->args['opt_name'].'/defaults', array( $this,'rt_biz_change_defaults' ) );
+			// Dynamically add a section. Can be also used to modify sections/fields
+			// add_filter('redux/options/' . $this->args['opt_name'] . '/sections', array($this, 'rt_biz_dynamic_section'));
+			//add_action("redux/options/{$this->args[ 'opt_name' ]}/register", array( $this, 'test') );
 		}
 
-		public  function rt_on_redux_save( $setting, $old_setting ){
+		public  function rt_biz_on_redux_save( $setting, $old_setting ){
 			//removed offering sync option
 			$diff = array();
 			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ) {
@@ -52,40 +65,25 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		}
 
 
-		public function init_settings() {
+		public function rt_biz_init_settings() {
 
 			// Set the default arguments
-			$this->set_arguments();
+			$this->rt_biz_set_arguments();
 
 			// Set a few help tabs so you can see how it's done
 			//			$this->set_helptabs();
 
 			// Create the sections and fields
-			$this->set_sections();
+			$this->rt_biz_set_sections();
 
 			if ( ! isset( $this->args['opt_name'] ) ) { // No errors please
 				return;
 			}
 
-			// If Redux is running as a plugin, this will remove the demo notice and links
-			add_action( 'redux/loaded', array( $this, 'remove_demo' ) );
-			// Function to test the compiler hook and demo CSS output.
-			// Above 10 is a priority, but 2 in necessary to include the dynamically generated CSS to be sent to the function.
-			// add_filter('redux/options/'.$this->args['opt_name'].'/compiler', array( $this, 'compiler_action' ), 10, 3);
-			// Change the arguments after they've been declared, but before the panel is created
-			// add_filter('redux/options/'.$this->args['opt_name'].'/args', array( $this, 'change_arguments' ) );
-			// Change the default value of a field after it's been set, but before it's been useds
-			// add_filter('redux/options/'.$this->args['opt_name'].'/defaults', array( $this,'change_defaults' ) );
-			// Dynamically add a section. Can be also used to modify sections/fields
-			// add_filter('redux/options/' . $this->args['opt_name'] . '/sections', array($this, 'dynamic_section'));
-
 			$this->ReduxFramework = new ReduxFramework( $this->sections, $this->args );
 
 			return true;
-			//add_action("redux/options/{$this->args[ 'opt_name' ]}/register", array( $this, 'test') );
-
 		}
-
 
 		/**
 		 *
@@ -95,7 +93,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		 * NOTE: the defined constants for URLs, and directories will NOT be available at this point in a child theme,
 		 * so you must use get_template_directory_uri() if you want to use any of the built in icons
 		 * */
-		function dynamic_section( $sections ) {
+		function rt_biz_dynamic_section( $sections ) {
 			//$sections = array();
 			$sections[] = array(
 				'title'  => __( 'Section via hook', 'redux-framework-demo' ),
@@ -112,7 +110,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		 *
 		 * Filter hook for filtering the args. Good for child themes to override or add to the args array. Can also be used in other functions.
 		 * */
-		function change_arguments( $args ) {
+		function rt_biz_change_arguments( $args ) {
 			//$args['dev_mode'] = true;
 
 			return $args;
@@ -122,14 +120,14 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		 *
 		 * Filter hook for filtering the default value of any given field. Very useful in development mode.
 		 * */
-		function change_defaults( $defaults ) {
+		function rt_biz_change_defaults( $defaults ) {
 			$defaults['str_replace'] = 'Testing filter hook!';
 
 			return $defaults;
 		}
 
 		// Remove the demo link and the notice of integrated demo from the redux-framework plugin
-		function remove_demo() {
+		function rt_biz_remove_demo() {
 
 			// Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
 			if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
@@ -144,7 +142,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		/**
 		 * @return bool
 		 */
-		public function set_sections() {
+		public function rt_biz_set_sections() {
 			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
 
@@ -177,7 +175,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
 					'type'     => 'checkbox',
 					'options'  => array(
-						//						'none'         => __( 'None' ),
+						//'none'         => __( 'None' ),
 						'woocommerce' => __( 'WooCommerce' ),
 						'edd' => __( 'Easy Digital Download' ),
 					),
@@ -247,7 +245,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		 * All the possible arguments for Redux.
 		 * For full documentation on arguments, please refer to: https://github.com/ReduxFramework/ReduxFramework/wiki/Arguments
 		 * */
-		public function set_arguments() {
+		public function rt_biz_set_arguments() {
 
 			//$theme = wp_get_theme(); // For use with some settings. Not necessary.
 			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
@@ -285,7 +283,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// OPTIONAL -> Give you extra features
 				'page_priority'      => null,
 				// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
-				'page_parent'        => Rt_Biz::$dashboard_slug,
+				'page_parent'        => Rt_Biz_Dashboard::$page_slug,
 				// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters
 				'page_permissions'   => $editor_cap,
 				// Permissions needed to access the options panel.
@@ -349,12 +347,4 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 	}
 
-}
-
-/**
- * Display all congigured mailbox(s).
- */
-function rtbiz_mailbox_list_view() {
-	global $rt_MailBox;
-	$rt_MailBox->rtmailbox_list_all();
 }

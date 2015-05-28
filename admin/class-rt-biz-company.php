@@ -12,28 +12,158 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Company' ) ) {
+if ( ! class_exists( 'Rt_Biz_Company' ) ) {
 
 	/**
-	 * Class Rt_Company
+	 * Class Rt_Biz_Company
 	 */
-	class Rt_Company extends Rt_Entity {
+	class Rt_Biz_Company extends Rt_Biz_Entity {
 
-		static $primary_email = 'account_primary_email';
+		static $primary_email = 'company_primary_email';
 
 		/**
 		 *
 		 */
 		public function __construct() {
-			parent::__construct( 'rt_account' );
+			parent::__construct( 'rtbiz_company' );
 
-			add_action( 'init', array( $this, 'init_labels' ), 9 );
+			$this->rt_biz_setup_meta_fields();
 
-			$this->setup_meta_fields();
-			add_action( 'init', array( $this, 'init_entity' ) );
+			Rt_Biz::$loader->add_action( 'init', $this, 'rt_biz_init_labels', 9 );
+			Rt_Biz::$loader->add_action( 'init', $this, 'rt_biz_init_entity', 9 );
 		}
 
-		function init_labels() {
+		/**
+		 *  Init Meta Fields
+		 */
+		function rt_biz_setup_meta_fields() {
+			$this->meta_fields = array(
+				array(
+					'key' => 'company_address',
+					'text' => __( 'Address' ),
+					'label' => __( 'Address' ),
+					'is_multiple' => false,
+					'type' => 'textarea',
+					'name' => 'company_meta[company_address]',
+					'id' => 'company_meta_address',
+					'description' => __( 'Organization address.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_country',
+					'text' => __( 'Country' ),
+					'label' => __( 'Country' ),
+					'is_multiple' => false,
+					'type' => 'text',
+					'name' => 'company_meta[company_country]',
+					'id' => 'company_meta_address',
+					'description' => __( 'Organization country.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_phone',
+					'text' => __( 'Phone' ),
+					'label' => __( 'Phone Number' ),
+					'is_multiple' => true,
+					'type' => 'tel',
+					'name' => 'company_meta[company_phone][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Phone number.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_fax',
+					'text' => __( 'Fax' ),
+					'label' => __( 'Fax Number' ),
+					'is_multiple' => true,
+					'type' => 'tel',
+					'name' => 'company_meta[company_fax][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Fax number.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_primary_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Primary Email Address' ),
+					'is_multiple' => false,
+					'type' => 'email',
+					'name' => 'company_meta[company_primary_email]',
+					'description' => __( 'Valid email address.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_email',
+					'text' => __( 'Email' ),
+					'label' => __( 'Email Address' ),
+					'is_multiple' => true,
+					'type' => 'email',
+					'name' => 'company_meta[company_email][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Valid email address.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_website',
+					'text' => __( 'Website' ),
+					'label' => __( 'Website URL' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'company_meta[company_website][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Website URL.' ),
+					'category' => 'Contact',
+				),
+				array(
+					'key' => 'company_skype_id',
+					'text' => __( 'Skype' ),
+					'label' => __( 'Skype Id' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'company_meta[company_skype_id][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Skype Id.' ),
+					'category' => 'Social',
+				),
+				array(
+					'key' => 'company_twitter',
+					'text' => __( 'Twitter' ),
+					'label' => __( 'Twitter Id' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'company_meta[company_twitter][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Twitter Id.' ),
+					'category' => 'Social',
+				),
+				array(
+					'key' => 'company_facebook',
+					'text' => __( 'Facebook' ),
+					'label' => __( 'Facebook Id' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'company_meta[company_facebook][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Facebook Id.' ),
+					'category' => 'Social',
+				),
+				array(
+					'key' => 'company_linkedin',
+					'text' => __( 'Linked In' ),
+					'label' => __( 'LinkedIn Id' ),
+					'is_multiple' => true,
+					'type' => 'text',
+					'name' => 'company_meta[company_linkedin][]',
+					'class' => 'input-multiple',
+					'description' => __( 'Linked IN Id.' ),
+					'category' => 'Social',
+				),
+			);
+
+			$this->meta_fields = apply_filters( 'rt_biz_company_meta_fields', $this->meta_fields, $this );
+		}
+
+		function rt_biz_init_labels() {
 			$this->labels = apply_filters( 'rt_biz_company_labels', array(
 				'name' => __( 'Companies' ),
 				'singular_name' => __( 'Company' ),
@@ -50,140 +180,85 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			) );
 		}
 
-		/**
-		 *  Init Meta Fields
-		 */
-		function setup_meta_fields() {
-			$this->meta_fields = array(
-				array(
-					'key' => 'account_address',
-					'text' => __( 'Address' ),
-					'label' => __( 'Address' ),
-					'is_multiple' => false,
-					'type' => 'textarea',
-					'name' => 'account_meta[account_address]',
-					'id' => 'account_meta_address',
-					'description' => __( 'Organization address.' ),
-				    'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_country',
-					'text' => __( 'Country' ),
-					'label' => __( 'Country' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'account_meta[account_country]',
-					'id' => 'account_meta_address',
-					'description' => __( 'Organization country.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_phone',
-					'text' => __( 'Phone' ),
-					'label' => __( 'Phone Number' ),
-					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'account_meta[account_phone][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Phone number.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_fax',
-					'text' => __( 'Fax' ),
-					'label' => __( 'Fax Number' ),
-					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'account_meta[account_fax][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Fax number.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_primary_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Primary Email Address' ),
-					'is_multiple' => false,
-					'type' => 'email',
-					'name' => 'account_meta[account_primary_email]',
-					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Email Address' ),
-					'is_multiple' => true,
-					'type' => 'email',
-					'name' => 'account_meta[account_email][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Website URL' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_website][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Website URL.' ),
-					'category' => 'Contact',
-				),
-				array(
-					'key' => 'account_skype_id',
-					'text' => __( 'Skype' ),
-					'label' => __( 'Skype Id' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_skype_id][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Skype Id.' ),
-					'category' => 'Social',
-				),
-				array(
-					'key' => 'account_twitter',
-					'text' => __( 'Twitter' ),
-					'label' => __( 'Twitter Id' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_twitter][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Twitter Id.' ),
-					'category' => 'Social',
-				),
-				array(
-					'key' => 'account_facebook',
-					'text' => __( 'Facebook' ),
-					'label' => __( 'Facebook Id' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_facebook][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Facebook Id.' ),
-					'category' => 'Social',
-				),
-				array(
-					'key' => 'account_linkedin',
-					'text' => __( 'Linked In' ),
-					'label' => __( 'LinkedIn Id' ),
-					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'account_meta[account_linkedin][]',
-					'class' => 'input-multiple',
-					'description' => __( 'Linked IN Id.' ),
-					'category' => 'Social',
-				),
-			);
+		/************************************* Overide Method *************************************/
 
-			$this->meta_fields = apply_filters( 'rt_biz_company_meta_fields', $this->meta_fields, $this );
+		/**
+		 *
+		 * Columns in List View
+		 *
+		 * @param $columns
+		 * @return mixed|void
+		 */
+		public function rt_biz_post_table_columns( $columns ) {
+
+			$cols = array();
+			$cols['cb'] = $columns['cb'];
+			$cols['title'] = __( 'Name' );
+			global $rtbiz_offerings;
+			if ( isset( $rtbiz_offerings ) ) {
+				$cols[ 'taxonomy-'.Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ];
+			}
+			$cols['date'] = $columns['date'];
+
+			unset( $columns['title'] );
+			unset( $columns['author'] );
+			unset( $columns['date'] );
+			unset( $columns['comments'] );
+			unset( $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ] );
+
+			$cols = array_merge( $cols, $columns );
+			return parent::rt_biz_post_table_columns( $cols );
 		}
 
 		/**
-		 *  Print JS for Additional Info MetaBox
+		 * Managing post table columns
+		 * @param $column
+		 * @param $post_id
 		 */
-		function print_metabox_js() {
+		public function rt_biz_manage_post_table_columns( $column, $post_id ){
+			parent::rt_biz_manage_post_table_columns( $column, $post_id );
+		}
+
+		/**
+		 *
+		 * Save Meta Fields
+		 *
+		 * @param $post_id
+		 */
+		protected function rt_biz_save_meta_values( $post_id, $post ) {
+			foreach ( $this->meta_fields as $field ) {
+				if ( isset( $_POST['company_meta'][ $field['key'] ] ) && ! empty( $_POST['company_meta'][ $field['key'] ] ) ) {
+					if ( $field['key'] == self::$primary_email ) {
+						if ( ! rt_biz_is_primary_email_unique_company( $_POST['company_meta'][ $field['key'] ] ) ) {
+							continue;
+						}
+					}
+					$company_meta[ $field['key'] ] = $_POST['company_meta'][ $field['key'] ];
+					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
+						$oldmeta = self::get_meta( $post_id, $field['key'] );
+						foreach ( $oldmeta as $ometa ) {
+							self::delete_meta( $post_id, $field['key'], $ometa );
+						}
+						foreach ( $company_meta[ $field['key'] ] as $nmeta ) {
+							if ( '' == $nmeta ) {
+								continue;
+							}
+							self::add_meta( $post_id, $field['key'], $nmeta );
+						}
+					} else {
+						self::update_meta( $post_id, $field['key'], $_POST['company_meta'][ $field['key'] ] );
+					}
+				} else {
+					$oldmeta = self::get_meta( $post_id, $field['key'] );
+					foreach ( $oldmeta as $ometa ) {
+						self::delete_meta( $post_id, $field['key'], $ometa );
+					}
+				}
+			}
+			parent::rt_biz_save_meta_values( $post_id, $post );
+		}
+
+		public function rt_biz_print_metabox_js() {
 			?>
 			<script>
 
@@ -245,96 +320,12 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 					} );
 				} );
 			</script>
-			<?php
+		<?php
 
 		}
 
-		/**
-		 *
-		 * Save Meta Fields
-		 *
-		 * @param $post_id
-		 */
-		function save_meta_values( $post_id ) {
-			foreach ( $this->meta_fields as $field ) {
-				if ( isset( $_POST['account_meta'][ $field['key'] ] ) && ! empty( $_POST['account_meta'][ $field['key'] ] ) ) {
-					if ( $field['key'] == self::$primary_email ) {
-						if ( ! rt_biz_is_primary_email_unique_company( $_POST['account_meta'][ $field['key'] ] ) ) {
-							continue;
-						}
-					}
-					$account_meta[ $field['key'] ] = $_POST['account_meta'][ $field['key'] ];
-					if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-						$oldmeta = self::get_meta( $post_id, $field['key'] );
-						foreach ( $oldmeta as $ometa ) {
-							self::delete_meta( $post_id, $field['key'], $ometa );
-						}
-						foreach ( $account_meta[ $field['key'] ] as $nmeta ) {
-							if ( '' == $nmeta ) {
-								continue;
-							}
-							self::add_meta( $post_id, $field['key'], $nmeta );
-						}
-					} else {
-						self::update_meta( $post_id, $field['key'], $_POST['account_meta'][ $field['key'] ] );
-					}
-				} else {
-					$oldmeta = self::get_meta( $post_id, $field['key'] );
-					foreach ( $oldmeta as $ometa ) {
-						self::delete_meta( $post_id, $field['key'], $ometa );
-					}
-				}
-			}
+		/************************************* Helper Method *************************************/
 
-			parent::save_meta_values( $post_id );
-		}
-
-		/**
-		 *
-		 * Columns in List View
-		 *
-		 * @param $columns
-		 * @return mixed|void
-		 */
-		function post_table_columns( $columns ) {
-
-			$cols = array();
-			$cols['cb'] = $columns['cb'];
-			$cols['title'] = __( 'Name' );
-			global $rtbiz_offerings;
-			if ( isset( $rtbiz_offerings ) ) {
-				$cols[ 'taxonomy-'.Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ];
-			}
-			$cols['author'] = $columns['author'];
-			$cols['country'] = __( 'Country' );
-			$cols['date'] = $columns['date'];
-
-			unset( $columns['title'] );
-			unset( $columns['author'] );
-			unset( $columns['date'] );
-			unset( $columns['comments'] );
-			unset( $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ] );
-
-			$cols = array_merge( $cols, $columns );
-			$cols = parent::post_table_columns( $cols );
-			return $cols;
-
-		}
-
-		/**
-		 * Managing post table columns
-		 * @param $column
-		 * @param $post_id
-		 */
-		public function manage_post_table_columns( $column, $post_id ){
-			switch ( $column ) {
-				case 'country':
-					echo esc_attr( implode( ' , ', get_post_meta( $post_id, Rt_Entity::$meta_key_prefix . 'account_country' ) ) );
-					break;
-			}
-
-			parent::manage_post_table_columns( $column, $post_id );
-		}
 		/**
 		 * @param $name
 		 * @param string $note
@@ -343,20 +334,20 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 		 * @param array $meta
 		 * @return int|WP_Error
 		 */
-		function add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
+		function rt_biz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 			$org_id = wp_insert_post( array(
-				                          'post_title'   => $name,
-				                          'post_content' => $note,
-				                          'post_type'    => $this->post_type,
-				                          'post_status'  => 'publish',
-			                          ) );
+				'post_title'   => $name,
+				'post_content' => $note,
+				'post_type'    => $this->post_type,
+				'post_status'  => 'publish',
+			) );
 
 			if ( ! empty( $address ) ) {
-				self::update_meta( $org_id, 'account_address', $address );
+				self::update_meta( $org_id, 'company_address', $address );
 			}
 
 			if ( ! empty( $country ) ) {
-				self::update_meta( $org_id, 'account_country', $country );
+				self::update_meta( $org_id, 'company_country', $country );
 			}
 
 			if ( ! empty( $meta ) && is_array( $meta ) ) {
@@ -370,12 +361,12 @@ if ( ! class_exists( 'Rt_Company' ) ) {
 			return $org_id;
 		}
 
-		function get_company() {
+		function rt_biz_get_company() {
 			return get_posts( array(
-				                  'post_type'   => $this->post_type,
-				                  'post_status' => 'any',
-				                  'nopaging'    => true,
-			                  ) );
+				'post_type'   => $this->post_type,
+				'post_status' => 'any',
+				'nopaging'    => true,
+			) );
 		}
 
 	}

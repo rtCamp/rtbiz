@@ -22,32 +22,32 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 
 	class Rt_Biz_Attributes {
 
-		public static $attributes_page_slug = 'rtbiz-attributes';
+		public static $page_slug = 'rtbiz-attributes';
 
 		public function __construct() {
-			add_action( 'init', array( $this, 'init_attributes' ) );
-			add_action( 'restrict_manage_posts', array( $this, 'restrict_entity_by_attributes' ) );
-			add_action( 'parse_query', array( $this, 'convert_term_id_to_term_slug_for_attributes_filter' ) );
+			Rt_Biz::$loader->add_action( 'init', $this, 'rt_biz_init_attributes' );
+			Rt_Biz::$loader->add_action( 'restrict_manage_posts', $this, 'rt_biz_restrict_entity_by_attributes' );
+			Rt_Biz::$loader->add_action( 'parse_query', $this, 'rt_biz_convert_term_id_to_term_slug_for_attributes_filter' );
 		}
 
-		function init_attributes() {
+		public function rt_biz_init_attributes() {
 			global $rt_biz_rt_attributes;
 			$rt_biz_rt_attributes = new RT_Attributes( RT_BIZ_TEXT_DOMAIN );
 
-			$admin_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
 			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
 
 			$terms_caps = array(
 				'manage_terms' => $editor_cap,
 				'edit_terms'   => $editor_cap,
 				'delete_terms' => $editor_cap,
-				'assign_terms' => $editor_cap,
+				'assign_terms' => $author_cap,
 			);
 
-			$rt_biz_rt_attributes->add_attributes_page( self::$attributes_page_slug, Rt_Biz::$dashboard_slug, '', $admin_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
+			$rt_biz_rt_attributes->add_attributes_page( self::$page_slug, Rt_Biz_Dashboard::$page_slug, '', $editor_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
 		}
 
-		function convert_term_id_to_term_slug_for_attributes_filter( $query ) {
+		public function rt_biz_convert_term_id_to_term_slug_for_attributes_filter( $query ) {
 			global $pagenow, $typenow, $rt_biz_rt_attributes;
 			$qv = &$query->query_vars;
 
@@ -78,7 +78,7 @@ if ( ! class_exists( 'Rt_Biz_Attributes' ) ) {
 			}
 		}
 
-		function restrict_entity_by_attributes() {
+		public function rt_biz_restrict_entity_by_attributes() {
 			global $typenow, $wp_query, $rt_biz_rt_attributes;
 
 			$post_types = array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() );

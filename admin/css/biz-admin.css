@@ -1,165 +1,165 @@
 .delete_row {
-  position: relative;
-  display: block;
-  float: right;
-  text-align: center;
-  color: #FFF;
-  background-color: #000;
-  border-radius: 100%;
-  padding: 0 5px;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-  text-decoration: none;
+	position: relative;
+	display: block;
+	float: right;
+	text-align: center;
+	color: #FFF;
+	background-color: #000;
+	border-radius: 100%;
+	padding: 0 5px;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+	text-decoration: none;
 }
 
 #divAssignList .delete_row {
-  margin-left: -15px;
-  margin-top: -10px;
+	margin-left: -15px;
+	margin-top: -10px;
 }
 
 #divAssignList .contact-list {
-  display: inline-block;
-  text-align: center;
-  margin-right: 10px;
+	display: inline-block;
+	text-align: center;
+	margin-right: 10px;
 }
 
 .rt_biz_acl_other_option {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-  position: absolute;
-  left: -18px;
-  margin-top: -2px;
-  -webkit-transition: all .1s ease-in-out;
-  transition: all .1s ease-in-out;
+	position: absolute;
+	left: -18px;
+	margin-top: -2px;
+	-webkit-transition: all .1s ease-in-out;
+	transition: all .1s ease-in-out;
 }
 
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-  background: none;
-  color: #bbb;
-  content: '\f153';
-  display: block !important;
-  font: normal 16px/1 'dashicons';
-  speak: none;
-  height: 20px;
-  text-align: center;
-  width: 20px;
-  -webkit-font-smoothing: antialiased !important;
+	background: none;
+	color: #bbb;
+	content: '\f153';
+	display: block !important;
+	font: normal 16px/1 'dashicons';
+	speak: none;
+	height: 20px;
+	text-align: center;
+	width: 20px;
+	-webkit-font-smoothing: antialiased !important;
 }
 
 #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:hover:before {
-  color: #c00;
+	color: #c00;
 }
 
 .rtbiz-validation-error {
-  border: 1px solid red !important;
+	border: 1px solid red !important;
 }
 
 .rtbiz-error {
-  color: red;
+	color: red;
 }
 
 .rtbiz-success {
-  color: green;
+	color: green;
 }
 
 .contact-list img, .ac-assign-selected img {
-  border-radius: 12px;
+	border-radius: 12px;
 }
 
 /* Smartphone */
 @media screen and (max-width: 600px) {
-  /* Make the close icon larger for tappability. */
-  #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-    font-size: 20px;
-    margin: 0;
-  }
+	/* Make the close icon larger for tappability. */
+	#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+	font-size: 20px;
+	margin: 0;
+	}
 }
 .welcome-panel .welcome-networking:before {
-  content: "\f325";
+	content: "\f325";
 }
 
 .welcome-panel .welcome-groups:before {
-  content: "\f307";
+	content: "\f307";
 }
 
 .welcome-panel .welcome-admin-users:before {
-  content: "\f110";
+	content: "\f110";
 }
 
 .welcome-panel .welcome-admin-home:before {
-  content: "\f102";
+	content: "\f102";
 }
 
 .welcome-panel .welcome-lock:before {
-  content: "\f160";
+	content: "\f160";
 }
 
 .welcome-panel .welcome-universal-access-alt:before {
-  content: "\f507";
+	content: "\f507";
 }
 
 .rtbiz_offering_dissmiss {
-  right: 50px;
-  position: absolute;
+	right: 50px;
+	position: absolute;
 }
 
 .rtbiz-exporter-message {
-  margin-left: 10px;
-  color: green;
+	margin-left: 10px;
+	color: green;
 }
 
 #rtbiz-contact-importer-bar, .contact-update {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 .rtbiz-import-contact-warning span {
-  padding: 0 !important;
-  margin: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
 .rtbiz-hide {
-  display: none;
+	display: none;
 }
 
 p.rtbiz-form-group {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
-      -ms-flex: 1 50%;
-          flex: 1 50%;
-  max-width: 50%;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1 50%;
+	  -ms-flex: 1 50%;
+		  flex: 1 50%;
+	max-width: 50%;
 }
 
 p.rtbiz-form-group.rtbiz-form-checkbox label {
-  display: inline-block;
-  vertical-align: middle;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .rtbiz-category-group {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	  -ms-flex-flow: row wrap;
+		  flex-flow: row wrap;
 }
 
 p.rtbiz-form-group label {
-  display: block;
-  margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
 .rtbiz-form-group input[type="checkbox"] {
-  width: auto;
+	width: auto;
 }
 
 .rtbiz-form-group input, .rtbiz-form-group textarea {
-  width: 80%;
+	width: 80%;
 }
 
 #rtbiz-additional-detail-meta-box div h3.rtbiz-category-title {
-  padding-left: 0;
+	padding-left: 0;
 }
 
 /*# sourceMappingURL=biz-admin.css.map */
