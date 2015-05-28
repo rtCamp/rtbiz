@@ -329,7 +329,7 @@ if ( ! class_exists( 'Rt_Access_Control' ) ) {
 			// get user object from user ids
 			$user_obj = array();
 			if ( ! empty( $module_user ) ) {
-				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC', ) );
+				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC' ) );
 			}
 			return $user_obj;
 		}
