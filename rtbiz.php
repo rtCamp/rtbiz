@@ -30,32 +30,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if ( ! defined( 'RT_BIZ_VERSION' ) ) {
-	define( 'RT_BIZ_VERSION', '1.2.20' );
+if ( ! defined( 'RTBIZ_VERSION' ) ) {
+	define( 'RTBIZ_VERSION', '1.2.20' );
 }
 
-if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
-	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
+if ( ! defined( 'RTBIZ_TEXT_DOMAIN' ) ) {
+	define( 'RTBIZ_TEXT_DOMAIN', 'rt_biz' );
 }
 
-if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
-	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'RTBIZ_PLUGIN_FILE' ) ) {
+	define( 'RTBIZ_PLUGIN_FILE', __FILE__ );
 }
 
-if ( ! defined( 'RT_BIZ_PATH' ) ) {
-	define( 'RT_BIZ_PATH', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'RTBIZ_PATH' ) ) {
+	define( 'RTBIZ_PATH', plugin_dir_path( __FILE__ ) );
 }
 
-if ( ! defined( 'RT_BIZ_URL' ) ) {
-	define( 'RT_BIZ_URL', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'RTBIZ_URL' ) ) {
+	define( 'RTBIZ_URL', plugin_dir_url( __FILE__ ) );
 }
 
-if ( ! defined( 'RT_BIZ_BASE_NAME' ) ) {
-	define( 'RT_BIZ_BASE_NAME', plugin_basename( __FILE__ ) );
+if ( ! defined( 'RTBIZ_BASE_NAME' ) ) {
+	define( 'RTBIZ_BASE_NAME', plugin_basename( __FILE__ ) );
 }
 
-if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
-	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'public/templates/' );
+if ( ! defined( 'RTBIZ_PATH_TEMPLATES' ) ) {
+	define( 'RTBIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'public/templates/' );
 }
 
 /**
@@ -63,7 +63,7 @@ if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
  * This action is documented in includes/class-plugin-name-activator.php
  */
 function activate_rtbiz() {
-	require_once RT_BIZ_PATH . 'includes/class-rt-biz-activator.php';
+	require_once RTBIZ_PATH . 'includes/class-rt-biz-activator.php';
 	Rt_Biz_Activator::activate();
 }
 
@@ -72,24 +72,24 @@ function activate_rtbiz() {
  * This action is documented in includes/class-plugin-name-deactivator.php
  */
 function deactivate_rtbiz() {
-	require_once RT_BIZ_PATH . 'includes/class-rt-biz-deactivator.php';
+	require_once RTBIZ_PATH . 'includes/class-rt-biz-deactivator.php';
 	Rt_Biz_Deactivator::deactivate();
 }
 
-register_activation_hook( RT_BIZ_PLUGIN_FILE, 'activate_rtbiz' );
-register_deactivation_hook( RT_BIZ_PLUGIN_FILE, 'deactivate_rtbiz' );
+register_activation_hook( RTBIZ_PLUGIN_FILE, 'activate_rtbiz' );
+register_deactivation_hook( RTBIZ_PLUGIN_FILE, 'deactivate_rtbiz' );
 
 /**
  * The class responsible for orchestrating the lib class
  * core plugin.
  */
-require_once RT_BIZ_PATH . 'lib/rt-lib.php';
+require_once RTBIZ_PATH . 'lib/rt-lib.php';
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require_once RT_BIZ_PATH . 'includes/class-rt-biz.php';
+require_once RTBIZ_PATH . 'includes/class-rt-biz.php';
 
 /**
  * Begins execution of the plugin.

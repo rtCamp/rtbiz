@@ -1,8 +1,8 @@
 <?php
 
-if ( ! class_exists( 'Rt_Biz_P2p' ) ) {
+if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 
-	class Rt_Biz_P2p {
+	class Rtbiz_P2p {
 
 		public $p2p_mapping = array();
 
@@ -10,7 +10,7 @@ if ( ! class_exists( 'Rt_Biz_P2p' ) ) {
 			add_action( 'p2p_init', array( $this, 'rt_biz_create_connection' ) );
 		}
 
-		public function rt_biz_init_connection( $from_post_type, $to_post_type, $args ){
+		public function rt_biz_init_connection( $from_post_type, $to_post_type, $args ) {
 			$default_args = array(
 				'cardinality' => '',
 				'admin_column' => 'any',
@@ -27,7 +27,7 @@ if ( ! class_exists( 'Rt_Biz_P2p' ) ) {
 		}
 
 		/**
-		 *  Create a connection between registered post types and Rt_Biz_Entity
+		 *  Create a connection between registered post types and Rtbiz_Entity
 		 */
 		public function rt_biz_create_connection() {
 			foreach ( $this->p2p_mapping as $to_post_type => $connected_items ) {
@@ -53,8 +53,8 @@ if ( ! class_exists( 'Rt_Biz_P2p' ) ) {
 					'from' => $from,
 					'to' => $to,
 					'meta' => array(
-						'date' => current_time( 'mysql' )
-					)
+						'date' => current_time( 'mysql' ),
+					),
 				) );
 			}
 		}

@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Biz_Company' ) ) {
+if ( ! class_exists( 'Rtbiz_Company' ) ) {
 
 	/**
-	 * Class Rt_Biz_Company
+	 * Class Rtbiz_Company
 	 */
-	class Rt_Biz_Company extends Rt_Biz_Entity {
+	class Rtbiz_Company extends Rtbiz_Entity {
 
 		static $primary_email = 'company_primary_email';
 
@@ -25,7 +25,7 @@ if ( ! class_exists( 'Rt_Biz_Company' ) ) {
 		 *
 		 */
 		public function __construct() {
-			parent::__construct( 'rtbiz_company' );
+			parent::__construct( 'company' );
 
 			$this->rt_biz_setup_meta_fields();
 
@@ -215,7 +215,7 @@ if ( ! class_exists( 'Rt_Biz_Company' ) ) {
 		 * @param $column
 		 * @param $post_id
 		 */
-		public function rt_biz_manage_post_table_columns( $column, $post_id ){
+		public function rt_biz_manage_post_table_columns( $column, $post_id ) {
 			parent::rt_biz_manage_post_table_columns( $column, $post_id );
 		}
 
@@ -229,7 +229,7 @@ if ( ! class_exists( 'Rt_Biz_Company' ) ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['company_meta'][ $field['key'] ] ) && ! empty( $_POST['company_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == self::$primary_email ) {
-						if ( ! rt_biz_is_primary_email_unique_company( $_POST['company_meta'][ $field['key'] ] ) ) {
+						if ( ! rtbiz_is_primary_email_unique_company( $_POST['company_meta'][ $field['key'] ] ) ) {
 							continue;
 						}
 					}

@@ -6,14 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Biz_Entity_Assignee' ) ) {
+if ( ! class_exists( 'Rtbiz_Entity_Assignee' ) ) {
 
-	class Rt_Biz_Entity_Assignee extends Rt_Biz_Metabox {
+	class Rtbiz_Entity_Assignee extends Rtbiz_Metabox {
 
 
 		public static function ui( $post ) {
 
-			$assigned = rt_biz_get_entity_meta( $post->ID, 'assgin_to', true );
+			$assigned = rtbiz_get_entity_meta( $post->ID, 'assgin_to', true );
 			$assignedHTML = '';
 			if ( $assigned && ! empty( $assigned ) ) {
 				$author = get_user_by( 'id', $assigned );
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Assignee' ) ) {
 				                "<br/><a target='_blank' class='assign-title heading' title='" . $author->display_name . "' href='" . get_edit_user_link( $author->ID ) . "'>" . $author->display_name . '</a>' .
 				                "<input type='hidden' name='assign_to' value='" . $author->ID . "' /></li>";
 			}
-			$emps = rt_biz_get_module_employee( RT_BIZ_TEXT_DOMAIN );
+			$emps = rtbiz_get_module_employee( RTBIZ_TEXT_DOMAIN );
 
 			$arrSubscriberUser = array();
 			foreach ( $emps as $author ) {
@@ -51,9 +51,9 @@ if ( ! class_exists( 'Rt_Biz_Entity_Assignee' ) ) {
 
 		public static function save( $post_id, $post ) {
 			if ( isset( $_POST['assign_to'] ) ) {
-				rt_biz_update_entity_meta( $post_id, 'assgin_to', $_POST['assign_to'] );
+				rtbiz_update_entity_meta( $post_id, 'assgin_to', $_POST['assign_to'] );
 			} else {
-				rt_biz_update_entity_meta( $post_id, 'assgin_to', '' );
+				rtbiz_update_entity_meta( $post_id, 'assgin_to', '' );
 			}
 		}
 

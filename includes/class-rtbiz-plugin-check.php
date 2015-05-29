@@ -48,19 +48,19 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 		}
 
 		public function rt_biz_plugins_dependency_enqueue_js() {
-			wp_enqueue_script( RT_BIZ_TEXT_DOMAIN . '-plugins-dependency', RT_BIZ_URL . 'admin/js/rtbiz-plugin-check.js', '', RT_BIZ_VERSION, true );
-			wp_localize_script( RT_BIZ_TEXT_DOMAIN . '-plugins-dependency', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
+			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . '-plugins-dependency', RTBIZ_URL . 'admin/js/rtbiz-plugin-check.js', '', RTBIZ_VERSION, true );
+			wp_localize_script( RTBIZ_TEXT_DOMAIN . '-plugins-dependency', 'rtbiz_ajax_url', admin_url( 'admin-ajax.php' ) );
 		}
 
 		public function rt_biz_install_plugin_ajax() {
 
 			if ( empty( $_POST['plugin_slug'] ) ) {
-				die( __( 'ERROR: No slug was passed to the AJAX callback.', RT_BIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', RTBIZ_TEXT_DOMAIN ) );
 			}
 			check_ajax_referer( 'rtbiz_install_plugin_' . $_POST['plugin_slug'] );
 
 			if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
-				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', RT_BIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', RTBIZ_TEXT_DOMAIN ) );
 			}
 			$this->rt_biz_install_plugin( $_POST['plugin_slug'] );
 
@@ -73,22 +73,22 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 			$api = plugins_api( 'plugin_information', array(
 				'slug'   => $plugin_slug,
-				'fields' => array( 'sections' => false )
+				'fields' => array( 'sections' => false ),
 			) );
 
 			if ( is_wp_error( $api ) ) {
-				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', RT_BIZ_TEXT_DOMAIN ), $api->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', RTBIZ_TEXT_DOMAIN ), $api->get_error_message() ) );
 			}
 
 			if ( ! class_exists( 'Plugin_Upgrader' ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 			}
 
-			if ( ! class_exists( 'Rt_Biz_Plugin_Upgrader_Skin' ) ) {
-				require_once( RT_BIZ_PATH . 'admin/abstract/class-rt-biz-plugin-upgrader-skin.php' );
+			if ( ! class_exists( 'Rtbiz_Plugin_Upgrader_Skin' ) ) {
+				require_once( RTBIZ_PATH . 'admin/abstract/class-rtbiz-plugin-upgrader-skin.php' );
 			}
 
-			$upgrader = new Plugin_Upgrader( new Rt_Biz_Plugin_Upgrader_Skin( array(
+			$upgrader = new Plugin_Upgrader( new Rtbiz_Plugin_Upgrader_Skin( array(
 				'nonce'  => 'install-plugin_' . $plugin_slug,
 				'plugin' => $plugin_slug,
 				'api'    => $api,
@@ -98,18 +98,18 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 			if ( ! $install_result || is_wp_error( $install_result ) ) {
 				// $install_result can be false if the file system isn't writeable.
-				$error_message = __( 'Please ensure the file system is writeable', RT_BIZ_TEXT_DOMAIN );
+				$error_message = __( 'Please ensure the file system is writeable', RTBIZ_TEXT_DOMAIN );
 
 				if ( is_wp_error( $install_result ) ) {
 					$error_message = $install_result->get_error_message();
 				}
 
-				die( sprintf( __( 'ERROR: Failed to install plugin: %s', RT_BIZ_TEXT_DOMAIN ), $error_message ) );
+				die( sprintf( __( 'ERROR: Failed to install plugin: %s', RTBIZ_TEXT_DOMAIN ), $error_message ) );
 			}
 
 			$activate_result = activate_plugin( $this->rt_biz_get_path_for_plugin( $plugin_slug ) );
 			if ( is_wp_error( $activate_result ) ) {
-				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RT_BIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RTBIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
 			}
 		}
 
@@ -122,12 +122,12 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 		function rt_biz_activate_plugin_ajax() {
 			if ( empty( $_POST['path'] ) ) {
-				die( __( 'ERROR: No slug was passed to the AJAX callback.', RT_BIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', RTBIZ_TEXT_DOMAIN ) );
 			}
 			check_ajax_referer( 'rtbiz_activate_plugin_' . $_POST['path'] );
 
 			if ( ! current_user_can( 'activate_plugins' ) ) {
-				die( __( 'ERROR: You lack permissions to activate plugins.', RT_BIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: You lack permissions to activate plugins.', RTBIZ_TEXT_DOMAIN ) );
 			}
 
 			$this->rt_biz_activate_plugin( $_POST['path'] );
@@ -140,11 +140,12 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 			$activate_result = activate_plugin( $plugin_path );
 			if ( is_wp_error( $activate_result ) ) {
-				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RT_BIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RTBIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
 			}
 		}
 
-		public function rt_biz_plugin_not_installed_admin_notice() { ?>
+		public function rt_biz_plugin_not_installed_admin_notice() {
+	?>
 			<div class="error rtbiz-plugin-not-installed-error"><?php
 			foreach ( $this->plugins_dependency as $plugin_slug => $plugin ) {
 				if ( ! $this->rt_biz_is_plugin_installed( $plugin_slug ) ) {

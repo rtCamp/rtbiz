@@ -15,15 +15,15 @@ class Test_Rt_Biz extends RT_WP_TestCase {
 
 	function test_class_exist(){
 		$this->assertTrue( class_exists( 'Rt_Access_Control' ), 'Class Rt_Access_Control does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Attributes' ), 'Class Rt_Biz_Attributes does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Dashboard' ), 'Class Rt_Biz_Dashboard does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Help' ), 'Class Rt_Biz_Help does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Plugin_Upgrader_Skin' ), 'Class Rt_Biz_Plugin_Upgrader_Skin does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Attributes' ), 'Class Rtbiz_Attributes does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Dashboard' ), 'Class Rtbiz_Dashboard does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Help' ), 'Class Rtbiz_Help does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Plugin_Upgrader_Skin' ), 'Class Rtbiz_Plugin_Upgrader_Skin does not exist' );
 		$this->assertTrue( class_exists( 'Rt_Entity' ), 'Class Rt_Entity does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Text_Diff' ), 'Class Rt_Biz_Text_Diff does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Text_Diff' ), 'Class Rtbiz_Text_Diff does not exist' );
 		$this->assertTrue( class_exists( 'Rt_Company' ), 'Class Rt_Company does not exist' );
 		$this->assertTrue( class_exists( 'Rt_Contact' ), 'Class Rt_Contact does not exist' );
-		$this->assertTrue( class_exists( 'Rt_Biz_Setting' ), 'Class Rt_Biz_Setting does not exist' );
+		$this->assertTrue( class_exists( 'Rtbiz_Setting' ), 'Class Rtbiz_Setting does not exist' );
 	}
 
 	function test_rtbiz_functions(){

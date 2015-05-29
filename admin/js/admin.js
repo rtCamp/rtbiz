@@ -143,7 +143,7 @@ jQuery( document ).ready(function($) {
 		}, 'json' );
 	}
 
-	jQuery( '#rt_biz_is_staff_member' ).click( function( e ){
+	jQuery( '#rtbiz_is_staff_member' ).click( function( e ){
 		if ( jQuery( this ).is( ':checked' ) ) {
 			jQuery( '#rtbiz-permission-container' ).show();
 		} else {

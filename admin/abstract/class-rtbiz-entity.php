@@ -11,18 +11,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
+if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 
 	/**
-	 * Class Rt_Biz_Entity
+	 * Class Rtbiz_Entity
 	 *
-	 * An abstract class for Rt_Biz_Contact & Rt_Biz_Company - Core Modules of rtBiz.
+	 * An abstract class for Rtbiz_Contact & Rtbiz_Company - Core Modules of rtBiz.
 	 * This will handle most of the functionalities of these two entities.
 	 *
 	 * If at all any individual entity wants to change the behavior for itself
 	 * then it will override that particular method in the its child class
 	 */
-	abstract class Rt_Biz_Entity {
+	abstract class Rtbiz_Entity {
 
 		/**
 		 * @var - Entity Core Post Type (Organization / Person)
@@ -42,7 +42,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 		/**
 		 * @var string - Meta Key Prefix
 		 */
-		public static $meta_key_prefix = 'rt_biz_';
+		public static $meta_key_prefix = 'rtbiz_';
 
 		/**
 		 * @param $post_type
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 		}
 
 		/**
-		 *  Register Rt_Biz_Entity Core Post Type
+		 *  Register Rtbiz_Entity Core Post Type
 		 */
 		public function rt_biz_init_entity() {
 			$this->rt_biz_register_post_type( $this->post_type, $this->labels );
@@ -70,7 +70,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 				'publicly_queryable' => false,
 				'show_ui' => true, // Show the UI in admin panel
 				'show_in_nav_menus' => false,
-				'show_in_menu' => Rt_Biz_Dashboard::$page_slug,
+				'show_in_menu' => Rtbiz_Dashboard::$page_slug,
 				'show_in_admin_bar' => false,
 				'supports' => array( 'title', 'comments', 'thumbnail' ),
 				'capability_type' => $name,
@@ -81,7 +81,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 		}
 
 		/**
-		 *  Actions/Filtes used by Rt_Biz_Entity
+		 *  Actions/Filtes used by Rtbiz_Entity
 		 */
 		private function rt_biz_hooks() {
 
@@ -140,11 +140,11 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 		}
 
 		/**
-		 * Registers Meta Box for Rt_Biz_Entity Meta Fields - Additional Information for Rt_Biz_Entity
+		 * Registers Meta Box for Rtbiz_Entity Meta Fields - Additional Information for Rtbiz_Entity
 		 */
 		public function rt_biz_entity_meta_boxes() {
-			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rt_Biz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
-			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rt_Biz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
+			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rtbiz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
+			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rtbiz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
 			do_action( 'rt_biz_entity_meta_boxes-' . $this->post_type , $this->post_type );
 		}
 
@@ -188,7 +188,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 			}
 
 			/* OK, its safe for us to save the data now. */
-			Rt_Biz_Entity_Assignee::save( $post_id, $post );
+			Rtbiz_Entity_Assignee::save( $post_id, $post );
 			$this->rt_biz_save_meta_values( $post_id, $post );
 		}
 
@@ -215,12 +215,12 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 			$post = get_post( $post_id );
 			if ( $_POST['post_title'] != $post->post_title ) {
 				$body = '<strong>' . __( 'Contact Title' ) . '</strong> : ';
-				$body .= rt_biz_text_diff( $post->post_title, $_POST['post_title'] );
+				$body .= rtbiz_text_diff( $post->post_title, $_POST['post_title'] );
 			}
 
 			if ( isset( $_POST['tax_input'] ) ) {
 				foreach ( $_POST['tax_input'] as $key => $val ) {
-					$tmp = rt_biz_get_tex_diff( $post_id, $key );
+					$tmp = rtbiz_get_tex_diff( $post_id, $key );
 					if ( '' != $tmp ) {
 						$body .= $tmp;
 						$flag = true;
@@ -230,10 +230,10 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 
 			$meta_key = '';
 			switch ( $_POST['post_type'] ) {
-				case rt_biz_get_contact_post_type():
+				case rtbiz_get_contact_post_type():
 					$meta_key = 'contact_meta';
 					break;
-				case rt_biz_get_company_post_type():
+				case rtbiz_get_company_post_type():
 					$meta_key = 'company_meta';
 					break;
 			}
@@ -244,13 +244,13 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 				}
 
 				if ( 'contact_primary_email' == $field['key'] ) {
-					if ( ! rt_biz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
+					if ( ! rtbiz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
 
-				if ( Rt_Biz_Company::$primary_email == $field['key'] ) {
-					if ( ! rt_biz_is_primary_email_unique_company( $_POST['company_meta'][ $field['key'] ] ) ) {
+				if ( Rtbiz_Company::$primary_email == $field['key'] ) {
+					if ( ! rtbiz_is_primary_email_unique_company( $_POST['company_meta'][ $field['key'] ] ) ) {
 						continue;
 					}
 				}
@@ -261,7 +261,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 					$filerpost = array_filter( $_POST[ $meta_key ][ $field['key'] ] );
 					$diff = array_diff( $filerval, $filerpost );
 					$diff2 = array_diff( $filerpost, $filerval );
-					$difftxt = rt_biz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
+					$difftxt = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
 					if ( ! empty( $difftxt ) || '' != $difftxt ) {
 						$skip_enter = str_replace( 'Enter', '', $field['label'] );
 						$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 					$val = self::get_meta( $post_id, $field['key'], true );
 					$newval = $_POST[ $meta_key ][ $field['key'] ];
 					if ( $val != $newval ) {
-						$difftxt = rt_biz_text_diff( $val, $newval );
+						$difftxt = rtbiz_text_diff( $val, $newval );
 						$skip_enter = str_replace( 'Enter', '', $field['label'] );
 						$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
 						$flag = true;
@@ -281,7 +281,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 			if ( $flag ) {
 				$user = wp_get_current_user();
 				$body = 'Updated by <strong>' . $user->display_name . '</strong> <br/>' . $body;
-				$settings = rt_biz_get_redux_settings();
+				$settings = rtbiz_get_redux_settings();
 				$label = $settings['menu_label'];
 				$data = array(
 					'comment_post_ID' => $post_id,
@@ -324,16 +324,16 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 			$singular = $this->labels['singular_name'];
 			$messages[ $this->post_type ] = array(
 				0 => '', // Unused. Messages start at index 1.
-				1 => __( $singular . ' updated.', RT_BIZ_TEXT_DOMAIN ),
-				2 => __( 'Custom field updated.', RT_BIZ_TEXT_DOMAIN ),
-				3 => __( 'Custom field deleted.', RT_BIZ_TEXT_DOMAIN ),
-				4 => __( $singular . ' updated.', RT_BIZ_TEXT_DOMAIN ),
+				1 => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
+				2 => __( 'Custom field updated.', RTBIZ_TEXT_DOMAIN ),
+				3 => __( 'Custom field deleted.', RTBIZ_TEXT_DOMAIN ),
+				4 => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
 				/* translators: %s: date and time of the revision */
-				5 => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', RT_BIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-				6 => __( $singular . ' published.', RT_BIZ_TEXT_DOMAIN ),
-				7 => __( $singular . ' saved.', RT_BIZ_TEXT_DOMAIN ),
-				8 => __( $singular . ' submitted.', RT_BIZ_TEXT_DOMAIN ),
-				10 => __( $singular . ' draft updated.', RT_BIZ_TEXT_DOMAIN )
+				5 => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', RTBIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6 => __( $singular . ' published.', RTBIZ_TEXT_DOMAIN ),
+				7 => __( $singular . ' saved.', RTBIZ_TEXT_DOMAIN ),
+				8 => __( $singular . ' submitted.', RTBIZ_TEXT_DOMAIN ),
+				10 => __( $singular . ' draft updated.', RTBIZ_TEXT_DOMAIN ),
 			);
 
 			return $messages;
@@ -354,7 +354,7 @@ if ( ! class_exists( 'Rt_Biz_Entity' ) ) {
 			// Contact and company comments needed on from end in furture need to remove else condition.
 			if ( is_admin() ) {
 				$screen = get_current_screen();
-				if ( ( isset( $screen->post_type ) && ( rt_biz_get_contact_post_type() != $screen->post_type && rt_biz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rt_Biz_Dashboard::$page_slug ) {
+				if ( ( isset( $screen->post_type ) && ( rtbiz_get_contact_post_type() != $screen->post_type && rtbiz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rtbiz_Dashboard::$page_slug ) {
 					$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
 					if ( ! is_array( $types ) ) {
 						$types = array( $types );

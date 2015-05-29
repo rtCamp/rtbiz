@@ -6,21 +6,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Biz_Text_Diff' ) ) {
+if ( ! class_exists( 'Rtbiz_Text_Diff' ) ) {
 
 	if ( ! class_exists( 'WP_Text_Diff_Renderer_Table' ) ) {
 		require( ABSPATH . WPINC . '/wp-diff.php' );
 	}
 
 	/**
-	 * Class Rt_Biz_Text_Diff
+	 * Class Rtbiz_Text_Diff
 	 * Email Diff text generator
 	 *
 	 * @since  0.1
 	 *
 	 * @author udit
 	 */
-	class Rt_Biz_Text_Diff extends WP_Text_Diff_Renderer_Table {
+	class Rtbiz_Text_Diff extends WP_Text_Diff_Renderer_Table {
 
 		/**
 		 * @var int

@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
+if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
-	class Rt_Biz_Dashboard {
+	class Rtbiz_Dashboard {
 
 		public static $page_slug = 'rtbiz-dashboard';
 
@@ -45,8 +45,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		public function rt_biz_setup_defaults() {
-			if ( ! empty( $_REQUEST['page'] ) && self::$page_slug == $_REQUEST['page'] && ! metadata_exists( 'user', get_current_user_id(), 'show_rtbiz_welcome_panel' ) ) {
-				update_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', 1 );
+			if ( ! empty( $_REQUEST['page'] ) && self::$page_slug == $_REQUEST['page'] && ! metadata_exists( 'user', get_current_user_id(), 'rtbiz_show_welcome_panel' ) ) {
+				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', 1 );
 			}
 		}
 
@@ -54,19 +54,19 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 			check_ajax_referer( 'rtbiz-welcome-panel-nonce', 'rtbizwelcomepanelnonce' );
 
-			$author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
+			$author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 
 			if ( ! current_user_can( $author_cap ) ) {
 				wp_die( - 1 );
 			}
 
-			update_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', empty( $_POST['visible'] ) ? 0 : 1 );
+			update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', empty( $_POST['visible'] ) ? 0 : 1 );
 
 			wp_die( 1 );
 		}
 
 		public function rt_biz_dashboard_ui() {
-			rt_biz_get_template( 'dashboard.php', array(), '', RT_BIZ_PATH . 'admin/page/' );
+			rtbiz_get_template( 'dashboard.php', array(), '', RTBIZ_PATH . 'admin/page/' );
 		}
 
 		public function rt_biz_add_screen_id( $screen_id ) {
@@ -102,7 +102,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		 * Prints the jQuery script to initiliase the metaboxes
 		 * Called on admin_footer-*
 		 */
-		public function rt_biz_footer_scripts() { ?>
+		public function rt_biz_footer_scripts() {
+	?>
 			<script> postboxes.add_postbox_toggles(pagenow);</script> <?php
 		}
 
@@ -113,27 +114,27 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		public function rt_biz_add_dashboard_widgets() {
 			$menu_label     = __( 'rtBiz' );
-			$contact_labels = rt_biz_get_contact_labels();
+			$contact_labels = rtbiz_get_contact_labels();
 			//$contact_group_labels = rt_biz_get_contact_group_labels();
 
-			add_meta_box( 'rtbiz-activity', __( $menu_label . ' Activity', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-activity', __( $menu_label . ' Activity', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
 				'rt_biz_dashboard_site_activity',
 			), $this->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-team-by-contacts', $contact_labels['name'] . ' ' . __( 'by Team', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-team-by-contacts', $contact_labels['name'] . ' ' . __( 'by Team', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
 				'rt_biz_team_by_contacts',
 			), $this->screen_id, 'column2' );
 
-			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RT_BIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array(
+			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RTBIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array(
 				$this,
 				'rt_biz_contact_type_wise_contacts'
 			), $this->screen_id, 'column3' );*/
 
 			//todo: offering move into rtbiz
 			//			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RT_BIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
 				'rt_biz_offering_wise_contacts',
 			), $this->screen_id, 'column5' );
@@ -142,7 +143,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			//todo: create function to get all attribute in attribute class
 			$rt_biz_attributes_model              = new RT_Attributes_Model();
 			$rt_biz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
-			$relations                            = $rt_biz_attributes_relationship_model->get_relations_by_post_type( rt_biz_get_contact_post_type() );
+			$relations                            = $rt_biz_attributes_relationship_model->get_relations_by_post_type( rtbiz_get_contact_post_type() );
 			foreach ( $relations as $r ) {
 				$attr = $rt_biz_attributes_model->get_attribute( $r->attr_id );
 				if ( 'taxonomy' == $attr->attribute_store_as ) {
@@ -156,8 +157,8 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		public function rt_biz_dashboard_site_activity() {
 
-			$contact_labels = rt_biz_get_contact_labels();
-			$company_labels = rt_biz_get_company_labels();
+			$contact_labels = rtbiz_get_contact_labels();
+			$company_labels = rtbiz_get_company_labels();
 
 			echo '<div id="activity-widget">';
 
@@ -167,14 +168,14 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 				'order'  => 'ASC',
 				'title'  => __( 'Recently added' ) . ' ' . $contact_labels['name'],
 				'id'     => 'future-posts',
-			), rt_biz_get_contact_post_type() );
+			), rtbiz_get_contact_post_type() );
 			$recent_posts = $this->rt_biz_dashboard_recent_posts( array(
 				'max'    => 5,
 				'status' => 'publish',
 				'order'  => 'DESC',
 				'title'  => __( 'Recently added' ) . ' ' . $company_labels['name'],
 				'id'     => 'published-posts',
-			), rt_biz_get_company_post_type() );
+			), rtbiz_get_company_post_type() );
 
 			$recent_comments = $this->rt_biz_dashboard_recent_comments();
 
@@ -295,7 +296,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$comments = array();
 
 			$comments_query = array(
-				'post_type' => array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ),
+				'post_type' => array( rtbiz_get_contact_post_type(), rtbiz_get_company_post_type() ),
 				'number'    => $total_items * 5,
 				'offset'    => 0,
 			);
@@ -332,12 +333,12 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		//todo: check data empty
 		public function rt_biz_team_by_contacts( $obj, $args ) {
-			$taxonomy    = RT_Biz_Teams::$slug;
+			$taxonomy    = Rtbiz_Teams::$slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Team', RT_BIZ_TEXT_DOMAIN ), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Team', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
 			$rows        = array();
-			$post_type   = rt_biz_get_contact_post_type();
+			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
 
 			if ( ! $terms instanceof WP_Error ) {
@@ -376,12 +377,12 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 
 		//todo: check data empty
 		public function rt_biz_contact_type_wise_contacts( $obj, $args ) {
-			$taxonomy    = Rt_Biz_Contact::$user_category_taxonomy;
+			$taxonomy    = Rtbiz_Contact::$user_category_taxonomy;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Contacts type', RT_BIZ_TEXT_DOMAIN ), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Contacts type', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
 			$rows        = array();
-			$post_type   = rt_biz_get_contact_post_type();
+			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
 
 			if ( ! $terms instanceof WP_Error ) {
@@ -424,9 +425,9 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$taxonomy    = Rt_Offerings::$offering_slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Offerings', RT_BIZ_TEXT_DOMAIN ), __( 'Count', RT_BIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Offerings', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
 			$rows        = array();
-			$post_type   = rt_biz_get_contact_post_type();
+			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
 
 			if ( ! $terms instanceof WP_Error ) {
@@ -470,7 +471,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 			$attribute_id            = $args['args']['attribute_id'];
 			$attr                    = $rt_biz_attributes_model->get_attribute( $attribute_id );
 			$taxonomy                = $rt_biz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
-			$post_type               = rt_biz_get_contact_post_type();
+			$post_type               = rtbiz_get_contact_post_type();
 			$terms                   = get_terms( $taxonomy );
 			$data_source             = array();
 			$cols                    = array( $attr->attribute_label, __( 'People' ) );
@@ -543,11 +544,11 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		}
 
 		public function rt_biz_welcome_panel() {
-			$admin_cap      = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
-			$editor_cap     = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$admin_cap      = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' );
+			$editor_cap     = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$welcome_label  = __( 'rtBiz' );
-			$contact_labels = rt_biz_get_contact_labels();
-			$company_labels = rt_biz_get_company_labels();
+			$contact_labels = rtbiz_get_contact_labels();
+			$company_labels = rtbiz_get_company_labels();
 			//$contact_group_labels = rt_biz_get_contact_group_labels(); ?>
 			<div class="welcome-panel-content">
 				<h3><?php _e( 'Welcome to ' . $welcome_label ); ?></h3>
@@ -559,7 +560,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<?php if ( current_user_can( $editor_cap ) ) : ?>
 							<h4><?php _e( 'Get Started' ); ?></h4>
 							<a id="rtbiz-customize-biz" class="button button-primary button-hero"
-							   href="<?php echo admin_url( 'admin.php?page=' . Rt_Biz_Setting::$page_slug ); ?>"><?php echo $welcome_label . ' ' . __( 'Settings' ); ?></a>
+							   href="<?php echo admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ); ?>"><?php echo $welcome_label . ' ' . __( 'Settings' ); ?></a>
 						<?php endif; ?>
 						<?php do_action( 'rtbiz_welcome_panel_addon_link' ); ?>
 					</div>
@@ -573,10 +574,10 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 							echo '</li>';
 						}
 						if ( current_user_can( $editor_cap ) ) { ?>
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Team & assign them to' ) . ' ' . strtolower( $contact_labels['singular_name'] ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . RT_Biz_Teams::$slug . '&post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
+							<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Team & assign them to' ) . ' ' . strtolower( $contact_labels['singular_name'] ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
 						<?php }
 						if ( current_user_can( $admin_cap ) ) { ?>
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-lock">' . __( 'Define your Access Control for' ) . ' ' . $welcome_label . '</a>', admin_url( 'admin.php?page=' . Rt_Biz_Access_Control::$page_slug ) ); ?></li>
+							<li><?php printf( '<a href="%s" class="welcome-icon welcome-lock">' . __( 'Define your Access Control for' ) . ' ' . $welcome_label . '</a>', admin_url( 'admin.php?page=' . Rtbiz_Access_Control::$page_slug ) ); ?></li>
 						<?php } ?>
 						</ul>
 					</div>
@@ -585,13 +586,13 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						<h4><?php _e( 'Quick Actions' ); ?></h4>
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
-								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new' ) . ' ' . $contact_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
-								<!--<li><?php /*printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup' ) . ' ' . $contact_group_labels['name'] . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Biz_Contact::$user_category_taxonomy . '&post_type=' . rt_biz_get_contact_post_type() ) ); */ ?></li>-->
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'Add new' ) . ' ' . $company_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rt_biz_get_company_post_type() ) ); ?></li>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-networking">' . __( 'Setup Attributes' ) . '</a>', admin_url( 'admin.php?page=' . Rt_Biz_Attributes::$page_slug ) ); ?></li>
+								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new' ) . ' ' . $contact_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
+								<!--<li><?php /*printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'Setup' ) . ' ' . $contact_group_labels['name'] . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Contact::$user_category_taxonomy . '&post_type=' . rtbiz_get_contact_post_type() ) ); */ ?></li>-->
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'Add new' ) . ' ' . $company_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rtbiz_get_company_post_type() ) ); ?></li>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-networking">' . __( 'Setup Attributes' ) . '</a>', admin_url( 'admin.php?page=' . Rtbiz_Attributes::$page_slug ) ); ?></li>
 							<?php } else { ?>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'View your' ) . ' ' . $contact_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rt_biz_get_contact_post_type() ) ); ?></li>
-								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'View your' ) . ' ' . $company_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rt_biz_get_company_post_type() ) ); ?></li>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'View your' ) . ' ' . $contact_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'View your' ) . ' ' . $company_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rtbiz_get_company_post_type() ) ); ?></li>
 							<?php } ?>
 							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', 'https://rtcamp.com/rtbiz/docs/' ); ?></li>
 						</ul>
@@ -603,9 +604,9 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		public function rt_biz_print_dashboard_js() {
 			if ( isset( $_GET['rtbizwelcome'] ) ) {
 				$welcome_checked = empty( $_GET['rtbizwelcome'] ) ? 0 : 1;
-				update_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', $welcome_checked );
+				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', $welcome_checked );
 			} else {
-				$welcome_checked = get_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', true );
+				$welcome_checked = get_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', true );
 				if ( 2 == $welcome_checked && wp_get_current_user()->user_email != get_option( 'admin_email' ) ) {
 					$welcome_checked = false;
 				}
@@ -640,7 +641,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 						rtbiz_updateWelcomePanel(this.checked ? 1 : 0);
 					});
 
-					$('#screen-options-wrap #adv-settings .metabox-prefs').append("<label for='rtbiz_welcome_panel-hide'><input type='checkbox' id='rtbiz_welcome_panel-hide' value='rtbiz-welcome-panel' <?php echo checked( (bool) $welcome_checked, true, false ); ?> /><?php _e( 'Welcome', RT_BIZ_TEXT_DOMAIN ); ?></label>");
+					$('#screen-options-wrap #adv-settings .metabox-prefs').append("<label for='rtbiz_welcome_panel-hide'><input type='checkbox' id='rtbiz_welcome_panel-hide' value='rtbiz-welcome-panel' <?php echo checked( (bool) $welcome_checked, true, false ); ?> /><?php _e( 'Welcome', RTBIZ_TEXT_DOMAIN ); ?></label>");
 				});
 			</script> <?php
 		}
@@ -648,7 +649,7 @@ if ( ! class_exists( 'Rt_Biz_Dashboard' ) ) {
 		public function rt_biz_check_welcome_panel() {
 			if ( isset( $_GET['rtbizwelcome'] ) ) {
 				$welcome_checked = empty( $_GET['rtbizwelcome'] ) ? 0 : 1;
-				update_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', $welcome_checked );
+				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', $welcome_checked );
 			}
 		}
 	}

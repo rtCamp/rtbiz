@@ -29,25 +29,25 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 	}*/
 
 	function test_constructor(){
-		$this->assertTrue( post_type_exists( rt_biz_get_contact_post_type() ), 'Something is wrong in rt_contact check class post type not exist' );
+		$this->assertTrue( post_type_exists( rtbiz_get_contact_post_type() ), 'Something is wrong in rt_contact check class post type not exist' );
 	}
 
 	function test_add_contact(){
-		$this->assertEquals( 0, sizeof( get_posts( array( 'post_type'=> rt_biz_get_contact_post_type() ) ) ) );
+		$this->assertEquals( 0, sizeof( get_posts( array( 'post_type'=> rtbiz_get_contact_post_type() ) ) ) );
 		$this->Rt_Contact->add_contact( 'sherlock holmes','','221b_backer@street.com' );
-		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
+		$posts = get_posts( array( 'post_type' => rtbiz_get_contact_post_type() ) );
 		$this->assertEquals( 1, sizeof( $posts ) ) ;
-		$this->assertEquals( false, rt_biz_is_primary_email_unique( '221b_backer@street.com' ) );
-		$this->assertEquals( true, rt_biz_is_primary_email_unique( 'james_moriart@woman.com' ) );
+		$this->assertEquals( false, rtbiz_is_primary_email_unique( '221b_backer@street.com' ) );
+		$this->assertEquals( true, rtbiz_is_primary_email_unique( 'james_moriart@woman.com' ) );
 	}
 
 	function test_get_contact_by_email(){
 		$this->Rt_Contact->add_contact( 'sherlock holmes' );
 		$this->Rt_Contact->add_contact( 'John Watson' );
-		$posts = get_posts( array( 'post_type' => rt_biz_get_contact_post_type() ) );
+		$posts = get_posts( array( 'post_type' => rtbiz_get_contact_post_type() ) );
 		$this->assertEquals( 2, sizeof( $posts ) ) ;
 		update_post_meta( $posts[1]->ID, Rt_Entity::$meta_key_prefix.Rt_Contact::$primary_email_key, '221b_backer@street.com' );
-		$contact = rt_biz_get_contact_by_email('221b_backer@street.com');
+		$contact = rtbiz_get_contact_by_email('221b_backer@street.com');
 		$this->assertEquals( 'sherlock holmes', $contact[0]->post_title ) ;
 	}
 

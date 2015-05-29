@@ -6,11 +6,11 @@
  * and open the template in the editor.
  */
 
-$team = rt_biz_get_team();
-$modules     = rt_biz_get_modules();
-$permissions = rt_biz_get_acl_permissions();
-$module_permissions = get_site_option( 'rt_biz_module_permissions' );
-$settings  = rt_biz_get_redux_settings();
+$team = rtbiz_get_team();
+$modules     = rtbiz_get_modules();
+$permissions = rtbiz_get_acl_permissions();
+$module_permissions = get_site_option( 'rtbiz_acl_module_permissions' );
+$settings  = rtbiz_get_redux_settings();
 $menu_label = $settings['menu_label'];
 if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type']  ) {
 	$menu_label = 'Helpdesk';
@@ -26,9 +26,9 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 		<ul class="rt_biz_acl_other_option subsubsub">
 			<strong>Team:</strong>
 			<?php foreach ( $team as $ug ) { ?>
-				<li><a href="<?php echo admin_url( 'edit-tags.php?action=edit&taxonomy=' . RT_Biz_Teams::$slug . '&tag_ID=' . $ug->term_id . '&post_type=' . rt_biz_get_contact_post_type() ) ?>" class=""><?php echo $ug->name; ?></a></li> |
+				<li><a href="<?php echo admin_url( 'edit-tags.php?action=edit&taxonomy=' . Rtbiz_Teams::$slug . '&tag_ID=' . $ug->term_id . '&post_type=' . rtbiz_get_contact_post_type() ) ?>" class=""><?php echo $ug->name; ?></a></li> |
 			<?php } ?>
-			<li><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . RT_Biz_Teams::$slug . '&post_type=' . rt_biz_get_contact_post_type() ); ?>">Add New</a></li>
+			<li><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() ); ?>">Add New</a></li>
 		</ul>
 		<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 			<input type="hidden" name="rt_biz_acl_permissions" value="1" />
@@ -43,7 +43,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 				</thead>
 				<tbody id="the-list">
 					<?php foreach ( $modules as $mkey => $m ) {
-						if ( RT_BIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type'] ) {
+						if ( RTBIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type'] ) {
 							$m['label'] = 'People';
 						}
 						?>
@@ -51,7 +51,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 						<td><strong><?php echo $m['label']; ?></strong></td>
 						<?php foreach ( $team as $ug ) { ?>
 							<td>
-								<select name="rt_biz_module_permissions[<?php echo $mkey ?>][<?php echo $ug->term_id; ?>]">
+								<select name="rtbiz_acl_module_permissions[<?php echo $mkey ?>][<?php echo $ug->term_id; ?>]">
 									<?php foreach ( $permissions as $pkey => $p ) { ?>
 									<option title="<?php echo $p['tooltip']; ?>" value="<?php echo $p['value']; ?>" <?php echo ( isset( $module_permissions[ $mkey ][ $ug->term_id ] ) && intval( $module_permissions[ $mkey ][ $ug->term_id ] ) == $p['value'] ) ? 'selected="selected"' : ''; ?>><?php echo $p['name']; ?></option>;
 									<?php } ?>
@@ -73,7 +73,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 			<br />
 			<input type="submit" class="button-primary" value="Save Settings" />
 	<div style="margin-top: 25px">
-			<p class="description"> Access to individual contacts can be updated from their contact profile page. Go to <a target="_blank" href="<?php echo admin_url( 'edit.php?post_type='.rt_biz_get_contact_post_type() ); ?>">People</a> section to find a contact.</p>
+			<p class="description"> Access to individual contacts can be updated from their contact profile page. Go to <a target="_blank" href="<?php echo admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type() ); ?>">People</a> section to find a contact.</p>
 	</div>
 		</form>
 	</div>

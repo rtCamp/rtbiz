@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-$settings = rt_biz_get_redux_settings();
+$settings = rtbiz_get_redux_settings();
 $menu_label = __( 'rtBiz' );
-$author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
+$author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 ?>
 <div class="wrap">
 
@@ -20,7 +20,7 @@ $author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
 	if ( current_user_can( $author_cap ) ) {
 		$classes = 'welcome-panel';
 
-		$option = get_user_meta( get_current_user_id(), 'show_rtbiz_welcome_panel', true );
+		$option = get_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', true );
 		// 0 = hide, 1 = toggled to show or single site creator, 2 = multisite site owner
 		$hide = 0 == $option || ( 2 == $option && wp_get_current_user()->user_email != get_option( 'admin_email' ) );
 		if ( $hide ) {
@@ -30,7 +30,7 @@ $author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
 
 		<div id="rtbiz-welcome-panel" class="<?php echo esc_attr( $classes ); ?>">
 			<?php wp_nonce_field( 'rtbiz-welcome-panel-nonce', 'rtbizwelcomepanelnonce', false ); ?>
-			<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rt_Biz_Dashboard::$page_slug . '&rtbizwelcome=0' ) ); ?>"><?php _e( 'Dismiss' ); ?></a>
+			<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug . '&rtbizwelcome=0' ) ); ?>"><?php _e( 'Dismiss' ); ?></a>
 			<?php
 			/**
 			 * Add content to the welcome panel on the admin dashboard.

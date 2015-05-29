@@ -82,7 +82,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __clone() {
 			// Cloning instances of the class is forbidden
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', RT_BIZ_TEXT_DOMAIN ), '1.6' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', RTBIZ_TEXT_DOMAIN ), '1.6' );
 		}
 
 		/**
@@ -94,7 +94,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		public function __wakeup() {
 			// Unserializing instances of the class is forbidden
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', RT_BIZ_TEXT_DOMAIN ), '1.6' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', RTBIZ_TEXT_DOMAIN ), '1.6' );
 		}
 
 
@@ -113,13 +113,13 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		public function rt_biz_init_plugin() {
 
-			require_once RT_BIZ_PATH . 'includes/class-rt-biz-plugin-check.php';
+			require_once RTBIZ_PATH . 'includes/class-rtbiz-plugin-check.php';
 
 			$plugins_dependency = array(
 				'posts-to-posts' => array(
 					'project_type' => 'all',
-					'name'         => esc_html__( 'Posts 2 Posts', RT_BIZ_TEXT_DOMAIN ),
-					'desc'         => esc_html__( 'Create many-to-many relationships between all types of posts.', RT_BIZ_TEXT_DOMAIN ),
+					'name'         => esc_html__( 'Posts 2 Posts', RTBIZ_TEXT_DOMAIN ),
+					'desc'         => esc_html__( 'Create many-to-many relationships between all types of posts.', RTBIZ_TEXT_DOMAIN ),
 					'active'       => class_exists( 'P2P_Autoload' ),
 					'filename'     => 'posts-to-posts.php',
 				),
@@ -136,7 +136,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			$this->define_public_hooks();
 
 			$this->run();
-			do_action( 'rt_biz_init' );
+			do_action( 'rtbiz_init' );
 		}
 
 		/**
@@ -161,18 +161,18 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			 * The class responsible for orchestrating the helping function
 			 * core plugin.
 			 */
-			require_once RT_BIZ_PATH . 'admin/helper/rt-biz-functions.php';
-			require_once RT_BIZ_PATH . 'vendor/redux/ReduxCore/framework.php';
+			require_once RTBIZ_PATH . 'admin/helper/rtbiz-functions.php';
+			require_once RTBIZ_PATH . 'vendor/redux/ReduxCore/framework.php';
 
-			$rtb_includes_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'includes/' );
-			$rtb_admin_autoload     = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/' );
-			$rtb_admin_autoload     = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/rt-biz-contact/metabox' );
-			$rtb_models_autoload    = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/models/' );
-			$rtb_abstract_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/abstract/' );
-			$rtb_abstract_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/abstract/metabox' );
-			$rtb_settings_autoload  = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/settings/' );
-			$rtb_helper_autoload    = new RT_WP_Autoload( RT_BIZ_PATH . 'admin/helper/' );
-			$rtb_migration_autoload = new RT_WP_Autoload( RT_BIZ_PATH . 'includes/migration/' );
+			$rtb_includes_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
+			$rtb_admin_autoload     = new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
+			$rtb_admin_autoload     = new RT_WP_Autoload( RTBIZ_PATH . 'admin/rtbiz-contact/metabox' );
+			$rtb_models_autoload    = new RT_WP_Autoload( RTBIZ_PATH . 'admin/models/' );
+			$rtb_abstract_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/' );
+			$rtb_abstract_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/metabox' );
+			$rtb_settings_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/settings/' );
+			$rtb_helper_autoload    = new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
+			$rtb_migration_autoload = new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
 
 			self::$loader = new Rt_Biz_Loader();
 		}
@@ -188,7 +188,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 */
 		private function set_locale() {
 			$plugin_i18n = new Rt_Biz_i18n();
-			$plugin_i18n->set_domain( $this->get_plugin_name() );
+			$plugin_i18n->set_domain( RTBIZ_TEXT_DOMAIN );
 
 			// called on plugins_loaded hook
 			$plugin_i18n->load_plugin_textdomain();
@@ -205,14 +205,14 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			self::$templateURL = apply_filters( 'rtbiz_template_url', 'rt_biz/' );
 
-			$plugin_admin = new Rt_Biz_Admin( );
+			$plugin_admin = new Rtbiz_Admin( );
 
 			if ( is_admin() ) {
 				// update menu order of rtbiz menu
 				Rt_Biz::$loader->add_action( 'admin_menu', $plugin_admin, 'rt_biz_register_menu', 1 );
 				Rt_Biz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'rt_biz_custom_pages_order' );
 
-				Rt_Biz::$loader->add_filter( 'plugin_action_links_' . RT_BIZ_BASE_NAME, $plugin_admin, 'rt_biz_plugin_action_links' );
+				Rt_Biz::$loader->add_filter( 'plugin_action_links_' . RTBIZ_BASE_NAME, $plugin_admin, 'rt_biz_plugin_action_links' );
 				Rt_Biz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'rt_biz_plugin_row_meta', 10, 4 );
 			}
 

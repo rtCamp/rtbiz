@@ -5,12 +5,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-if ( ! class_exists( 'RT_Biz_Teams' ) ) {
+if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 
 	/**
-	 * Class RT_Biz_Teams
+	 * Class Rtbiz_Teams
 	 */
-	class RT_Biz_Teams {
+	class Rtbiz_Teams {
 		/**
 		 * @var $slug - team slug
 		 */
@@ -45,7 +45,7 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 
 
 
-		function rt_biz_get_lables(){
+		function rt_biz_get_lables() {
 			$this->labels = array(
 				'name'                       => __( 'Teams' ),
 				'singular_name'              => __( 'Team' ),
@@ -69,7 +69,7 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 		 */
 		function rt_biz_register_taxonomy_team() {
 
-			$editor_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$caps = array(
 				'manage_terms' => $editor_cap,
 				'edit_terms'   => $editor_cap,
@@ -85,8 +85,8 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 			register_taxonomy( self::$slug, $supported_posttypes, $arg );
 		}
 
-		public function rt_biz_add_team_support( $supports ){
-			$modules          = rt_biz_get_modules();
+		public function rt_biz_add_team_support( $supports ) {
+			$modules          = rtbiz_get_modules();
 			foreach ( $modules as $key => $value ) {
 				if ( ! empty( $value['team_support'] ) ) {
 					$supports = array_merge( $supports, $value['team_support'] );
@@ -149,7 +149,7 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 					<tbody>
 					<tr class="form-field">
 						<th scope="row" valign="top"><label
-								for="term_meta[email_address]"><?php _e( 'Email Address', RT_BIZ_TEXT_DOMAIN ); ?></label></th>
+								for="term_meta[email_address]"><?php _e( 'Email Address', RTBIZ_TEXT_DOMAIN ); ?></label></th>
 						<td>
 							<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 							       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
@@ -178,7 +178,7 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 		 * add view action for Team
 		 */
 		function rt_biz_row_actions( $actions, $term ) {
-			$actions['view'] = sprintf( __( '%sView%s', RT_BIZ_TEXT_DOMAIN ), '<a href="' . esc_url( add_query_arg( array( self::$slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
+			$actions['view'] = sprintf( __( '%sView%s', RTBIZ_TEXT_DOMAIN ), '<a href="' . esc_url( add_query_arg( array( self::$slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
 
 			return $actions;
 		}
@@ -213,7 +213,7 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 			switch ( $column ) {
 				case 'contacts':
 					$term = get_term( $term_id, self::$slug );
-					$contacts_count = count( rt_biz_get_team_contacts( $term_id ) );
+					$contacts_count = count( rtbiz_get_team_contacts( $term_id ) );
 					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rt_biz_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'email_address';
@@ -237,9 +237,9 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 
 			unset( $columns['posts'], $columns['slug'] );
 
-			$columns['contacts']         = __( 'Contacts', RT_BIZ_TEXT_DOMAIN );
-			//			$columns['color']         = __( 'Color', RT_BIZ_TEXT_DOMAIN );
-			$columns['email_address'] = __( 'Email Address', RT_BIZ_TEXT_DOMAIN );
+			$columns['contacts']         = __( 'Contacts', RTBIZ_TEXT_DOMAIN );
+			//			$columns['color']         = __( 'Color', RTBIZ_TEXT_DOMAIN );
+			$columns['email_address'] = __( 'Email Address', RTBIZ_TEXT_DOMAIN );
 
 			return $columns;
 		}
@@ -272,11 +272,11 @@ if ( ! class_exists( 'RT_Biz_Teams' ) ) {
 			return false;
 		}
 
-		function rt_biz_add_manage_acl_button( $taxonomy ){
+		function rt_biz_add_manage_acl_button( $taxonomy ) {
 			global $pagenow;
 			if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 				if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ) {
-					$acl_url = admin_url( 'admin.php?page=' . Rt_Biz_Access_Control::$page_slug );
+					$acl_url = admin_url( 'admin.php?page=' . Rtbiz_Access_Control::$page_slug );
 					echo '<div class="updated" style="padding: 10px 10px 10px;">You can manage ACL for these Team from <a href="' . esc_url( $acl_url ) . '">Access Control</a></div>';
 				}
 			}

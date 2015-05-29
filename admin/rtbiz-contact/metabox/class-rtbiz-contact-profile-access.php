@@ -6,42 +6,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Biz_Contact_Profile_Access' ) ) {
+if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 
-	class Rt_Biz_Contact_Profile_Access extends Rt_Biz_Metabox {
+	class Rtbiz_Contact_Profile_Access extends Rtbiz_Metabox {
 
 		public static function ui( $post ) {
 			global $rt_biz_contact;
-			$modules          = rt_biz_get_modules();
-			$permissions      = rt_biz_get_acl_permissions();
-			$user_permissions = get_post_meta( $post->ID, 'rt_biz_profile_permissions', true );
-			$is_staff_member  = get_post_meta( $post->ID, 'rt_biz_is_staff_member', true );
+			$modules          = rtbiz_get_modules();
+			$permissions      = rtbiz_get_acl_permissions();
+			$user_permissions = get_post_meta( $post->ID, 'rtbiz_profile_permissions', true );
+			$is_staff_member  = get_post_meta( $post->ID, 'rtbiz_is_staff_member', true );
 			if ( empty( $is_staff_member ) && isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
 				$is_staff_member = 'yes';
 			}
-			$user = rt_biz_get_wp_user_for_contact( $post->ID );
+			$user = rtbiz_get_wp_user_for_contact( $post->ID );
 			if ( isset( $user[0]->roles ) && in_array( 'administrator', $user[0]->roles ) ) {
-				_e( "Admin have full access for all plugins. You can't change it", RT_BIZ_TEXT_DOMAIN );
+				_e( "Admin have full access for all plugins. You can't change it", RTBIZ_TEXT_DOMAIN );
 				return;
 			} ?>
 			<div>
 				<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked"' : ''; ?>
-				<label><input type="checkbox" id="rt_biz_is_staff_member" <?php echo $selected; ?>
-				              name="rt_biz_is_staff_member" value="yes"><span
-						class="checkbox-title"><?php _e( 'Staff Member ', RT_BIZ_TEXT_DOMAIN ) ?></span></label>
+				<label><input type="checkbox" id="rtbiz_is_staff_member" <?php echo $selected; ?>
+				              name="rtbiz_is_staff_member" value="yes"><span
+						class="checkbox-title"><?php _e( 'Staff Member ', RTBIZ_TEXT_DOMAIN ) ?></span></label>
 			</div>
 			<?php $class = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? '' : 'rtbiz-hide'; ?>
 			<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
 				<table class="form-table">
 					<tbody>
 					<?php foreach ( $modules as $mkey => $m ) {
-						if ( RT_BIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
+						if ( RTBIZ_TEXT_DOMAIN == $mkey && is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 							continue;
 						} ?>
 						<tr>
 							<th><?php echo $m['label']; ?></th>
 							<td>
-								<select name="rt_biz_profile_permissions[<?php echo $mkey ?>]"><?php
+								<select name="rtbiz_profile_permissions[<?php echo $mkey ?>]"><?php
 								if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
 									<option title="<?php _e( 'No Profile Access Override' ); ?>"
 									        value=""><?php _e( 'Use Group Access' ); ?></option><?php
@@ -64,23 +64,23 @@ if ( ! class_exists( 'Rt_Biz_Contact_Profile_Access' ) ) {
 		public static function save( $contact_id, $post ) {
 
 			global $rt_biz_acl_model;
-			$user = rt_biz_get_wp_user_for_contact( $contact_id );
+			$user = rtbiz_get_wp_user_for_contact( $contact_id );
 			if ( empty( $user ) ) {
 				return;
 			}
 			$profile_permissions = array();
-			if ( 'yes' == $_REQUEST['rt_biz_is_staff_member'] ) {
-				if ( isset( $_REQUEST['rt_biz_profile_permissions'] ) && is_array( $_REQUEST['rt_biz_profile_permissions'] ) ) {
-					$teams = wp_get_post_terms( $contact_id, RT_Biz_Teams::$slug );
-					$module_permissions = get_site_option( 'rt_biz_module_permissions' );
+			if ( 'yes' == $_REQUEST['rtbiz_is_staff_member'] ) {
+				if ( isset( $_REQUEST['rtbiz_profile_permissions'] ) && is_array( $_REQUEST['rtbiz_profile_permissions'] ) ) {
+					$teams = wp_get_post_terms( $contact_id, Rtbiz_Teams::$slug );
+					$module_permissions = get_site_option( 'rtbiz_acl_module_permissions' );
 
-					$profile_permissions = $_REQUEST['rt_biz_profile_permissions'];
-					$old_profile_permissions = get_post_meta( $contact_id, 'rt_biz_profile_permissions', true );
+					$profile_permissions = $_REQUEST['rtbiz_profile_permissions'];
+					$old_profile_permissions = get_post_meta( $contact_id, 'rtbiz_profile_permissions', true );
 
 					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
 					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
-						$profile_permissions[ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_HD_TEXT_DOMAIN ];
-						$_REQUEST['rt_biz_profile_permissions'][ RT_BIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_BIZ_TEXT_DOMAIN ] ;
+						$profile_permissions[ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_HD_TEXT_DOMAIN ];
+						$_REQUEST['rtbiz_profile_permissions'][ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_TEXT_DOMAIN ] ;
 					}
 
 					foreach ( $profile_permissions as $module_Key => $module_permission ) {
@@ -240,8 +240,8 @@ if ( ! class_exists( 'Rt_Biz_Contact_Profile_Access' ) ) {
 				);
 				$rt_biz_acl_model->remove_acl( $where );
 			}
-			update_post_meta( $contact_id, 'rt_biz_profile_permissions', $profile_permissions );
-			update_post_meta( $contact_id, 'rt_biz_is_staff_member', $_REQUEST['rt_biz_is_staff_member'] );
+			update_post_meta( $contact_id, 'rtbiz_profile_permissions', $profile_permissions );
+			update_post_meta( $contact_id, 'rtbiz_is_staff_member', $_REQUEST['rtbiz_is_staff_member'] );
 		}
 
 

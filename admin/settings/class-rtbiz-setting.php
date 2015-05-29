@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author utkarsh
  *
  * */
-if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
+if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 
-	class Rt_Biz_Setting {
+	class Rtbiz_Setting {
 
 		public $args = array();
 		public $sections = array();
@@ -49,7 +49,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			//add_action("redux/options/{$this->args[ 'opt_name' ]}/register", array( $this, 'test') );
 		}
 
-		public  function rt_biz_on_redux_save( $setting, $old_setting ){
+		public  function rt_biz_on_redux_save( $setting, $old_setting ) {
 			//removed offering sync option
 			$diff = array();
 			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ) {
@@ -58,9 +58,9 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 			}
 
 			if ( ! empty( $diff ) ) {
-				update_option( 'rtbiz_offering_plugin_synx', 'true' );
+				update_option( 'rtbiz_offering_plugin_sync', 'true' );
 			} else {
-				update_option( 'rtbiz_offering_plugin_synx', 'false' );
+				update_option( 'rtbiz_offering_plugin_sync', 'false' );
 			}
 		}
 
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'desc'   => __( '<p class="description">This is a section created by adding a filter to the sections array. Can be used by child themes to add/remove sections from the options.</p>', 'redux-framework-demo' ),
 				'icon'   => 'el-icon-paper-clip',
 				// Leave this as a blank section, no options just some intro text set above.
-				'fields' => array()
+				'fields' => array(),
 			);
 
 			return $sections;
@@ -131,7 +131,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 
 			// Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
 			if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
-				remove_filter( 'plugin_row_meta', array( ReduxFrameworkPlugin::instance(), 'plugin_metalinks', ), null, 2 );
+				remove_filter( 'plugin_row_meta', array( ReduxFrameworkPlugin::instance(), 'plugin_metalinks' ), null, 2 );
 
 				// Used to hide the activation notice informing users of the demo panel. Only used when Redux is a plugin.
 				remove_action( 'admin_notices', array( ReduxFrameworkPlugin::instance(), 'admin_notices' ) );
@@ -143,8 +143,8 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		 * @return bool
 		 */
 		public function rt_biz_set_sections() {
-			$admin_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'admin' );
-			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$admin_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' );
+			$editor_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 
 			// ACTUAL DECLARATION OF SECTIONS
 			$general_fields = array(
@@ -170,13 +170,13 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				'fields'      => $general_fields,
 			);
 
-			$contact_labels = rt_biz_get_contact_labels();
+			$contact_labels = rtbiz_get_contact_labels();
 
 			$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to ' . $contact_labels['name'] . '</div>' );
 			$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
 			$contact_importer_subtitle .= '<a href="' . admin_url( 'users.php' ) . '">WP users</a> page.';
 			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as ' . $contact_labels['name'] . '.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing ' . $contact_labels['name'] . ' is a heavy process. So please be patient.</span></p><br/>' );
-			$contact_importer_subtitle .= rt_biz_export_wp_users_to_contacts();
+			$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
 			$this->sections[]   = array(
 				'title'       => $contact_labels['singular_name'] . ' ' . __( 'Importer' ),
 				'icon'        => 'el-icon-list-alt',
@@ -228,14 +228,14 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 		public function rt_biz_set_arguments() {
 
 			//$theme = wp_get_theme(); // For use with some settings. Not necessary.
-			$editor_cap  = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'editor' );
+			$editor_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$this->args = array(
 				// TYPICAL -> Change these values as you need/desire
 				'opt_name'           => self::$biz_opt,
 				// This is where your data is stored in the database and also becomes your global variable name.
 				'display_name'       => __( 'Settings' ),
 				// Name that appears at the top of your panel
-				'display_version'    => RT_BIZ_VERSION,
+				'display_version'    => RTBIZ_VERSION,
 				// Version that appears at the top of your panel
 				'menu_type'          => 'submenu',
 				//Specify if the admin menu should appear or not. Options: menu or submenu (Under appearance only)
@@ -263,7 +263,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 				// OPTIONAL -> Give you extra features
 				'page_priority'      => null,
 				// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
-				'page_parent'        => Rt_Biz_Dashboard::$page_slug,
+				'page_parent'        => Rtbiz_Dashboard::$page_slug,
 				// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters
 				'page_permissions'   => $editor_cap,
 				// Permissions needed to access the options panel.
@@ -320,7 +320,7 @@ if ( ! class_exists( 'Rt_Biz_Setting' ) ) {
 							'event'    => 'click mouseleave',
 						),
 					),
-				)
+				),
 			);
 			return true;
 		}

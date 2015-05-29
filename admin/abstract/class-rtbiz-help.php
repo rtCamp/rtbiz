@@ -18,9 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Biz_Help' ) ) {
+if ( ! class_exists( 'Rtbiz_Help' ) ) {
 
-	class Rt_Biz_Help {
+	class Rtbiz_Help {
 
 		var $tabs = array();
 		var $help_sidebar_content;
@@ -36,31 +36,31 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'create_person_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'create_person_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'create_person_role',
 						'title' => __( 'Role' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'create_organization_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 					array(
 						'id' => 'create_organization_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 				),
 				'post.php' => array(
@@ -68,31 +68,31 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'edit_person_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'edit_person_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'edit_person_role',
 						'title' => __( 'Role' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'edit_organization_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 					array(
 						'id' => 'edit_organization_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 				),
 				'edit.php' => array(
@@ -100,25 +100,25 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'person_list_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'person_list_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_contact_post_type(),
+						'post_type' => rtbiz_get_contact_post_type(),
 					),
 					array(
 						'id' => 'organization_list_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 					array(
 						'id' => 'organization_list_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'post_type' => rt_biz_get_company_post_type(),
+						'post_type' => rtbiz_get_company_post_type(),
 					),
 				),
 				'admin.php' => array(
@@ -126,13 +126,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'dashboard_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Biz_Dashboard::$page_slug,
+						'page' => Rtbiz_Dashboard::$page_slug,
 					),
 					array(
 						'id' => 'dashboard_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Biz_Dashboard::$page_slug,
+						'page' => Rtbiz_Dashboard::$page_slug,
 					),
 					array(
 						'id' => 'acl_overview',
@@ -156,13 +156,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'attributes_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Biz_Attributes::$attributes_page_slug,
+						'page' => Rtbiz_Attributes::$attributes_page_slug,
 					),
 					array(
 						'id' => 'attributes_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Biz_Attributes::$attributes_page_slug,
+						'page' => Rtbiz_Attributes::$attributes_page_slug,
 					),
 				),
 				'edit-tags.php' => array(
@@ -170,13 +170,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'teams_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'taxonomy' => RT_Biz_Teams::$slug,
+						'taxonomy' => Rtbiz_Teams::$slug,
 					),
 					array(
 						'id' => 'teams_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'taxonomy' => RT_Biz_Teams::$slug,
+						'taxonomy' => Rtbiz_Teams::$slug,
 					),
 					array(
 						'id'       => 'rt-offering_overview',
@@ -194,13 +194,13 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						'id' => 'contact_group_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'taxonomy' => Rt_Biz_Contact::$user_category_taxonomy,
+						'taxonomy' => Rtbiz_Contact::$user_category_taxonomy,
 					),
 					array(
 						'id' => 'contact_group_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'taxonomy' => Rt_Biz_Contact::$user_category_taxonomy,
+						'taxonomy' => Rtbiz_Contact::$user_category_taxonomy,
 					),*/
 				),
 			) );
@@ -329,7 +329,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 						<li><?php _e( 'You can also put any description/comments related to the company in to the rich text editor provided.' ); ?></li>
 						<li>
 							<?php _e( 'There might be other extra attributes metaboxes depending upon how you add an attribute from the attributes page' ); ?>
-							<a href="<?php echo add_query_arg( array( 'page' => Rt_Biz_Attributes::$attributes_page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
+							<a href="<?php echo add_query_arg( array( 'page' => Rtbiz_Attributes::$attributes_page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
 						</li>
 						<li>
 							<?php _e( 'You will see a "Connected X" metaboxes in the side colum.' ); ?>
@@ -415,7 +415,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'dashboard_overview':
-					$settings  = rt_biz_get_redux_settings();
+					$settings  = rtbiz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<p>
@@ -482,7 +482,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'acl_roles':
-					$settings  = rt_biz_get_redux_settings();
+					$settings  = rtbiz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<ul>
@@ -512,7 +512,7 @@ if ( ! class_exists( 'Rt_Biz_Help' ) ) {
 					<?php
 					break;
 				case 'settings_overview':
-					$settings  = rt_biz_get_redux_settings();
+					$settings  = rtbiz_get_redux_settings();
 					$menu_label = $settings['menu_label'];
 					?>
 					<p>

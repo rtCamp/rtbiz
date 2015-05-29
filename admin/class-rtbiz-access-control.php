@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author udit
  */
-if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
+if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 
 	/**
-	 * Class Rt_Biz_Access_Control
+	 * Class Rtbiz_Access_Control
 	 *
 	 * This class works as the base for all the permissions, user access for rtBiz family plugins.
 	 * All the plugins including rtBiz will register with this class for the Access Control that it requires
@@ -30,7 +30,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 	 * It will map a matrix for permissions for Plugin Modules => User Groups (Teams) and from there user access
 	 * can be set as per requirement.
 	 */
-	class Rt_Biz_Access_Control {
+	class Rtbiz_Access_Control {
 
 		public static $page_slug = 'rtbiz-access-control';
 
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 		public static $permissions;
 
 		/**
-		 * @var - Registered Plugin Modules for Rt_Biz_Access_Control
+		 * @var - Registered Plugin Modules for Rtbiz_Access_Control
 		 */
 		public static $modules = array();
 
@@ -63,7 +63,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 			 *  Array Structure is array( 'module_slug' => array() )
 			 *
 			 *  $biz_module = array(
-			 *		RT_BIZ_TEXT_DOMAIN => array(
+			 *		RTBIZ_TEXT_DOMAIN => array(
 			 *			'label' => __( 'rtBiz' ),                                                                   // module label
 			 *			'post_types' => array( 'post', 'page', 'rt_biz_contact', 'rt_lead', ),                          // array of post type for given module
 			 *          'team_support' => array( 'rt_biz_contact', 'rt_ticket' ),                                 // array of post types for which team taxonomy is to be registered
@@ -163,7 +163,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 					$post_types = ( isset( self::$modules[ $mkey ]['post_types'] ) && is_array( self::$modules[ $mkey ]['post_types'] ) ) ? self::$modules[ $mkey ]['post_types'] : array();
 					// $pt - post_type
 					foreach ( $post_types as $pt ) {
-						$post_caps = call_user_func( array( 'Rt_Biz_Access_Control', 'rt_biz_get_'.$valid_role_key.'_post_caps' ), $pt );
+						$post_caps = call_user_func( array( 'Rtbiz_Access_Control', 'rt_biz_get_'.$valid_role_key.'_post_caps' ), $pt );
 						if ( ! empty( $post_caps ) && is_array( $post_caps ) ) {
 							$valid_caps = array_merge( $valid_caps, $post_caps );
 						}
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 		/**
 		 *
 		 * This method return the capability name text if you pass the module_slug & role
-		 * It will return proper cap if passed module_key is registered with Rt_Biz_Access_Control
+		 * It will return proper cap if passed module_key is registered with Rtbiz_Access_Control
 		 * & passed role is valid.
 		 *
 		 * Other wise it will return empty string.
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 		 */
 		public static function rt_biz_get_capability_from_access_role( $module_key, $role = 'no_access' ) {
 			if ( isset( self::$modules[ $module_key ] ) && isset( self::$permissions[ $role ] ) ) {
-				$module_key = rt_biz_sanitize_module_key( $module_key );
+				$module_key = rtbiz_sanitize_module_key( $module_key );
 				return $module_key . '_' . $role;
 			}
 			return '';
@@ -317,7 +317,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 			$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
 			global $wpdb;
 			// include other module user
-			$sql = 'SELECT DISTINCT(acl.userid) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where acl.module =  '".$module_key."' and acl.permission > 0 and p2p.p2p_type = '".rt_biz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rt_biz_get_contact_post_type()."' ";
+			$sql = 'SELECT DISTINCT(acl.userid) FROM '.$rt_biz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts." as posts on (p2p.p2p_from = posts.ID )  where acl.module =  '".$module_key."' and acl.permission > 0 and p2p.p2p_type = '".rtbiz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rtbiz_get_contact_post_type()."' ";
 			$user_ids = $wpdb->get_col( $sql );
 
 			if ( ! empty( $user_ids ) ) {
@@ -328,7 +328,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 			// get user object from user ids
 			$user_obj = array();
 			if ( ! empty( $module_user ) ) {
-				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC', ) );
+				$user_obj = get_users( array( 'include' => $module_user, 'orderby' => 'display_name', 'order' => 'ASC' ) );
 			}
 			return $user_obj;
 		}
@@ -340,18 +340,18 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 			if ( ! isset( $_POST['rt_biz_acl_permissions'] ) ) {
 				return;
 			}
-			if ( ! isset( $_POST['rt_biz_module_permissions'] ) || ! is_array( $_POST['rt_biz_module_permissions'] ) ) {
+			if ( ! isset( $_POST['rtbiz_acl_module_permissions'] ) || ! is_array( $_POST['rtbiz_acl_module_permissions'] ) ) {
 				return;
 			}
 
 			//update acl custom table
 			global $rt_biz_acl_model;
 
-			$old_module_permissions = get_site_option( 'rt_biz_module_permissions' );
+			$old_module_permissions = get_site_option( 'rtbiz_acl_module_permissions' );
 			if ( empty( $old_module_permissions ) || ! is_array( $old_module_permissions ) ) {
 				$old_module_permissions = array();
 			}
-			$module_permissions = $_POST['rt_biz_module_permissions'];
+			$module_permissions = $_POST['rtbiz_acl_module_permissions'];
 
 			// New Module added
 			$Module_added = array_diff_key( $module_permissions, $old_module_permissions );
@@ -404,7 +404,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 					$rt_biz_acl_model->update_acl( $data, $where );
 				}
 			}
-			update_site_option( 'rt_biz_module_permissions', $module_permissions );
+			update_site_option( 'rtbiz_acl_module_permissions', $module_permissions );
 		}
 
 		/**
@@ -412,7 +412,7 @@ if ( ! class_exists( 'Rt_Biz_Access_Control' ) ) {
 		 */
 		public function rt_biz_acl_settings_ui() {
 			$this->rt_biz_save_acl_settings();
-			rt_biz_get_template( 'acl-settings.php', array(), '', RT_BIZ_PATH . 'admin/page/' );
+			rtbiz_get_template( 'acl-settings.php', array(), '', RTBIZ_PATH . 'admin/page/' );
 		}
 
 

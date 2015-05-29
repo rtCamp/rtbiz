@@ -6,18 +6,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
+if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 
 
 
-	class Rt_Biz_Entity_Additional_Detail extends Rt_Biz_Metabox {
+	class Rtbiz_Entity_Additional_Detail extends Rtbiz_Metabox {
 
 		public static function ui( $post ) {
 
-			if ( rt_biz_get_contact_post_type() == $post->post_type ) {
-				$meta_fields = rt_biz_get_contact_meta_fields();
-			} elseif ( rt_biz_get_company_post_type() == $post->post_type ) {
-				$meta_fields = rt_biz_get_company_meta_fields();
+			if ( rtbiz_get_contact_post_type() == $post->post_type ) {
+				$meta_fields = rtbiz_get_contact_meta_fields();
+			} elseif ( rtbiz_get_company_post_type() == $post->post_type ) {
+				$meta_fields = rtbiz_get_company_meta_fields();
 			}
 
 			if ( empty( $meta_fields ) ) {
@@ -40,8 +40,8 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 				$postid = $post->ID;
 			}
 
-			$wp_user = rt_biz_get_wp_user_for_contact( $postid ); //get wp user
-			$cap     = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
+			$wp_user = rtbiz_get_wp_user_for_contact( $postid ); //get wp user
+			$cap     = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 			if ( ! empty( $wp_user[0] ) ) {
 				$is_our_team_mate = user_can( $wp_user[0], $cap );
 			}
@@ -56,7 +56,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 				}
 
 				if ( isset( $field['is_datepicker'] ) && $field['is_datepicker'] ) {
-					$values = Rt_Biz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
+					$values = Rtbiz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
 					<script>
 						jQuery(document).ready(function ($) {
 							$(document).on('focus', ".datepicker", function () {
@@ -82,7 +82,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 						<br/><span></span>
 					</p> <?php
 				} else if ( isset( $field['is_multiple'] ) && $field['is_multiple'] ) {
-					$values = Rt_Biz_Entity::get_meta( $post->ID, $field['key'] ); ?>
+					$values = Rtbiz_Entity::get_meta( $post->ID, $field['key'] ); ?>
 					<p class="rtbiz-form-group"><?php
 					if ( isset( $field['label'] ) ) { ?>
 						<label for="<?php echo ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>">
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 						} ?>
 					</p> <?php
 				} else if ( isset( $field['type'] ) && 'textarea' == $field['type'] ) {
-					$values = Rt_Biz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
+					$values = Rtbiz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
 					<p class="rtbiz-form-group"><?php
 					if ( isset( $field['label'] ) ) { ?>
 						<label for="<?php echo ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : ''; ?>"><?php
@@ -119,7 +119,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 						<br/><span></span>
 					</p> <?php
 				} else if ( isset( $field['type'] ) && 'user_group' == $field['type'] ) {
-					$user_id = Rt_Biz_Entity::get_meta( $post->ID, $field['key'], true );
+					$user_id = Rtbiz_Entity::get_meta( $post->ID, $field['key'], true );
 					if ( empty( $user_id ) ) {
 						continue;
 					} ?>
@@ -127,7 +127,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 						call_user_func( $field['data_source'], new WP_User( $user_id ) ); ?>
 					</p><?php
 				} else if ( isset( $field['type'] ) && 'checkbox' == $field['type'] ) {
-					$values = Rt_Biz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
+					$values = Rtbiz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
 					<p class="rtbiz-form-group rtbiz-form-checkbox">
 						<label for="<?php echo ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>" >
 							<input value='yes' <?php echo ( 'yes' == $values ) ? 'checked' : ''; ?>
@@ -138,7 +138,7 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 						<br/><span></span>
 					</p> <?php
 				} else {
-					$values = Rt_Biz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
+					$values = Rtbiz_Entity::get_meta( $post->ID, $field['key'], true ); ?>
 					<p class="rtbiz-form-group"><?php
 					if ( isset( $field['label'] ) ) { ?>
 						<label for="<?php echo ( isset( $field['id'] ) ) ? '' . $field['id'] . '' : '' ?>"><?php
@@ -203,12 +203,12 @@ if ( ! class_exists( 'Rt_Biz_Entity_Additional_Detail' ) ) {
 
 			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
 
-			if ( rt_biz_get_contact_post_type() == $post->post_type ) {
+			if ( rtbiz_get_contact_post_type() == $post->post_type ) {
 				global $rt_biz_contact;
 				$rt_biz_contact->rt_biz_print_metabox_js( $post );
-			} elseif ( rt_biz_get_company_post_type() == $post->post_type ) {
-				global $rt_biz_company;
-				$rt_biz_company->rt_biz_print_metabox_js( $post );
+			} elseif ( rtbiz_get_company_post_type() == $post->post_type ) {
+				global $rtbiz_company;
+				$rtbiz_company->rt_biz_print_metabox_js( $post );
 			}
 
 			do_action( 'rt_biz_print_metabox_js', $post, $post->post_type );

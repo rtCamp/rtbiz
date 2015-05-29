@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Description of RTBIZACLModel
  * Model for 'rt_wp_rtbiz_acl' table in DB
  */
-if ( ! class_exists( 'RT_Biz_ACL_Model' ) ) {
-	class RT_Biz_ACL_Model extends RT_DB_Model {
+if ( ! class_exists( 'Rtbiz_ACL_Model' ) ) {
+	class Rtbiz_ACL_Model extends RT_DB_Model {
 
 		public function __construct() {
 			parent::__construct( 'wp_rtbiz_acl' );

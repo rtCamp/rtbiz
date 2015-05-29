@@ -44,23 +44,23 @@ if ( ! class_exists( 'Rt_Biz_i18n' ) ) {
 		public function load_plugin_textdomain() {
 
 			// Set filter for plugin's languages directory
-			$lang_dir = dirname( plugin_basename( RT_BIZ_PATH ) ) . 'languages/';
+			$lang_dir = dirname( plugin_basename( RTBIZ_PATH ) ) . 'languages/';
 			$lang_dir = apply_filters( 'rtbiz_languages_directory', $lang_dir );
 
 			// Traditional WordPress plugin locale filter
-			$locale = apply_filters( 'plugin_locale', get_locale(), RT_BIZ_TEXT_DOMAIN );
-			$mofile = sprintf( '%1$s-%2$s.mo', RT_BIZ_TEXT_DOMAIN, $locale );
+			$locale = apply_filters( 'plugin_locale', get_locale(), RTBIZ_TEXT_DOMAIN );
+			$mofile = sprintf( '%1$s-%2$s.mo', RTBIZ_TEXT_DOMAIN, $locale );
 
 			// Setup paths to current locale file
 			$mofile_local  = $lang_dir . $mofile;
-			$mofile_global = WP_LANG_DIR . '/' . RT_BIZ_TEXT_DOMAIN . '/' . $mofile;
+			$mofile_global = WP_LANG_DIR . '/' . RTBIZ_TEXT_DOMAIN . '/' . $mofile;
 
 			if ( file_exists( $mofile_global ) ) {
 				// Look in global /wp-content/languages/rt_biz folder
-				load_textdomain( RT_BIZ_TEXT_DOMAIN, $mofile_global );
+				load_textdomain( RTBIZ_TEXT_DOMAIN, $mofile_global );
 			} elseif ( file_exists( $mofile_local ) ) {
 				// Look in local /wp-content/plugins/rtbiz/languages/ folder
-				load_textdomain( RT_BIZ_TEXT_DOMAIN, $mofile_local );
+				load_textdomain( RTBIZ_TEXT_DOMAIN, $mofile_local );
 			} else {
 				// Load the default language files
 				load_plugin_textdomain(

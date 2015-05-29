@@ -31,7 +31,7 @@ if ( ! class_exists( 'Rt_Biz_Activator' ) ) {
 		 */
 		public static function activate() {
 			// Add the transient to redirect
-			update_option( '_rt_biz_activation_redirect', true, false );
+			update_option( 'rtbiz_activation_redirect', true, false );
 			do_action( 'rt_biz_activation_redirect' );
 		}
 
