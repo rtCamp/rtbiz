@@ -214,7 +214,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			}
 
 			if ( ! class_exists( 'Rt_Biz_Plugin_Upgrader_Skin' ) ) {
-				require_once( RT_BIZ_PATH . '/app/abstract/class-rt-biz-plugin-upgrader-skin.php' );
+				require_once( RT_BIZ_PATH . 'admin/abstract/class-rt-biz-plugin-upgrader-skin.php' );
 			}
 
 			$upgrader = new Plugin_Upgrader( new Rt_Biz_Plugin_Upgrader_Skin( array(
@@ -281,9 +281,9 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 					<p>
 						<b><?php _e( 'rtBiz:' ); ?></b><?php _e( 'Click' ) ?>
 						<a href="#"
-					        onclick="install_rtbiz_plugin( $plugin_slug, 'rtbiz_install_plugin', '<?php echo $nonce ?>' )">
+					        onclick="install_rtbiz_plugin( '<?php echo $plugin_slug; ?>', 'rtbiz_install_plugin', '<?php echo $nonce ?>' )">
 							here</a><?php
-							_e( 'to install ' . $plugin['name'] . '.', $plugin_slug ) ?>
+							_e( ' to install ' . $plugin['name'] . '.', $plugin_slug ) ?>
 					</p><?php
 				} elseif ( $this->rt_biz_is_plugin_installed( $plugin_slug ) && ! $this->rt_biz_is_plugin_active( $plugin_slug ) ) {
 					$path  = $this->rt_biz_get_path_for_plugin( $plugin_slug );
@@ -293,7 +293,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 						<a href="#"
 						   onclick="activate_rtbiz_plugin( '<?php echo $path ?>', 'rtbiz_activate_plugin', '<?php echo $nonce; ?>' )">
 							here</a> <?php
-							_e( 'to activate ' . $plugin['name'] . '.', $plugin_slug ) ?>
+							_e( ' to activate ' . $plugin['name'] . '.', $plugin_slug ) ?>
 					</p><?php
 				}
 			} ?>

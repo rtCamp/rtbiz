@@ -7,7 +7,7 @@
  */
 
 $settings = rt_biz_get_redux_settings();
-$menu_label = $settings['menu_label'];
+$menu_label = __( 'rtBiz' );
 $author_cap = rt_biz_get_access_role_cap( RT_BIZ_TEXT_DOMAIN, 'author' );
 ?>
 <div class="wrap">

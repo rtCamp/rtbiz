@@ -62,7 +62,7 @@ if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */
-function activate_plugin_name() {
+function activate_rtbiz() {
 	require_once RT_BIZ_PATH . 'includes/class-rt-biz-activator.php';
 	Rt_Biz_Activator::activate();
 }
@@ -71,13 +71,13 @@ function activate_plugin_name() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-plugin-name-deactivator.php
  */
-function deactivate_plugin_name() {
+function deactivate_rtbiz() {
 	require_once RT_BIZ_PATH . 'includes/class-rt-biz-deactivator.php';
 	Rt_Biz_Deactivator::deactivate();
 }
 
-register_activation_hook( RT_BIZ_PLUGIN_FILE, 'activate_plugin_name' );
-register_deactivation_hook( RT_BIZ_PLUGIN_FILE, 'deactivate_plugin_name' );
+register_activation_hook( RT_BIZ_PLUGIN_FILE, 'activate_rtbiz' );
+register_deactivation_hook( RT_BIZ_PLUGIN_FILE, 'deactivate_rtbiz' );
 
 /**
  * The class responsible for orchestrating the lib class
@@ -100,7 +100,7 @@ require_once RT_BIZ_PATH . 'includes/class-rt-biz.php';
  *
  * @since    1.0.0
  */
-function run_plugin_name() {
+function run_rtbiz() {
 	$plugin = Rt_Biz::instance();
 }
-run_plugin_name();
+run_rtbiz();
