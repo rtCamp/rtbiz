@@ -10,7 +10,7 @@
  *
  * @link              https://rtcamp.com/
  * @since             1.2.20
- * @package           rtBiz
+ * @package           rtbiz
  *
  * @wordpress-plugin
  * Plugin Name:       rtBiz
@@ -34,6 +34,10 @@ if ( ! defined( 'RT_BIZ_VERSION' ) ) {
 	define( 'RT_BIZ_VERSION', '1.2.20' );
 }
 
+if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
+	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
+}
+
 if ( ! defined( 'RT_BIZ_PLUGIN_FILE' ) ) {
 	define( 'RT_BIZ_PLUGIN_FILE', __FILE__ );
 }
@@ -52,10 +56,6 @@ if ( ! defined( 'RT_BIZ_BASE_NAME' ) ) {
 
 if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
 	define( 'RT_BIZ_PATH_TEMPLATES', plugin_dir_path( __FILE__ ) . 'public/templates/' );
-}
-
-if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
-	define( 'RT_BIZ_TEXT_DOMAIN', 'rt-biz' );
 }
 
 /**

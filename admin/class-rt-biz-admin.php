@@ -24,35 +24,11 @@ if ( ! class_exists( 'Rt_Biz_Admin' ) ) {
 	class Rt_Biz_Admin {
 
 		/**
-		 * The ID of this plugin.
-		 *
-		 * @since    1.0.0
-		 * @access   private
-		 * @var      string $plugin_name The ID of this plugin.
-		 */
-		private $plugin_name;
-
-		/**
-		 * The version of this plugin.
-		 *
-		 * @since    1.0.0
-		 * @access   private
-		 * @var      string $version The current version of this plugin.
-		 */
-		private $version;
-
-		/**
 		 * Initialize the class and set its properties.
 		 *
 		 * @since    1.0.0
-		 *
-		 * @param      string $plugin_name The name of this plugin.
-		 * @param      string $version The version of this plugin.
 		 */
-		public function __construct( $plugin_name, $version ) {
-
-			$this->plugin_name = $plugin_name;
-			$this->version     = $version;
+		public function __construct( ) {
 
 		}
 
@@ -60,7 +36,7 @@ if ( ! class_exists( 'Rt_Biz_Admin' ) ) {
 			global  $rt_biz_acl_model,
 					$rt_biz_attributes, $rt_biz_access_control, $rt_biz_p2p,
 			        $rt_biz_contact, $rt_biz_company, $rt_biz_team,
-			        $rt_biz_setttings, $rt_biz_dashboard, $rt_migration,
+			        $rt_biz_settings, $rt_biz_dashboard, $rt_migration,
 			        $rt_biz_reports;
 
 			$rt_biz_acl_model = new RT_Biz_ACL_Model();
@@ -76,7 +52,7 @@ if ( ! class_exists( 'Rt_Biz_Admin' ) ) {
 
 			$rt_biz_team = new RT_Biz_Teams();
 
-			$rt_biz_setttings = new Rt_Biz_Setting();
+			$rt_biz_settings = new Rt_Biz_Setting();
 
 			$rt_biz_dashboard = new Rt_Biz_Dashboard();
 
@@ -311,7 +287,7 @@ if ( ! class_exists( 'Rt_Biz_Admin' ) ) {
 			 * class.
 			 */
 
-			wp_enqueue_style( $this->plugin_name . 'admin-css', RT_BIZ_URL . 'admin/css/biz-admin.min.css', array(), $this->version, 'all' );
+			wp_enqueue_style( RT_BIZ_TEXT_DOMAIN . 'admin-css', RT_BIZ_URL . 'admin/css/biz-admin.min.css', array(), RT_BIZ_VERSION, 'all' );
 
 		}
 
@@ -338,13 +314,13 @@ if ( ! class_exists( 'Rt_Biz_Admin' ) ) {
 
 			// Taxonomy menu hack for rtBiz
 			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rt_biz_get_contact_post_type(), rt_biz_get_company_post_type() ) ) ) {
-				wp_localize_script( $this->plugin_name . 'admin-js', 'rt_biz_dashboard_screen', Rt_Biz_Dashboard::$page_slug );
-				wp_localize_script( $this->plugin_name . 'admin-js', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
+				wp_localize_script( RT_BIZ_TEXT_DOMAIN . 'admin-js', 'rt_biz_dashboard_screen', Rt_Biz_Dashboard::$page_slug );
+				wp_localize_script( RT_BIZ_TEXT_DOMAIN . 'admin-js', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
 
 			wp_enqueue_script( 'jquery-ui-autocomplete', '', array( 'jquery-ui-widget', 'jquery-ui-position' ), '1.9.2', true );
-			wp_enqueue_script( $this->plugin_name . 'admin-js', RT_BIZ_URL . 'admin/js/admin.js', array( 'jquery' ), $this->version, true );
-			wp_localize_script( $this->plugin_name . 'admin-js', 'rtbiz_ajax_url_admin', admin_url( 'admin-ajax.php' ) );
+			wp_enqueue_script( RT_BIZ_TEXT_DOMAIN . 'admin-js', RT_BIZ_URL . 'admin/js/admin.js', array( 'jquery' ), RT_BIZ_VERSION, true );
+			wp_localize_script( RT_BIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_ajax_url_admin', admin_url( 'admin-ajax.php' ) );
 
 		}
 
