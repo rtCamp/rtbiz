@@ -21,7 +21,7 @@
  * Author URI:        http://example.com/
  * License:           GPL-2.0+
  * License URI:       https://rtcamp.com/
- * Text Domain:       rt_biz
+ * Text Domain:       rt-biz
  * Domain Path:       /languages
  */
 
@@ -55,7 +55,7 @@ if ( ! defined( 'RT_BIZ_PATH_TEMPLATES' ) ) {
 }
 
 if ( ! defined( 'RT_BIZ_TEXT_DOMAIN' ) ) {
-	define( 'RT_BIZ_TEXT_DOMAIN', 'rt_biz' );
+	define( 'RT_BIZ_TEXT_DOMAIN', 'rt-biz' );
 }
 
 /**
