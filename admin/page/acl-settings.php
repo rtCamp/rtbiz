@@ -10,8 +10,7 @@ $team = rtbiz_get_team();
 $modules     = rtbiz_get_modules();
 $permissions = rtbiz_get_acl_permissions();
 $module_permissions = get_site_option( 'rtbiz_acl_module_permissions' );
-$settings  = rtbiz_get_redux_settings();
-$menu_label = $settings['menu_label'];
+$menu_label = __( 'rtBiz' );
 if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['post_type'] ) && 'rtbiz_hd_ticket' == $_GET['post_type']  ) {
 	$menu_label = 'Helpdesk';
 }
