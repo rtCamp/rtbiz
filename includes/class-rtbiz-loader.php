@@ -23,7 +23,7 @@
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
 
-class Rt_Biz_Loader {
+class Rtbiz_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

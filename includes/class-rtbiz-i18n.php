@@ -24,8 +24,8 @@
  * @subpackage Plugin_Name/includes
  * @author     Your Name <email@example.com>
  */
-if ( ! class_exists( 'Rt_Biz_i18n' ) ) {
-	class Rt_Biz_i18n {
+if ( ! class_exists( 'Rtbiz_i18n' ) ) {
+	class Rtbiz_i18n {
 
 		/**
 		 * The domain specified for this plugin.

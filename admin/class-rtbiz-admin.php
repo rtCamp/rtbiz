@@ -56,7 +56,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			$rt_biz_dashboard = new Rtbiz_Dashboard();
 
-			$rt_migration = new Rt_Biz_Migration();
+			$rt_migration = new Rtbiz_Migration();
 
 			$rt_biz_reports = new Rt_Reports( array( Rtbiz_Dashboard::$page_slug ) );
 

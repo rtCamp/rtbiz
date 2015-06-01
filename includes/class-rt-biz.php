@@ -48,7 +48,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 *
 		 * @since    1.0.0
 		 * @access   protected
-		 * @var      Rt_Biz_Loader $loader Maintains and registers all hooks for the plugin.
+		 * @var      Rtbiz_Loader $loader Maintains and registers all hooks for the plugin.
 		 */
 		public static $loader;
 
@@ -164,17 +164,17 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 			require_once RTBIZ_PATH . 'admin/helper/rtbiz-functions.php';
 			require_once RTBIZ_PATH . 'vendor/redux/ReduxCore/framework.php';
 
-			$rtb_includes_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
-			$rtb_admin_autoload     = new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
-			$rtb_admin_autoload     = new RT_WP_Autoload( RTBIZ_PATH . 'admin/rtbiz-contact/metabox' );
-			$rtb_models_autoload    = new RT_WP_Autoload( RTBIZ_PATH . 'admin/models/' );
-			$rtb_abstract_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/' );
-			$rtb_abstract_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/metabox' );
-			$rtb_settings_autoload  = new RT_WP_Autoload( RTBIZ_PATH . 'admin/settings/' );
-			$rtb_helper_autoload    = new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
-			$rtb_migration_autoload = new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/rtbiz-contact/metabox' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/models/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/metabox' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/settings/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
 
-			self::$loader = new Rt_Biz_Loader();
+			self::$loader = new Rtbiz_Loader();
 		}
 
 		/**
@@ -187,7 +187,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		 * @access   private
 		 */
 		private function set_locale() {
-			$plugin_i18n = new Rt_Biz_i18n();
+			$plugin_i18n = new Rtbiz_i18n();
 			$plugin_i18n->set_domain( RTBIZ_TEXT_DOMAIN );
 
 			// called on plugins_loaded hook

@@ -63,8 +63,8 @@ if ( ! defined( 'RTBIZ_PATH_TEMPLATES' ) ) {
  * This action is documented in includes/class-plugin-name-activator.php
  */
 function activate_rtbiz() {
-	require_once RTBIZ_PATH . 'includes/class-rt-biz-activator.php';
-	Rt_Biz_Activator::activate();
+	require_once RTBIZ_PATH . 'includes/class-rtbiz-activator.php';
+	Rtbiz_Activator::activate();
 }
 
 /**
@@ -72,8 +72,8 @@ function activate_rtbiz() {
  * This action is documented in includes/class-plugin-name-deactivator.php
  */
 function deactivate_rtbiz() {
-	require_once RTBIZ_PATH . 'includes/class-rt-biz-deactivator.php';
-	Rt_Biz_Deactivator::deactivate();
+	require_once RTBIZ_PATH . 'includes/class-rtbiz-deactivator.php';
+	Rtbiz_Deactivator::deactivate();
 }
 
 register_activation_hook( RTBIZ_PLUGIN_FILE, 'activate_rtbiz' );

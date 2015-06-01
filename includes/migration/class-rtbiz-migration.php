@@ -6,12 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Biz_Migration' ) ) {
+if ( ! class_exists( 'Rtbiz_Migration' ) ) {
 
 	/*
 	 *
 	 */
-	class Rt_Biz_Migration {
+	class Rtbiz_Migration {
 
 		/*
 		 * construct

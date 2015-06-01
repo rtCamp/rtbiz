@@ -20,8 +20,8 @@
  * @subpackage rt_biz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
-if ( ! class_exists( 'Rt_Biz_Deactivator' ) ) {
-	class Rt_Biz_Deactivator {
+if ( ! class_exists( 'Rtbiz_Deactivator' ) ) {
+	class Rtbiz_Deactivator {
 
 		/**
 		 * Short Description. (use period)

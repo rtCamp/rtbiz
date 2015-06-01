@@ -19,8 +19,8 @@
  * @subpackage rt_biz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
-if ( ! class_exists( 'Rt_Biz_Activator' ) ) {
-	class Rt_Biz_Activator {
+if ( ! class_exists( 'Rtbiz_Activator' ) ) {
+	class Rtbiz_Activator {
 
 		/**
 		 * Short Description. (use period)
