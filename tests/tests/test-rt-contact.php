@@ -53,7 +53,6 @@ class Test_Rt_Contact extends RT_WP_TestCase {
 
 	function test_functions(){
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'check_primary_email_for_admin_notice' ), 'method setup_meta_fields does not exist in rtbiz' );
-		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_header' ), 'method print_metabox_js does not exist in rtbiz') ;
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'manage_contact_column_body' ), 'method post_table_columns does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'contact_user_p2p' ), 'method contact_user_p2p does not exist in rtbiz' );
 		$this->assertTrue( method_exists( $this->Rt_Contact, 'connect_contact_to_user' ), 'method connect_contact_to_user does not exist in rtbiz' );

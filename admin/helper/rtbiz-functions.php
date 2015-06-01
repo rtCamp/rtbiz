@@ -538,8 +538,8 @@ function rtbiz_get_module_team_users( $team_id, $category_slug = '', $module_key
  * @param $label
  */
 function rtbiz_register_contact_connection( $post_type, $label ) {
-	global $rt_contact, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_init_connection( $post_type, $rt_contact->post_type, array() );
+	global $rtbiz_contact, $rtbiz_p2p;
+	$rtbiz_p2p->rt_biz_init_connection( $post_type, $rtbiz_contact->post_type, array() );
 }
 
 /**

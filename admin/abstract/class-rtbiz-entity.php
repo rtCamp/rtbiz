@@ -117,7 +117,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @return mixed|void
 		 */
 		public function rtbiz_post_table_columns( $columns ) {
-			return apply_filters( 'rt_entity_columns', $columns, $this );
+			return apply_filters( 'rtbiz_entity_columns', $columns, $this );
 		}
 
 		/**
@@ -128,12 +128,15 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param $post_id
 		 */
 		public function rtbiz_manage_post_table_columns( $column, $post_id ) {
-			do_action( 'rt_entity_manage_columns', $column, $post_id, $this );
+			do_action( 'rtbiz_entity_manage_columns', $column, $post_id, $this );
 		}
 
 		/**
 		 * Overridden in Child Classes
+		 *
 		 * @param $columns
+		 *
+		 * @return mixed|void
 		 */
 		public function rtbiz_rearrange_columns( $columns ) {
 			return apply_filters( 'rt_entity_rearrange_columns', $columns, $this );
@@ -146,6 +149,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rtbiz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
 			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rtbiz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
 			do_action( 'rtbiz_entity_meta_boxes-' . $this->post_type , $this->post_type );
+			do_action( 'rtbiz_entity_meta_boxes', $this->post_type );
 		}
 
 		/**

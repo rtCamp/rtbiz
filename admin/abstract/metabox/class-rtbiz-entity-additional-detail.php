@@ -19,6 +19,7 @@ if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 			} elseif ( rtbiz_get_company_post_type() == $post->post_type ) {
 				$meta_fields = rtbiz_get_company_meta_fields();
 			}
+			do_action( 'rtbiz_before_render_meta_fields', $meta_fields );
 
 			if ( empty( $meta_fields ) ) {
 				return false;
@@ -47,7 +48,7 @@ if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 			}
 			foreach ( $meta_fields as $field ) {
 				ob_start();
-				$field = apply_filters( 'rt_entity_fields_loop_single_field', $field );
+				$field = apply_filters( 'rtbiz_entity_fields_loop_single_field', $field );
 
 				if ( ! $is_our_team_mate ) {
 					if ( isset( $field['hide_for_client'] ) && $field['hide_for_client'] ) {
