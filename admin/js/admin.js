@@ -8,26 +8,26 @@ jQuery( document ).ready(function($) {
 	/**
 	 * WordPress Menu Hack for Teams Menu Page ( Taxonomy Page )
 	 */
-	if ( typeof rt_biz_dashboard_screen !== 'undefined' && typeof rt_biz_team_url !== 'undefined' ) {
+	if ( typeof rtbiz_dashboard_screen !== 'undefined' && typeof rtbiz_team_url !== 'undefined' ) {
 		$( '#menu-posts' ).removeClass( 'wp-menu-open wp-has-current-submenu' ).addClass( 'wp-not-current-submenu' );
 		$( '#menu-posts a.wp-has-submenu' ).removeClass( 'wp-has-current-submenu wp-menu-open menu-top' );
-		$( '#' + rt_biz_dashboard_screen ).addClass( 'wp-has-current-submenu wp-menu-open menu-top menu-top-first' ).removeClass( 'wp-not-current-submenu' );
-		$( '#' + rt_biz_dashboard_screen + ' a.wp-has-submenu' ).addClass( 'wp-has-current-submenu wp-menu-open menu-top' );
+		$( '#' + rtbiz_dashboard_screen ).addClass( 'wp-has-current-submenu wp-menu-open menu-top menu-top-first' ).removeClass( 'wp-not-current-submenu' );
+		$( '#' + rtbiz_dashboard_screen + ' a.wp-has-submenu' ).addClass( 'wp-has-current-submenu wp-menu-open menu-top' );
 		$( window ).resize();
 	}
 
 	/**
 	 * WordPress Menu Hack for Offerings Menu Page ( Taxonomy Page )
 	 */
-	if ( typeof rt_biz_dashboard_screen !== 'undefined' && typeof rt_biz_menu_url !== 'undefined' ) {
+	if ( typeof rtbiz_dashboard_screen !== 'undefined' && typeof rtbiz_menu_url !== 'undefined' ) {
 		$( '#menu-posts' ).removeClass( 'wp-menu-open wp-has-current-submenu' ).addClass( 'wp-not-current-submenu' );
 		$( '#menu-posts a.wp-has-submenu' ).removeClass( 'wp-has-current-submenu wp-menu-open menu-top' );
-		$( '#' + rt_biz_dashboard_screen ).addClass( 'wp-has-current-submenu wp-menu-open menu-top menu-top-first' ).removeClass( 'wp-not-current-submenu' );
-		$( '#' + rt_biz_dashboard_screen + ' a.wp-has-submenu' ).addClass( 'wp-has-current-submenu wp-menu-open menu-top' );
-		$( 'li.' + rt_biz_dashboard_screen + ' ul li' ).removeClass( 'current' );
-		$( 'li.' + rt_biz_dashboard_screen + ' ul li a' ).removeClass( 'current' );
-		$( 'li.' + rt_biz_dashboard_screen + ' ul li a' ).each(function(e) {
-			if ( this.href === rt_biz_menu_url ) {
+		$( '#' + rtbiz_dashboard_screen ).addClass( 'wp-has-current-submenu wp-menu-open menu-top menu-top-first' ).removeClass( 'wp-not-current-submenu' );
+		$( '#' + rtbiz_dashboard_screen + ' a.wp-has-submenu' ).addClass( 'wp-has-current-submenu wp-menu-open menu-top' );
+		$( 'li.' + rtbiz_dashboard_screen + ' ul li' ).removeClass( 'current' );
+		$( 'li.' + rtbiz_dashboard_screen + ' ul li a' ).removeClass( 'current' );
+		$( 'li.' + rtbiz_dashboard_screen + ' ul li a' ).each(function(e) {
+			if ( this.href === rtbiz_menu_url ) {
 				$( this ).parent().addClass( 'current' );
 				$( this ).addClass( 'current' );
 			}
@@ -90,7 +90,7 @@ jQuery( document ).ready(function($) {
 		var id = jQuery( this ).data( 'id' );
 		var nonce = jQuery( this ).next().val();
 		var param = {
-			action: 'rtbiz_export_biz_contact',
+			action: 'rtbiz_exportbiz_contact',
 			id: id,
 			nonce: nonce
 		};

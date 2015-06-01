@@ -11,7 +11,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 	class Rtbiz_Contact_Profile_Access extends Rtbiz_Metabox {
 
 		public static function ui( $post ) {
-			global $rt_biz_contact;
+			global $rtbiz_contact;
 			$modules          = rtbiz_get_modules();
 			$permissions      = rtbiz_get_acl_permissions();
 			$user_permissions = get_post_meta( $post->ID, 'rtbiz_profile_permissions', true );
@@ -63,7 +63,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 
 		public static function save( $contact_id, $post ) {
 
-			global $rt_biz_acl_model;
+			global $rtbiz_acl_model;
 			$user = rtbiz_get_wp_user_for_contact( $contact_id );
 			if ( empty( $user ) ) {
 				return;
@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 											'userid'     => $user[0]->ID,
 											'module'     => $module_Key,
 										);
-										$old_group_permission = $rt_biz_acl_model->get_acl( $where );
+										$old_group_permission = $rtbiz_acl_model->get_acl( $where );
 
 										if ( ! empty( $old_group_permission ) ) {
 											$old_group = array_unique( wp_list_pluck( $old_group_permission, 'groupid' ) );
@@ -129,7 +129,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 														'module'     => $module_Key,
 														'groupid'    => $team->term_id,
 													);
-													$rt_biz_acl_model->update_acl( $data, $where );
+													$rtbiz_acl_model->update_acl( $data, $where );
 												}
 											} else {
 												// add new group level permission
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 													'groupid'    => $team->term_id,
 													'permission' => $module_permission[ $team->term_id ],
 												);
-												$rt_biz_acl_model->add_acl( $data );
+												$rtbiz_acl_model->add_acl( $data );
 											}
 										}
 
@@ -158,7 +158,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 													'groupid'    => $group,
 													'module'     => $module_Key,
 												);
-												$rt_biz_acl_model->remove_acl( $where );
+												$rtbiz_acl_model->remove_acl( $where );
 											}
 										}
 									} else {
@@ -169,7 +169,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 												'userid'     => $user[0]->ID,
 												'module'     => $module_Key,
 											);
-											$rt_biz_acl_model->remove_acl( $where );
+											$rtbiz_acl_model->remove_acl( $where );
 										}
 										// Add new group level permission
 										foreach ( $teams as $team ) {
@@ -179,7 +179,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 												'groupid'    => $team->term_id,
 												'permission' => $module_permission[ $team->term_id ],
 											);
-											$rt_biz_acl_model->add_acl( $data );
+											$rtbiz_acl_model->add_acl( $data );
 										}
 									}
 								} else {
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 											'userid'     => $user[0]->ID,
 											'module'     => $module_Key,
 										);
-										$rt_biz_acl_model->remove_acl( $where );
+										$rtbiz_acl_model->remove_acl( $where );
 									}
 								}
 								break;
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 											'module'     => $module_Key,
 											'groupid'    => 0,
 										);
-										$rt_biz_acl_model->update_acl( $data, $where );
+										$rtbiz_acl_model->update_acl( $data, $where );
 									}
 								} else {
 									// remove old group level permission if already set
@@ -219,7 +219,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 											'userid'     => $user[0]->ID,
 											'module'     => $module_Key,
 										);
-										$rt_biz_acl_model->remove_acl( $where );
+										$rtbiz_acl_model->remove_acl( $where );
 									}
 									// Add new profile level permission
 									$data = array(
@@ -228,7 +228,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 										'groupid'    => 0,
 										'permission' => $module_permission,
 									);
-									$rt_biz_acl_model->add_acl( $data );
+									$rtbiz_acl_model->add_acl( $data );
 								}
 								break;
 						}
@@ -238,7 +238,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				$where = array(
 					'userid'     => $user[0]->ID,
 				);
-				$rt_biz_acl_model->remove_acl( $where );
+				$rtbiz_acl_model->remove_acl( $where );
 			}
 			update_post_meta( $contact_id, 'rtbiz_profile_permissions', $profile_permissions );
 			update_post_meta( $contact_id, 'rtbiz_is_staff_member', $_REQUEST['rtbiz_is_staff_member'] );

@@ -6,8 +6,8 @@
  * @link       https://rtcamp.com/
  * @since      1.2.19
  *
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  */
 
 /**
@@ -18,8 +18,8 @@
  * run function to execute the list of actions and filters.
  *
  * @since      1.0.0
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
 

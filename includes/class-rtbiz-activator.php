@@ -5,8 +5,8 @@
  * @link       https://rtcamp.com/
  * @since      1.2.19
  *
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  */
 
 /**
@@ -15,8 +15,8 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.2.19
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
 if ( ! class_exists( 'Rtbiz_Activator' ) ) {
@@ -32,7 +32,7 @@ if ( ! class_exists( 'Rtbiz_Activator' ) ) {
 		public static function activate() {
 			// Add the transient to redirect
 			update_option( 'rtbiz_activation_redirect', true, false );
-			do_action( 'rt_biz_activation_redirect' );
+			do_action( 'rtbiz_activation_redirect' );
 		}
 
 	}

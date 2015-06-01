@@ -23,7 +23,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 		<div id="message" class="error"><p><?php echo 'No Team found, please add a team first to manage ACL'; ?></p></div>
 	<?php } ?>
 	<div class="rt-biz-container">
-		<ul class="rt_biz_acl_other_option subsubsub">
+		<ul class="rtbiz_acl_other_option subsubsub">
 			<strong>Team:</strong>
 			<?php foreach ( $team as $ug ) { ?>
 				<li><a href="<?php echo admin_url( 'edit-tags.php?action=edit&taxonomy=' . Rtbiz_Teams::$slug . '&tag_ID=' . $ug->term_id . '&post_type=' . rtbiz_get_contact_post_type() ) ?>" class=""><?php echo $ug->name; ?></a></li> |
@@ -31,7 +31,7 @@ if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && isset( $_GET['po
 			<li><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() ); ?>">Add New</a></li>
 		</ul>
 		<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
-			<input type="hidden" name="rt_biz_acl_permissions" value="1" />
+			<input type="hidden" name="rtbiz_acl_permissions" value="1" />
 			<table class="wp-list-table widefat" cellspacing="0">
 				<thead>
 					<tr>

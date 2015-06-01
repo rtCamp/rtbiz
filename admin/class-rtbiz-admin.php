@@ -32,33 +32,33 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rt_biz_init_admin() {
-			global  $rt_biz_acl_model,
-					$rt_biz_attributes, $rt_biz_access_control, $rt_biz_p2p,
-			        $rt_biz_contact, $rtbiz_company, $rt_biz_team,
-			        $rt_biz_settings, $rt_biz_dashboard, $rt_migration,
-			        $rt_biz_reports;
+		public function rtbiz_init_admin() {
+			global  $rtbiz_acl_model,
+					$rtbiz_attributes, $rtbiz_access_control, $rtbiz_p2p,
+			        $rtbiz_contact, $rtbiz_company, $rtbiz_team,
+			        $rtbiz_settings, $rtbiz_dashboard, $rt_migration,
+			        $rtbiz_reports;
 
-			$rt_biz_acl_model = new Rtbiz_ACL_Model();
+			$rtbiz_acl_model = new Rtbiz_ACL_Model();
 
-			$rt_biz_attributes = new Rtbiz_Attributes();
+			$rtbiz_attributes = new Rtbiz_Attributes();
 
-			$rt_biz_access_control = new Rtbiz_Access_Control();
+			$rtbiz_access_control = new Rtbiz_Access_Control();
 
-			$rt_biz_p2p = new Rtbiz_P2p();
+			$rtbiz_p2p = new Rtbiz_P2p();
 
-			$rt_biz_contact = new Rtbiz_Contact();
+			$rtbiz_contact = new Rtbiz_Contact();
 			$rtbiz_company = new Rtbiz_Company();
 
-			$rt_biz_team = new Rtbiz_Teams();
+			$rtbiz_team = new Rtbiz_Teams();
 
-			$rt_biz_settings = new Rtbiz_Setting();
+			$rtbiz_settings = new Rtbiz_Setting();
 
-			$rt_biz_dashboard = new Rtbiz_Dashboard();
+			$rtbiz_dashboard = new Rtbiz_Dashboard();
 
 			$rt_migration = new Rtbiz_Migration();
 
-			$rt_biz_reports = new Rt_Reports( array( Rtbiz_Dashboard::$page_slug ) );
+			$rtbiz_reports = new Rt_Reports( array( Rtbiz_Dashboard::$page_slug ) );
 
 			global $taxonomy_metadata;
 			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
@@ -72,27 +72,27 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rt_biz_register_menu() {
+		public function rtbiz_register_menu() {
 
-			global $rt_biz_dashboard, $rt_biz_access_control;
+			global $rtbiz_dashboard, $rtbiz_access_control;
 
 			$logo_url      = RTBIZ_URL . 'admin/img/biz-16X16.png';
 			$menu_label    = __( 'rtBiz' );
 			$menu_position = 30;
 
 			$dashboard_screen = add_menu_page( $menu_label, $menu_label, rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' ), Rtbiz_Dashboard::$page_slug, array(
-				$rt_biz_dashboard,
-				'rt_biz_dashboard_ui',
+				$rtbiz_dashboard,
+				'rtbiz_dashboard_ui',
 			), $logo_url, $menu_position );
 
-			$rt_biz_dashboard->rt_biz_add_screen_id( $dashboard_screen );
-			$rt_biz_dashboard->rt_biz_setup_dashboard();
+			$rtbiz_dashboard->rtbiz_add_screen_id( $dashboard_screen );
+			$rtbiz_dashboard->rtbiz_setup_dashboard();
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Offerings' ), __( 'Offerings' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rtbiz_get_contact_post_type() );
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Access Control' ), __( 'Access Control' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' ), Rtbiz_Access_Control::$page_slug, array(
-				$rt_biz_access_control,
-				'rt_biz_acl_settings_ui',
+				$rtbiz_access_control,
+				'rtbiz_acl_settings_ui',
 			) );
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Teams' ), __( '--- Teams' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() );
@@ -101,10 +101,10 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, $contact_groups_label, '--- ' . $contact_groups_label, rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rtbiz_Contact::$user_category_taxonomy . '&post_type=' . rtbiz_get_contact_post_type() );*/
 		}
 
-		public function rt_biz_custom_pages_order( $menu_order ) {
+		public function rtbiz_custom_pages_order( $menu_order ) {
 			global $submenu, $menu;
 
-			$rtbizMenuOrder = $this->rt_biz_get_custom_menu_order();
+			$rtbizMenuOrder = $this->rtbiz_get_custom_menu_order();
 
 			if ( isset( $submenu[ Rtbiz_Dashboard::$page_slug ] ) && ! empty( $submenu[ Rtbiz_Dashboard::$page_slug ] ) ) {
 				$module_menu = $submenu[ Rtbiz_Dashboard::$page_slug ];
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $menu_order;
 		}
 
-		public function rt_biz_get_custom_menu_order() {
+		public function rtbiz_get_custom_menu_order() {
 			// Set menu order
 			$rtbizMenuOrder = array(
 				Rtbiz_Dashboard::$page_slug,
@@ -180,13 +180,13 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $rtbizMenuOrder;
 		}
 
-		public function rt_biz_plugin_action_links( $links ) {
+		public function rtbiz_plugin_action_links( $links ) {
 			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Get Started', RTBIZ_TEXT_DOMAIN ) . '</a>';
 			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', RTBIZ_TEXT_DOMAIN ) . '</a>';
 			return $links;
 		}
 
-		public function rt_biz_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+		public function rtbiz_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
 			if ( RTBIZ_BASE_NAME == $plugin_file ) {
 				$plugin_meta[] = '<a href="' . 'http://docs.rtcamp.com/rtbiz/' . '">' . __( 'Documentation', RTBIZ_TEXT_DOMAIN ) . '</a>';
 				//$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RTBIZ_TEXT_DOMAIN ) . '</a>';
@@ -195,12 +195,12 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $plugin_meta;
 		}
 
-		public function rt_biz_database_update() {
+		public function rtbiz_database_update() {
 			$updateDB = new RT_DB_Update( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php', trailingslashit( RTBIZ_PATH . 'admin/schema/' ) );
 			$updateDB->do_upgrade();
 		}
 
-		public function rt_biz_welcome() {
+		public function rtbiz_welcome() {
 			// fail if no activation redirect
 			if ( ! get_option( 'rtbiz_activation_redirect', false ) ) {
 				return;
@@ -216,15 +216,15 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			exit;
 		}
 
-		public function rt_biz_module_register( $modules ) {
-			global $rt_biz_contact, $rtbiz_company;
+		public function rtbiz_module_register( $modules ) {
+			global $rtbiz_contact, $rtbiz_company;
 			$menu_label = 'rtBiz';
 
 			$modules[ rtbiz_sanitize_module_key( RTBIZ_TEXT_DOMAIN ) ] = array(
 				'label'               => $menu_label,
-				'post_types'          => array( $rt_biz_contact->post_type, $rtbiz_company->post_type ),
-				'team_support'  => array( $rt_biz_contact->post_type ),
-				'offering_support'    => array( $rt_biz_contact->post_type, $rtbiz_company->post_type ),
+				'post_types'          => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
+				'team_support'  => array( $rtbiz_contact->post_type ),
+				'offering_support'    => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
 				'setting_option_name' => Rtbiz_Setting::$biz_opt,
 				// Use For ACL
 				'setting_page_url'    => admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ),
@@ -234,10 +234,10 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $modules;
 		}
 
-		public function rt_biz_init_rtlib() {
+		public function rtbiz_init_rtlib() {
 			global $rt_MailBox, $rt_importer;
 
-			$this->rt_biz_init_offering();
+			$this->rtbiz_init_offering();
 
 			$rt_MailBox  = new Rt_Mailbox( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php' );
 			$rt_importer = new Rt_Importer( null, null, false );
@@ -246,7 +246,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rt_biz_init_offering() {
+		public function rtbiz_init_offering() {
 			global $rtbiz_offerings;
 			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$terms_caps = array(
@@ -273,7 +273,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		 *
 		 * @since    1.0.0
 		 */
-		public function rt_biz_enqueue_styles() {
+		public function rtbiz_enqueue_styles() {
 
 			/**
 			 * This function is provided for demonstration purposes only.
@@ -296,7 +296,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		 *
 		 * @since    1.0.0
 		 */
-		public function rt_biz_enqueue_scripts() {
+		public function rtbiz_enqueue_scripts() {
 
 			/**
 			 * This function is provided for demonstration purposes only.
@@ -314,8 +314,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			// Taxonomy menu hack for rtBiz
 			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rtbiz_get_contact_post_type(), rtbiz_get_company_post_type() ) ) ) {
-				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rt_biz_dashboard_screen', Rtbiz_Dashboard::$page_slug );
-				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rt_biz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
+				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_dashboard_screen', Rtbiz_Dashboard::$page_slug );
+				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
 
 			wp_enqueue_script( 'jquery-ui-autocomplete', '', array( 'jquery-ui-widget', 'jquery-ui-position' ), '1.9.2', true );

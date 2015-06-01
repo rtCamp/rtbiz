@@ -35,7 +35,7 @@ if ( ! defined( 'RTBIZ_VERSION' ) ) {
 }
 
 if ( ! defined( 'RTBIZ_TEXT_DOMAIN' ) ) {
-	define( 'RTBIZ_TEXT_DOMAIN', 'rt_biz' );
+	define( 'RTBIZ_TEXT_DOMAIN', 'rtbiz' );
 }
 
 if ( ! defined( 'RTBIZ_PLUGIN_FILE' ) ) {

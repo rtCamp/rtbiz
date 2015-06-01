@@ -199,19 +199,19 @@ if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 
 			</div> <?php
 
-			do_action( 'rt_biz_after_render_meta_fields', $post, $post->post_type );
+			do_action( 'rtbiz_after_render_meta_fields', $post, $post->post_type );
 
-			wp_nonce_field( 'rt_biz_additional_details_metabox', 'rt_biz_additional_details_metabox_nonce' );
+			wp_nonce_field( 'rtbiz_additional_details_metabox', 'rtbiz_additional_details_metabox_nonce' );
 
 			if ( rtbiz_get_contact_post_type() == $post->post_type ) {
-				global $rt_biz_contact;
-				$rt_biz_contact->rt_biz_print_metabox_js( $post );
+				global $rtbiz_contact;
+				$rtbiz_contact->rtbiz_print_metabox_js( $post );
 			} elseif ( rtbiz_get_company_post_type() == $post->post_type ) {
 				global $rtbiz_company;
-				$rtbiz_company->rt_biz_print_metabox_js( $post );
+				$rtbiz_company->rtbiz_print_metabox_js( $post );
 			}
 
-			do_action( 'rt_biz_print_metabox_js', $post, $post->post_type );
+			do_action( 'rtbiz_print_metabox_js', $post, $post->post_type );
 
 		}
 

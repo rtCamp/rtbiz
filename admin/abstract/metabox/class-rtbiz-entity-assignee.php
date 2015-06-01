@@ -45,7 +45,7 @@ if ( ! class_exists( 'Rtbiz_Entity_Assignee' ) ) {
 					<?php echo balanceTags( $assignedHTML ); ?>
 				</ul>
 			</div> <?php
-			do_action( 'rt_biz_metabox_assignee', $post, $post->post_type );
+			do_action( 'rtbiz_metabox_assignee', $post, $post->post_type );
 		}
 
 

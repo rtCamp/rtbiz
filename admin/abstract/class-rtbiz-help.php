@@ -30,7 +30,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 		}
 
 		function init_help() {
-			$this->tabs = apply_filters( 'rt_biz_help_tabs', array(
+			$this->tabs = apply_filters( 'rtbiz_help_tabs', array(
 				'post-new.php' => array(
 					array(
 						'id' => 'create_person_overview',
@@ -205,9 +205,9 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 				),
 			) );
 
-			$documentation_link = apply_filters( 'rt_biz_help_documentation_link', 'http://docs.rtcamp.com/rtbiz/' );
-			$support_forum_link = apply_filters( 'rt_biz_help_support_forum_link', 'https://rtcamp.com/premium-support/' );
-			$this->help_sidebar_content = apply_filters( 'rt_biz_help_sidebar_content', '<p><strong>' . __( 'For More Information -  ' ) . '</strong></p><p><a href="' . $documentation_link . '">' . __( 'Documentation' ) . '</a></p><p><a href="' . $support_forum_link . '">' . __( 'Support Forum' ) . '</a></p>' );
+			$documentation_link = apply_filters( 'rtbiz_help_documentation_link', 'http://docs.rtcamp.com/rtbiz/' );
+			$support_forum_link = apply_filters( 'rtbiz_help_support_forum_link', 'https://rtcamp.com/premium-support/' );
+			$this->help_sidebar_content = apply_filters( 'rtbiz_help_sidebar_content', '<p><strong>' . __( 'For More Information -  ' ) . '</strong></p><p><a href="' . $documentation_link . '">' . __( 'Documentation' ) . '</a></p><p><a href="' . $support_forum_link . '">' . __( 'Support Forum' ) . '</a></p>' );
 
 			add_action( 'current_screen', array( $this, 'check_tabs' ) );
 		}
@@ -562,7 +562,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					<?php
 					break;
 				default:
-					do_action( 'rt_biz_help_tab_content', $screen, $tab );
+					do_action( 'rtbiz_help_tab_content', $screen, $tab );
 					break;
 			}
 		}

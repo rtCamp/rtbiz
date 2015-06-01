@@ -27,16 +27,16 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		public function __construct() {
 			parent::__construct( 'company' );
 
-			$this->rt_biz_setup_meta_fields();
+			$this->rtbiz_setup_meta_fields();
 
-			Rt_Biz::$loader->add_action( 'init', $this, 'rt_biz_init_labels', 9 );
-			Rt_Biz::$loader->add_action( 'init', $this, 'rt_biz_init_entity', 9 );
+			Rt_Biz::$loader->add_action( 'init', $this, 'rtbiz_init_labels', 9 );
+			Rt_Biz::$loader->add_action( 'init', $this, 'rtbiz_init_entity', 9 );
 		}
 
 		/**
 		 *  Init Meta Fields
 		 */
-		function rt_biz_setup_meta_fields() {
+		function rtbiz_setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
 					'key' => 'company_address',
@@ -160,11 +160,11 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 				),
 			);
 
-			$this->meta_fields = apply_filters( 'rt_biz_company_meta_fields', $this->meta_fields, $this );
+			$this->meta_fields = apply_filters( 'rtbiz_company_meta_fields', $this->meta_fields, $this );
 		}
 
-		function rt_biz_init_labels() {
-			$this->labels = apply_filters( 'rt_biz_company_labels', array(
+		function rtbiz_init_labels() {
+			$this->labels = apply_filters( 'rtbiz_company_labels', array(
 				'name' => __( 'Companies' ),
 				'singular_name' => __( 'Company' ),
 				'menu_name' => __( 'Companies' ),
@@ -189,7 +189,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 * @param $columns
 		 * @return mixed|void
 		 */
-		public function rt_biz_post_table_columns( $columns ) {
+		public function rtbiz_post_table_columns( $columns ) {
 
 			$cols = array();
 			$cols['cb'] = $columns['cb'];
@@ -207,7 +207,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			unset( $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ] );
 
 			$cols = array_merge( $cols, $columns );
-			return parent::rt_biz_post_table_columns( $cols );
+			return parent::rtbiz_post_table_columns( $cols );
 		}
 
 		/**
@@ -215,8 +215,8 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 * @param $column
 		 * @param $post_id
 		 */
-		public function rt_biz_manage_post_table_columns( $column, $post_id ) {
-			parent::rt_biz_manage_post_table_columns( $column, $post_id );
+		public function rtbiz_manage_post_table_columns( $column, $post_id ) {
+			parent::rtbiz_manage_post_table_columns( $column, $post_id );
 		}
 
 		/**
@@ -225,7 +225,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 *
 		 * @param $post_id
 		 */
-		protected function rt_biz_save_meta_values( $post_id, $post ) {
+		protected function rtbiz_save_meta_values( $post_id, $post ) {
 			foreach ( $this->meta_fields as $field ) {
 				if ( isset( $_POST['company_meta'][ $field['key'] ] ) && ! empty( $_POST['company_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == self::$primary_email ) {
@@ -255,10 +255,10 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 					}
 				}
 			}
-			parent::rt_biz_save_meta_values( $post_id, $post );
+			parent::rtbiz_save_meta_values( $post_id, $post );
 		}
 
-		public function rt_biz_print_metabox_js() {
+		public function rtbiz_print_metabox_js() {
 			?>
 			<script>
 
@@ -334,7 +334,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 * @param array $meta
 		 * @return int|WP_Error
 		 */
-		function rt_biz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
+		function rtbiz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 			$org_id = wp_insert_post( array(
 				'post_title'   => $name,
 				'post_content' => $note,
@@ -361,7 +361,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			return $org_id;
 		}
 
-		function rt_biz_get_company() {
+		function rtbiz_get_company() {
 			return get_posts( array(
 				'post_type'   => $this->post_type,
 				'post_status' => 'any',

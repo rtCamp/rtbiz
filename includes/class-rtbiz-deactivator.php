@@ -6,8 +6,8 @@
  * @link       https://rtcamp.com/
  * @since      1.2.19
  *
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  */
 
 /**
@@ -16,8 +16,8 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.2.19
- * @package    rt_biz
- * @subpackage rt_biz/includes
+ * @package    rtbiz
+ * @subpackage rtbiz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
 if ( ! class_exists( 'Rtbiz_Deactivator' ) ) {
