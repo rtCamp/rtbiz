@@ -29,8 +29,8 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 
 			$this->setup_meta_fields();
 
-			Rt_Biz::$loader->add_action( 'init', $this, 'init_labels', 9 );
-			Rt_Biz::$loader->add_action( 'init', $this, 'init_entity', 9 );
+			Rtbiz::$loader->add_action( 'init', $this, 'init_labels', 9 );
+			Rtbiz::$loader->add_action( 'init', $this, 'init_entity', 9 );
 		}
 
 		/**

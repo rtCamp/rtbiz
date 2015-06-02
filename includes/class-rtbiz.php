@@ -27,16 +27,16 @@
  * @subpackage rtBiz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
-if ( ! class_exists( 'Rt_Biz' ) ) {
-	class Rt_Biz {
+if ( ! class_exists( 'Rtbiz' ) ) {
+	class Rtbiz {
 
 		/**
-		 * The class that's responsible for Singleton object of Rt_Biz
+		 * The class that's responsible for Singleton object of Rtbiz
 		 * the plugin.
 		 *
 		 * @since    1.0.0
 		 * @access   protected
-		 * @var      Rt_Biz $instance Singleton object of Rt_Biz
+		 * @var      Rtbiz $instance Singleton object of Rtbiz
 		 */
 		private static $instance;
 
@@ -55,15 +55,15 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		public static $templateURL;
 
 		/**
-		 * Create singleton object of Rt_Biz
+		 * Create singleton object of Rtbiz
 		 *
 		 * @since     1.0.0
 		 * @access    private
 		 * @return    string    The name of the plugin.
 		 */
 		public static function instance() {
-			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Rt_Biz ) ) {
-				self::$instance = new Rt_Biz();
+			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Rtbiz ) ) {
+				self::$instance = new Rtbiz();
 				add_action( 'plugins_loaded', array( self::$instance, 'init_plugin' ) );
 			}
 
@@ -210,11 +210,11 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			if ( is_admin() ) {
 				// update menu order of rtbiz menu
-				Rt_Biz::$loader->add_action( 'admin_menu', $plugin_admin, 'rtbiz_register_menu', 1 );
-				Rt_Biz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'rtbiz_custom_pages_order' );
+				Rtbiz::$loader->add_action( 'admin_menu', $plugin_admin, 'rtbiz_register_menu', 1 );
+				Rtbiz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'rtbiz_custom_pages_order' );
 
-				Rt_Biz::$loader->add_filter( 'plugin_action_links_' . RTBIZ_BASE_NAME, $plugin_admin, 'rtbiz_plugin_action_links' );
-				Rt_Biz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'rtbiz_plugin_row_meta', 10, 4 );
+				Rtbiz::$loader->add_filter( 'plugin_action_links_' . RTBIZ_BASE_NAME, $plugin_admin, 'rtbiz_plugin_action_links' );
+				Rtbiz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'rtbiz_plugin_row_meta', 10, 4 );
 			}
 
 			self::$loader->add_action( 'admin_init', $plugin_admin, 'rtbiz_database_update' );

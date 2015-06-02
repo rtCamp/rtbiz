@@ -37,35 +37,35 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 
 			$this->setup_meta_fields();
 
-			Rt_Biz::$loader->add_action( 'init', $this, 'init_labels', 9 );
-			Rt_Biz::$loader->add_action( 'init', $this, 'init_entity' );
+			Rtbiz::$loader->add_action( 'init', $this, 'init_labels', 9 );
+			Rtbiz::$loader->add_action( 'init', $this, 'init_entity' );
 
-			//Rt_Biz::$loader->add_action( 'add_meta_boxes_' . $this->post_type, $this, 'metabox_rearrange' );
+			//Rtbiz::$loader->add_action( 'add_meta_boxes_' . $this->post_type, $this, 'metabox_rearrange' );
 
 			// Admin primary Notice
-			Rt_Biz::$loader->add_action( 'admin_notices', $this, 'check_primary_email_for_admin_notice' );
+			Rtbiz::$loader->add_action( 'admin_notices', $this, 'check_primary_email_for_admin_notice' );
 
-			Rt_Biz::$loader->add_action( 'pre_get_posts', $this, 'contact_posts_filter' );
+			Rtbiz::$loader->add_action( 'pre_get_posts', $this, 'contact_posts_filter' );
 
-			Rt_Biz::$loader->add_action( 'before_delete_post', $this, 'before_contact_deleted' );
+			Rtbiz::$loader->add_action( 'before_delete_post', $this, 'before_contact_deleted' );
 
-			Rt_Biz::$loader->add_action( 'wp_ajax_search_user_from_name', $this, 'search_user_ajax' );
+			Rtbiz::$loader->add_action( 'wp_ajax_search_user_from_name', $this, 'search_user_ajax' );
 
 			/**
 			 * Add ACL meta box
 			 */
-			Rt_Biz::$loader->add_action( 'entity_meta_boxes-' . $this->post_type, $this, 'acl_meta_boxes' );
+			Rtbiz::$loader->add_action( 'entity_meta_boxes-' . $this->post_type, $this, 'acl_meta_boxes' );
 
 			//User integration
-			Rt_Biz::$loader->add_action( 'user_register', $this, 'contact_create_for_wp_user' );
-			Rt_Biz::$loader->add_action( 'manage_users_custom_column', $this, 'manage_export_user_columns', 15, 3 );
-			Rt_Biz::$loader->add_action( 'wp_ajax_rtbiz_export_contact', $this, 'rtbiz_rtbiz_export_contact' );
-			Rt_Biz::$loader->add_action( 'wp_ajax_rtbiz_export_all_contacts', $this, 'rtbiz_rtbiz_export_all_contacts' );
-			Rt_Biz::$loader->add_action( 'admin_notices', $this, 'exported_admin_notice' );
+			Rtbiz::$loader->add_action( 'user_register', $this, 'contact_create_for_wp_user' );
+			Rtbiz::$loader->add_action( 'manage_users_custom_column', $this, 'manage_export_user_columns', 15, 3 );
+			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_contact', $this, 'rtbiz_rtbiz_export_contact' );
+			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_all_contacts', $this, 'rtbiz_rtbiz_export_all_contacts' );
+			Rtbiz::$loader->add_action( 'admin_notices', $this, 'exported_admin_notice' );
 
 			// for bulk action
-			Rt_Biz::$loader->add_action( 'admin_footer-users.php', $this, 'add_export_user_bulk_action' );
-			Rt_Biz::$loader->add_action( 'load-users.php', $this, 'rtbiz_callback_rtbiz_bulk_action' );
+			Rtbiz::$loader->add_action( 'admin_footer-users.php', $this, 'add_export_user_bulk_action' );
+			Rtbiz::$loader->add_action( 'load-users.php', $this, 'rtbiz_callback_rtbiz_bulk_action' );
 
 			$rtbiz_p2p->init_connection( $this->post_type, 'user', array(
 				'cardinality'  => 'one-to-one',

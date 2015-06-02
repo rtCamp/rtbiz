@@ -30,12 +30,12 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 				return;
 			}
 			// init because can not get Biz ACL before that.
-			Rt_Biz::$loader->add_action( 'p2p_init', $this, 'rtbiz_init_settings', 30 );
+			Rtbiz::$loader->add_action( 'p2p_init', $this, 'rtbiz_init_settings', 30 );
 
 			//after redux setting saved
-			Rt_Biz::$loader->add_action( 'redux/options/' . self::$biz_opt . '/saved', $this, 'rtbiz_on_redux_save', 10, 2 );
+			Rtbiz::$loader->add_action( 'redux/options/' . self::$biz_opt . '/saved', $this, 'rtbiz_on_redux_save', 10, 2 );
 
-			Rt_Biz::$loader->add_action( 'redux/loaded', $this, 'rtbiz_remove_demo' );
+			Rtbiz::$loader->add_action( 'redux/loaded', $this, 'rtbiz_remove_demo' );
 
 			// Function to test the compiler hook and demo CSS output.
 			// Above 10 is a priority, but 2 in necessary to include the dynamically generated CSS to be sent to the function.

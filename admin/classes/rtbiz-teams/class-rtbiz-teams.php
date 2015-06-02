@@ -27,19 +27,19 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		public function __construct(  ) {
 			$this->get_lables();
 
-			Rt_Biz::$loader->add_action( 'init', $this, 'register_taxonomy_team', 20 );
-			Rt_Biz::$loader->add_action( 'rtbiz_team_support', $this, 'add_team_support' );
-			Rt_Biz::$loader->add_action( 'admin_head', $this, 'hide_slug' );
-			Rt_Biz::$loader->add_action( self::$slug . '_add_form_fields', $this, 'team_add_custom_field', 10, 2 );
-			Rt_Biz::$loader->add_action( self::$slug . '_edit_form', $this, 'team_add_custom_field', 10, 2 );
-			Rt_Biz::$loader->add_filter( self::$slug . '_row_actions', $this, 'row_actions', 1, 2 );
+			Rtbiz::$loader->add_action( 'init', $this, 'register_taxonomy_team', 20 );
+			Rtbiz::$loader->add_action( 'rtbiz_team_support', $this, 'add_team_support' );
+			Rtbiz::$loader->add_action( 'admin_head', $this, 'hide_slug' );
+			Rtbiz::$loader->add_action( self::$slug . '_add_form_fields', $this, 'team_add_custom_field', 10, 2 );
+			Rtbiz::$loader->add_action( self::$slug . '_edit_form', $this, 'team_add_custom_field', 10, 2 );
+			Rtbiz::$loader->add_filter( self::$slug . '_row_actions', $this, 'row_actions', 1, 2 );
 
-			Rt_Biz::$loader->add_action( 'create_term', $this, 'save_team', 10, 2 );
-			Rt_Biz::$loader->add_action( 'edit_term', $this, 'save_team', 10, 2 );
+			Rtbiz::$loader->add_action( 'create_term', $this, 'save_team', 10, 2 );
+			Rtbiz::$loader->add_action( 'edit_term', $this, 'save_team', 10, 2 );
 
-			Rt_Biz::$loader->add_action( 'manage_' . self::$slug . '_custom_column', $this, 'manage_team_column_body', 10, 3 );
-			Rt_Biz::$loader->add_filter( 'manage_edit-' . self::$slug . '_columns', $this, 'manage_team_column_header' );
-			Rt_Biz::$loader->add_filter( 'admin_notices', $this, 'add_manage_acl_button' );
+			Rtbiz::$loader->add_action( 'manage_' . self::$slug . '_custom_column', $this, 'manage_team_column_body', 10, 3 );
+			Rtbiz::$loader->add_filter( 'manage_edit-' . self::$slug . '_columns', $this, 'manage_team_column_header' );
+			Rtbiz::$loader->add_filter( 'admin_notices', $this, 'add_manage_acl_button' );
 
 		}
 

@@ -138,19 +138,19 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 						'id' => 'acl_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Biz::$access_control_slug,
+						'page' => Rtbiz::$access_control_slug,
 					),
 					array(
 						'id' => 'acl_roles',
 						'title' => __( 'Roles' ),
 						'content' => '',
-						'page' => Rt_Biz::$access_control_slug,
+						'page' => Rtbiz::$access_control_slug,
 					),
 					array(
 						'id' => 'settings_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Biz::$settings_slug,
+						'page' => Rtbiz::$settings_slug,
 					),
 					array(
 						'id' => 'attributes_overview',

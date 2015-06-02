@@ -48,8 +48,8 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 		 *
 		 */
 		public function __construct() {
-			Rt_Biz::$loader->add_action( 'plugins_loaded', $this, 'init_acl', 15 );
-			Rt_Biz::$loader->add_filter( 'user_has_cap', $this, 'filter_caps', 900, 4 );
+			Rtbiz::$loader->add_action( 'plugins_loaded', $this, 'init_acl', 15 );
+			Rtbiz::$loader->add_filter( 'user_has_cap', $this, 'filter_caps', 900, 4 );
 		}
 
 		/**

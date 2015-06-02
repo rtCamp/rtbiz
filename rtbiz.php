@@ -89,7 +89,7 @@ require_once RTBIZ_PATH . 'lib/rt-lib.php';
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require_once RTBIZ_PATH . 'includes/class-rt-biz.php';
+require_once RTBIZ_PATH . 'includes/class-rtbiz.php';
 
 /**
  * Begins execution of the plugin.
@@ -101,6 +101,6 @@ require_once RTBIZ_PATH . 'includes/class-rt-biz.php';
  * @since    1.0.0
  */
 function run_rtbiz() {
-	$plugin = Rt_Biz::instance();
+	$plugin = Rtbiz::instance();
 }
 run_rtbiz();

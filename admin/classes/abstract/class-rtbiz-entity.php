@@ -86,25 +86,25 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		private function hooks() {
 
 			if ( is_admin() ) {
-				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_columns', $this, 'post_table_columns' );
-				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_custom_column', $this, 'manage_post_table_columns', 10, 2 );
-				Rt_Biz::$loader->add_action( 'manage_edit-' . $this->post_type, $this, 'rearrange_columns', 20 );
+				Rtbiz::$loader->add_action( 'manage_' . $this->post_type . '_posts_columns', $this, 'post_table_columns' );
+				Rtbiz::$loader->add_action( 'manage_' . $this->post_type . '_posts_custom_column', $this, 'manage_post_table_columns', 10, 2 );
+				Rtbiz::$loader->add_action( 'manage_edit-' . $this->post_type, $this, 'rearrange_columns', 20 );
 
-				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'entity_meta_boxes' );
-				Rt_Biz::$loader->add_action( 'admin_init', $this, 'entity_meta_boxes' );
-				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'remove_metabox' );
-				Rt_Biz::$loader->add_action( 'save_post', $this, 'save_entity_details', 10, 2 );
-				Rt_Biz::$loader->add_action( 'pre_post_update', $this, 'save_old_data' );
+				Rtbiz::$loader->add_action( 'add_meta_boxes', $this, 'entity_meta_boxes' );
+				Rtbiz::$loader->add_action( 'admin_init', $this, 'entity_meta_boxes' );
+				Rtbiz::$loader->add_action( 'add_meta_boxes', $this, 'remove_metabox' );
+				Rtbiz::$loader->add_action( 'save_post', $this, 'save_entity_details', 10, 2 );
+				Rtbiz::$loader->add_action( 'pre_post_update', $this, 'save_old_data' );
 
 				/* add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 ); */
 
-				Rt_Biz::$loader->add_action( 'bulk_post_updated_messages', $this, 'bulk_entity_update_messages', 10, 2 );
-				Rt_Biz::$loader->add_action( 'post_updated_messages', $this, 'entity_updated_messages', 10, 2 );
+				Rtbiz::$loader->add_action( 'bulk_post_updated_messages', $this, 'bulk_entity_update_messages', 10, 2 );
+				Rtbiz::$loader->add_action( 'post_updated_messages', $this, 'entity_updated_messages', 10, 2 );
 
 			}
 
-			Rt_Biz::$loader->add_action( 'comment_feed_where', $this, 'skip_feed_comments' );
-			Rt_Biz::$loader->add_action( 'pre_get_comments', $this, 'preprocess_comment_handler' );
+			Rtbiz::$loader->add_action( 'comment_feed_where', $this, 'skip_feed_comments' );
+			Rtbiz::$loader->add_action( 'pre_get_comments', $this, 'preprocess_comment_handler' );
 
 			do_action( 'rtbiz_entity_hooks', $this );
 		}

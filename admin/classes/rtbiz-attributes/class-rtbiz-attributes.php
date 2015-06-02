@@ -25,9 +25,9 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 		public static $page_slug = 'rtbiz-attributes';
 
 		public function __construct() {
-			Rt_Biz::$loader->add_action( 'init', $this, 'init_attributes' );
-			Rt_Biz::$loader->add_action( 'restrict_manage_posts', $this, 'restrict_entity_by_attributes' );
-			Rt_Biz::$loader->add_action( 'parse_query', $this, 'convert_term_id_to_term_slug_for_attributes_filter' );
+			Rtbiz::$loader->add_action( 'init', $this, 'init_attributes' );
+			Rtbiz::$loader->add_action( 'restrict_manage_posts', $this, 'restrict_entity_by_attributes' );
+			Rtbiz::$loader->add_action( 'parse_query', $this, 'convert_term_id_to_term_slug_for_attributes_filter' );
 		}
 
 		public function init_attributes() {

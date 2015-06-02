@@ -31,17 +31,17 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 		public function __construct() {
 			$this->setup_defaults();
-			Rt_Biz::$loader->add_action( 'wp_ajax_update_rtbiz_welcome_panel', $this, 'update_welcome_panel_ajax' );
+			Rtbiz::$loader->add_action( 'wp_ajax_update_rtbiz_welcome_panel', $this, 'update_welcome_panel_ajax' );
 
 			/* Setup Google Charts */
-			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'render_google_charts' );
+			Rtbiz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'render_google_charts' );
 
 			/* Metaboxes for dashboard widgets */
-			Rt_Biz::$loader->add_action( 'rtbiz_dashboard_add_meta_boxes', $this, 'add_dashboard_widgets' );
+			Rtbiz::$loader->add_action( 'rtbiz_dashboard_add_meta_boxes', $this, 'add_dashboard_widgets' );
 
-			Rt_Biz::$loader->add_action( 'rtbiz_welcome_panel', $this, 'rtbiz_welcome_panel' );
+			Rtbiz::$loader->add_action( 'rtbiz_welcome_panel', $this, 'rtbiz_welcome_panel' );
 
-			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'print_dashboard_js' );
+			Rtbiz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'print_dashboard_js' );
 		}
 
 		public function setup_defaults() {
@@ -75,10 +75,10 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 		public function setup_dashboard() {
 			/* Add callbacks for this screen only */
-			Rt_Biz::$loader->add_action( 'load-' . $this->screen_id, $this, 'page_actions', 9 );
-			Rt_Biz::$loader->add_action( 'admin_footer-' . $this->screen_id, $this, 'footer_scripts' );
+			Rtbiz::$loader->add_action( 'load-' . $this->screen_id, $this, 'page_actions', 9 );
+			Rtbiz::$loader->add_action( 'admin_footer-' . $this->screen_id, $this, 'footer_scripts' );
 
-			Rt_Biz::$loader->run();
+			Rtbiz::$loader->run();
 
 			$this->check_welcome_panel();
 		}

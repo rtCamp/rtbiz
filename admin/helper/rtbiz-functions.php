@@ -42,7 +42,7 @@ function rtbiz_get_template( $template_name, $args = array(), $template_path = '
 function rtbiz_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 
 	if ( ! $template_path ) {
-		$template_path = Rt_Biz::$templateURL;
+		$template_path = Rtbiz::$templateURL;
 	}
 
 	if ( ! $default_path ) {
