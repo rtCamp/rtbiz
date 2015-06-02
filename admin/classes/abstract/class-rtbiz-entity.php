@@ -64,7 +64,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param array $labels
 		 */
 		private function register_post_type( $name, $labels = array() ) {
-			$args = apply_filters( 'rt_entity_register_post_type_args', array(
+			$args = apply_filters( 'rtbiz_entity_register_post_type_args', array(
 				'labels' => $labels,
 				'public' => false,
 				'publicly_queryable' => false,
