@@ -205,11 +205,13 @@ if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 			wp_nonce_field( 'rtbiz_additional_details_metabox', 'rtbiz_additional_details_metabox_nonce' );
 
 			if ( rtbiz_get_contact_post_type() == $post->post_type ) {
+				/*  @var $rtbiz_contact Rtbiz_Contact */
 				global $rtbiz_contact;
-				$rtbiz_contact->rtbiz_print_metabox_js( $post );
+				$rtbiz_contact->print_metabox_js( $post );
 			} elseif ( rtbiz_get_company_post_type() == $post->post_type ) {
+				/*  @var $rtbiz_company Rtbiz_Company */
 				global $rtbiz_company;
-				$rtbiz_company->rtbiz_print_metabox_js( $post );
+				$rtbiz_company->print_metabox_js( $post );
 			}
 
 			do_action( 'print_metabox_js', $post, $post->post_type );

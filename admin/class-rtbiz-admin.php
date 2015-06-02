@@ -32,7 +32,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rtbiz_init_admin() {
+		public function init_admin() {
 			global  $rtbiz_acl_model,
 					$rtbiz_attributes, $rtbiz_access_control, $rtbiz_p2p,
 			        $rtbiz_contact, $rtbiz_company, $rtbiz_team,
@@ -72,7 +72,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rtbiz_register_menu() {
+		public function register_menu() {
 
 			global $rtbiz_dashboard, $rtbiz_access_control;
 
@@ -101,10 +101,10 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, $contact_groups_label, '--- ' . $contact_groups_label, rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rtbiz_Contact::$user_category_taxonomy . '&post_type=' . rtbiz_get_contact_post_type() );*/
 		}
 
-		public function rtbiz_custom_pages_order( $menu_order ) {
+		public function custom_pages_order( $menu_order ) {
 			global $submenu, $menu;
 
-			$rtbizMenuOrder = $this->rtbiz_get_custom_menu_order();
+			$rtbizMenuOrder = $this->get_custom_menu_order();
 
 			if ( isset( $submenu[ Rtbiz_Dashboard::$page_slug ] ) && ! empty( $submenu[ Rtbiz_Dashboard::$page_slug ] ) ) {
 				$module_menu = $submenu[ Rtbiz_Dashboard::$page_slug ];
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $menu_order;
 		}
 
-		public function rtbiz_get_custom_menu_order() {
+		public function get_custom_menu_order() {
 			// Set menu order
 			$rtbizMenuOrder = array(
 				Rtbiz_Dashboard::$page_slug,
@@ -180,13 +180,13 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $rtbizMenuOrder;
 		}
 
-		public function rtbiz_plugin_action_links( $links ) {
+		public function plugin_action_links( $links ) {
 			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Get Started', RTBIZ_TEXT_DOMAIN ) . '</a>';
 			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', RTBIZ_TEXT_DOMAIN ) . '</a>';
 			return $links;
 		}
 
-		public function rtbiz_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+		public function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
 			if ( RTBIZ_BASE_NAME == $plugin_file ) {
 				$plugin_meta[] = '<a href="' . 'http://docs.rtcamp.com/rtbiz/' . '">' . __( 'Documentation', RTBIZ_TEXT_DOMAIN ) . '</a>';
 				//$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RTBIZ_TEXT_DOMAIN ) . '</a>';
@@ -195,7 +195,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $plugin_meta;
 		}
 
-		public function rtbiz_database_update() {
+		public function database_update() {
 			$updateDB = new RT_DB_Update( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php', trailingslashit( RTBIZ_PATH . 'admin/schema/' ) );
 			$updateDB->do_upgrade();
 		}
@@ -216,7 +216,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			exit;
 		}
 
-		public function rtbiz_module_register( $modules ) {
+		public function module_register( $modules ) {
 			global $rtbiz_contact, $rtbiz_company;
 			$menu_label = 'rtBiz';
 
@@ -234,10 +234,10 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			return $modules;
 		}
 
-		public function rtbiz_init_rtlib() {
+		public function init_rtlib() {
 			global $rtbiz_mailBox, $rtbiz_importer;
 
-			$this->rtbiz_init_offering();
+			$this->init_offering();
 
 			$rtbiz_mailBox  = new Rt_Mailbox( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php' );
 			$rtbiz_importer = new Rt_Importer( null, null, false );
@@ -246,7 +246,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function rtbiz_init_offering() {
+		public function init_offering() {
 			global $rtbiz_offerings;
 			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$terms_caps = array(
@@ -273,7 +273,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		 *
 		 * @since    1.0.0
 		 */
-		public function rtbiz_enqueue_styles() {
+		public function enqueue_styles() {
 
 			/**
 			 * This function is provided for demonstration purposes only.
@@ -296,7 +296,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		 *
 		 * @since    1.0.0
 		 */
-		public function rtbiz_enqueue_scripts() {
+		public function enqueue_scripts() {
 
 			/**
 			 * This function is provided for demonstration purposes only.

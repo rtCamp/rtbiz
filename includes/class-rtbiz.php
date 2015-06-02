@@ -210,23 +210,23 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 
 			if ( is_admin() ) {
 				// update menu order of rtbiz menu
-				Rtbiz::$loader->add_action( 'admin_menu', $plugin_admin, 'rtbiz_register_menu', 1 );
-				Rtbiz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'rtbiz_custom_pages_order' );
+				Rtbiz::$loader->add_action( 'admin_menu', $plugin_admin, 'register_menu', 1 );
+				Rtbiz::$loader->add_action( 'custom_menu_order', $plugin_admin, 'custom_pages_order' );
 
-				Rtbiz::$loader->add_filter( 'plugin_action_links_' . RTBIZ_BASE_NAME, $plugin_admin, 'rtbiz_plugin_action_links' );
-				Rtbiz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'rtbiz_plugin_row_meta', 10, 4 );
+				Rtbiz::$loader->add_filter( 'plugin_action_links_' . RTBIZ_BASE_NAME, $plugin_admin, 'plugin_action_links' );
+				Rtbiz::$loader->add_filter( 'plugin_row_meta', $plugin_admin, 'plugin_row_meta', 10, 4 );
 			}
 
-			self::$loader->add_action( 'admin_init', $plugin_admin, 'rtbiz_database_update' );
+			self::$loader->add_action( 'admin_init', $plugin_admin, 'database_update' );
 			self::$loader->add_action( 'admin_init', $plugin_admin, 'rtbiz_welcome' );
-			self::$loader->add_filter( 'rtbiz_modules', $plugin_admin, 'rtbiz_module_register' );
+			self::$loader->add_filter( 'rtbiz_modules', $plugin_admin, 'module_register' );
 
-			$plugin_admin->rtbiz_init_admin();
+			$plugin_admin->init_admin();
 
-			self::$loader->add_action( 'after_setup_theme', $plugin_admin, 'rtbiz_init_rtlib', 20 );
+			self::$loader->add_action( 'after_setup_theme', $plugin_admin, 'init_rtlib', 20 );
 
-			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'rtbiz_enqueue_styles' );
-			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'rtbiz_enqueue_scripts' );
+			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+			self::$loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		}
 
 		/**
