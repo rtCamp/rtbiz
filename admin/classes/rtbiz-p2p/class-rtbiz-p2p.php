@@ -12,7 +12,6 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 
 		public function init_connection( $from_post_type, $to_post_type, $args ) {
 			$default_args = array(
-				'cardinality' => '',
 				'admin_column' => 'any',
 				'title' => 'Connection',
 				'from_labels' => array(
