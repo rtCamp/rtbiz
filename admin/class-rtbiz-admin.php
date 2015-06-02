@@ -235,11 +235,11 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		}
 
 		public function rtbiz_init_rtlib() {
-			global $rtbiz_MailBox, $rtbiz_importer;
+			global $rtbiz_mailBox, $rtbiz_importer;
 
 			$this->rtbiz_init_offering();
 
-			$rtbiz_MailBox  = new Rt_Mailbox( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php' );
+			$rtbiz_mailBox  = new Rt_Mailbox( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php' );
 			$rtbiz_importer = new Rt_Importer( null, null, false );
 
 			//
