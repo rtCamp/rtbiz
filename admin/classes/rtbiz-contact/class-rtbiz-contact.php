@@ -851,7 +851,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			$limit = 25;
 			$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => $limit, 'offset' => $offset ) );
 
-			$count = $this->export_biz_contacts( $users->get_results() );
+			$count = rtbiz_export_contact( $users->get_results() );
 			$return['count'] = $count;
 			$return['offset'] = $limit + $offset;
 			$return['contact_processed'] = count( $users->get_results() );
@@ -884,7 +884,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			check_admin_referer( 'bulk-users' );
 			$userids = $_REQUEST['users'];
 			if ( ! empty( $userids ) ) {
-				$this->export_biz_contacts( $userids );
+				rtbiz_export_contact( $userids );
 			}
 			$redirect = 'users.php';
 			$sendback = add_query_arg( array( 'exported' => count( $userids ) ), $redirect );
@@ -905,7 +905,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 				$possts = rtbiz_get_contact_for_wp_user( $id );
 
 				if ( empty( $possts ) ) {
-					$postid = $this->export_biz_contact( $id );
+					$postid = rtbiz_export_contact( $id );
 					if ( $postid ) {
 						$count = $count + 1;
 					}

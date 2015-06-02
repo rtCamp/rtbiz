@@ -279,6 +279,11 @@ function rtbiz_get_contact_edit_link( $email ) {
 		return '#';
 	}
 }
+
+function rtbiz_export_contact( $user_id ){
+	global $rtbiz_contact;
+	return $rtbiz_contact->export_biz_contact( $user_id );
+}
 /**
  * get contact by email
  *
@@ -679,8 +684,8 @@ function rtbiz_get_redux_settings() {
 }
 
 function rtbiz_set_redux_setting( $key, $val ) {
-	global $rtbiz_setttings;
-	$rtbiz_setttings->ReduxFramework->set( $key, $val );
+	global $rtbiz_settings;
+	$rtbiz_settings->ReduxFramework->set( $key, $val );
 	$GLOBALS[ Rtbiz_Setting::$biz_opt ] = get_option( Rtbiz_Setting::$biz_opt, array() );
 }
 
@@ -702,8 +707,8 @@ function rtbiz_get_offering_selection_setting() {
  * Display all congigured mailbox(s).
  */
 function rtbiz_mailbox_list_view() {
-	global $rt_MailBox;
-	$rt_MailBox->rtmailbox_list_all();
+	global $rtbiz_mailBox;
+	$rtbiz_mailBox->rtmailbox_list_all();
 }
 
 
