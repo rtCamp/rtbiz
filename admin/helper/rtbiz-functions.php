@@ -339,11 +339,14 @@ function rtbiz_get_team_contacts( $team_id ) {
  * @return mixed
  */
 function rtbiz_get_company_post_type() {
+	/* @var $rtbiz_company Rtbiz_Company */
+
 	global $rtbiz_company;
 	return $rtbiz_company->post_type;
 }
 
 function rtbiz_get_company_labels() {
+	/* @var $rtbiz_company Rtbiz_Company */
 	global $rtbiz_company;
 	return $rtbiz_company->labels;
 }
@@ -352,6 +355,8 @@ function rtbiz_get_company_labels() {
  * @return mixed
  */
 function rtbiz_get_company_meta_fields() {
+
+	/* @var $rtbiz_company Rtbiz_Company */
 	global $rtbiz_company;
 	return $rtbiz_company->meta_fields;
 }
@@ -382,6 +387,8 @@ function rtbiz_is_primary_email_unique_company( $email ) {
  * @return mixed
  */
 function rtbiz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
+	/* @var $rtbiz_company Rtbiz_Company */
+
 	global $rtbiz_company;
 	return $rtbiz_company->add_company( $name, $note, $address, $country, $meta );
 }
@@ -392,12 +399,16 @@ function rtbiz_add_company( $name, $note = '', $address = '', $country = '', $me
  * @return mixed
  */
 function rtbiz_search_company( $query, $args = array() ) {
+	/* @var $rtbiz_company Rtbiz_Company */
+
 	global $rtbiz_company;
 	return $rtbiz_company->search_entity( $query, $args );
 }
 
 
 function rtbiz_get_companies() {
+	/* @var $rtbiz_company Rtbiz_Company */
+
 	global $rtbiz_company;
 	return $rtbiz_company->get_company();
 }

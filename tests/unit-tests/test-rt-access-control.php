@@ -11,7 +11,7 @@ class Test_Rt_Access_Control extends RT_WP_TestCase  {
 	var $access_control;
 	function setUp() {
 		parent::setUp();
-		$this->access_control = new Rt_Access_Control();
+		$this->access_control = new Rtbiz_Access_Control();
 	}
 
 	function test_functions(){
