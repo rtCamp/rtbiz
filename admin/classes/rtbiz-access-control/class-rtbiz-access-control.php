@@ -163,7 +163,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 					$post_types = ( isset( self::$modules[ $mkey ]['post_types'] ) && is_array( self::$modules[ $mkey ]['post_types'] ) ) ? self::$modules[ $mkey ]['post_types'] : array();
 					// $pt - post_type
 					foreach ( $post_types as $pt ) {
-						$post_caps = call_user_func( array( 'Rtbiz_Access_Control', 'rtbiz_get_'.$valid_role_key.'_post_caps' ), $pt );
+						$post_caps = call_user_func( array( 'Rtbiz_Access_Control', 'get_'.$valid_role_key.'_post_caps' ), $pt );
 						if ( ! empty( $post_caps ) && is_array( $post_caps ) ) {
 							$valid_caps = array_merge( $valid_caps, $post_caps );
 						}

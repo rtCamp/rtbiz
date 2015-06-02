@@ -546,6 +546,12 @@ function rtbiz_get_module_team_users( $team_id, $category_slug = '', $module_key
 /**
  * ******** P2p function *********
  */
+function rtbiz_register_p2p_connection( $from_post_type, $to_post_type, $args = array() ) {
+	global $rtbiz_p2p;
+	$rtbiz_p2p->init_connection( $from_post_type, $to_post_type, $args );
+}
+
+
 
 /**
  * Register the contact connection with a post type
@@ -553,9 +559,9 @@ function rtbiz_get_module_team_users( $team_id, $category_slug = '', $module_key
  * @param $post_type
  * @param $label
  */
-function rtbiz_register_contact_connection( $post_type, $label ) {
-	global $rtbiz_contact, $rtbiz_p2p;
-	$rtbiz_p2p->init_connection( $post_type, $rtbiz_contact->post_type, array() );
+function rtbiz_register_contact_connection( $post_type, $label = array() ) {
+	global $rtbiz_contact;
+	rtbiz_register_p2p_connection( $post_type, $rtbiz_contact->post_type, $label );
 }
 
 /**
@@ -564,9 +570,9 @@ function rtbiz_register_contact_connection( $post_type, $label ) {
  * @param $post_type
  * @param $label
  */
-function rtbiz_register_company_connection( $post_type, $label ) {
-	global $rtbiz_company, $rtbiz_p2p;
-	$rtbiz_p2p->init_connection( $post_type, $rtbiz_company->post_type, array() );
+function rtbiz_register_company_connection( $post_type, $label = array() ) {
+	global $rtbiz_company;
+	rtbiz_register_p2p_connection( $post_type, $rtbiz_company->post_type, $label );
 }
 
 /**

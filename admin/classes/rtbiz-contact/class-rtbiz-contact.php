@@ -33,7 +33,6 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 
 		public function __construct() {
 			parent::__construct( 'contact' );
-			global $rtbiz_p2p;
 
 			$this->setup_meta_fields();
 
@@ -54,7 +53,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			/**
 			 * Add ACL meta box
 			 */
-			Rtbiz::$loader->add_action( 'entity_meta_boxes-' . $this->post_type, $this, 'acl_meta_boxes' );
+			Rtbiz::$loader->add_action( 'rtbiz_entity_meta_boxes-' . $this->post_type, $this, 'acl_meta_boxes' );
 
 			//User integration
 			Rtbiz::$loader->add_action( 'user_register', $this, 'contact_create_for_wp_user' );
@@ -67,7 +66,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			Rtbiz::$loader->add_action( 'admin_footer-users.php', $this, 'add_export_user_bulk_action' );
 			Rtbiz::$loader->add_action( 'load-users.php', $this, 'rtbiz_callback_rtbiz_bulk_action' );
 
-			$rtbiz_p2p->init_connection( $this->post_type, 'user', array(
+			rtbiz_register_p2p_connection( $this->post_type, 'user', array(
 				'cardinality'  => 'one-to-one',
 				'admin_column' => 'any',
 				'title' => '',
@@ -965,7 +964,6 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * Registers Meta Box for Rt_contact Meta Fields
 		 */
 		function acl_meta_boxes() {
-			global $rtbiz_access_control;
 			add_meta_box( 'rt-biz-acl-details', __( 'Profile-level Access' ), 'Rtbiz_Contact_Profile_Access::ui', $this->post_type, 'side', 'default' );
 		}
 

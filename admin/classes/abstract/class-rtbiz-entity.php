@@ -148,8 +148,8 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		public function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rtbiz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
 			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rtbiz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
-			do_action( 'entity_meta_boxes-' . $this->post_type , $this->post_type );
-			do_action( 'entity_meta_boxes', $this->post_type );
+			do_action( 'rtbiz_entity_meta_boxes-' . $this->post_type , $this->post_type );
+			do_action( 'rtbiz_entity_meta_boxes', $this->post_type );
 		}
 
 		/**
