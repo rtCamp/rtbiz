@@ -25,12 +25,12 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 		public static $page_slug = 'rtbiz-attributes';
 
 		public function __construct() {
-			Rt_Biz::$loader->add_action( 'init', $this, 'rtbiz_init_attributes' );
-			Rt_Biz::$loader->add_action( 'restrict_manage_posts', $this, 'rtbiz_restrict_entity_by_attributes' );
-			Rt_Biz::$loader->add_action( 'parse_query', $this, 'rtbiz_convert_term_id_to_term_slug_for_attributes_filter' );
+			Rt_Biz::$loader->add_action( 'init', $this, 'init_attributes' );
+			Rt_Biz::$loader->add_action( 'restrict_manage_posts', $this, 'restrict_entity_by_attributes' );
+			Rt_Biz::$loader->add_action( 'parse_query', $this, 'convert_term_id_to_term_slug_for_attributes_filter' );
 		}
 
-		public function rtbiz_init_attributes() {
+		public function init_attributes() {
 			global $rtbiz_rt_attributes;
 			$rtbiz_rt_attributes = new RT_Attributes( RTBIZ_TEXT_DOMAIN );
 
@@ -47,7 +47,7 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 			$rtbiz_rt_attributes->add_attributes_page( self::$page_slug, Rtbiz_Dashboard::$page_slug, '', $editor_cap, $terms_caps, $render_type = false, $storage_type = false, $orderby = false );
 		}
 
-		public function rtbiz_convert_term_id_to_term_slug_for_attributes_filter( $query ) {
+		public function convert_term_id_to_term_slug_for_attributes_filter( $query ) {
 			global $pagenow, $typenow, $rtbiz_rt_attributes;
 			$qv = &$query->query_vars;
 
@@ -78,7 +78,7 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 			}
 		}
 
-		public function rtbiz_restrict_entity_by_attributes() {
+		public function restrict_entity_by_attributes() {
 			global $typenow, $wp_query, $rtbiz_rt_attributes;
 
 			$post_types = array( rtbiz_get_contact_post_type(), rtbiz_get_company_post_type() );

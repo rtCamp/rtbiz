@@ -82,17 +82,17 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			$dashboard_screen = add_menu_page( $menu_label, $menu_label, rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' ), Rtbiz_Dashboard::$page_slug, array(
 				$rtbiz_dashboard,
-				'rtbiz_dashboard_ui',
+				'dashboard_ui',
 			), $logo_url, $menu_position );
 
-			$rtbiz_dashboard->rtbiz_add_screen_id( $dashboard_screen );
-			$rtbiz_dashboard->rtbiz_setup_dashboard();
+			$rtbiz_dashboard->add_screen_id( $dashboard_screen );
+			$rtbiz_dashboard->setup_dashboard();
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Offerings' ), __( 'Offerings' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rtbiz_get_contact_post_type() );
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Access Control' ), __( 'Access Control' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' ), Rtbiz_Access_Control::$page_slug, array(
 				$rtbiz_access_control,
-				'rtbiz_acl_settings_ui',
+				'acl_settings_ui',
 			) );
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Teams' ), __( '--- Teams' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() );

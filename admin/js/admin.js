@@ -123,7 +123,7 @@ jQuery( document ).ready(function($) {
 		countselect = jQuery( '#rtbiz-contact-count-proceed' );
 
 		var param = {
-			action: 'rtbiz_export_all_contacts',
+			action: 'export_all_contacts',
 			nonce: nonce,
 			offset: offset
 		};

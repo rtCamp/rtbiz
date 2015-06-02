@@ -30,27 +30,27 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		private $charts = array();
 
 		public function __construct() {
-			$this->rtbiz_setup_defaults();
-			Rt_Biz::$loader->add_action( 'wp_ajax_update_rtbiz_welcome_panel', $this, 'rtbiz_update_welcome_panel_ajax' );
+			$this->setup_defaults();
+			Rt_Biz::$loader->add_action( 'wp_ajax_update_rtbiz_welcome_panel', $this, 'update_welcome_panel_ajax' );
 
 			/* Setup Google Charts */
-			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'rtbiz_render_google_charts' );
+			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'render_google_charts' );
 
 			/* Metaboxes for dashboard widgets */
-			Rt_Biz::$loader->add_action( 'rtbiz_dashboard_add_meta_boxes', $this, 'rtbiz_add_dashboard_widgets' );
+			Rt_Biz::$loader->add_action( 'rtbiz_dashboard_add_meta_boxes', $this, 'add_dashboard_widgets' );
 
 			Rt_Biz::$loader->add_action( 'rtbiz_welcome_panel', $this, 'rtbiz_welcome_panel' );
 
-			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'rtbiz_print_dashboard_js' );
+			Rt_Biz::$loader->add_action( 'rtbiz_after_dashboard', $this, 'print_dashboard_js' );
 		}
 
-		public function rtbiz_setup_defaults() {
+		public function setup_defaults() {
 			if ( ! empty( $_REQUEST['page'] ) && self::$page_slug == $_REQUEST['page'] && ! metadata_exists( 'user', get_current_user_id(), 'rtbiz_show_welcome_panel' ) ) {
 				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', 1 );
 			}
 		}
 
-		public function rtbiz_update_welcome_panel_ajax() {
+		public function update_welcome_panel_ajax() {
 
 			check_ajax_referer( 'rtbiz-welcome-panel-nonce', 'rtbizwelcomepanelnonce' );
 
@@ -65,22 +65,22 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			wp_die( 1 );
 		}
 
-		public function rtbiz_dashboard_ui() {
+		public function dashboard_ui() {
 			rtbiz_get_template( 'dashboard.php', array(), '', RTBIZ_PATH . 'admin/page/' );
 		}
 
-		public function rtbiz_add_screen_id( $screen_id ) {
+		public function add_screen_id( $screen_id ) {
 			$this->screen_id = $screen_id;
 		}
 
-		public function rtbiz_setup_dashboard() {
+		public function setup_dashboard() {
 			/* Add callbacks for this screen only */
-			Rt_Biz::$loader->add_action( 'load-' . $this->screen_id, $this, 'rtbiz_page_actions', 9 );
-			Rt_Biz::$loader->add_action( 'admin_footer-' . $this->screen_id, $this, 'rtbiz_footer_scripts' );
+			Rt_Biz::$loader->add_action( 'load-' . $this->screen_id, $this, 'page_actions', 9 );
+			Rt_Biz::$loader->add_action( 'admin_footer-' . $this->screen_id, $this, 'footer_scripts' );
 
 			Rt_Biz::$loader->run();
 
-			$this->rtbiz_check_welcome_panel();
+			$this->check_welcome_panel();
 		}
 
 		/*
@@ -88,7 +88,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		 * call on load-$hook
 		 * This calls the add_meta_boxes hooks, adds screen options and enqueues the postbox.js script.
 		 */
-		public function rtbiz_page_actions() {
+		public function page_actions() {
 
 			if ( isset( $_REQUEST['page'] ) && self::$page_slug === $_REQUEST['page'] ) {
 				do_action( 'rtbiz_dashboard_add_meta_boxes', $this->screen_id, null );
@@ -102,41 +102,41 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		 * Prints the jQuery script to initiliase the metaboxes
 		 * Called on admin_footer-*
 		 */
-		public function rtbiz_footer_scripts() {
+		public function footer_scripts() {
 	?>
 			<script> postboxes.add_postbox_toggles(pagenow);</script> <?php
 		}
 
-		public function rtbiz_render_google_charts() {
+		public function render_google_charts() {
 			global $rtbiz_reports;
 			$rtbiz_reports->render_chart( $this->charts );
 		}
 
-		public function rtbiz_add_dashboard_widgets() {
+		public function add_dashboard_widgets() {
 			$menu_label     = __( 'rtBiz' );
 			$contact_labels = rtbiz_get_contact_labels();
 			//$contact_group_labels = rtbiz_get_contact_group_labels();
 
 			add_meta_box( 'rtbiz-activity', __( $menu_label . ' Activity', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
-				'rtbiz_dashboard_site_activity',
+				'dashboard_site_activity',
 			), $this->screen_id, 'column1' );
 
 			add_meta_box( 'rtbiz-team-by-contacts', $contact_labels['name'] . ' ' . __( 'by Team', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
-				'rtbiz_team_by_contacts',
+				'team_by_contacts',
 			), $this->screen_id, 'column2' );
 
 			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RTBIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array(
 				$this,
-				'rtbiz_contact_type_wise_contacts'
+				'contact_type_wise_contacts'
 			), $this->screen_id, 'column3' );*/
 
 			//todo: offering move into rtbiz
 			//			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
 			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
-				'rtbiz_offering_wise_contacts',
+				'offering_wise_contacts',
 			), $this->screen_id, 'column5' );
 			//			}
 
@@ -149,27 +149,27 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				if ( 'taxonomy' == $attr->attribute_store_as ) {
 					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name,  $contact_labels['name'] . __( ' by ' ) . $attr->attribute_label, array(
 						$this,
-						'rtbiz_dashboard_widget_content',
+						'dashboard_widget_content',
 					), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
 				}
 			}
 		}
 
-		public function rtbiz_dashboard_site_activity() {
+		public function dashboard_site_activity() {
 
 			$contact_labels = rtbiz_get_contact_labels();
 			$company_labels = rtbiz_get_company_labels();
 
 			echo '<div id="activity-widget">';
 
-			$future_posts = $this->rtbiz_dashboard_recent_posts( array(
+			$future_posts = $this->dashboard_recent_posts( array(
 				'max'    => 5,
 				'status' => 'publish',
 				'order'  => 'ASC',
 				'title'  => __( 'Recently added' ) . ' ' . $contact_labels['name'],
 				'id'     => 'future-posts',
 			), rtbiz_get_contact_post_type() );
-			$recent_posts = $this->rtbiz_dashboard_recent_posts( array(
+			$recent_posts = $this->dashboard_recent_posts( array(
 				'max'    => 5,
 				'status' => 'publish',
 				'order'  => 'DESC',
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				'id'     => 'published-posts',
 			), rtbiz_get_company_post_type() );
 
-			$recent_comments = $this->rtbiz_dashboard_recent_comments();
+			$recent_comments = $this->dashboard_recent_comments();
 
 			if ( ! $future_posts && ! $recent_posts && ! $recent_comments ) {
 				echo '<div class="no-activity">';
@@ -189,7 +189,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			echo '</div>';
 		}
 
-		public function rtbiz_dashboard_recent_posts( $args, $post_type ) {
+		public function dashboard_recent_posts( $args, $post_type ) {
 			$query_args = array(
 				'post_type'      => $post_type,
 				'post_status'    => $args['status'],
@@ -247,7 +247,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			return true;
 		}
 
-		public function rtbiz_dashboard_recent_comments_row( &$comment, $show_date = true ) {
+		public function dashboard_recent_comments_row( &$comment, $show_date = true ) {
 			$GLOBALS['comment'] =& $comment;
 			$comment_post_title = strip_tags( get_the_title( $comment->comment_post_ID ) );
 
@@ -291,7 +291,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			</div><?php
 		}
 
-		public function rtbiz_dashboard_recent_comments( $total_items = 5 ) {
+		public function dashboard_recent_comments( $total_items = 5 ) {
 			// Select all comment types and filter out spam later for better query performance.
 			$comments = array();
 
@@ -321,7 +321,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 				echo '<div id="the-comment-list" data-wp-lists="list:comment">';
 				foreach ( $comments as $comment ) {
-					$this->rtbiz_dashboard_recent_comments_row( $comment );
+					$this->dashboard_recent_comments_row( $comment );
 				}
 				echo '</div> </div>';
 			} else {
@@ -332,7 +332,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		}
 
 		//todo: check data empty
-		public function rtbiz_team_by_contacts( $obj, $args ) {
+		public function team_by_contacts( $obj, $args ) {
 			$taxonomy    = Rtbiz_Teams::$slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
@@ -358,7 +358,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				}
 			}
 
-			$rows[] = array( __( 'Uncategorized' ), $this->rtbiz_get_post_count_excluding_tax( $taxonomy, $post_type ) );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -376,7 +376,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		}
 
 		//todo: check data empty
-		public function rtbiz_contact_type_wise_contacts( $obj, $args ) {
+		public function contact_type_wise_contacts( $obj, $args ) {
 			$taxonomy    = Rtbiz_Contact::$user_category_taxonomy;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
@@ -402,7 +402,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				}
 			}
 
-			$rows[] = array( __( 'Uncategorized' ), $this->rtbiz_get_post_count_excluding_tax( $taxonomy, $post_type ) );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -420,7 +420,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		}
 
 		//todo: check data empty
-		public function rtbiz_offering_wise_contacts( $obj, $args ) {
+		public function offering_wise_contacts( $obj, $args ) {
 
 			$taxonomy    = Rt_Offerings::$offering_slug;
 			$terms       = get_terms( $taxonomy );
@@ -447,7 +447,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				}
 			}
 
-			$rows[] = array( __( 'Uncategorized' ), $this->rtbiz_get_post_count_excluding_tax( $taxonomy, $post_type ) );
+			$rows[] = array( __( 'Uncategorized' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -465,7 +465,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		}
 
 		//todo: check data empty
-		public function rtbiz_dashboard_widget_content( $obj, $args ) {
+		public function dashboard_widget_content( $obj, $args ) {
 			global $rtbiz_rt_attributes;
 			$rtbiz_attributes_model = new RT_Attributes_Model();
 			$attribute_id            = $args['args']['attribute_id'];
@@ -501,7 +501,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				'nopaging'    => true,
 			) );
 
-			$rows[] = array( __( 'Others' ), $this->rtbiz_get_post_count_excluding_tax( $taxonomy, $post_type ) );
+			$rows[] = array( __( 'Others' ), $this->get_post_count_excluding_tax( $taxonomy, $post_type ) );
 
 			$data_source['cols'] = $cols;
 			$data_source['rows'] = $rows;
@@ -518,7 +518,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			<div id="<?php echo 'rtbiz_pie_' . $args['id']; ?>"></div> <?php
 		}
 
-		public function rtbiz_get_post_count_excluding_tax( $taxonomy, $post_type ) {
+		public function get_post_count_excluding_tax( $taxonomy, $post_type ) {
 			$terms_name = get_terms( $taxonomy, array( 'fields' => 'id=>slug' ) );
 			$count      = 0;
 			if ( ! $terms_name instanceof WP_Error && ! empty( $terms_name ) ) {
@@ -601,7 +601,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			</div> <?php
 		}
 
-		public function rtbiz_print_dashboard_js() {
+		public function print_dashboard_js() {
 			if ( isset( $_GET['rtbizwelcome'] ) ) {
 				$welcome_checked = empty( $_GET['rtbizwelcome'] ) ? 0 : 1;
 				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', $welcome_checked );
@@ -646,7 +646,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			</script> <?php
 		}
 
-		public function rtbiz_check_welcome_panel() {
+		public function check_welcome_panel() {
 			if ( isset( $_GET['rtbizwelcome'] ) ) {
 				$welcome_checked = empty( $_GET['rtbizwelcome'] ) ? 0 : 1;
 				update_user_meta( get_current_user_id(), 'rtbiz_show_welcome_panel', $welcome_checked );

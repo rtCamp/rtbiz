@@ -25,27 +25,27 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 * Constructor
 		 */
 		public function __construct(  ) {
-			$this->rtbiz_get_lables();
+			$this->get_lables();
 
-			Rt_Biz::$loader->add_action( 'init', $this, 'rtbiz_register_taxonomy_team', 20 );
-			Rt_Biz::$loader->add_action( 'rtbiz_team_support', $this, 'rtbiz_add_team_support' );
-			Rt_Biz::$loader->add_action( 'admin_head', $this, 'rtbiz_hide_slug' );
-			Rt_Biz::$loader->add_action( self::$slug . '_add_form_fields', $this, 'rtbiz_team_add_custom_field', 10, 2 );
-			Rt_Biz::$loader->add_action( self::$slug . '_edit_form', $this, 'rtbiz_team_add_custom_field', 10, 2 );
-			Rt_Biz::$loader->add_filter( self::$slug . '_row_actions', $this, 'rtbiz_row_actions', 1, 2 );
+			Rt_Biz::$loader->add_action( 'init', $this, 'register_taxonomy_team', 20 );
+			Rt_Biz::$loader->add_action( 'rtbiz_team_support', $this, 'add_team_support' );
+			Rt_Biz::$loader->add_action( 'admin_head', $this, 'hide_slug' );
+			Rt_Biz::$loader->add_action( self::$slug . '_add_form_fields', $this, 'team_add_custom_field', 10, 2 );
+			Rt_Biz::$loader->add_action( self::$slug . '_edit_form', $this, 'team_add_custom_field', 10, 2 );
+			Rt_Biz::$loader->add_filter( self::$slug . '_row_actions', $this, 'row_actions', 1, 2 );
 
-			Rt_Biz::$loader->add_action( 'create_term', $this, 'rtbiz_save_team', 10, 2 );
-			Rt_Biz::$loader->add_action( 'edit_term', $this, 'rtbiz_save_team', 10, 2 );
+			Rt_Biz::$loader->add_action( 'create_term', $this, 'save_team', 10, 2 );
+			Rt_Biz::$loader->add_action( 'edit_term', $this, 'save_team', 10, 2 );
 
-			Rt_Biz::$loader->add_action( 'manage_' . self::$slug . '_custom_column', $this, 'rtbiz_manage_team_column_body', 10, 3 );
-			Rt_Biz::$loader->add_filter( 'manage_edit-' . self::$slug . '_columns', $this, 'rtbiz_manage_team_column_header' );
-			Rt_Biz::$loader->add_filter( 'admin_notices', $this, 'rtbiz_add_manage_acl_button' );
+			Rt_Biz::$loader->add_action( 'manage_' . self::$slug . '_custom_column', $this, 'manage_team_column_body', 10, 3 );
+			Rt_Biz::$loader->add_filter( 'manage_edit-' . self::$slug . '_columns', $this, 'manage_team_column_header' );
+			Rt_Biz::$loader->add_filter( 'admin_notices', $this, 'add_manage_acl_button' );
 
 		}
 
 
 
-		function rtbiz_get_lables() {
+		function get_lables() {
 			$this->labels = array(
 				'name'                       => __( 'Teams' ),
 				'singular_name'              => __( 'Team' ),
@@ -67,7 +67,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		/**
 		 * Register Team
 		 */
-		function rtbiz_register_taxonomy_team() {
+		function register_taxonomy_team() {
 
 			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$caps = array(
@@ -85,7 +85,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 			register_taxonomy( self::$slug, $supported_posttypes, $arg );
 		}
 
-		public function rtbiz_add_team_support( $supports ) {
+		public function add_team_support( $supports ) {
 			$modules          = rtbiz_get_modules();
 			foreach ( $modules as $key => $value ) {
 				if ( ! empty( $value['team_support'] ) ) {
@@ -98,8 +98,8 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		/**
 		 * hide_slug
 		 */
-		function rtbiz_hide_slug() {
-			if ( $this->rtbiz_is_edit_team( 'all' ) ) {
+		function hide_slug() {
+			if ( $this->is_edit_team( 'all' ) ) {
 				?>
 				<style type="text/css">
 					.form-wrap form span.description {
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 						$('.inline-edit-col input[name=slug]').parents('label').hide();
 					});
 				</script><?php
-			} elseif ( $this->rtbiz_is_edit_team( 'edit' ) ) {
+			} elseif ( $this->is_edit_team( 'edit' ) ) {
 				?>
 				<style type="text/css">
 					.form-table .form-field td span.description, .form-table .form-field {
@@ -135,12 +135,12 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 * @param        $tag
 		 * @param string $group
 		 */
-		function rtbiz_team_add_custom_field( $tag, $group = '' ) {
+		function team_add_custom_field( $tag, $group = '' ) {
 
 			$tax = get_taxonomy( $group );
-			$this->rtbiz_get_team_meta( 'email_address' );
+			$this->get_team_meta( 'email_address' );
 
-			if ( $this->rtbiz_is_edit_team( 'edit' ) ) {
+			if ( $this->is_edit_team( 'edit' ) ) {
 				?>
 
 				<h3><?php _e( 'User Group Settings', 'rtlib' ); ?></h3>
@@ -153,7 +153,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 						<td>
 							<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 							       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
-							       value="<?php echo esc_html( $this->rtbiz_get_team_meta( 'email_address' ) ); ?>"/>
+							       value="<?php echo esc_html( $this->get_team_meta( 'email_address' ) ); ?>"/>
 
 							<p class="description"><?php _e( 'Enter a email address for Team', 'rtcamp' ); ?></p>
 						</td>
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		/**
 		 * add view action for Team
 		 */
-		function rtbiz_row_actions( $actions, $term ) {
+		function row_actions( $actions, $term ) {
 			$actions['view'] = sprintf( __( '%sView%s', RTBIZ_TEXT_DOMAIN ), '<a href="' . esc_url( add_query_arg( array( self::$slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
 
 			return $actions;
@@ -188,7 +188,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 *
 		 * @param type $term_id
 		 */
-		function rtbiz_save_team( $term_id ) {
+		function save_team( $term_id ) {
 			if ( isset( $_POST[ self::$slug ] ) ) {
 				$prev_value = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '-meta', true );
 				$meta_value = (array) $_POST[ self::$slug ];
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 *
 		 * @return type
 		 */
-		function rtbiz_manage_team_column_body( $display, $column, $term_id ) {
+		function manage_team_column_body( $display, $column, $term_id ) {
 			switch ( $column ) {
 				case 'contacts':
 					$term = get_term( $term_id, self::$slug );
@@ -217,7 +217,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=rtbiz_contact&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'email_address';
-					$email_address = $this->rtbiz_get_team_meta( 'email_address', $term_id );
+					$email_address = $this->get_team_meta( 'email_address', $term_id );
 					if ( isset( $email_address ) && ! empty( $email_address ) ) {
 						echo esc_html( $email_address );
 					}
@@ -233,7 +233,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 *
 		 * @return type
 		 */
-		function rtbiz_manage_team_column_header( $columns ) {
+		function manage_team_column_header( $columns ) {
 
 			unset( $columns['posts'], $columns['slug'] );
 
@@ -252,7 +252,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 *
 		 * @return bool
 		 */
-		function rtbiz_get_team_meta( $key = '', $term_id = 0 ) {
+		function get_team_meta( $key = '', $term_id = 0 ) {
 
 			if ( isset( $_GET['tag_ID'] ) ) {
 				$term_id = $_GET['tag_ID'];
@@ -272,7 +272,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 			return false;
 		}
 
-		function rtbiz_add_manage_acl_button( $taxonomy ) {
+		function add_manage_acl_button( $taxonomy ) {
 			global $pagenow;
 			if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 				if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ) {
@@ -289,7 +289,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 *
 		 * @return bool
 		 */
-		function rtbiz_is_edit_team( $page = false ) {
+		function is_edit_team( $page = false ) {
 			global $pagenow;
 
 			if ( ( ! $page || 'edit' === $page ) && 'edit-tags.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === self::$slug ) {

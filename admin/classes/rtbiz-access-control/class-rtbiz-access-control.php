@@ -48,15 +48,15 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 		 *
 		 */
 		public function __construct() {
-			Rt_Biz::$loader->add_action( 'plugins_loaded', $this, 'rtbiz_init_acl', 15 );
-			Rt_Biz::$loader->add_filter( 'user_has_cap', $this, 'rtbiz_filter_caps', 900, 4 );
+			Rt_Biz::$loader->add_action( 'plugins_loaded', $this, 'init_acl', 15 );
+			Rt_Biz::$loader->add_filter( 'user_has_cap', $this, 'filter_caps', 900, 4 );
 		}
 
 		/**
 		 *  Initilize ACL on plugins_loaded with 15 priority. So that before this gets executed;
 		 *  other addon plugins get chance to hook into it and register themselved
 		 */
-		public function rtbiz_init_acl() {
+		public function init_acl() {
 			/**
 			 *
 			 *  Filter for other addons to register.
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			) );
 		}
 
-		public function rtbiz_filter_caps( $all_caps, $required_caps, $args, $user ) {
+		public function filter_caps( $all_caps, $required_caps, $args, $user ) {
 			global $rtbiz_acl_model;
 
 			$rtbiz_caps = array();
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 					$post_types = ( isset( $m['post_types'] ) && is_array( $m['post_types'] ) ) ? $m['post_types'] : array();
 					// $pt - post_type
 					foreach ( $post_types as $pt ) {
-						$post_caps   = self::rtbiz_get_admin_post_caps( $pt );
+						$post_caps   = self::get_admin_post_caps( $pt );
 						$rtbiz_caps = array_merge( $rtbiz_caps, array_keys( $post_caps ) );
 					}
 				}
@@ -146,13 +146,13 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 
 				$valid_caps = array();
 				foreach ( $module_permissions as $mkey => $valid_role_value ) {
-					$valid_role_key = self::rtbiz_get_role_key( $valid_role_value );
+					$valid_role_key = self::get_role_key( $valid_role_value );
 					// rtbiz role capability
 					foreach ( self::$permissions as $ap ) {
 						if ( $ap['value'] > $valid_role_value ) {
 							continue;
 						}
-						$role_cap = self::rtbiz_get_capability_from_access_role( $mkey, self::rtbiz_get_role_key( $ap['value'] ) );
+						$role_cap = self::get_capability_from_access_role( $mkey, self::get_role_key( $ap['value'] ) );
 						if ( empty( $role_cap ) ) {
 							continue;
 						}
@@ -189,7 +189,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 		 * @param string $role
 		 * @return string
 		 */
-		public static function rtbiz_get_capability_from_access_role( $module_key, $role = 'no_access' ) {
+		public static function get_capability_from_access_role( $module_key, $role = 'no_access' ) {
 			if ( isset( self::$modules[ $module_key ] ) && isset( self::$permissions[ $role ] ) ) {
 				$module_key = rtbiz_sanitize_module_key( $module_key );
 				return $module_key . '_' . $role;
@@ -197,7 +197,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			return '';
 		}
 
-		public static function rtbiz_get_role_key( $role_value ) {
+		public static function get_role_key( $role_value ) {
 			foreach ( self::$permissions as $pkey => $p ) {
 				if ( $p['value'] == $role_value ) {
 					return $pkey;
@@ -206,7 +206,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			return '';
 		}
 
-		public static function rtbiz_get_no_access_post_caps( $post_type ) {
+		public static function get_no_access_post_caps( $post_type ) {
 			return array(
 				"edit_{$post_type}" => false,
 				"read_{$post_type}" => false,
@@ -228,7 +228,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			);
 		}
 
-		public static function rtbiz_get_author_post_caps( $post_type ) {
+		public static function get_author_post_caps( $post_type ) {
 			return array(
 				"edit_{$post_type}" => true,
 				"read_{$post_type}" => true,
@@ -250,7 +250,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			);
 		}
 
-		public static function rtbiz_get_editor_post_caps( $post_type ) {
+		public static function get_editor_post_caps( $post_type ) {
 			return array(
 				"edit_{$post_type}" => true,
 				"read_{$post_type}" => true,
@@ -272,7 +272,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			);
 		}
 
-		public static function rtbiz_get_admin_post_caps( $post_type ) {
+		public static function get_admin_post_caps( $post_type ) {
 			$admin_cap = array(
 				"edit_{$post_type}"              => true,
 				"read_{$post_type}"              => true,
@@ -309,7 +309,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 			return $admin_cap;
 		}
 
-		public function rtbiz_get_module_users( $module_key ) {
+		public function get_module_users( $module_key ) {
 
 			global $rtbiz_acl_model;
 
@@ -336,7 +336,7 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 		/**
 		 *  Saves the ACL Permission Matrix to the Database
 		 */
-		public function rtbiz_save_acl_settings() {
+		public function save_acl_settings() {
 			if ( ! isset( $_POST['rtbiz_acl_permissions'] ) ) {
 				return;
 			}
@@ -410,8 +410,8 @@ if ( ! class_exists( 'Rtbiz_Access_Control' ) ) {
 		/**
 		 *  Take Action according to permission saved from the form & then display the ACL Settings UI
 		 */
-		public function rtbiz_acl_settings_ui() {
-			$this->rtbiz_save_acl_settings();
+		public function acl_settings_ui() {
+			$this->save_acl_settings();
 			rtbiz_get_template( 'acl-settings.php', array(), '', RTBIZ_PATH . 'admin/page/' );
 		}
 

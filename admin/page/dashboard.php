@@ -36,7 +36,7 @@ $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 			 * Add content to the welcome panel on the admin dashboard.
 			 *
 			 * To remove the default welcome panel, use remove_action():
-			 * <code>remove_action( 'welcome_panel', 'wp_welcome_panel' );</code>
+			 * <code>remove_action( 'rtbiz_welcome_panel', 'wp_welcome_panel' );</code>
 			 *
 			 * @since 3.5.0
 			 */

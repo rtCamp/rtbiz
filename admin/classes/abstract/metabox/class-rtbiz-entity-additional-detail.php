@@ -212,7 +212,7 @@ if ( ! class_exists( 'Rtbiz_Entity_Additional_Detail' ) ) {
 				$rtbiz_company->rtbiz_print_metabox_js( $post );
 			}
 
-			do_action( 'rtbiz_print_metabox_js', $post, $post->post_type );
+			do_action( 'print_metabox_js', $post, $post->post_type );
 
 		}
 

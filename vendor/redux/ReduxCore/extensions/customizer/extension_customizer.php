@@ -155,7 +155,7 @@
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/customizer-control.js'."'></script>";
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/fonts-customizer-admin.js'."'></script>";
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/header-control.js'."'></script>";
-                //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/header-models.js'."'></script>";
+                //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/header-model.js'."'></script>";
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/jquery.slimscroll.js'."'></script>";
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/jquery.ui.droppable.min.js'."'></script>";
                 //echo "<script type='text/javascript' src='".$this->_extension_url . 'new/media-editor.min.js'."'></script>";
@@ -169,7 +169,7 @@
                   wp_enqueue_script('redux-extension-customizer-controls-js', $this->_extension_url . 'new/customizer-control.js');
                   wp_enqueue_script('redux-extension-customizer-fonts-js', $this->_extension_url . 'new/fonts-customizer-admin.js');
                   wp_enqueue_script('redux-extension-customizer-header-js', $this->_extension_url . 'new/header-control.js');
-                  wp_enqueue_script('redux-extension-customizer-models-js', $this->_extension_url . 'new/header-models.js');
+                  wp_enqueue_script('redux-extension-customizer-model-js', $this->_extension_url . 'new/header-model.js');
                   wp_enqueue_script('redux-extension-customizer-slimscroll-js', $this->_extension_url . 'new/jquery.slimscroll.js');
                   wp_enqueue_script('redux-extension-customizer-droppable-js', $this->_extension_url . 'new/jquery.ui.droppable.min.js');
                   wp_enqueue_script('redux-extension-customizer-editor-js', $this->_extension_url . 'new/media-editor.min.js');

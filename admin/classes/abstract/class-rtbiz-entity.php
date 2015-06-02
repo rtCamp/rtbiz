@@ -49,21 +49,21 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 */
 		public function __construct( $post_type ) {
 			$this->post_type = $post_type;
-			$this->rtbiz_hooks();
+			$this->hooks();
 		}
 
 		/**
 		 *  Register Rtbiz_Entity Core Post Type
 		 */
-		public function rtbiz_init_entity() {
-			$this->rtbiz_register_post_type( $this->post_type, $this->labels );
+		public function init_entity() {
+			$this->register_post_type( $this->post_type, $this->labels );
 		}
 
 		/**
 		 * @param $name
 		 * @param array $labels
 		 */
-		private function rtbiz_register_post_type( $name, $labels = array() ) {
+		private function register_post_type( $name, $labels = array() ) {
 			$args = apply_filters( 'rt_entity_register_post_type_args', array(
 				'labels' => $labels,
 				'public' => false,
@@ -83,28 +83,28 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		/**
 		 *  Actions/Filtes used by Rtbiz_Entity
 		 */
-		private function rtbiz_hooks() {
+		private function hooks() {
 
 			if ( is_admin() ) {
-				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_columns', $this, 'rtbiz_post_table_columns' );
-				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_custom_column', $this, 'rtbiz_manage_post_table_columns', 10, 2 );
-				Rt_Biz::$loader->add_action( 'manage_edit-' . $this->post_type, $this, 'rtbiz_rearrange_columns', 20 );
+				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_columns', $this, 'post_table_columns' );
+				Rt_Biz::$loader->add_action( 'manage_' . $this->post_type . '_posts_custom_column', $this, 'manage_post_table_columns', 10, 2 );
+				Rt_Biz::$loader->add_action( 'manage_edit-' . $this->post_type, $this, 'rearrange_columns', 20 );
 
-				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'rtbiz_entity_meta_boxes' );
-				Rt_Biz::$loader->add_action( 'admin_init', $this, 'rtbiz_entity_meta_boxes' );
-				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'rtbiz_remove_metabox' );
-				Rt_Biz::$loader->add_action( 'save_post', $this, 'rtbiz_save_entity_details', 10, 2 );
-				Rt_Biz::$loader->add_action( 'pre_post_update', $this, 'rtbiz_save_old_data' );
+				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'entity_meta_boxes' );
+				Rt_Biz::$loader->add_action( 'admin_init', $this, 'entity_meta_boxes' );
+				Rt_Biz::$loader->add_action( 'add_meta_boxes', $this, 'remove_metabox' );
+				Rt_Biz::$loader->add_action( 'save_post', $this, 'save_entity_details', 10, 2 );
+				Rt_Biz::$loader->add_action( 'pre_post_update', $this, 'save_old_data' );
 
 				/* add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 ); */
 
-				Rt_Biz::$loader->add_action( 'bulk_post_updated_messages', $this, 'rtbiz_bulk_entity_update_messages', 10, 2 );
-				Rt_Biz::$loader->add_action( 'post_updated_messages', $this, 'rtbiz_entity_updated_messages', 10, 2 );
+				Rt_Biz::$loader->add_action( 'bulk_post_updated_messages', $this, 'bulk_entity_update_messages', 10, 2 );
+				Rt_Biz::$loader->add_action( 'post_updated_messages', $this, 'entity_updated_messages', 10, 2 );
 
 			}
 
-			Rt_Biz::$loader->add_action( 'comment_feed_where', $this, 'rtbiz_skip_feed_comments' );
-			Rt_Biz::$loader->add_action( 'pre_get_comments', $this, 'rtbiz_preprocess_comment_handler' );
+			Rt_Biz::$loader->add_action( 'comment_feed_where', $this, 'skip_feed_comments' );
+			Rt_Biz::$loader->add_action( 'pre_get_comments', $this, 'preprocess_comment_handler' );
 
 			do_action( 'rtbiz_entity_hooks', $this );
 		}
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param $columns
 		 * @return mixed|void
 		 */
-		public function rtbiz_post_table_columns( $columns ) {
+		public function post_table_columns( $columns ) {
 			return apply_filters( 'rtbiz_entity_columns', $columns, $this );
 		}
 
@@ -127,7 +127,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param $column
 		 * @param $post_id
 		 */
-		public function rtbiz_manage_post_table_columns( $column, $post_id ) {
+		public function manage_post_table_columns( $column, $post_id ) {
 			do_action( 'rtbiz_entity_manage_columns', $column, $post_id, $this );
 		}
 
@@ -138,24 +138,24 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 *
 		 * @return mixed|void
 		 */
-		public function rtbiz_rearrange_columns( $columns ) {
+		public function rearrange_columns( $columns ) {
 			return apply_filters( 'rt_entity_rearrange_columns', $columns, $this );
 		}
 
 		/**
 		 * Registers Meta Box for Rtbiz_Entity Meta Fields - Additional Information for Rtbiz_Entity
 		 */
-		public function rtbiz_entity_meta_boxes() {
+		public function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rtbiz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
 			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rtbiz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
-			do_action( 'rtbiz_entity_meta_boxes-' . $this->post_type , $this->post_type );
-			do_action( 'rtbiz_entity_meta_boxes', $this->post_type );
+			do_action( 'entity_meta_boxes-' . $this->post_type , $this->post_type );
+			do_action( 'entity_meta_boxes', $this->post_type );
 		}
 
 		/**
 		 * remove metabox of contact
 		 */
-		public function rtbiz_remove_metabox() {
+		public function remove_metabox() {
 			$metabox_ids = apply_filters( 'rt_entity_remove_meta_box', array( 'commentstatusdiv' ) );
 			foreach ( $metabox_ids as $metabox_id ) {
 				remove_meta_box( $metabox_id[0], $this->post_type, $metabox_id[1] );
@@ -168,7 +168,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 *
 		 * @param $post_id
 		 */
-		public function rtbiz_save_entity_details( $post_id, $post ) {
+		public function save_entity_details( $post_id, $post ) {
 			/*
 			 * We need to verify this came from the our screen and with proper authorization,
 			 * because save_post can be triggered at other times.
@@ -193,7 +193,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 
 			/* OK, its safe for us to save the data now. */
 			Rtbiz_Entity_Assignee::save( $post_id, $post );
-			$this->rtbiz_save_meta_values( $post_id, $post );
+			$this->save_meta_values( $post_id, $post );
 		}
 
 		/**
@@ -202,12 +202,12 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 *
 		 * @param $post_id
 		 */
-		protected function rtbiz_save_meta_values( $post_id, $post ) {
+		protected function save_meta_values( $post_id, $post ) {
 			do_action( 'rtbiz_save_entity_meta', $post_id, $post, $this );
 			do_action( 'rtbiz_save_entity_meta-' . $this->post_type , $post_id, $post, $this );
 		}
 
-		public function rtbiz_save_old_data( $post_id ) {
+		public function save_old_data( $post_id ) {
 			if ( ! isset( $_POST['post_type'] ) ) {
 				return;
 			}
@@ -305,7 +305,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 *
 		 * @return $bulk_messages
 		 */
-		public function rtbiz_bulk_entity_update_messages( $bulk_messages, $bulk_counts ) {
+		public function bulk_entity_update_messages( $bulk_messages, $bulk_counts ) {
 			$singular = strtolower( $this->labels['singular_name'] );
 			$plural = strtolower( $this->labels['name'] );
 			$bulk_messages[ $this->post_type ] = array(
@@ -324,7 +324,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function rtbiz_entity_updated_messages( $messages ) {
+		public function entity_updated_messages( $messages ) {
 			$singular = $this->labels['singular_name'];
 			$messages[ $this->post_type ] = array(
 				0 => '', // Unused. Messages start at index 1.
@@ -348,13 +348,13 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * skip rtbot comments from feeds
 		 * @return string
 		 */
-		public function rtbiz_skip_feed_comments( $where ) {
+		public function skip_feed_comments( $where ) {
 			global $wpdb;
 			$where .= $wpdb->prepare( ' AND comment_type != %s', 'rt_bot' );
 			return $where;
 		}
 
-		public function rtbiz_preprocess_comment_handler( $commentdata ) {
+		public function preprocess_comment_handler( $commentdata ) {
 			// Contact and company comments needed on from end in furture need to remove else condition.
 			if ( is_admin() ) {
 				$screen = get_current_screen();
@@ -423,7 +423,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param $args
 		 * @return array
 		 */
-		public function rtbiz_search_entity( $query, $args = array() ) {
+		public function search_entity( $query, $args = array() ) {
 			$query_args = array(
 				'post_type' => $this->post_type,
 				'post_status' => 'any',

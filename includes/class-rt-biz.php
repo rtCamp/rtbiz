@@ -64,7 +64,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 		public static function instance() {
 			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Rt_Biz ) ) {
 				self::$instance = new Rt_Biz();
-				add_action( 'plugins_loaded', array( self::$instance, 'rtbiz_init_plugin' ) );
+				add_action( 'plugins_loaded', array( self::$instance, 'init_plugin' ) );
 			}
 
 			return self::$instance;
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 		}
 
-		public function rtbiz_init_plugin() {
+		public function init_plugin() {
 
 			require_once RTBIZ_PATH . 'includes/class-rtbiz-plugin-check.php';
 
@@ -166,11 +166,12 @@ if ( ! class_exists( 'Rt_Biz' ) ) {
 
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/rtbiz-contact/metabox' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/models/' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/abstract/metabox' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/settings/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/rtbiz-contact/metabox' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/models' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/abstract/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/abstract/metabox' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/rtbiz-settings/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
 

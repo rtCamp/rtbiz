@@ -268,7 +268,7 @@ function rtbiz_is_primary_email_unique( $email, $postid = null ) {
  */
 function rtbiz_add_contact( $name, $description = '', $email = '' ) {
 	global $rtbiz_contact;
-	return $rtbiz_contact->rtbiz_add_contact( $name, $description, $email );
+	return $rtbiz_contact->add_contact( $name, $description, $email );
 }
 
 function rtbiz_get_contact_edit_link( $email ) {
@@ -287,7 +287,7 @@ function rtbiz_get_contact_edit_link( $email ) {
  */
 function rtbiz_get_contact_by_email( $email ) {
 	global $rtbiz_contact;
-	return $rtbiz_contact->rtbiz_get_by_email( $email );
+	return $rtbiz_contact->get_by_email( $email );
 }
 
 /**
@@ -298,17 +298,17 @@ function rtbiz_get_contact_by_email( $email ) {
  */
 function rtbiz_search_contact( $query, $args = array() ) {
 	global $rtbiz_contact;
-	return $rtbiz_contact->rtbiz_search_entity( $query, $args );
+	return $rtbiz_contact->search_entity( $query, $args );
 }
 
 function rtbiz_get_contact_for_wp_user( $user_id ) {
 	global $rtbiz_contact;
-	return $rtbiz_contact->rtbiz_get_contact_for_wp_user( $user_id );
+	return $rtbiz_contact->get_contact_for_wp_user( $user_id );
 }
 
 function rtbiz_get_wp_user_for_contact( $contact_id ) {
 	global $rtbiz_contact;
-	return $rtbiz_contact->rtbiz_get_wp_user_for_contact( $contact_id );
+	return $rtbiz_contact->get_wp_user_for_contact( $contact_id );
 }
 
 /**
@@ -383,7 +383,7 @@ function rtbiz_is_primary_email_unique_company( $email ) {
  */
 function rtbiz_add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {
 	global $rtbiz_company;
-	return $rtbiz_company->rtbiz_add_company( $name, $note, $address, $country, $meta );
+	return $rtbiz_company->add_company( $name, $note, $address, $country, $meta );
 }
 
 /**
@@ -393,13 +393,13 @@ function rtbiz_add_company( $name, $note = '', $address = '', $country = '', $me
  */
 function rtbiz_search_company( $query, $args = array() ) {
 	global $rtbiz_company;
-	return $rtbiz_company->rtbiz_search_entity( $query, $args );
+	return $rtbiz_company->search_entity( $query, $args );
 }
 
 
 function rtbiz_get_companies() {
 	global $rtbiz_company;
-	return $rtbiz_company->rtbiz_get_company();
+	return $rtbiz_company->get_company();
 }
 
 
@@ -449,7 +449,7 @@ function rtbiz_get_user_team( $user_ID ) {
  * @return string
  */
 function rtbiz_get_access_role_cap( $module_key, $role = 'no_access' ) {
-	return Rtbiz_Access_Control::rtbiz_get_capability_from_access_role( $module_key, $role );
+	return Rtbiz_Access_Control::get_capability_from_access_role( $module_key, $role );
 }
 
 function rtbiz_is_our_employee( $value, $module ) {
@@ -468,7 +468,7 @@ function rtbiz_is_our_employee( $value, $module ) {
 
 function rtbiz_get_module_employee( $module_key ) {
 	global $rtbiz_access_control;
-	return $rtbiz_access_control->rtbiz_get_module_users( $module_key );
+	return $rtbiz_access_control->get_module_users( $module_key );
 }
 
 function rtbiz_get_team_users( $team_id ) {
@@ -550,7 +550,7 @@ function rtbiz_register_contact_connection( $post_type, $label ) {
  */
 function rtbiz_register_company_connection( $post_type, $label ) {
 	global $rtbiz_company, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_init_connection( $post_type, $rtbiz_company->post_type, array() );
+	$rtbiz_p2p->init_connection( $post_type, $rtbiz_company->post_type, array() );
 }
 
 /**
@@ -561,7 +561,7 @@ function rtbiz_register_company_connection( $post_type, $label ) {
  */
 function rtbiz_connect_post_to_contact( $post_type, $from = '', $to = '' ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_connect_post_to_entity( $post_type, $rtbiz_contact->post_type, $from, $to );
+	$rtbiz_p2p->connect_post_to_entity( $post_type, $rtbiz_contact->post_type, $from, $to );
 }
 
 /**
@@ -572,13 +572,13 @@ function rtbiz_connect_post_to_contact( $post_type, $from = '', $to = '' ) {
  */
 function rtbiz_connect_post_to_company( $post_type, $from = '', $to = '' ) {
 	global $rtbiz_company, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_connect_post_to_entity( $post_type, $rtbiz_company->post_type, $from, $to );
+	$rtbiz_p2p->connect_post_to_entity( $post_type, $rtbiz_company->post_type, $from, $to );
 }
 
 
 function rtbiz_connect_contact_to_user( $from = '', $to = '' ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_connect_post_to_entity( $rtbiz_contact->post_type, 'user', $from, $to );
+	$rtbiz_p2p->connect_post_to_entity( $rtbiz_contact->post_type, 'user', $from, $to );
 }
 
 
@@ -593,7 +593,7 @@ function rtbiz_connect_contact_to_user( $from = '', $to = '' ) {
  */
 function rtbiz_get_post_for_contact_connection( $post_id, $post_type, $fetch_contact = false ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	return $rtbiz_p2p->rtbiz_get_posts_for_entity( $post_id, $post_type, $rtbiz_contact->post_type, $fetch_contact );
+	return $rtbiz_p2p->get_posts_for_entity( $post_id, $post_type, $rtbiz_contact->post_type, $fetch_contact );
 }
 
 /**
@@ -607,18 +607,18 @@ function rtbiz_get_post_for_contact_connection( $post_id, $post_type, $fetch_con
  */
 function rtbiz_get_post_for_company_connection( $post_id, $post_type, $fetch_company = false ) {
 	global $rtbiz_company, $rtbiz_p2p;
-	return $rtbiz_p2p->rtbiz_get_posts_for_entity( $post_id, $post_type, $rtbiz_company->post_type, $fetch_company );
+	return $rtbiz_p2p->get_posts_for_entity( $post_id, $post_type, $rtbiz_company->post_type, $fetch_company );
 }
 
 
 function rtbiz_clear_post_connections_to_contact( $post_type, $ids ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_clear_post_connections_to_entity( $post_type, $rtbiz_contact->post_type, 'from', $ids );
+	$rtbiz_p2p->clear_post_connections_to_entity( $post_type, $rtbiz_contact->post_type, 'from', $ids );
 }
 
 function rtbiz_clear_post_connections_to_company( $post_type, $ids ) {
 	global $rtbiz_company, $rtbiz_p2p;
-	$rtbiz_p2p->rtbiz_clear_post_connections_to_entity( $post_type, $rtbiz_company->post_type, 'from', $ids );
+	$rtbiz_p2p->clear_post_connections_to_entity( $post_type, $rtbiz_company->post_type, 'from', $ids );
 }
 
 /**
@@ -628,7 +628,7 @@ function rtbiz_clear_post_connections_to_company( $post_type, $ids ) {
  */
 function rtbiz_contact_connection_to_string( $post_id, $term_seperator = ' , ' ) {
 	global $rtbiz_contact, $rtbiz_company;
-	return Rtbiz_P2p::rtbiz_connection_to_string( $post_id, $rtbiz_company->post_type, $rtbiz_contact->post_type, $term_seperator );
+	return Rtbiz_P2p::connection_to_string( $post_id, $rtbiz_company->post_type, $rtbiz_contact->post_type, $term_seperator );
 }
 
 /**
@@ -638,7 +638,7 @@ function rtbiz_contact_connection_to_string( $post_id, $term_seperator = ' , ' )
  */
 function rtbiz_company_connection_to_string( $post_id, $term_seperator = ' , ' ) {
 	global $rtbiz_company, $rtbiz_contact;
-	return Rtbiz_P2p::rtbiz_connection_to_string( $post_id, $rtbiz_contact->post_type, $rtbiz_company->post_type, $term_seperator );
+	return Rtbiz_P2p::connection_to_string( $post_id, $rtbiz_contact->post_type, $rtbiz_company->post_type, $term_seperator );
 }
 
 /**
@@ -649,12 +649,12 @@ function rtbiz_company_connection_to_string( $post_id, $term_seperator = ' , ' )
  */
 function rtbiz_clear_post_connection_to_contact( $post_type, $from, $to ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	return $rtbiz_p2p->rtbiz_clear_post_connection_to_entity( $post_type, $rtbiz_contact->post_type, $from, $to );
+	return $rtbiz_p2p->clear_post_connection_to_entity( $post_type, $rtbiz_contact->post_type, $from, $to );
 }
 
 function rtbiz_remove_contact_to_user( $from = '', $to = '' ) {
 	global $rtbiz_contact, $rtbiz_p2p;
-	return $rtbiz_p2p->rtbiz_clear_post_connection_to_entity( $rtbiz_contact->post_type, 'user', $from, $to );
+	return $rtbiz_p2p->clear_post_connection_to_entity( $rtbiz_contact->post_type, 'user', $from, $to );
 }
 
 
