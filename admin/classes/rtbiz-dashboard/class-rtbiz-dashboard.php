@@ -422,7 +422,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		//todo: check data empty
 		public function offering_wise_contacts( $obj, $args ) {
 
-			$taxonomy    = Rt_Offerings::$offering_slug;
+			$taxonomy    = Rt_Products::$product_slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
 			$cols        = array( __( 'Offerings', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );

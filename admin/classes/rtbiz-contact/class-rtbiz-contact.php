@@ -449,7 +449,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
 			if ( $rtbiz_offerings ) {
-				$cols[ 'taxonomy-' . Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-' . Rt_Offerings::$offering_slug ];
+				$cols[ 'taxonomy-' . Rt_Products::$product_slug ] = $columns[ 'taxonomy-' . Rt_Products::$product_slug ];
 			}
 			$cols[ 'p2p-from-' . $rtbiz_contact->post_type . '_to_user' ] = __( 'User' );
 
@@ -465,7 +465,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			unset( $columns['title'] );
 			unset( $columns['author'] );
 			unset( $columns['date'] );
-			unset( $columns[ 'taxonomy-' . Rt_Offerings::$offering_slug ] );
+			unset( $columns[ 'taxonomy-' . Rt_Products::$product_slug ] );
 			unset( $columns[ 'p2p-to-' . $rtbiz_company->post_type . '_to_' . $rtbiz_contact->post_type ] );
 			unset( $columns[ 'p2p-from-' . $rtbiz_contact->post_type . '_to_user' ] );
 			unset( $columns['comments'] );

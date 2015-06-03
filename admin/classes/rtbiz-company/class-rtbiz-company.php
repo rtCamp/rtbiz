@@ -196,7 +196,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			$cols['title'] = __( 'Name' );
 			global $rtbiz_offerings;
 			if ( isset( $rtbiz_offerings ) ) {
-				$cols[ 'taxonomy-'.Rt_Offerings::$offering_slug ] = $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ];
+				$cols[ 'taxonomy-'.Rt_Products::$product_slug ] = $columns[ 'taxonomy-'.Rt_Products::$product_slug ];
 			}
 			$cols['date'] = $columns['date'];
 
@@ -204,7 +204,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			unset( $columns['author'] );
 			unset( $columns['date'] );
 			unset( $columns['comments'] );
-			unset( $columns[ 'taxonomy-'.Rt_Offerings::$offering_slug ] );
+			unset( $columns[ 'taxonomy-'.Rt_Products::$product_slug ] );
 
 			$cols = array_merge( $cols, $columns );
 			return parent::post_table_columns( $cols );

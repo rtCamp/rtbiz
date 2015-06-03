@@ -88,7 +88,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			$rtbiz_dashboard->add_screen_id( $dashboard_screen );
 			$rtbiz_dashboard->setup_dashboard();
 
-			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Offerings' ), __( 'Offerings' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rtbiz_get_contact_post_type() );
+			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Products' ), __( 'Products' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . Rt_Products::$product_slug . '&post_type=' . rtbiz_get_contact_post_type() );
 
 			add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'Access Control' ), __( 'Access Control' ), rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' ), Rtbiz_Access_Control::$page_slug, array(
 				$rtbiz_access_control,
@@ -149,8 +149,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			$rtbizMenuOrder[] = 'edit.php?post_type=' . rtbiz_get_company_post_type();
 
-			if ( class_exists( 'Rt_Offerings' ) ) {
-				$rtbizMenuOrder[] = 'edit-tags.php?taxonomy=' . Rt_Offerings::$offering_slug . '&post_type=' . rtbiz_get_contact_post_type();
+			if ( class_exists( 'Rt_Products' ) ) {
+				$rtbizMenuOrder[] = 'edit-tags.php?taxonomy=' . Rt_Products::$product_slug . '&post_type=' . rtbiz_get_contact_post_type();
 			}
 
 			if ( ! empty( Rtbiz_Access_Control::$page_slug ) ) {
@@ -265,7 +265,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				}
 			}
 
-			$rtbiz_offerings = new Rt_Offerings( $offering_plugin, $terms_caps, $to_register_posttype );
+			$rtbiz_offerings = new Rt_Products( $offering_plugin, $terms_caps, $to_register_posttype );
 		}
 
 		/**
