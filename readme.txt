@@ -75,7 +75,7 @@ Great! There are several ways you can get involved to help make Stream better:
 * Mailbox Library
 
 = 0.9 =
-* Rt_Product Refactor & Bug Fixes
+* Rt_Products Refactor & Bug Fixes
 
 = 0.8 =
 * RT Product Sync Library Added

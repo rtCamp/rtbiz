@@ -1,7 +1,7 @@
 RT Offerings
 ============
 
-### `class Rt_Product`
+### `class Rt_Products`
 
 This class gives a special attribute to link it with other Custom Post Types.
 
@@ -52,13 +52,13 @@ Constructor method for the class.
 @param string   $plugin_name - Plugin name from which products need to be synced.
 @param array    $post_types - Array of post types with which Offerings taxonomy needs to be mapped.
 
-@uses Rt_Product::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Product::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Product::auto_loader()
-@uses Rt_Product::get_label()
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::auto_loader()
+@uses Rt_Products::get_label()
 @uses Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata()
 @uses Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata::activate()
-@uses Rt_Product::hooks()
+@uses Rt_Products::hooks()
 ```
 
 ##### `is_woocommerce_active()`
@@ -74,8 +74,8 @@ Check id Easy Digital Downloads is installed & active or not.
 Get the post type of product according to which plugin is active in WordPress.
 
 ``` php
-@uses Rt_Product::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Product::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
 ```
 
 ##### `auto_loader()`
@@ -141,9 +141,9 @@ old_offerings_synchronization_enabled function.
 @access public
 @return void
 
-@uses Rt_Product::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Product::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Product::bulk_insert_products() - Bult insert of offerings.
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::bulk_insert_products() - Bult insert of offerings.
 ```
 
 ##### `get_taxonomy( $post_id )`
@@ -166,10 +166,10 @@ insert an offering for a given post.
 @access public
 @return void
 
-@uses Rt_Product::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Product::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Product::get_taxonomy()
-@uses Rt_Product::check_postid_term_exist()
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::get_taxonomy()
+@uses Rt_Products::check_postid_term_exist()
 @uses Rt_Lib_Taxonomy_Metadata\add_term_meta()
 ```
 
@@ -188,7 +188,7 @@ This method checks for any term that exists for given post id or not.
 This method inserts offernigs in bulk.
 
 ``` php
-@uses Rt_Product::get_taxonomy()
+@uses Rt_Products::get_taxonomy()
 @uses wp_insert_term()
 @uses Rt_Lib_Taxonomy_Metadata\add_term_meta()
 ```
@@ -229,5 +229,5 @@ $product_plugin = 'woocommerce';
 /* Post Types to provide Product Sync Support to */
 $post_types = array( 'ticket', 'lead' );
 
-$rtbiz_offerings = new Rt_Product( $product_plugin, $terms_caps, $post_types );
+$rtbiz_offerings = new Rt_Products( $product_plugin, $terms_caps, $post_types );
 ```

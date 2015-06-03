@@ -6,15 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Product' ) ) {
+if ( ! class_exists( 'Rt_Products' ) ) {
 
 	/**
 	 * Description of class-rt-product
-	 * To sync WooCommerce/EDD Product With Rt_Product taxonomy
+	 * To sync WooCommerce/EDD Product With Rt_Products taxonomy
 	 *
 	 * @author dipesh
 	 */
-	class Rt_Product {
+	class Rt_Products {
 
 		/**
 		 * Product taxonomy Slug
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Rt_Product' ) ) {
 		 * @return type
 		 */
 		function manage_product_column_body( $display, $column, $term_id ) {
-			$t = get_term( $term_id, Rt_Product::$product_slug );
+			$t = get_term( $term_id, Rt_Products::$product_slug );
 			$content = '';
 			switch ( $column ) {
 				case 'product_detail':
@@ -295,11 +295,11 @@ if ( ! class_exists( 'Rt_Product' ) ) {
 							'post_type' => $posttype,
 							'post_status' => 'any',
 							'nopaging' => true,
-							Rt_Product::$product_slug  => $t->slug,
+							Rt_Products::$product_slug  => $t->slug,
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content .= ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Product::$product_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content .= ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Products::$product_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
 					}
 
 					break;
@@ -473,7 +473,7 @@ if ( ! class_exists( 'Rt_Product' ) ) {
 		 * @return void
 		 */
 		public function delete_products_meta( $term_id ) {
-			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Product::$term_product_id_meta_key );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Products::$term_product_id_meta_key );
 		}
 
 	}
