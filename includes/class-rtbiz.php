@@ -63,11 +63,18 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 		 */
 		public static function instance() {
 			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Rtbiz ) ) {
+				self::_p2p_load();
 				self::$instance = new Rtbiz();
 				add_action( 'plugins_loaded', array( self::$instance, 'init_plugin' ) );
 			}
-
 			return self::$instance;
+		}
+
+		private static function _p2p_load() {
+			require_once RTBIZ_PATH . 'includes/class-rtbiz-posts-to-posts.php';
+			global $rtbiz_posts_to_posts ;
+			// Load p2p library and init
+			$rtbiz_posts_to_posts = new Rtbiz_Post_To_Post();
 		}
 
 		/**
@@ -112,11 +119,6 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 		}
 
 		public function init_plugin() {
-			require_once RTBIZ_PATH . 'includes/class-rtbiz-posts-to-posts.php';
-			global $rtbiz_posts_to_posts ;
-			// Load p2p library and init
-			$rtbiz_posts_to_posts = new Rtbiz_Post_To_Post();
-
 			$this->load_dependencies();
 			$this->set_locale();
 			$this->define_admin_hooks();

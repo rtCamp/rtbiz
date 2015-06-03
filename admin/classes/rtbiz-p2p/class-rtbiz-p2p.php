@@ -8,6 +8,15 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 
 		public function __construct() {
 			add_action( 'p2p_init', array( $this, 'create_connection' ) );
+			add_filter( 'p2p_post_admin_column_link', array( $this,'change_link_to_admin' ), 10, 2 );
+		}
+
+		public function change_link_to_admin( $link, $item ){
+			$cpt = rtbiz_get_contact_post_type() ;
+			if ( $cpt == get_current_screen()->post_type && $cpt.'_to_user' === $item->p2p_type && current_user_can('edit_users') ){
+				return get_edit_user_link( $item->ID );
+			}
+			return $link;
 		}
 
 		public function init_connection( $from_post_type, $to_post_type, $args ) {
