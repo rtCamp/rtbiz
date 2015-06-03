@@ -62,7 +62,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			global $taxonomy_metadata;
 			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
-				include_once RTBIZ_PATH . 'lib/rt-offerings/taxonomy-metadata.php';
+				include_once RTBIZ_PATH . 'lib/rt-products/taxonomy-metadata.php';
 			}
 
 			if ( ! is_object( $taxonomy_metadata ) ) {
@@ -224,7 +224,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				'label'               => $menu_label,
 				'post_types'          => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
 				'team_support'  => array( $rtbiz_contact->post_type ),
-				'offering_support'    => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
+				'product_support'    => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
 				'setting_option_name' => Rtbiz_Setting::$biz_opt,
 				// Use For ACL
 				'setting_page_url'    => admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ),
@@ -237,7 +237,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		public function init_rtlib() {
 			global $rtbiz_mailBox, $rtbiz_importer;
 
-			$this->init_offering();
+			$this->init_product();
 
 			$rtbiz_mailBox  = new Rt_Mailbox( trailingslashit( RTBIZ_PATH ) . 'rtbiz.php' );
 			$rtbiz_importer = new Rt_Importer( null, null, false );
@@ -246,8 +246,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		}
 
-		public function init_offering() {
-			global $rtbiz_offerings;
+		public function init_product() {
+			global $rtbiz_products;
 			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$terms_caps = array(
 				'manage_terms' => $editor_cap,
@@ -256,16 +256,16 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$settings             = rtbiz_get_offering_selection_setting();
-			$offering_plugin      = ! empty( $settings ) ? $settings : array();
+			$settings             = rtbiz_get_product_selection_setting();
+			$product_plugin      = ! empty( $settings ) ? $settings : array();
 			$to_register_posttype = array();
 			foreach ( Rtbiz_Access_Control::$modules as $key => $value ) {
-				if ( ! empty( $value['offering_support'] ) ) {
-					$to_register_posttype = array_merge( $to_register_posttype, $value['offering_support'] );
+				if ( ! empty( $value['product_support'] ) ) {
+					$to_register_posttype = array_merge( $to_register_posttype, $value['product_support'] );
 				}
 			}
 
-			$rtbiz_offerings = new Rt_Products( $offering_plugin, $terms_caps, $to_register_posttype );
+			$rtbiz_products = new Rt_Products( $product_plugin, $terms_caps, $to_register_posttype );
 		}
 
 		/**

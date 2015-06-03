@@ -695,12 +695,12 @@ function rtbiz_set_redux_setting( $key, $val ) {
 	$GLOBALS[ Rtbiz_Setting::$biz_opt ] = get_option( Rtbiz_Setting::$biz_opt, array() );
 }
 
-function rtbiz_get_offering_selection_setting() {
+function rtbiz_get_product_selection_setting() {
 	$return  = array();
 	$redux = rtbiz_get_redux_settings();
-	$redux['offering_plugin'] = apply_filters( 'rtbiz_offering_setting', ( ! empty( $redux['offering_plugin'] ) ) ? $redux['offering_plugin'] : '' );
-	if ( ! empty( $redux['offering_plugin'] ) && is_array( $redux['offering_plugin'] ) ) {
-		foreach ( $redux['offering_plugin'] as $key => $val ) {
+	$redux['product_plugin'] = apply_filters( 'rtbiz_product_setting', ( ! empty( $redux['product_plugin'] ) ) ? $redux['product_plugin'] : '' );
+	if ( ! empty( $redux['product_plugin'] ) && is_array( $redux['product_plugin'] ) ) {
+		foreach ( $redux['product_plugin'] as $key => $val ) {
 			if ( ! empty( $val ) ) {
 				$return[] = $key;
 			}

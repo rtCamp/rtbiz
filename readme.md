@@ -166,7 +166,7 @@ Please refer to the documentation.
 
 ### 1.2.5 ###
 * Contacts Count on Department List View
-* Dismiss link on offerings admin notice
+* Dismiss link on products admin notice
 * rtLib updated
 * Mailbox UI proper labels & messages updated
 * Bug Fixes

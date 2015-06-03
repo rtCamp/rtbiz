@@ -344,7 +344,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( current_user_can( $admin_cap ) ) {
 				$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
 			}
-			$custom_order['rt-offeringdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-offeringdiv'];
+			$custom_order['rt-productdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-productdiv'];
 			if ( isset( $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-teamdiv'] ) ) {
 				$custom_order['rt-teamdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-teamdiv'];
 			}
@@ -443,12 +443,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function post_table_columns( $columns ) {
 
-			global $rtbiz_company, $rtbiz_contact, $rtbiz_offerings;
+			global $rtbiz_company, $rtbiz_contact, $rtbiz_products;
 
 			$cols = array();
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
-			if ( $rtbiz_offerings ) {
+			if ( $rtbiz_products ) {
 				$cols[ 'taxonomy-' . Rt_Products::$product_slug ] = $columns[ 'taxonomy-' . Rt_Products::$product_slug ];
 			}
 			$cols[ 'p2p-from-' . $rtbiz_contact->post_type . '_to_user' ] = __( 'User' );

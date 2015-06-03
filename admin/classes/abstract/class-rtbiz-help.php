@@ -179,16 +179,16 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 						'taxonomy' => Rtbiz_Teams::$slug,
 					),
 					array(
-						'id'       => 'rt-offering_overview',
+						'id'       => 'rt-product_overview',
 						'title'    => __( 'Overview' ),
 						'content'  => '',
-						'taxonomy' => 'rt-offering',
+						'taxonomy' => 'rt-product',
 					),
 					array(
-						'id'       => 'rt-offering_screen_content',
+						'id'       => 'rt-product_screen_content',
 						'title'    => __( 'Screen Content' ),
 						'content'  => '',
-						'taxonomy' => 'rt-offering',
+						'taxonomy' => 'rt-product',
 					),
 					/*array(
 						'id' => 'contact_group_overview',
@@ -541,22 +541,22 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					</ul>
 					<?php
 					break;
-				case 'rt-offering_overview':
+				case 'rt-product_overview':
 					?>
 					<p>
-						<?php _e( 'This screen is useful when you have to add custom offerings.You can create, edit, delete teams & select default assignee for each offering.' ); ?>
+						<?php _e( 'This screen is useful when you have to add custom products.You can create, edit, delete teams & select default assignee for each product.' ); ?>
 					</p>
 					<?php
 					break;
-				case 'rt-offering_screen_content':
+				case 'rt-product_screen_content':
 					?>
 					<ul>
-						<li><?php _e( 'Using the left column form, you can create a new offering and select a default assignee for it.' ); ?></li>
-						<li><?php _e( 'On the right column, there are existing offerings listed.' ); ?></li>
-						<li><strong><?php _e( 'Count - ' ); ?></strong><?php _e( 'The number of ' . $cpt_name . ' created for each offering.' ); ?></li>
-						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an ' . $module_name . ' offering is linked to.' ); ?></li>
+						<li><?php _e( 'Using the left column form, you can create a new product and select a default assignee for it.' ); ?></li>
+						<li><?php _e( 'On the right column, there are existing products listed.' ); ?></li>
+						<li><strong><?php _e( 'Count - ' ); ?></strong><?php _e( 'The number of ' . $cpt_name . ' created for each product.' ); ?></li>
+						<li><strong><?php _e( 'Product - ' ); ?></strong><?php _e( 'EDD or WooCommerce product to which an ' . $module_name . ' product is linked to.' ); ?></li>
 						<?php if ( 'Helpdesk' == $module_name ) { ?>
-							<li><strong><?php _e( 'Helpdesk default assignee - ' ); ?></strong><?php _e( 'Staff member to whom all tickets for that offering will be assigned.' ); ?></li>
+							<li><strong><?php _e( 'Helpdesk default assignee - ' ); ?></strong><?php _e( 'Staff member to whom all tickets for that product will be assigned.' ); ?></li>
 						<?php } ?>
 					</ul>
 					<?php

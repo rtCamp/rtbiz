@@ -19,7 +19,7 @@ class Test_Rt_Dashboard extends RT_WP_TestCase  {
 		$this->assertTrue( method_exists( $this->dashboard, 'dashboard_recent_comments_row' ), 'method dashboard_recent_comments_row does not exist in Rtbiz_Dashboard' );
 		$this->assertTrue( method_exists( $this->dashboard, 'dashboard_recent_comments' ), 'method dashboard_recent_comments does not exist in Rtbiz_Dashboard' );
 		$this->assertTrue( method_exists( $this->dashboard, 'dashboard_site_activity' ), 'method dashboard_site_activity does not exist in Rtbiz_Dashboard' );
-		$this->assertTrue( method_exists( $this->dashboard, 'offering_wise_contacts' ), 'method offering_wise_contacts does not exist in Rtbiz_Dashboard' );
+		$this->assertTrue( method_exists( $this->dashboard, 'product_wise_contacts' ), 'method product_wise_contacts does not exist in Rtbiz_Dashboard' );
 		$this->assertTrue( method_exists( $this->dashboard, 'contact_type_wise_contacts' ), 'method contact_type_wise_contacts does not exist in Rtbiz_Dashboard' );
 		$this->assertTrue( method_exists( $this->dashboard, 'department_by_contacts' ), 'method department_by_contacts does not exist in Rtbiz_Dashboard' );
 		$this->assertTrue( method_exists( $this->dashboard, 'dashboard_widget_content' ), 'method dashboard_widget_content does not exist in Rtbiz_Dashboard' );

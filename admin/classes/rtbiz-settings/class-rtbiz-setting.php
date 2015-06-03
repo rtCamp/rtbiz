@@ -50,10 +50,10 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 		}
 
 		public  function rtbiz_on_redux_save( $setting, $old_setting ) {
-			//removed offering sync option
+			//removed product sync option
 			$diff = array();
-			if ( isset( $setting['offering_plugin'] ) && isset( $old_setting['offering_plugin'] ) ) {
-				$diff = array_diff( $setting['offering_plugin'], $old_setting['offering_plugin'] );
+			if ( isset( $setting['product_plugin'] ) && isset( $old_setting['product_plugin'] ) ) {
+				$diff = array_diff( $setting['product_plugin'], $old_setting['product_plugin'] );
 				$diff = array_unique( $diff );
 			}
 
@@ -149,9 +149,9 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			// ACTUAL DECLARATION OF SECTIONS
 			$general_fields = array(
 				array(
-					'id'       => 'offering_plugin',
+					'id'       => 'product_plugin',
 					'title'    => __( 'Offering Sync Option' ),
-					'subtitle' => __( 'Select the plugin you want to use for offering sync.' ),
+					'subtitle' => __( 'Select the plugin you want to use for product sync.' ),
 					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
 					'type'     => 'checkbox',
 					'options'  => array(
