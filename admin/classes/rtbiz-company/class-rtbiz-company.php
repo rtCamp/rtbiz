@@ -194,8 +194,8 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			$cols = array();
 			$cols['cb'] = $columns['cb'];
 			$cols['title'] = __( 'Name' );
-			global $rtbiz_offerings;
-			if ( isset( $rtbiz_offerings ) ) {
+			global $rtbiz_products;
+			if ( isset( $rtbiz_products ) ) {
 				$cols[ 'taxonomy-'.Rt_Products::$product_slug ] = $columns[ 'taxonomy-'.Rt_Products::$product_slug ];
 			}
 			$cols['date'] = $columns['date'];

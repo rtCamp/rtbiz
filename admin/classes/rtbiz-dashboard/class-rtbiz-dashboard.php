@@ -132,11 +132,11 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 				'contact_type_wise_contacts'
 			), $this->screen_id, 'column3' );*/
 
-			//todo: offering move into rtbiz
-			//			if ( isset( $settings['offering_plugin'] ) && 'none' != $settings['offering_plugin'] ) {
-			add_meta_box( 'rtbiz-offering-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RTBIZ_TEXT_DOMAIN ), array(
+			//todo: product move into rtbiz
+			//			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
+			add_meta_box( 'rtbiz-product-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
-				'offering_wise_contacts',
+				'product_wise_contacts',
 			), $this->screen_id, 'column5' );
 			//			}
 
@@ -420,7 +420,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		}
 
 		//todo: check data empty
-		public function offering_wise_contacts( $obj, $args ) {
+		public function product_wise_contacts( $obj, $args ) {
 
 			$taxonomy    = Rt_Products::$product_slug;
 			$terms       = get_terms( $taxonomy );

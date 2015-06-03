@@ -71,15 +71,15 @@ jQuery( document ).ready(function($) {
 
 	}
 
-	jQuery( '.rtbiz_offering_dissmiss' ).click( function (e ) {
+	jQuery( '.rtbiz_product_dissmiss' ).click( function (e ) {
 		e.preventDefault();
 		var param = {
-			action: 'rtbiz_hide_offering_notice'
+			action: 'rtbiz_hide_product_notice'
 		};
 		jQuery.post( rtbiz_ajax_url_admin, param,function(data){
 			data = data.trim();
 			if (data === 'true') {
-				jQuery( '.rtbiz-offering-notice' ).hide();
+				jQuery( '.rtbiz-product-notice' ).hide();
 			}
 		});
 	});
