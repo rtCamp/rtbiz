@@ -6,25 +6,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Rt_Offerings' ) ) {
+if ( ! class_exists( 'Rt_Product' ) ) {
 
 	/**
-	 * Description of class-rt-offering
-	 * To sync WooCommerce/EDD Product With Rt_Offerings taxonomy
+	 * Description of class-rt-product
+	 * To sync WooCommerce/EDD Product With Rt_Product taxonomy
 	 *
 	 * @author dipesh
 	 */
-	class Rt_Offerings {
+	class Rt_Product {
 
 		/**
-		 * Offering taxonomy Slug
+		 * Product taxonomy Slug
 		 * @var string
 		 */
-		static $offering_slug = 'rt-offering';
+		static $product_slug = 'product';
 
-		static $term_product_id_meta_key = '_offering_id';
+		static $term_product_id_meta_key = '_product_id';
 
-		static $term_product_from_meta_key = '_offering_import_from';
+		static $term_product_from_meta_key = '_product_import_from';
 
 		/**
 		 * Product taxonomy labels
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		var $post_types;
 
 		/**
-		 * Offering taxonomy Sync enable
+		 * Product taxonomy Sync enable
 		 * @var array
 		 */
 		var $isSync;
@@ -71,7 +71,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			$this->get_label();
 
 			//Register Product taxonomy
-			add_action( 'init', array( $this, 'register_offering_taxonomy' ), 5 );
+			add_action( 'init', array( $this, 'register_product_taxonomy' ), 5 );
 
 			if ( ! is_object( $taxonomy_metadata ) ) {
 				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
@@ -115,31 +115,31 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
-		 * Get Lable of Offerings taxonomy
+		 * Get Lable of Products taxonomy
 		 * @return array
 		 */
 		public function get_label() {
 			return $this->labels = array(
-				'name' => __( 'Offerings' ),
-				'singular_name' => __( 'Offering' ),
-				'menu_name' => __( 'Offerings' ),
-				'search_items' => __( 'Search Offerings' ),
-				'popular_items' => __( 'Popular Offerings' ),
-				'all_items' => __( 'All Offerings' ),
-				'edit_item' => __( 'Edit Offering' ),
-				'update_item' => __( 'Update Offering' ),
-				'add_new_item' => __( 'Add New Offering' ),
-				'new_item_name' => __( 'New Offering Name' ),
-				'separate_items_with_commas' => __( 'Separate offering with commas' ),
-				'add_or_remove_items' => __( 'Add or remove offering' ),
-				'choose_from_most_used' => __( 'Choose from the most popular offerings' ),
+				'name' => __( 'Products' ),
+				'singular_name' => __( 'Product' ),
+				'menu_name' => __( 'Products' ),
+				'search_items' => __( 'Search Products' ),
+				'popular_items' => __( 'Popular Products' ),
+				'all_items' => __( 'All Products' ),
+				'edit_item' => __( 'Edit Product' ),
+				'update_item' => __( 'Update Product' ),
+				'add_new_item' => __( 'Add New Product' ),
+				'new_item_name' => __( 'New Product Name' ),
+				'separate_items_with_commas' => __( 'Separate product with commas' ),
+				'add_or_remove_items' => __( 'Add or remove product' ),
+				'choose_from_most_used' => __( 'Choose from the most popular product' ),
 			);
 		}
 
 		/**
 		 * Register Product taxonomy if not-exist
 		 */
-		public function register_offering_taxonomy() {
+		public function register_product_taxonomy() {
 			$arg = array(
 				'hierarchical' 				=> true,
 				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
@@ -152,8 +152,8 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				//'rewrite' 				=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
 				'rewrite'                   => true,
 			);
-			$supports = apply_filters( 'rtlib_offerings_support', $this->post_types );
-			register_taxonomy( self::$offering_slug, $supports, $arg );
+			$supports = apply_filters( 'rtlib_products_support', $this->post_types );
+			register_taxonomy( self::$product_slug, $supports, $arg );
 		}
 
 		public function update_post_term_count( $terms, $taxonomy ) {
@@ -213,22 +213,28 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		public function hooks() {
 
 			if ( true === $this->isSync ) {
-				$isSyncOpt = get_option( 'rtbiz_offering_plugin_sync' );
+				$isSyncOpt = get_option( 'rt_product_plugin_sync' );
 				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ) {
-					add_action( 'init', array( $this, 'bulk_insert_offerings' ) );
+					add_action( 'init', array( $this, 'bulk_insert_products' ) );
 				}
-				add_action( 'save_post', array( $this, 'insert_offerings' ) );
+				add_action( 'save_post', array( $this, 'insert_products' ) );
 			}
 			add_action( 'delete_term', array( $this, 'cleanup_meta_after_term_deletion' ), 10, 4 );
-			add_action( 'manage_' . self::$offering_slug . '_custom_column', array( $this, 'manage_offering_column_body' ), 10, 3 );
-			add_filter( 'manage_edit-' . self::$offering_slug . '_columns', array( $this, 'manage_offering_column_header' ) );
+			add_action( 'manage_' . self::$product_slug . '_custom_column', array(
+				$this,
+				'manage_product_column_body',
+			), 10, 3 );
+			add_filter( 'manage_edit-' . self::$product_slug . '_columns', array(
+				$this,
+				'manage_product_column_header',
+			) );
 		}
 
 		/**
-		 * Filter offering as per store select
+		 * Filter product as per store select
 		 */
-		public function offering_filter( $terms, $taxonomies, $args  ) {
-			if ( in_array( self::$offering_slug, $taxonomies ) ) {
+		public function product_filter( $terms, $taxonomies, $args  ) {
+			if ( in_array( self::$product_slug, $taxonomies ) ) {
 				$terms_filter = array();
 				foreach ( $terms as $term ) {
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term->term_id, self::$term_product_from_meta_key, true );
@@ -242,21 +248,21 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
-		 * dd column heading on offering list page
+		 * dd column heading on product list page
 		 * @param $columns
 		 *
 		 * @return mixed
 		 */
-		function manage_offering_column_header( $columns ) {
+		function manage_product_column_header( $columns ) {
 			unset( $columns['posts'] );
 			unset( $columns['slug'] );
-			$columns['offering_count'] = __( 'Count', RT_HD_TEXT_DOMAIN );
-			$columns['product_detail'] = __( 'Product', RT_HD_TEXT_DOMAIN );
-			return apply_filters( 'rt_biz_offerings_columns' , $columns );
+			$columns['product_count'] = __( 'Count' );
+			$columns['product_detail'] = __( 'Product' );
+			return apply_filters( 'rt_product_columns' , $columns );
 		}
 
 		/**
-		 * UI for group List View custom Columns for offerings
+		 * UI for group List View custom Columns for products
 		 *
 		 * @param type $display
 		 * @param type $column
@@ -264,8 +270,8 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 *
 		 * @return type
 		 */
-		function manage_offering_column_body( $display, $column, $term_id ) {
-			$t = get_term( $term_id, Rt_Offerings::$offering_slug );
+		function manage_product_column_body( $display, $column, $term_id ) {
+			$t = get_term( $term_id, Rt_Product::$product_slug );
 			$content = '';
 			switch ( $column ) {
 				case 'product_detail':
@@ -278,7 +284,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 						echo '-';
 					}
 					break;
-				case 'offering_count':
+				case 'product_count':
 					$posttypes = $this->post_types;
 					if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], $posttypes ) ) {
 						$posttypes = array( $_GET['post_type'] );
@@ -289,16 +295,16 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 							'post_type' => $posttype,
 							'post_status' => 'any',
 							'nopaging' => true,
-							Rt_Offerings::$offering_slug  => $t->slug,
+							Rt_Product::$product_slug  => $t->slug,
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content .= ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Offerings::$offering_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content .= ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Product::$product_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
 					}
 
 					break;
 			}
-			return apply_filters( 'rt_biz_offering_column_content', $content, $column, $term_id );
+			return apply_filters( 'rt_product_column_content', $content, $column, $term_id );
 		}
 
 		/**
@@ -314,7 +320,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
-		 * Get taxonomy form offering ID
+		 * Get taxonomy form product ID
 		 *
 		 * @access public
 		 * @param $post_id
@@ -324,20 +330,20 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			global $wpdb;
 			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_product_id_meta_key."' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
-				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$offering_slug );
+				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$product_slug );
 			}
 			return false;
 		}
 
 		/**
-		 * insert_offerings function.
+		 * insert_products function.
 		 *
 		 * @param $post_id
 		 *
 		 * @access public
 		 * @return void
 		 */
-		public function insert_offerings( $post_id ) {
+		public function insert_products( $post_id ) {
 
 			// If this is just a revision, don't.
 			if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) || empty( $_POST['post_type'] ) ) {
@@ -369,7 +375,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 					do {
 						$term = wp_insert_term(
 							$termname, // the term
-							self::$offering_slug, // the taxonomy
+							self::$product_slug, // the taxonomy
 							array(
 								'slug' => $slug.$i,
 							)
@@ -382,7 +388,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 				} else {
 					$term = wp_update_term(
 						$termid, // the term
-						self::$offering_slug, // the taxonomy
+						self::$product_slug, // the taxonomy
 						array(
 							'name' => $termname,
 							'slug' => $slug,
@@ -420,7 +426,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		}
 
 		/**
-		 * bulk_insert_offerings function.
+		 * bulk_insert_products function.
 		 *
 		 * @access public
 		 *
@@ -428,7 +434,7 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 		 *
 		 * @return bool
 		 */
-		public function bulk_insert_offerings( $plugin = array() ) {
+		public function bulk_insert_products( $plugin = array() ) {
 
 			if ( ! empty( $plugin ) ) {
 				$this->pluginName = $plugin;
@@ -438,36 +444,36 @@ if ( ! class_exists( 'Rt_Offerings' ) ) {
 			}
 
 			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'publish' );
-			$offerings_array = get_posts( $args ); // Get Woo Commerce post object
+			$product_array = get_posts( $args ); // Get Woo Commerce post object
 
-			foreach ( $offerings_array as $offering ) {
-				$term = $this->get_taxonomy( $offering->ID );
+			foreach ( $product_array as $product ) {
+				$term = $this->get_taxonomy( $product->ID );
 
 				if ( empty( $term ) ) {
-					$new_term = wp_insert_term( $offering->post_title, self::$offering_slug, array( 'slug' => $offering->post_name ) );
+					$new_term = wp_insert_term( $product->post_title, self::$product_slug, array( 'slug' => $product->post_name ) );
 					if ( ! $new_term instanceof WP_Error ) {
-						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_id_meta_key, $offering->ID, true );
+						Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_id_meta_key, $product->ID, true );
 						if ( ! empty( $this->pluginName ) ) {
-							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $offering->ID ), true );
+							Rt_Lib_Taxonomy_Metadata\add_term_meta( $new_term['term_id'], self::$term_product_from_meta_key, $this->get_product_plugin_by_post( $product->ID ), true );
 						}
 					}
 				}
 			}
-			update_option( 'rtbiz_offering_plugin_sync', 'false' );
+			update_option( 'rt_product_plugin_sync', 'false' );
 
 		}
 
 		/**
 		 *
-		 * delete_offerings_meta function.
+		 * delete_products_meta function.
 		 *
 		 * @param $term_id
 		 *
 		 * @access public
 		 * @return void
 		 */
-		public function delete_offerings_meta( $term_id ) {
-			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Offerings::$term_product_id_meta_key );
+		public function delete_products_meta( $term_id ) {
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, Rt_Product::$term_product_id_meta_key );
 		}
 
 	}
