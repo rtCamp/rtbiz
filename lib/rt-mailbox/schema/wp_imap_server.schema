@@ -1,0 +1,11 @@
+CREATE TABLE %s (
+	id BIGINT(11) NOT NULL AUTO_INCREMENT,
+	server_name VARCHAR(200) NOT NULL,
+	incoming_imap_server VARCHAR(200) NOT NULL,
+	incoming_imap_port VARCHAR(200) NOT NULL,
+	incoming_imap_enc VARCHAR(10) DEFAULT NULL,
+	outgoing_smtp_server VARCHAR(200) NOT NULL,
+	outgoing_smtp_port VARCHAR(200) NOT NULL,
+	outgoing_smtp_enc VARCHAR(10) DEFAULT NULL,
+	PRIMARY KEY  (id)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
