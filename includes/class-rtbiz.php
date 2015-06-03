@@ -112,24 +112,11 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 		}
 
 		public function init_plugin() {
+			require_once RTBIZ_PATH . 'includes/class-rtbiz-posts-to-posts.php';
+			global $rtbiz_posts_to_posts ;
+			// Load p2p library and init
+			$rtbiz_posts_to_posts = new Rtbiz_Post_To_Post();
 
-			require_once RTBIZ_PATH . 'includes/class-rtbiz-plugin-check.php';
-
-			$plugins_dependency = array(
-				'posts-to-posts' => array(
-					'project_type' => 'all',
-					'name'         => esc_html__( 'Posts 2 Posts', RTBIZ_TEXT_DOMAIN ),
-					'desc'         => esc_html__( 'Create many-to-many relationships between all types of posts.', RTBIZ_TEXT_DOMAIN ),
-					'active'       => class_exists( 'P2P_Autoload' ),
-					'filename'     => 'posts-to-posts.php',
-				),
-			);
-
-			$rtbiz_plugin_check = new RtBiz_Plugin_Check( $plugins_dependency );
-
-			if ( ! $rtbiz_plugin_check->rtbiz_check_plugin_dependency() ) {
-				return false;
-			}
 			$this->load_dependencies();
 			$this->set_locale();
 			$this->define_admin_hooks();

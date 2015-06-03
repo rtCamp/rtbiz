@@ -62,7 +62,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			global $taxonomy_metadata;
 			if ( ! class_exists( 'Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata' ) ) {
-				include_once RTBIZ_PATH . 'lib/rt-offerings/taxonomy-metadata.php';
+				include_once RTBIZ_PATH . 'lib/rt-products/taxonomy-metadata.php';
 			}
 
 			if ( ! is_object( $taxonomy_metadata ) ) {

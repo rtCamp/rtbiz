@@ -64,7 +64,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 
 			// for bulk action
 			Rtbiz::$loader->add_action( 'admin_footer-users.php', $this, 'add_export_user_bulk_action' );
-			Rtbiz::$loader->add_action( 'load-users.php', $this, 'rtbiz_callback_rtbiz_bulk_action' );
+//			Rtbiz::$loader->add_action( 'load-users.php', $this, 'rtbiz_callback_rtbiz_bulk_action' );
 
 			rtbiz_register_p2p_connection( $this->post_type, 'user', array(
 				'cardinality'  => 'one-to-one',
