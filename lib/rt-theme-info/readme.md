@@ -1,2 +1,0 @@
-RT Theme Info
-==========
