@@ -387,23 +387,34 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function contact_posts_filter( $query ) {
 			global $wpdb, $rtbiz_acl_model;
-			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && $query->is_main_query() ) {
+
+			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) {
+
+				if ( ! empty( $_GET['fall_back'] ) ) {
+					return ;
+				}
+				$_GET['fall_back'] = 'yes';
+
 				$module_where = isset( $_GET['module'] ) ? "acl.module =  '" . $_GET['module'] . "' and" : '';
 				$sql = 'SELECT DISTINCT(posts.ID) FROM '.$rtbiz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts.' as posts on (p2p.p2p_from = posts.ID )  where ' . $module_where . " acl.permission > 0 and p2p.p2p_type = '".rtbiz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rtbiz_get_contact_post_type()."' ";
 				$contacts = $wpdb->get_col( $sql );
+
 				$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
 				$admin_contact = rtbiz_get_contact_for_wp_user( $module_user );
 				foreach ( $admin_contact as $contact ) {
 					$contacts[] = $contact->ID;
 				}
-				if ( isset( $_GET['rtbiz_contact_group'] ) && 'staff' == $_GET['rtbiz_contact_group'] ) {
+
+				if ( isset( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group'] ) {
 					if ( empty( $contacts ) ) {
 						$contacts = array( -1 );
 					}
 					$query->set( 'post__in', $contacts );
-				} elseif ( isset( $_GET['rtbiz_contact_group'] ) && 'customer' == $_GET['rtbiz_contact_group'] && ! empty( $contacts ) ) {
+				} elseif ( isset( $_GET['contact_group'] ) && 'customer' == $_GET['contact_group'] && ! empty( $contacts ) ) {
 					$query->set( 'post__not_in', $contacts );
 				}
+
+				$_GET['fall_back'] = '';
 			}
 		}
 

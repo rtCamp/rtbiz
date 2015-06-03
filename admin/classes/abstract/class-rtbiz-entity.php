@@ -285,14 +285,12 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			if ( $flag ) {
 				$user = wp_get_current_user();
 				$body = 'Updated by <strong>' . $user->display_name . '</strong> <br/>' . $body;
-				$settings = rtbiz_get_redux_settings();
-				$label = $settings['menu_label'];
 				$data = array(
 					'comment_post_ID' => $post_id,
 					'comment_content' => $body,
 					'comment_type' => 'rt_bot',
 					'comment_approved' => 1,
-					'comment_author' => $label . ' Bot',
+					'comment_author' => 'rtBiz' . ' Bot',
 				);
 				wp_insert_comment( $data );
 			}

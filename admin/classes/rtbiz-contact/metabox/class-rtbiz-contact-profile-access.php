@@ -79,7 +79,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 
 					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
 					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
-						$profile_permissions[ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RT_HD_TEXT_DOMAIN ];
+						$profile_permissions[ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_HD_TEXT_DOMAIN ];
 						$_REQUEST['rtbiz_profile_permissions'][ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_TEXT_DOMAIN ] ;
 					}
 
