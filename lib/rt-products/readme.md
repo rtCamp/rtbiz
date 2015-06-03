@@ -1,7 +1,7 @@
 RT Offerings
 ============
 
-### `class Rt_Offerings`
+### `class Rt_Products`
 
 This class gives a special attribute to link it with other Custom Post Types.
 
@@ -13,7 +13,7 @@ So that we can assign these products to any custom post types that are registere
 
 #### Attributes
 
-##### `static $offering_slug = 'rt-offering'`
+##### `static $product_slug = 'rt-offering'`
 
 Offering taxonomy Slug
 
@@ -52,13 +52,13 @@ Constructor method for the class.
 @param string   $plugin_name - Plugin name from which products need to be synced.
 @param array    $post_types - Array of post types with which Offerings taxonomy needs to be mapped.
 
-@uses Rt_Offerings::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Offerings::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Offerings::auto_loader()
-@uses Rt_Offerings::get_label()
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::auto_loader()
+@uses Rt_Products::get_label()
 @uses Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata()
 @uses Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata::activate()
-@uses Rt_Offerings::hooks()
+@uses Rt_Products::hooks()
 ```
 
 ##### `is_woocommerce_active()`
@@ -74,8 +74,8 @@ Check id Easy Digital Downloads is installed & active or not.
 Get the post type of product according to which plugin is active in WordPress.
 
 ``` php
-@uses Rt_Offerings::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Offerings::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
 ```
 
 ##### `auto_loader()`
@@ -90,12 +90,12 @@ Get Labels of Offerings taxonomy
 @return array
 ```
 
-##### `register_offering_taxonomy()`
+##### `register_product_taxonomy()`
 
 Register Product taxonomy if it doesn't exist
 
 ``` php
-@defined rtlib_offerings_support
+@defined rtlib_products_support
 ```
 
 ##### `update_post_term_count( $terms, $taxonomy )`
@@ -141,9 +141,9 @@ old_offerings_synchronization_enabled function.
 @access public
 @return void
 
-@uses Rt_Offerings::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Offerings::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Offerings::bulk_insert_offerings() - Bult insert of offerings.
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::bulk_insert_products() - Bult insert of offerings.
 ```
 
 ##### `get_taxonomy( $post_id )`
@@ -156,7 +156,7 @@ access public
 @return void
 ```
 
-##### `insert_offerings(  $post_id  )`
+##### `insert_products(  $post_id  )`
 
 insert an offering for a given post.
 
@@ -166,10 +166,10 @@ insert an offering for a given post.
 @access public
 @return void
 
-@uses Rt_Offerings::is_woocommerce_active() - checks if WooCommerce is active or not.
-@uses Rt_Offerings::is_edd_active() - checks if EDD is active or not.
-@uses Rt_Offerings::get_taxonomy()
-@uses Rt_Offerings::check_postid_term_exist()
+@uses Rt_Products::is_woocommerce_active() - checks if WooCommerce is active or not.
+@uses Rt_Products::is_edd_active() - checks if EDD is active or not.
+@uses Rt_Products::get_taxonomy()
+@uses Rt_Products::check_postid_term_exist()
 @uses Rt_Lib_Taxonomy_Metadata\add_term_meta()
 ```
 
@@ -183,17 +183,17 @@ This method checks for any term that exists for given post id or not.
 @param $post_id
 ```
 
-##### `bulk_insert_offerings()`
+##### `bulk_insert_products()`
 
 This method inserts offernigs in bulk.
 
 ``` php
-@uses Rt_Offerings::get_taxonomy()
+@uses Rt_Products::get_taxonomy()
 @uses wp_insert_term()
 @uses Rt_Lib_Taxonomy_Metadata\add_term_meta()
 ```
 
-#### `delete_offerings_meta( $term_id )`
+#### `delete_products_meta( $term_id )`
 
 Deletes offerings meta field for given term ID
 
@@ -211,7 +211,7 @@ Deletes offerings meta field for given term ID
 
 ##### Filters
 
-###### `rtlib_offerings_support`
+###### `rtlib_products_support`
 
 ### How to use
 
@@ -229,5 +229,5 @@ $product_plugin = 'woocommerce';
 /* Post Types to provide Product Sync Support to */
 $post_types = array( 'ticket', 'lead' );
 
-$rtbiz_offerings = new Rt_Offerings( $product_plugin, $terms_caps, $post_types );
+$rtbiz_offerings = new Rt_Products( $product_plugin, $terms_caps, $post_types );
 ```

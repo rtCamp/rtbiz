@@ -58,9 +58,9 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			}
 
 			if ( ! empty( $diff ) ) {
-				update_option( 'rtbiz_offering_plugin_sync', 'true' );
+				update_option( 'rt_product_plugin_sync', 'true' );
 			} else {
-				update_option( 'rtbiz_offering_plugin_sync', 'false' );
+				update_option( 'rt_product_plugin_sync', 'false' );
 			}
 		}
 
