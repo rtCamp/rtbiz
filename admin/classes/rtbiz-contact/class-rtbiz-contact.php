@@ -535,8 +535,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		}
 
 		function rearrange_columns( $columns ) {
-			$columns = parent::rearrange_columns( $columns );
-			return $columns;
+			return parent::rearrange_columns( $columns );
 		}
 
 		/**
