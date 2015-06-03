@@ -21,7 +21,6 @@ if ( ! class_exists( 'Rtbiz_Post_To_Post' ) ) {
 		function __construct() {
 
 			$this->_p2p_load_framework();
-			$this->_p2p_load();
 			add_action( 'wp_loaded', array( $this, '_p2p_init' ) );
 		}
 
