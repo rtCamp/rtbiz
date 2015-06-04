@@ -897,7 +897,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			check_admin_referer( 'bulk-users' );
 			$userids = $_REQUEST['users'];
 			if ( ! empty( $userids ) ) {
-				rtbiz_export_contact( $userids );
+				$this->export_biz_contacts( $userids );
 			}
 			$redirect = 'users.php';
 			$sendback = add_query_arg( array( 'exported' => count( $userids ) ), $redirect );
@@ -934,7 +934,8 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * @return mixed|null
 		 */
 		function export_biz_contact( $id ) {
-			$user = get_user_by( 'id', $id );
+
+			$user = get_userdata( $id );
 			$email = $user->user_email;
 			$post_id = null;
 			$meta_query_args = array(
