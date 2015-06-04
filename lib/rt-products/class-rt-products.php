@@ -254,6 +254,9 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * @return mixed
 		 */
 		function manage_product_column_header( $columns ) {
+			if ( isset( $_GET['post_type'] ) && 'product' == $_GET['post_type'] ) {
+				return $columns;
+			}
 			unset( $columns['posts'] );
 			unset( $columns['slug'] );
 			$columns['product_count'] = __( 'Count' );
