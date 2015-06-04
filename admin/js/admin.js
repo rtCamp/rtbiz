@@ -90,7 +90,7 @@ jQuery( document ).ready(function($) {
 		var id = jQuery( this ).data( 'id' );
 		var nonce = jQuery( this ).next().val();
 		var param = {
-			action: 'rtbiz_exportbiz_contact',
+			action: 'rtbiz_export_contact',
 			id: id,
 			nonce: nonce
 		};

@@ -58,8 +58,8 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			//User integration
 			Rtbiz::$loader->add_action( 'user_register', $this, 'contact_create_for_wp_user' );
 			Rtbiz::$loader->add_action( 'manage_users_custom_column', $this, 'manage_export_user_columns', 15, 3 );
-			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_contact', $this, 'rtbiz_rtbiz_export_contact' );
-			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_all_contacts', $this, 'rtbiz_rtbiz_export_all_contacts' );
+			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_contact', $this, 'export_contact' );
+			Rtbiz::$loader->add_action( 'wp_ajax_rtbiz_export_all_contacts', $this, 'export_all_contacts' );
 			Rtbiz::$loader->add_action( 'admin_notices', $this, 'exported_admin_notice' );
 
 			// for bulk action
@@ -784,13 +784,16 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * @return mixed
 		 */
 		function get_contact_for_wp_user( $user_id ) {
-			return get_posts( array(
+			remove_action( 'pre_get_posts', array( $this, 'contact_posts_filter' ) );
+			$posts =  get_posts( array(
 				'connected_type'  => $this->post_type . '_to_user',
 				'connected_items' => $user_id,
 				'post_type'       => $this->post_type,
 				'post_status'     => 'any',
 				'nopaging'        => true,
 			) );
+			add_action('pre_get_posts', array( $this, 'contact_posts_filter' ) );
+			return $posts;
 		}
 
 		/**
@@ -836,7 +839,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function export_contact() {
 			check_ajax_referer( 'rt-biz-export-'.$_POST['id'], 'nonce' );
 			$return_array = array();
-			$postid = $this->rtbiz_exportbiz_contact( $_POST['id'] );
+			$postid = $this->export_biz_contact( $_POST['id'] );
 			if ( ! empty( $postid ) ) {
 				$post = get_post( $postid );
 				$return_array['html'] = '<a href="'.get_edit_post_link( $postid ).'">'.$post->post_title.'</a>';
