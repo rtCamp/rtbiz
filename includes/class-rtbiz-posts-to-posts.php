@@ -22,6 +22,21 @@ if ( ! class_exists( 'Rtbiz_Post_To_Post' ) ) {
 
 			$this->_p2p_load_framework();
 			add_action( 'wp_loaded', array( $this, '_p2p_init' ) );
+			add_action( 'admin_notices', array( $this, 'maybe_install' ) );
+		}
+
+		function maybe_install() {
+			if ( !current_user_can( 'manage_options' ) )
+				return;
+
+			$current_ver = get_option( 'p2p_storage' );
+
+			if ( $current_ver == P2P_Storage::$version )
+				return;
+
+			P2P_Storage::install();
+
+			update_option( 'p2p_storage', P2P_Storage::$version );
 		}
 
 		function _p2p_load() {
