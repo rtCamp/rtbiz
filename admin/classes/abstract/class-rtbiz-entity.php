@@ -276,9 +276,12 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 					$newval = $_POST[ $meta_key ][ $field['key'] ];
 					if ( $val != $newval ) {
 						$difftxt = rtbiz_text_diff( $val, $newval );
-						$skip_enter = str_replace( 'Enter', '', $field['label'] );
-						$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
-						$flag = true;
+						$difftxt = trim( $difftxt );
+						if ( ! empty( $difftxt ) ) {
+							$skip_enter = str_replace( 'Enter', '', $field[ 'label' ] );
+							$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
+							$flag = true;
+						}
 					}
 				}
 			}
