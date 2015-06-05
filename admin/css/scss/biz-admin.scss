@@ -1,0 +1,156 @@
+.delete_row {
+    position: relative;
+    display: block;
+    float: right;
+    text-align: center;
+    color: #FFF;
+    background-color: #000;
+    border-radius: 100%;
+    padding: 0 5px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+#divAssignList .delete_row {
+    margin-left: -15px;
+    margin-top: -10px;
+}
+
+#divAssignList .contact-list {
+    display: inline-block;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.rtbiz_acl_other_option{
+    margin-bottom: 10px;
+}
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+    position: absolute;
+    left: -18px;
+    margin-top: -2px;
+    -webkit-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out;
+}
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+    background: none;
+    color: #bbb;
+    content: '\f153';
+    display: block !important;
+    font: normal 16px/1 'dashicons';
+    speak: none;
+    height: 20px;
+    text-align: center;
+    width: 20px;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:hover:before {
+    color: #c00;
+}
+
+.rtbiz-validation-error{
+    border: 1px solid red !important;
+}
+
+.rtbiz-error{
+    color: red;
+}
+
+.rtbiz-success{
+    color: green;
+}
+
+.contact-list img, .ac-assign-selected img{
+    border-radius: 12px;
+}
+
+/* Smartphone */
+@media screen and (max-width: 600px) {
+    /* Make the close icon larger for tappability. */
+    #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
+        font-size: 20px;
+        margin: 0;
+    }
+}
+
+.welcome-panel .welcome-networking:before {
+    content: "\f325";
+}
+
+.welcome-panel .welcome-groups:before {
+    content: "\f307";
+}
+
+.welcome-panel .welcome-admin-users:before {
+    content: "\f110";
+}
+
+.welcome-panel .welcome-admin-home:before {
+    content: "\f102";
+}
+
+.welcome-panel .welcome-lock:before {
+    content: "\f160";
+}
+
+.welcome-panel .welcome-universal-access-alt:before {
+    content: "\f507";
+}
+
+.rtbiz_product_dissmiss{
+    right: 50px;
+    position: absolute;
+}
+
+.rtbiz-exporter-message{
+    margin-left: 10px;
+    color: green;
+}
+
+#rtbiz-contact-importer-bar, .contact-update{
+    margin-top: 10px;
+}
+
+.rtbiz-import-contact-warning span{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rtbiz-hide{
+    display: none;
+}
+
+p.rtbiz-form-group {
+    flex: 1 50%;
+    max-width: 50%;
+}
+
+p.rtbiz-form-group.rtbiz-form-checkbox label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.rtbiz-category-group{
+    display: flex;
+    flex-flow: row wrap;
+}
+
+p.rtbiz-form-group label{
+    display: block;
+    margin-bottom: 5px;
+}
+
+.rtbiz-form-group input[type="checkbox"]{
+    width: auto;
+}
+
+.rtbiz-form-group input,.rtbiz-form-group textarea {
+    width: 80%;
+}
+
+#rtbiz-additional-detail-meta-box div h3.rtbiz-category-title{
+    padding-left: 0;
+}

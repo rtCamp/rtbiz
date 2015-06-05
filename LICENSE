@@ -163,8 +163,8 @@ form) with the major components (compiler, kernel, and so on) of the
 operating system on which the executable runs, unless that component
 itself accompanies the executable.
 
-If distribution of executable or object code is made by offering
-access to copy from a designated place, then offering equivalent
+If distribution of executable or object code is made by product
+access to copy from a designated place, then product equivalent
 access to copy the source code from the same place counts as
 distribution of the source code, even though third parties are not
 compelled to copy the source along with the object code.

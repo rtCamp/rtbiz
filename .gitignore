@@ -1,5 +1,10 @@
-*/.sass-cache/*
+.sass-cache
 .idea/
 _book
 node_modules
 *.log
+*.DS_Store
+*.swp
+*.bak
+npm-debug.log
+nbproject
