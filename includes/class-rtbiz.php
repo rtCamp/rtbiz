@@ -155,12 +155,9 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/rtbiz-contact/metabox' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/models' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/abstract/' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/abstract/metabox' );
-			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/rtbiz-settings/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/metabox' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
 

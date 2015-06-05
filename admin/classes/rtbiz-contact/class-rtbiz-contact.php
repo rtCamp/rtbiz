@@ -388,7 +388,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function contact_posts_filter( $query ) {
 			global $wpdb, $rtbiz_acl_model;
 
-			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) {
+			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && rtbiz_get_contact_post_type() == $query->get( 'post_type' ) ) {
 
 				if ( ! empty( $_GET['fall_back'] ) ) {
 					return ;
