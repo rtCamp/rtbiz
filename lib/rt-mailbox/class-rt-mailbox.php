@@ -644,6 +644,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							}
 						} else {
 							$mailboxid = $rt_mail_settings->add_user_google_ac( rtmb_encrypt_decrypt( $password ), $email, maybe_serialize( $email_data ), '', $email_type, $imap_server, $module );
+							do_action( 'rt_mailbox_add_mailbox', $email, $module );
 						}
 						if ( ! empty( $mailboxid ) ) {
 							ob_start();
@@ -829,6 +830,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				global $rt_mail_crons, $rt_mail_settings;
 				$status = $rt_mail_settings->delete_user_google_ac( $dataobj['email'], $dataobj['module'], $dataobj['mailboxid'] );
 				if ( $status ) {
+					do_action( 'rt_mailbox_remove_mailbox', $dataobj['email'], $dataobj['module'] );
 					$result['status'] = true;
 					$result['moduleid'] = $dataobj['mailboxid'];
 				} else {
