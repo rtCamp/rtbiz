@@ -14,7 +14,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		/**
 		 * @var $slug - team slug
 		 */
-		static $slug = 'rt-team';
+		static $slug = 'team';
 
 		/**
 		 * @var $labels - Lable array
