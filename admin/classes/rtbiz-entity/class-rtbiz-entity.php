@@ -42,7 +42,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		/**
 		 * @var string - Meta Key Prefix
 		 */
-		public static $meta_key_prefix = 'rtbiz_';
+		public static $meta_key_prefix = '_rtbiz_';
 
 		/**
 		 * @param $post_type
