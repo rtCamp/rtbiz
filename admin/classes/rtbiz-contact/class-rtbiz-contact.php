@@ -344,9 +344,9 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( current_user_can( $admin_cap ) ) {
 				$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
 			}
-			$custom_order['rt-productdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-productdiv'];
+			$custom_order['productdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['productdiv'];
 			if ( isset( $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-teamdiv'] ) ) {
-				$custom_order['rt-teamdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['rt-teamdiv'];
+				$custom_order['teamdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['teamdiv'];
 			}
 			$wp_meta_boxes[ $this->post_type ]['side']['core'] = $custom_order;
 			unset( $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'] );
