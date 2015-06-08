@@ -190,9 +190,9 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 */
 		function save_team( $term_id ) {
 			if ( isset( $_POST[ self::$slug ] ) ) {
-				$prev_value = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '-meta', true );
+				$prev_value = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '_meta', true );
 				$meta_value = (array) $_POST[ self::$slug ];
-				Rt_Lib_Taxonomy_Metadata\update_term_meta( $term_id, self::$slug . '-meta', $meta_value, $prev_value );
+				Rt_Lib_Taxonomy_Metadata\update_term_meta( $term_id, self::$slug . '_meta', $meta_value, $prev_value );
 				if ( isset( $_POST['_wp_original_http_referer'] ) ) {
 					wp_safe_redirect( $_POST['_wp_original_http_referer'] );
 					exit();
@@ -261,7 +261,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				return false;
 			}
 
-			$term_meta = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '-meta', true );
+			$term_meta = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$slug . '_meta', true );
 			if ( ! empty( $term_meta ) ) {
 				if ( ! empty( $key ) ) {
 					return isset( $term_meta[ $key ] ) ? $term_meta[ $key ] : false;
