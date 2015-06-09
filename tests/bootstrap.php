@@ -19,7 +19,7 @@ function _manually_load_plugin() {
 	define( 'AUTH_KEY', '1234567890' );
 	define( 'SECURE_AUTH_KEY', '1234567890' );
 	require_once dirname( __FILE__ ) . '/../../posts-to-posts/posts-to-posts.php';
-	require_once dirname( __FILE__ ) . '/../index.php';
+	require_once dirname( __FILE__ ) . '/../rtbiz.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
