@@ -20,11 +20,11 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * Product taxonomy Slug
 		 * @var string
 		 */
-		static $product_slug = 'product';
+		static $product_slug = 'rt-product';
 
-		static $term_product_id_meta_key = 'product_id';
+		static $term_product_id_meta_key = '_product_id';
 
-		static $term_product_from_meta_key = 'product_import_from';
+		static $term_product_from_meta_key = '_product_import_from';
 
 		/**
 		 * Product taxonomy labels
