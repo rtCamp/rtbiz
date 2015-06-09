@@ -99,7 +99,8 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 			$result = array();
 			if ( $this->is_woocommerce_active( ) ) {
 				$result[] = 'product';
-			} else if ( $this->is_edd_active( ) ) {
+			}
+			if ( $this->is_edd_active( ) ) {
 				$result[] = 'download';
 			}
 			return $result;
