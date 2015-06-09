@@ -18,7 +18,7 @@
  * Description:       WordPress for Business
  * Version:           1.3
  * Author:            rtCamp
- * Author URI:        http://example.com/
+ * Author URI:        https://rtcamp.com/
  * License:           GPL-2.0+
  * License URI:       https://rtcamp.com/
  * Text Domain:       rt-biz
