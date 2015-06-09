@@ -861,9 +861,8 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * Get mailbox list.
 		 */
-		public function rtmailbox_list_all() {
+		public function rtmailbox_list_all( $rtbiz_modules ) {
 			global $rt_mail_settings;
-			$rtbiz_modules = rt_biz_get_modules();
 			$mailbox_list = $rt_mail_settings->get_all_mailbox();
 
 			if ( isset( $mailbox_list ) && ! empty( $mailbox_list ) ) {
