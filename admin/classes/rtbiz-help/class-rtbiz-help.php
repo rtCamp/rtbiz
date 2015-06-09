@@ -182,13 +182,13 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 						'id'       => 'rt-product_overview',
 						'title'    => __( 'Overview' ),
 						'content'  => '',
-						'taxonomy' => 'rt-product',
+						'taxonomy' => Rt_Products::$product_slug,
 					),
 					array(
 						'id'       => 'rt-product_screen_content',
 						'title'    => __( 'Screen Content' ),
 						'content'  => '',
-						'taxonomy' => 'rt-product',
+						'taxonomy' => Rt_Products::$product_slug,
 					),
 					/*array(
 						'id' => 'contact_group_overview',
