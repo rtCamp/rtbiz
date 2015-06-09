@@ -37,7 +37,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 					$rtbiz_attributes, $rtbiz_access_control, $rtbiz_p2p,
 			        $rtbiz_contact, $rtbiz_company, $rtbiz_team,
 			        $rtbiz_settings, $rtbiz_dashboard, $rt_migration,
-			        $rtbiz_reports;
+			        $rtbiz_reports, $rtbiz_help;
 
 			$rtbiz_acl_model = new Rtbiz_ACL_Model();
 
@@ -69,6 +69,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 				$taxonomy_metadata->activate();
 			}
+
+			$rtbiz_help = new Rtbiz_Help();
 
 		}
 

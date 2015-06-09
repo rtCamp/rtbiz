@@ -138,31 +138,31 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 						'id' => 'acl_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rtbiz::$access_control_slug,
+						'page' => Rtbiz_Access_Control::$page_slug,
 					),
 					array(
 						'id' => 'acl_roles',
 						'title' => __( 'Roles' ),
 						'content' => '',
-						'page' => Rtbiz::$access_control_slug,
+						'page' => Rtbiz_Access_Control::$page_slug,
 					),
 					array(
 						'id' => 'settings_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rtbiz::$settings_slug,
+						'page' => Rtbiz_Access_Control::$page_slug,
 					),
 					array(
 						'id' => 'attributes_overview',
 						'title' => __( 'Overview' ),
 						'content' => '',
-						'page' => Rtbiz_Attributes::$attributes_page_slug,
+						'page' => Rtbiz_Attributes::$page_slug,
 					),
 					array(
 						'id' => 'attributes_screen_content',
 						'title' => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rtbiz_Attributes::$attributes_page_slug,
+						'page' => Rtbiz_Attributes::$page_slug,
 					),
 				),
 				'edit-tags.php' => array(
@@ -270,7 +270,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 			// Some Extra content with logic
 			$module_name = 'rtBiz';
 			$cpt_name = 'post';
-			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && ! empty( $_REQUEST['module'] ) && RT_BIZ_HD_TEXT_DOMAIN == $_REQUEST['module'] ) {
+			if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) && ! empty( $_REQUEST['module'] ) && RTBIZ_HD_TEXT_DOMAIN == $_REQUEST['module'] ) {
 				$module_name = 'Helpdesk';
 				$cpt_name = 'tickets';
 			}
