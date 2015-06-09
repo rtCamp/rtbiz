@@ -9,7 +9,7 @@
  * that starts the plugin.
  *
  * @link              https://rtcamp.com/
- * @since             1.3
+ * @since             1.3.1
  * @package           rtbiz
  *
  * @wordpress-plugin
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'RTBIZ_VERSION' ) ) {
-	define( 'RTBIZ_VERSION', '1.3' );
+	define( 'RTBIZ_VERSION', '1.3.1' );
 }
 
 if ( ! defined( 'RTBIZ_TEXT_DOMAIN' ) ) {
