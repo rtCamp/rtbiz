@@ -88,7 +88,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			if ( is_admin() ) {
 				Rtbiz::$loader->add_action( 'manage_' . $this->post_type . '_posts_columns', $this, 'post_table_columns' );
 				Rtbiz::$loader->add_action( 'manage_' . $this->post_type . '_posts_custom_column', $this, 'manage_post_table_columns', 10, 2 );
-				Rtbiz::$loader->add_action( 'manage_edit-' . $this->post_type . '_columns', $this, 'rearrange_columns', 10 );
+				Rtbiz::$loader->add_action( 'manage_edit-' . $this->post_type . '_columns', $this, 'rearrange_columns', 20 );
 
 				Rtbiz::$loader->add_action( 'add_meta_boxes', $this, 'entity_meta_boxes' );
 				Rtbiz::$loader->add_action( 'admin_init', $this, 'entity_meta_boxes' );
@@ -278,7 +278,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 						$difftxt = rtbiz_text_diff( $val, $newval );
 						$difftxt = trim( $difftxt );
 						if ( ! empty( $difftxt ) ) {
-							$skip_enter = str_replace( 'Enter', '', $field[ 'label' ] );
+							$skip_enter = str_replace( 'Enter', '', $field['label'] );
 							$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
 							$flag = true;
 						}
