@@ -3,8 +3,8 @@ Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, 
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
-Tested up to:      4.1
-Stable tag:        1.2.20
+Tested up to:      4.2
+Stable tag:        1.3
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,11 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.3 =
+* Skeleton update
+* Slugs update
+* Posts2Posts Lib added ( plugin dependency removed )
 
 = 1.2.20 =
 * Contact Hooks change
