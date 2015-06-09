@@ -311,7 +311,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @return string
 		 */
 		function get_taxonomy_name( $attribute ) {
-			return 'rt_' . $this->sanitize_taxonomy( $attribute );
+			return 'rt-' . $this->sanitize_taxonomy( $attribute );
 		}
 
 		/**
