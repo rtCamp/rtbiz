@@ -714,7 +714,8 @@ function rtbiz_get_product_selection_setting() {
  */
 function rtbiz_mailbox_list_view() {
 	global $rtbiz_mailBox;
-	$rtbiz_mailBox->rtmailbox_list_all();
+	$rtbiz_modules = rtbiz_get_modules();
+	$rtbiz_mailBox->rtmailbox_list_all( $rtbiz_modules );
 }
 
 

@@ -594,7 +594,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-groups">' . __( 'View your' ) . ' ' . $contact_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
 								<li><?php printf( '<a href="%s" class="welcome-icon welcome-admin-home">' . __( 'View your' ) . ' ' . $company_labels['name'] . '</a>', admin_url( 'edit.php?post_type=' . rtbiz_get_company_post_type() ) ); ?></li>
 							<?php } ?>
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', 'https://rtcamp.com/rtbiz/docs/' ); ?></li>
+							<li><?php printf( '<a href="%s" class="welcome-icon welcome-learn-more">' . __( 'Learn more about getting started' ) . '</a>', 'http://docs.rtcamp.com/rtbiz/' ); ?></li>
 						</ul>
 					</div>
 				</div>
