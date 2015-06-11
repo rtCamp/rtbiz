@@ -309,8 +309,10 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 					'category' => 'HR',
 				),
 			);
+		}
 
-			$this->meta_fields = apply_filters( 'rtbiz_contact_meta_fields', $this->meta_fields );
+		public function get_meta_fields() {
+			return apply_filters( 'rtbiz_contact_meta_fields', $this->meta_fields );
 		}
 
 		/**
@@ -542,12 +544,15 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * @param $post_id
 		 */
 		function save_meta_values( $post_id, $post ) {
+
+			$meta_fields = $this->get_meta_fields();
+
 			if ( isset( $_POST['contact_meta'][ self::$primary_email_key ] ) && empty( $_POST['contact_meta'][ self::$primary_email_key ] ) ) {
 				update_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'], true );
 			} else {
 				delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'] );
 			}
-			foreach ( $this->meta_fields as $field ) {
+			foreach ( $meta_fields as $field ) {
 				if ( isset( $_POST['contact_meta'][ $field['key'] ] ) && ! empty( $_POST['contact_meta'][ $field['key'] ] ) ) {
 					if ( $field['key'] == self::$primary_email_key ) {
 						if ( ! rtbiz_is_primary_email_unique( $_POST['contact_meta'][ $field['key'] ], $_POST['post_ID'] ) ) {
@@ -784,14 +789,14 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function get_contact_for_wp_user( $user_id ) {
 			remove_action( 'pre_get_posts', array( $this, 'contact_posts_filter' ) );
-			$posts =  get_posts( array(
+			$posts = get_posts( array(
 				'connected_type'  => $this->post_type . '_to_user',
 				'connected_items' => $user_id,
 				'post_type'       => $this->post_type,
 				'post_status'     => 'any',
 				'nopaging'        => true,
 			) );
-			add_action('pre_get_posts', array( $this, 'contact_posts_filter' ) );
+			add_action( 'pre_get_posts', array( $this, 'contact_posts_filter' ) );
 			return $posts;
 		}
 

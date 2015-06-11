@@ -80,6 +80,10 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			register_post_type( $name, $args );
 		}
 
+		public function get_meta_fields(){
+			return $this->meta_fields;
+		}
+
 		/**
 		 *  Actions/Filtes used by Rtbiz_Entity
 		 */
@@ -214,6 +218,9 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			if ( $this->post_type != $_POST['post_type'] ) {
 				return;
 			}
+
+			$meta_fields = $this->get_meta_fields();
+
 			$body = '';
 			$flag = false;
 			$post = get_post( $post_id );
@@ -242,7 +249,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 					break;
 			}
 
-			foreach ( $this->meta_fields as $field ) {
+			foreach ( $meta_fields as $field ) {
 				if ( ! isset( $_POST[ $meta_key ][ $field['key'] ] ) ) {
 					continue;
 				}
