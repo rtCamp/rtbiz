@@ -234,7 +234,7 @@ function rtbiz_get_contact_labels() {
  */
 function rtbiz_get_contact_meta_fields() {
 	global $rtbiz_contact;
-	return $rtbiz_contact->meta_fields;
+	return $rtbiz_contact->get_meta_fields();
 }
 
 function rtbiz_is_primary_email_unique( $email, $postid = null ) {
