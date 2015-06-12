@@ -151,7 +151,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 				'show_in_nav_menus' 		=> true,
 				'show_admin_column'			=> true,
 				//'rewrite' 				=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
-				'rewrite'                   => true,
+				'rewrite'                   => false,
 			);
 			$supports = apply_filters( 'rtlib_products_support', $this->post_types );
 			register_taxonomy( self::$product_slug, $supports, $arg );
