@@ -145,6 +145,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 					apply_filters(
 						'rt_wp_attributes_taxonomy_args_' . $name,
 						array(
+						'public'                    => false,
 						'hierarchical' 				=> $hierarchical,
 						'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
 						'labels' => array(
@@ -165,7 +166,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 						'show_in_nav_menus' 		=> $show_in_nav_menus,
 						'show_admin_column'			=> $show_admin_column,
 						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
-						'rewrite' => true,
+						'rewrite' => false,
 						)
 					)
 				);
