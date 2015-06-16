@@ -77,7 +77,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => true, 'show_ui' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
+			$arg = array( 'public' => false, 'show_ui' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_team_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
