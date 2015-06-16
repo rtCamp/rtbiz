@@ -142,6 +142,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 */
 		public function register_product_taxonomy() {
 			$arg = array(
+				'public'                    => false,
 				'hierarchical' 				=> true,
 				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
 				'labels'                    => $this->labels,
