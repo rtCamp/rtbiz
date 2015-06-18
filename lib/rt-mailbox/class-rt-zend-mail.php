@@ -709,8 +709,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					foreach ( $attachements as $a ) {
-						if ( ! empty( $a['xattachmentid'] ) ) {
-							$htmlBody = str_replace( 'src="cid:' . $a['xattachmentid'] . '"', 'src="' . $a['url'] . '"', $htmlBody );
+						if ( ! empty( $a['Content-ID'] ) ){
+							$htmlBody = str_replace( 'src="cid:' . $a['Content-ID'] . '"', 'src="' . $a['url'] . '"', $htmlBody );
 						}
 					}
 
@@ -852,9 +852,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$file['filename']      = $filename;
 						$file['extn']          = $extn;
 						$file['type']          = $ContentType;
-						if ( $part->__isset( 'xattachmentid' ) ) {
-							$tmpval = $part->getHeader( 'xattachmentid' );
-							$file['xattachmentid'] = $tmpval->getFieldValue();
+
+						if ( $part->__isset( 'Content-ID' ) ) {
+							$tmpval = $part->getHeader( 'Content-ID' );
+							$file['Content-ID'] = trim( $tmpval->getFieldValue(), '<>' );
 						}
 						$responce['attachements'][]        = $file;
 					} else {
