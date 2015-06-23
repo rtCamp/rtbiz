@@ -1,6 +1,7 @@
 
 #startImporting, .rt-lib-spinner {
-	display: none
+	display: none;
+	vertical-align: -webkit-baseline-middle;
 }
 
 .nav-tab-wrapper{
@@ -18,12 +19,17 @@
 }
 
 #map_mapping_import{
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 #sucessmessage{
 	margin-left: 15px;
 }
+
+input#futureYes, input#futureNo{
+	vertical-align: middle;
+}
+
 
 .myerror {
 	background-color: #ffebe8;
