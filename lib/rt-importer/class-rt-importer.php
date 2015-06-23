@@ -68,7 +68,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$this->rt_importer_ajax_hooks();
 		}
 
-		public function init(){
+		public function init() {
 			global $rtlib_gravity_fields_mapping_model, $rtlib_importer_mapper;
 
 			$rtlib_gravity_fields_mapping_model = new Rtlib_Gravity_Fields_Mapping_Model();
@@ -87,7 +87,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$updateDB->do_upgrade();
 		}
 
-		public  function hook(){
+		public  function hook() {
 			$this->field_array = apply_filters( 'rtlib_importer_fields', $this->field_array );
 			$this->post_type   = apply_filters( 'rtlib_importer_posttype', $this->post_type );
 			if ( $this->pageflag ) {
@@ -96,7 +96,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 
-		function init_importer_help(){
+		function init_importer_help() {
 			global $rt_importer_help;
 			$rt_importer_help = new Rt_Importer_Help();
 		}
@@ -145,7 +145,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		<?php
 		}
 
-		public function importer_tab(){
+		public function importer_tab() {
 			// Declare local variables
 			$tabs_html    = '';
 
@@ -241,7 +241,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			echo json_encode( $wpdb->get_results( $sql, ARRAY_A ) );
 		}
 
-		public function ui(){
+		public function ui() {
 			?>
 			<form method="post" action="" enctype="multipart/form-data" >
 				<?php $this->importer_ui( null, true ); ?>
@@ -249,7 +249,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			<?php
 		}
 
-		public function importer_ui( $module = null, $all_module = false ){
+		public function importer_ui( $module = null, $all_module = false ) {
 			$this->load_handlebars_templates(); ?>
 
 			<?php
@@ -284,8 +284,15 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			} else {
 				$class = '';
 			}
-			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . '>';
-			$form_posttype .= '<option value="">' . __( 'Please select attribute' ) . '</option>';
+			$countFlag = ( 1 == count( $this->post_type ) );
+			$style = '';
+			if ( $countFlag ) {
+				$style = 'style=display:none;';
+			}
+			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . ' '. $style .'>';
+			if ( ! $countFlag ) {
+				$form_posttype .= '<option value="">' . __( 'Please select attribute' ) . '</option>';
+			}
 			foreach ( $this->post_type as $cpt_slug => $cpt_label ) {
 				if ( $all_module || $cpt_label['module'] == $module ) {
 					if ( isset( $_POST['mapPostType'] ) && intval( $_POST['mapPostType'] ) == $cpt_slug ) {
@@ -296,7 +303,8 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					}
 					$form_posttype .= '<option value="' . $cpt_slug . '"' . $selected . '>' . $cpt_label['lable'] . '</option>';
 				}
-			} ?>
+			}
+			?>
 			<div class="wrap">
 				<?php if ( $this->pageflag ) {
 					echo '<h2>' . __( 'Importer' ) . '</h2>'; }
@@ -340,7 +348,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			</div><?php
 		}
 
-		public function rt_importer_ajax_hooks(){
+		public function rt_importer_ajax_hooks() {
 			add_action( 'wp_ajax_rtlib_import', array( $this, 'rtlib_importer' ) ); // Display mapping field form
 			add_action( 'wp_ajax_rtlib_map_import', array( $this, 'rtlib_map_import_callback' ) ); // import alll record & convert as CPT
 			add_action( 'wp_ajax_rtlib_gravity_dummy_data', array( $this, 'get_random_gravity_data' ) ); // Dummy data deisplay
@@ -627,7 +635,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			die();
 		}
 
-		function rtlib_map_import_callback(){
+		function rtlib_map_import_callback() {
 
 			if ( ! isset( $_REQUEST['gravity_lead_id'] ) ) {
 				echo json_encode( array( array( 'status' => false ) ) );
@@ -649,7 +657,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			return do_action( 'rtlib_map_import_callback', $map_data, $map_source_form_id, $map_index_lead_id, $type, $forceImport );
 		}
 
-		public function rtlib_add_custome_field( $data ){
+		public function rtlib_add_custome_field( $data ) {
 
 			global $rtlib_gravity_fields_mapping_model;
 			$form_id       = $data['id'];
@@ -660,7 +668,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			return $data;
 		}
 
-		public function gravity_form_lead_meta( $form_id, $gr_lead ){
+		public function gravity_form_lead_meta( $form_id, $gr_lead ) {
 			global $rtlib_gravity_fields_mapping_model;
 			$gr_lead_id = absint( $gr_lead['id'] );
 			$mappings   = $rtlib_gravity_fields_mapping_model->get_mapping( $form_id );
@@ -669,7 +677,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 		}
 
-		public function rtlib_auto_import( $lead, $form ){
+		public function rtlib_auto_import( $lead, $form ) {
 			//gform_after_submission
 			global $rtlib_gravity_fields_mapping_model;
 			$form_id       = $form['id'];
@@ -749,8 +757,9 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					$data  = array(
 						'mapping' => $map_data,
 						'post_type' => $post_type,
-						'module_id' => $module,);
-					$where = array( 'form_id' => $form_id, );
+						'module_id' => $module,
+					);
+					$where = array( 'form_id' => $form_id );
 					$rtlib_gravity_fields_mapping_model->update_mapping( $data, $where );
 				} else {
 					$data = array(
@@ -886,7 +895,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$_gform_lead_meta = array();
 		}
 
-		public function enqueue_scripts(){
+		public function enqueue_scripts() {
 			if ( ! wp_script_is( 'jquery-ui-progressbar' ) ) {
 				wp_enqueue_script( 'jquery-ui-progressbar', '', array(
 					'jquery-ui-widget',
