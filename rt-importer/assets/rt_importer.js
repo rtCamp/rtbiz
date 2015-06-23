@@ -1,8 +1,9 @@
 jQuery( document ).ready( function() {
 	var count = 1;
-	var sucessCount = 0;
+	var successCount = 0;
 	var failCount = 0;
 	var forceImport = false;
+	var arr_failed_lead = {};
 
 	jQuery.rtImporter = {
 		init: function(){
@@ -30,7 +31,7 @@ jQuery( document ).ready( function() {
 				};
 
 				jQuery.post( ajaxurl, data, function ( response ) {
-					sucessCount = 0;
+					successCount = 0;
 					failCount = 0;
 					forceImport = false;
 					jQuery( '#mapping-form' ).html( response );
@@ -357,10 +358,10 @@ jQuery( document ).ready( function() {
 			ajaxdata.gravity_lead_id = tmpArray;
 			jQuery.post( ajaxurl, ajaxdata,function ( response ) {
 				jQuery.each( response, function ( ind, obj ) {
-					jQuery( '#progressbar' ).progressbar( 'option', 'value', sucessCount + failCount + 1 );
+					jQuery( '#progressbar' ).progressbar( 'option', 'value', successCount + failCount + 1 );
 					if ( obj.status ) {
-						sucessCount ++;
-						jQuery( '#sucessfullyImported' ).html( sucessCount );
+						successCount ++;
+						jQuery( '#sucessfullyImported' ).html( successCount );
 
 					} else {
 						failCount ++;
@@ -373,7 +374,7 @@ jQuery( document ).ready( function() {
 					jQuery.rtImporter.do_ajax_in_loop( ajaxdata, rCount );
 				}
 			} ).fail( function () {
-				jQuery( '#progressbar' ).progressbar( 'option', 'value', sucessCount + failCount + lastCount );
+				jQuery( '#progressbar' ).progressbar( 'option', 'value', successCount + failCount + lastCount );
 				failCount += lastCount;
 				jQuery( '#failImported' ).html( failCount );
 				jQuery.each( ajaxdata.gravity_lead_id, function ( ind, obj ) {
