@@ -473,7 +473,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				<input type="hidden" name="mapPostType" id="mapPostType" value="<?php echo esc_attr( $post_type ); ?>"/>
 				<input type="hidden" name="mapSourceType" id="mapSourceType" value="<?php echo esc_attr( $_REQUEST['type'] ); ?>"/>
 				<input type="hidden" name="mapEntryCount" id="mapEntryCount" value="<?php echo esc_attr( $form_count['total'] ); ?>"/>
-				<table class="wp-list-table widefat fixed posts" >
+				<table class="wp-list-table widefat fixed posts rt-importer" >
 					<thead>
 						<tr>
 							<th scope="row"><?php _e( 'Form field name' ); ?></th>
