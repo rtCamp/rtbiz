@@ -205,7 +205,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return string
 		 */
-		function try_imap_connect( $host, $port, $ssl ){
+		function try_imap_connect( $host, $port, $ssl ) {
 			$this->imap = new Zend\Mail\Protocol\Imap();
 			return $this->imap->connect( $host, $port, $ssl );
 		}
@@ -244,7 +244,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$smtp_args['host']              = 'smtp.gmail.com';
 					$smtp_args['port']              = 465;
 					$smtp_args['connection_class']  = 'oauth2';
-					$smtp_args['connection_config'] = array( 'xoauth2_request' => $this->authString, 'ssl' => 'ssl', );
+					$smtp_args['connection_config'] = array( 'xoauth2_request' => $this->authString, 'ssl' => 'ssl' );
 					break;
 				case 'imap':
 					global $rt_imap_server_model;
@@ -627,7 +627,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tTo->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to', );
+							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to' );
 						}
 					}
 					if ( isset( $message->cc ) ) { // or $message->headerExists('cc');
@@ -636,7 +636,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc', );
+							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc' );
 						}
 					}
 					if ( isset( $message->bcc ) ) { // or $message->headerExists('cc');
@@ -645,7 +645,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tBCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc', );
+							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc' );
 						}
 					}
 					$htmlBody     = '';
@@ -709,7 +709,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					foreach ( $attachements as $a ) {
-						if ( ! empty( $a['Content-ID'] ) ){
+						if ( ! empty( $a['Content-ID'] ) ) {
 							$htmlBody = str_replace( 'src="cid:' . $a['Content-ID'] . '"', 'src="' . $a['url'] . '"', $htmlBody );
 						}
 					}
@@ -726,14 +726,14 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$htmlBody = $output_array[1][0];
 					}
 
-					$offset = strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' );
+					$offset = strpos( $htmlBody, ':: Reply Above This Line ::' );
 					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
 					$originalBody = '';
 					$tmp  = $message->getHeaders();
 					foreach ( $tmp as $header ) {
-						$originalBody .= htmlentities( $header->toString() ). '<br/><br/>';
+						$originalBody .= htmlentities( $header->toString() ) ."\n";
 					}
 					$originalBody .= 'Body: ';
 					$originalBody .= $txtBody;
@@ -779,7 +779,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ){
+		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ) {
 			$part_index = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
 			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ) {

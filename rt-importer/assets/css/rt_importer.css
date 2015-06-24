@@ -25,6 +25,9 @@
 #sucessmessage{
 	margin-left: 15px;
 }
+table.rt-importer select{
+	max-width: 100%;
+}
 
 input#futureYes, input#futureNo{
 	vertical-align: middle;
