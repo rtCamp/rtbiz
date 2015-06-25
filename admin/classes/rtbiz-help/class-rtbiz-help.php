@@ -418,10 +418,9 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					break;
 				case 'dashboard_overview':
 					$settings  = rtbiz_get_redux_settings();
-					$menu_label = $settings['menu_label'];
 					?>
 					<p>
-						<?php echo sprintf( __( 'Welcome to your %s Dashboard!' ), $menu_label ); ?>
+						<?php echo sprintf( __( 'Welcome to your rtBiz Dashboard!' ) ); ?>
 						<?php _e( 'You can get help for any screen by clicking the Help tab in the upper corner.' ); ?>
 					</p>
 					<?php
