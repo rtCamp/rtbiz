@@ -902,12 +902,11 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					'jquery-ui-position',
 				), '1.9.2' );
 			}
+			wp_enqueue_script( 'rt_importer', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/rt_importer.js', array( 'jquery' ), null, true );
+			wp_enqueue_script( 'rt_handlebars', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/handlebars.js', array( 'jquery' ), null, true );
 
-			wp_enqueue_script( 'rt_importer', plugin_dir_url( __FILE__ ) . '/assets/rt_importer.js', array( 'jquery' ), null, true );
-			wp_enqueue_script( 'rt_handlebars', plugin_dir_url( __FILE__ ) . '/assets/handlebars.js', array( 'jquery' ), null, true );
-
-			wp_enqueue_style( 'jquery-ui-custom',  plugin_dir_url( __FILE__ ).'/assets/css/jquery-ui-1.9.2.custom.css' );
-			wp_enqueue_style( 'importer-setting-css',  plugin_dir_url( __FILE__ ).'/assets/css/rt_importer.css' );
+			wp_enqueue_style( 'jquery-ui-custom', trailingslashit( plugin_dir_url( __FILE__ ) ).'assets/css/jquery-ui-1.9.2.custom.css' );
+			wp_enqueue_style( 'importer-setting-css', trailingslashit( plugin_dir_url( __FILE__ ) ).'assets/css/rt_importer.css' );
 		}
 	}
 }
