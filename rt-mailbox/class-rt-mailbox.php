@@ -153,7 +153,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * init global rt-mailbox class
 		 */
-		function inti_global(  ){
+		function inti_global(  ) {
 			global $rt_imap_server_model, $rt_mail_accounts_model, $rt_mail_message_model, $rt_outbound_model;
 			$rt_imap_server_model           = new Rt_IMAP_Server_Model();
 			$rt_mail_accounts_model         = new Rt_Mail_Accounts_Model();
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * Ajx request for rtmailbox
 		 */
-		function rtmailbox_ajax(){
+		function rtmailbox_ajax() {
 			add_action( 'wp_ajax_rtmailbox_imap_connect', array( $this, 'rtmailbox_imap_connect_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_folder_update', array( $this, 'rtmailbox_imap_folder_save_callback' ) );
 			add_action( 'wp_ajax_rtmailbox_mailbox_update', array( $this, 'rtmailbox_mailbox_update_callback' ) );
@@ -221,7 +221,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * Register css & js for rt-mailbox
 		 */
-		function enqueue_styles_scripts(){
+		function enqueue_styles_scripts() {
 			wp_enqueue_style( 'mailbox-setting-css',  plugin_dir_url( __FILE__ ).'assets/css/rt-mailbox.css', array(), time() );
 			wp_enqueue_script( 'mailbox-setting-js', plugin_dir_url( __FILE__ ).'assets/js/rt-mailbox.js', array( 'jquery' ) , time(), true );
 			wp_localize_script( 'mailbox-setting-js', 'adminurl', admin_url() );
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 *
 		 * @param $plugin_path_for_deactivate_cron
 		 */
-		function init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron ){
+		function init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron ) {
 			global $rt_mail_crons;
 			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_deactivate_cron );
 		}
@@ -240,10 +240,18 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		/**
 		 * render mailbox setting ui
-		 * @param $module
 		 *
+		 * @param        $module
+		 * @param string $reload_page_url
+		 * If page requires reload after successfull connection pass url where to reload or redirect.
 		 */
-		function render_mailbox_setting_page( $module ) {
+		function render_mailbox_setting_page( $module, $reload_page_url = '' ) {
+			if ( ! empty( $reload_page_url ) ) {
+				?><script>
+					var reload_url = '<?php echo ( $reload_page_url ); ?>';
+				</script>
+				<?php
+			}
 			?>
 			<div id="rtmailbox-page" class="wrap">
 				<div id="mailbox-list" class="mailbox-list">
@@ -822,7 +830,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * remove mailbox
 		 */
-		function rtmailbox_mailbox_remove_callback(){
+		function rtmailbox_mailbox_remove_callback() {
 			$result           = array();
 			$result['status'] = false;
 			$dataobj          = $_POST;
@@ -846,7 +854,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		/**
 		 * mailbox add event
 		 */
-		function rtmailbox_mailbox_add_callback(){
+		function rtmailbox_mailbox_add_callback() {
 			$result           = array();
 			$result['status'] = false;
 			ob_start();
