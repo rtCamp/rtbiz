@@ -19,6 +19,7 @@
 /* provider list css */
 ul.rtmailbox_provider_list{
     display: inline-block;
+    margin: 0px;
 }
 
 ul.rtmailbox_provider_list li input{
