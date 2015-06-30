@@ -113,14 +113,19 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			);
 
 			$this->auto_loader();
+			add_action( 'rt_db_update_finished', array( $this, 'call_default_imap_servers' ) );
 			$this->db_upgrade();
 			$this->inti_global();
-			$this->default_imap_servers();
+			//			$this->default_imap_servers();
 
 			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
 
 			add_action( 'init', array( $this, 'rtmailbox_ajax' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 999 );
+		}
+
+		function call_default_imap_servers() {
+			add_action( 'rt_mailbox_global_init_finish', array( $this, 'default_imap_servers' ) );
 		}
 
 		/**
@@ -162,12 +167,14 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 			global $rt_mail_settings;
 			$rt_mail_settings           = new Rt_Mail_Settings();
+			do_action( 'rt_mailbox_global_init_finish' );
 		}
 
 		/**
 		 * Default Imap server added
 		 */
 		function default_imap_servers() {
+
 			global $rt_imap_server_model;
 			$default_imap_servers = array(
 				array(
@@ -198,10 +205,16 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					'outgoing_smtp_enc'    => 'tls',
 				),
 			);
-
+			$existing_server = $rt_imap_server_model->get_all_servers();
 			foreach ( $default_imap_servers as $server ) {
-				$existing_server = $rt_imap_server_model->get_servers( array( 'incoming_imap_server' => $server['incoming_imap_server'] ) );
-				if ( empty( $existing_server ) ) {
+				$exist_in_db = false;
+				foreach ( $existing_server as $old_servers ) {
+					if ( $server['incoming_imap_server'] == $old_servers->incoming_imap_server ) {
+						$exist_in_db = true;
+						break;
+					}
+				}
+				if ( empty( $exist_in_db ) ) {
 					$rt_imap_server_model->add_server( $server );
 				}
 			}
@@ -250,7 +263,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				?><script>
 					var reload_url = '<?php echo ( $reload_page_url ); ?>';
 				</script>
-				<?php
+			<?php
 			}
 			?>
 			<div id="rtmailbox-page" class="wrap">
