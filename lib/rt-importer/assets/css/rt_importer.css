@@ -32,7 +32,9 @@ table.rt-importer select{
 input#futureYes, input#futureNo{
 	vertical-align: middle;
 }
-
+.rt-lib-sync{
+	color: #81C341;
+}
 
 .myerror {
 	background-color: #ffebe8;
