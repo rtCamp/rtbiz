@@ -343,7 +343,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 				case 'person_list_overview':
 					?>
 					<p><?php
-					if ( isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
+					if ( isset( $_REQUEST['contact_group'] ) && 'staff' == $_REQUEST['contact_group'] ) {
 						echo __( 'Staff are part of your organization who are responsible to handle customer tickets.' );
 					} else {
 						if ( 'Helpdesk' == $module_name ) {
@@ -359,9 +359,10 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					?>
 					<ul>
 						<li><strong><?php _e( 'User - ' ); ?></strong><?php _e( 'WordPress user account linked to this contact.' ); ?></li>
-						<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to.' ); ?></li>
+						<?php if ( isset( $_REQUEST['contact_group'] ) && 'staff' == $_REQUEST['contact_group'] ) { ?>
+							<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to.' ); ?></li>
+						<?php } ?>
 						<?php if ( 'Helpdesk' == $module_name ) { ?>
-							<li><strong><?php _e( 'Helpdesk Role - ' ); ?></strong><?php _e( "Customer won't have any role for Helpdesk. Staff can have Admin, Editor or Author roles.  Roles can be updated from staff member's Helpdesk profile page. " ); ?></li>
 							<li><strong><?php _e( 'Ticket - ' ); ?></strong><?php _e( 'The number of tickets created by a customer.' ); ?></li>
 						<?php } ?>
 					</ul>
