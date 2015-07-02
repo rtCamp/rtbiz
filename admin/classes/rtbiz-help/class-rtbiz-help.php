@@ -343,7 +343,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 				case 'person_list_overview':
 					?>
 					<p><?php
-					if ( isset( $_REQUEST['rt_contact_group'] ) && 'staff' == $_REQUEST['rt_contact_group'] ) {
+					if ( isset( $_REQUEST['contact_group'] ) && 'staff' == $_REQUEST['contact_group'] ) {
 						echo __( 'Staff are part of your organization who are responsible to handle customer tickets.' );
 					} else {
 						if ( 'Helpdesk' == $module_name ) {
@@ -358,11 +358,10 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 				case 'person_list_screen_content':
 					?>
 					<ul>
-						<li><strong><?php _e( 'Name - ' ); ?></strong><?php _e( 'Contact Name.' ); ?></li>
-						<?php if ( ! 'Helpdesk' == $module_name ) { ?>
 						<li><strong><?php _e( 'User - ' ); ?></strong><?php _e( 'WordPress user account linked to this contact.' ); ?></li>
+						<?php if ( isset( $_REQUEST['contact_group'] ) && 'staff' == $_REQUEST['contact_group'] ) { ?>
+							<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to.' ); ?></li>
 						<?php } ?>
-						<li><strong><?php _e( 'Teams - ' ); ?></strong><?php _e( 'Applicable for Staff. The team to which a staff member belongs to.' ); ?></li>
 						<?php if ( 'Helpdesk' == $module_name ) { ?>
 							<li><strong><?php _e( 'Ticket - ' ); ?></strong><?php _e( 'The number of tickets created by a customer.' ); ?></li>
 						<?php } ?>
@@ -447,7 +446,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					?>
 					<ul>
 						<li><?php _e( 'Using the left column form, you can create new team.' ); ?></li>
-						<li><?php _e( 'You can assign a group email address to the team as well, if in use.' ); ?></li>
+						<li><?php _e( 'You can assign an group email address to the team as well, if in use.' ); ?></li>
 						<!--<li><?php /*_e( 'You can also assign a color code to the team. It will help you identify the team or the user from which team he is just by the color.' ); */?></li>-->
 						<li><?php _e( 'On the right column, there will be existing teams listed along with basic information related to the team.' ); ?></li>
 						<li><?php _e( 'You can edit an individual team on the Edit Team Screen.' ); ?></li>
