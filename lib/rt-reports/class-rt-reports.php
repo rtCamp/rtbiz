@@ -182,12 +182,20 @@ if ( ! class_exists( 'Rt_Reports' ) ) {
 								jQuery('#'+chart.dom_element).parent().siblings('.rt-report-actions').prepend('<span class="rt-report-title">'+chart_title+'</span>');
 
 								var chart_table = new google.visualization.Table(document.getElementById(chart.dom_element));
-								chart_table.draw(data_table, {
+								var option = {
 									showRowNumber: true,
 									width: '100%',
 									allowHtml: true,
 									page: 'enable'
-								});
+								};
+								if ( chart.options.hasOwnProperty('sortColumn') ){
+									option['sortColumn'] = chart.options.sortColumn;
+									if (chart.options.hasOwnProperty('sortAscending') ){
+										option['sortAscending'] = chart.options.sortAscending == 'true';
+									}
+									option['sortAscending'] = false;
+								}
+								chart_table.draw(data_table, option);
 								break;
 							case 'pie':
 							case 'gauge':

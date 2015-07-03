@@ -280,7 +280,7 @@ function rtbiz_get_contact_edit_link( $email ) {
 	}
 }
 
-function rtbiz_export_contact( $user_id ){
+function rtbiz_export_contact( $user_id ) {
 	global $rtbiz_contact;
 	return $rtbiz_contact->export_biz_contact( $user_id );
 }
@@ -720,9 +720,9 @@ function rtbiz_mailbox_list_view() {
 
 
 function rtbiz_gravity_importer_view( $module ) {
-	global $rt_importer;
+	global $rtbiz_importer;
 	ob_start();
-	$rt_importer->importer_ui( $module );
+	$rtbiz_importer->importer_ui( $module );
 	$gravity_importer_view = ob_get_clean();
 	return $gravity_importer_view;
 }

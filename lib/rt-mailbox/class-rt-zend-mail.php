@@ -205,7 +205,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return string
 		 */
-		function try_imap_connect( $host, $port, $ssl ){
+		function try_imap_connect( $host, $port, $ssl ) {
 			$this->imap = new Zend\Mail\Protocol\Imap();
 			return $this->imap->connect( $host, $port, $ssl );
 		}
@@ -244,7 +244,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$smtp_args['host']              = 'smtp.gmail.com';
 					$smtp_args['port']              = 465;
 					$smtp_args['connection_class']  = 'oauth2';
-					$smtp_args['connection_config'] = array( 'xoauth2_request' => $this->authString, 'ssl' => 'ssl', );
+					$smtp_args['connection_config'] = array( 'xoauth2_request' => $this->authString, 'ssl' => 'ssl' );
 					break;
 				case 'imap':
 					global $rt_imap_server_model;
@@ -413,7 +413,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 			foreach ( $mail_folders as $folder ) {
 				$storage->selectFolder( $folder );
-				error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
+				error_log( ' Reading folder - ' . esc_attr( $folder ) . "\r\n" );
 				$sync_inbox_type = $folder;
 				if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
 					$rt_mail_uid[ $sync_inbox_type ] = 0;
@@ -429,6 +429,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $module );
+				error_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -627,7 +628,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tTo->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to', );
+							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to' );
 						}
 					}
 					if ( isset( $message->cc ) ) { // or $message->headerExists('cc');
@@ -636,7 +637,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc', );
+							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc' );
 						}
 					}
 					if ( isset( $message->bcc ) ) { // or $message->headerExists('cc');
@@ -645,7 +646,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tBCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc', );
+							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc' );
 						}
 					}
 					$htmlBody     = '';
@@ -709,7 +710,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					foreach ( $attachements as $a ) {
-						if ( ! empty( $a['Content-ID'] ) ){
+						if ( ! empty( $a['Content-ID'] ) ) {
 							$htmlBody = str_replace( 'src="cid:' . $a['Content-ID'] . '"', 'src="' . $a['url'] . '"', $htmlBody );
 						}
 					}
@@ -726,14 +727,14 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$htmlBody = $output_array[1][0];
 					}
 
-					$offset = strpos( $htmlBody, '&lt; ! ------------------ REPLY ABOVE THIS LINE ------------------ ! &gt;' );
+					$offset = strpos( $htmlBody, ':: Reply Above This Line ::' );
 					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
 					$originalBody = '';
 					$tmp  = $message->getHeaders();
 					foreach ( $tmp as $header ) {
-						$originalBody .= htmlentities( $header->toString() ). '<br/><br/>';
+						$originalBody .= htmlentities( $header->toString() ) ."\n";
 					}
 					$originalBody .= 'Body: ';
 					$originalBody .= $txtBody;
@@ -779,7 +780,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ){
+		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ) {
 			$part_index = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
 			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ) {
@@ -795,10 +796,15 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
 			} else {
+				$filename = '';
 				try {
-					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
+					$filenameval = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
+					if ( preg_match( '*filename=\"([^;]+)\"*', $filenameval, $matches ) ) {
+						if ( isset( $matches[1] ) ) {
+							$filename = trim( $matches[1] );
+						}
+					}
 				} catch ( Exception $e ) {
-					$filename = '';
 				}
 
 				if ( 'text/plain' == $ContentType && empty( $filename ) ) {
@@ -808,23 +814,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce['htmlBody'] = $this->get_decoded_message( $part );
 					$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
 				} else {
-
-					try {
-						$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
-						if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
-							if ( isset( $matches[1] ) ) {
-								$filename = trim( $matches[1] );
-							} else {
-								$filename = rtmb_get_extention( $ContentType );
-							}
-						} else {
-							$filename = rtmb_get_extention( $ContentType );
-						}
-					} catch ( Exception $e ) {
-						$e->getTrace();
-						$filename = rtmb_get_extention( $ContentType );
-					}
-
 					if ( trim( $filename ) == '' ) {
 						$filename = rtmb_get_extention( $ContentType );
 					}
@@ -859,7 +848,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 						$responce['attachements'][]        = $file;
 					} else {
-						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . '\r\n' );
+						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
 						error_log( var_export( $uploaded, true ) );
 						$data = ob_get_clean();

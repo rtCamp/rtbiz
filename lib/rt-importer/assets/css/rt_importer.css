@@ -1,6 +1,7 @@
 
 #startImporting, .rt-lib-spinner {
-	display: none
+	display: none;
+	vertical-align: -webkit-baseline-middle;
 }
 
 .nav-tab-wrapper{
@@ -18,11 +19,21 @@
 }
 
 #map_mapping_import{
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 #sucessmessage{
 	margin-left: 15px;
+}
+table.rt-importer select{
+	max-width: 100%;
+}
+
+input#futureYes, input#futureNo{
+	vertical-align: middle;
+}
+.rt-lib-sync{
+	color: #81C341;
 }
 
 .myerror {
