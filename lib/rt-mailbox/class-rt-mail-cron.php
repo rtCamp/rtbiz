@@ -80,7 +80,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 					continue;
 				}
 				$email = $emailRow->email;
-				error_log( "\r\n" . sanitize_email( $email ) . " Selected. \r\n" );
+				error_log( sanitize_email( $email ) . " Selected. \r\n" );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 				$last_sync_time = $emailRow->last_mail_time;
@@ -125,7 +125,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			$accessTokenArray = array();
 			$signature        = '';
 			foreach ( $emailRow as $email ) {
-				error_log( var_export( $email, true ) );
+				error_log( 'Sending email : '. var_export( $email->id, true ) );
 				if ( ! isset( $accessTokenArray[ $email->fromemail ] ) ) {
 					$email_type                            = '';
 					$imap_server                           = '';
@@ -141,7 +141,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 					try {
 						$fromname = ( ! empty( $email->fromname ) ) ? $email->fromname : get_bloginfo();
 						$result = $rtZendEmail->sendemail( $fromname, $email->fromemail, $accessTokenArray[ $email->fromemail ]['token'], $accessTokenArray[ $email->fromemail ]['email_type'], $accessTokenArray[ $email->fromemail ]['imap_server'], $email->subject, $email->body, unserialize( $email->toemail ), unserialize( $email->ccemail ), unserialize( $email->bccemail ), unserialize( $email->attachement ) );
-						error_log( var_export( $result, true ) );
+						error_log( var_export( 'Email id :'.$email->id.' Status :' . $result, true ) );
 						if ( $result ) {
 							$updateFlag = true;
 						}

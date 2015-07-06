@@ -413,7 +413,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 			foreach ( $mail_folders as $folder ) {
 				$storage->selectFolder( $folder );
-				error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
+				error_log( ' Reading folder - ' . esc_attr( $folder ) . "\r\n" );
 				$sync_inbox_type = $folder;
 				if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
 					$rt_mail_uid[ $sync_inbox_type ] = 0;
@@ -429,6 +429,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $module );
+				error_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -795,10 +796,15 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
 				}
 			} else {
+				$filename = '';
 				try {
-					$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
+					$filenameval = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
+					if ( preg_match( '*filename=\"([^;]+)\"*', $filenameval, $matches ) ) {
+						if ( isset( $matches[1] ) ) {
+							$filename = trim( $matches[1] );
+						}
+					}
 				} catch ( Exception $e ) {
-					$filename = '';
 				}
 
 				if ( 'text/plain' == $ContentType && empty( $filename ) ) {
@@ -808,23 +814,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce['htmlBody'] = $this->get_decoded_message( $part );
 					$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
 				} else {
-
-					try {
-						$filename = $part->getHeader( 'content-disposition' )->getFieldValue( 'filename' );
-						if ( preg_match( '*filename=\"([^;]+)\"*', $filename, $matches ) ) {
-							if ( isset( $matches[1] ) ) {
-								$filename = trim( $matches[1] );
-							} else {
-								$filename = rtmb_get_extention( $ContentType );
-							}
-						} else {
-							$filename = rtmb_get_extention( $ContentType );
-						}
-					} catch ( Exception $e ) {
-						$e->getTrace();
-						$filename = rtmb_get_extention( $ContentType );
-					}
-
 					if ( trim( $filename ) == '' ) {
 						$filename = rtmb_get_extention( $ContentType );
 					}
@@ -859,7 +848,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 						$responce['attachements'][]        = $file;
 					} else {
-						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . '\r\n' );
+						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
 						error_log( var_export( $uploaded, true ) );
 						$data = ob_get_clean();
