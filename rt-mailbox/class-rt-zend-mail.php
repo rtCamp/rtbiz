@@ -672,14 +672,17 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 								$htmlBody = $txtBody;
 							} else if ( 'text/html' == $message->contentType ) {
 								$htmlBody = $this->get_decoded_message( $message );
-								$txtBody  = strip_tags( $htmlBody );
+								$htmlBody = balanceTags( $htmlBody );
+								$txtBody  = strip_tags( $htmlBody, '<br><br/>' );
 							} else {
 								$htmlBody = $message->getContent();
-								$txtBody  = strip_tags( $htmlBody );
+								$htmlBody = balanceTags( $htmlBody );
+								$txtBody  = strip_tags( $htmlBody, '<br><br/>' );
 							}
 						} else {
 							$htmlBody = nl2br( $message->getContent() );
-							$txtBody  = strip_tags( $htmlBody );
+							$htmlBody = balanceTags( $htmlBody );
+							$txtBody  = strip_tags( $htmlBody, '<br><br/>' );
 						}
 					}
 					if ( false !== $lastFlags ) {
@@ -736,8 +739,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					foreach ( $tmp as $header ) {
 						$originalBody .= htmlentities( $header->toString() ) ."\n";
 					}
-					$originalBody .= 'Body: ';
-					$originalBody .= $txtBody;
+					$originalBody .= "-- Start of Body -- \n";
+					$originalBody .= "Body: \n" . $txtBody;
+					$originalBody .= "\n -- End of Body -- ";
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( $email, $module );
@@ -812,7 +816,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$responce['htmlBody'] = $responce['txtBody'];
 				} else if ( 'text/html' == $ContentType && empty( $filename ) ) {
 					$responce['htmlBody'] = $this->get_decoded_message( $part );
-					$responce['txtBody']  = strip_tags( $responce['htmlBody'] );
+					$responce['htmlBody'] = balanceTags( $responce['htmlBody'] );
+					$responce['txtBody']  = strip_tags( $responce['htmlBody'], '<br><br/>' );
 				} else {
 					if ( trim( $filename ) == '' ) {
 						$filename = rtmb_get_extention( $ContentType );
