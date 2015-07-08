@@ -654,16 +654,22 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$attachements = array();
 					if ( $message->isMultiPart() ) {
 						foreach ( $message as $part ) {
-							$responce = $this->parse_message( $part, $email, $message );
-							if ( isset( $responce['txtBody'] ) && ! empty( $responce['txtBody'] ) ) {
-								$txtBody = $responce['txtBody'];
+							$response = $this->parse_message( $part, $email, $message );
+							if ( isset( $response['txtBody'] ) && ! empty( $response['txtBody'] ) ) {
+								$txtBody = $response['txtBody'];
 							}
-							if ( isset( $responce['htmlBody'] ) && ! empty( $responce['htmlBody'] ) ) {
-								$htmlBody = $responce['htmlBody'];
+							if ( isset( $response['htmlBody'] ) && ! empty( $response['htmlBody'] ) ) {
+								$htmlBody = $response['htmlBody'];
 							}
-							if ( isset( $responce['attachements'] ) && ! empty( $responce['attachements'] ) ) {
-								$attachements = array_merge( $attachements, $responce['attachements'] );
+							if ( isset( $response['attachements'] ) && ! empty( $response['attachements'] ) ) {
+								$attachements = array_merge( $attachements, $response['attachements'] );
 							}
+						}
+						if ( isset( $txtBody ) && empty( $htmlBody ) ) {
+							$htmlBody = $txtBody;
+						}
+						if ( isset( $htmlBody ) && empty( $txtBody ) ) {
+							$txtBody = strip_tags( $htmlBody, '<br><br/>' );
 						}
 					} else {
 						if ( isset( $message->contentType ) ) {
@@ -782,25 +788,25 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @param $part
 		 * @param $email
 		 * @param $message
-		 * @param array $responce
+		 * @param array $response
 		 * @param int $part_index
 		 *
 		 * @return array
 		 */
-		function parse_message ( $part, $email, $message, $responce = array(), $part_index = 0 ) {
+		function parse_message ( $part, $email, $message, $response = array(), $part_index = 0 ) {
 			$part_index = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
 			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
-					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
+					$response = $this->parse_message( $tPart, $email, $message, $response, $part_index );
 				}
 			} else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
 					$tPart = $part->getPart( $rCount );
-					$responce = $this->parse_message( $tPart, $email, $message, $responce, $part_index );
+					$response = $this->parse_message( $tPart, $email, $message, $response, $part_index );
 				}
 			} else {
 				$filename = '';
@@ -815,12 +821,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				}
 
 				if ( 'text/plain' == $ContentType && empty( $filename ) ) {
-					$responce['txtBody'] = $this->get_decoded_message( $part );
-					$responce['htmlBody'] = $responce['txtBody'];
+					$response['txtBody'] = $this->get_decoded_message( $part );
 				} else if ( 'text/html' == $ContentType && empty( $filename ) ) {
-					$responce['htmlBody'] = $this->get_decoded_message( $part );
-					$responce['htmlBody'] = balanceTags( $responce['htmlBody'] );
-					$responce['txtBody']  = strip_tags( $responce['htmlBody'], '<br><br/>' );
+					$response['htmlBody'] = $this->get_decoded_message( $part );
+					$response['htmlBody'] = balanceTags( $response['htmlBody'] );
 				} else {
 					if ( trim( $filename ) == '' ) {
 						$filename = rtmb_get_extention( $ContentType );
@@ -854,7 +858,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							$tmpval = $part->getHeader( 'Content-ID' );
 							$file['Content-ID'] = trim( $tmpval->getFieldValue(), '<>' );
 						}
-						$responce['attachements'][]        = $file;
+						$response['attachements'][]        = $file;
 					} else {
 						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
@@ -864,7 +868,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 				}
 			}
-			return $responce;
+			return $response;
 		}
 
 	}
