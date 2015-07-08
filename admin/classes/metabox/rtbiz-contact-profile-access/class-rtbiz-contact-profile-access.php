@@ -57,7 +57,6 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 					<?php } ?>
 					</tbody>
 				</table>
-				<p><?php printf( '%s <strong>%s</strong> %s', __( 'In order to assign profile level access, connect user with contact from' ), __( 'Connected Users' ), __( 'metabox.' ) ); ?> </p>
 			</div> <?php
 		}
 
