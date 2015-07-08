@@ -731,6 +731,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					$offset = strpos( $htmlBody, ':: Reply Above This Line ::' );
+					if ( empty( $offset ) ){
+						$offset = strpos( $htmlBody, '::Reply Above This Line::' );
+					}
 					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
 					$visibleText = balanceTags( $visibleText, true );
