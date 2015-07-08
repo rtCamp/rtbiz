@@ -742,15 +742,21 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
+					$offset = strpos( $txtBody, ':: Reply Above This Line ::' );
+					if ( empty( $offset ) ){
+						$offset = strpos( $txtBody, '::Reply Above This Line::' );
+					}
+					$txtBody = substr( $txtBody, 0, ( false === $offset ) ? strlen( $txtBody ) : $offset );
+
 					$visibleText = balanceTags( $visibleText, true );
 					$originalBody = '';
 					$tmp  = $message->getHeaders();
 					foreach ( $tmp as $header ) {
 						$originalBody .= htmlentities( $header->toString() ) ."\n";
 					}
-					$originalBody .= "-- Start of Body -- \n";
-					$originalBody .= "Body: \n" . $txtBody;
-					$originalBody .= "\n -- End of Body -- ";
+					$txtBody = rtrim( $txtBody, '\r\n' );
+					$originalBody .= "Body:\r\n" . $txtBody;
+					$originalBody .= "\r\n -- End of Body -- ";
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( $email, $module );
