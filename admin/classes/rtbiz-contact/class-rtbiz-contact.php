@@ -940,6 +940,9 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function export_biz_contact( $id ) {
 
 			$user = get_userdata( $id );
+			if ( empty( $user ) ){
+				return false;
+			}
 			$email = $user->user_email;
 			$post_id = null;
 			$meta_query_args = array(
