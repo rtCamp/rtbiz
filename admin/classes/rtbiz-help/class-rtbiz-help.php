@@ -329,7 +329,7 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 						<li><?php _e( 'You can also put any description/comments related to the company in to the rich text editor provided.' ); ?></li>
 						<li>
 							<?php _e( 'There might be other extra attributes metaboxes depending upon how you add an attribute from the attributes page' ); ?>
-							<a href="<?php echo add_query_arg( array( 'page' => Rtbiz_Attributes::$attributes_page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
+							<a href="<?php echo add_query_arg( array( 'page' => Rtbiz_Attributes::$page_slug ), admin_url( 'admin.php' ) ); ?>"><?php _e( 'here' ); ?></a>.
 						</li>
 						<li>
 							<?php _e( 'You will see a "Connected X" metaboxes in the side colum.' ); ?>
