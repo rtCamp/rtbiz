@@ -358,13 +358,25 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function check_primary_email_for_admin_notice() {
 			if ( isset( $_REQUEST['post'] ) && get_post_type( $_REQUEST['post'] ) == rtbiz_get_contact_post_type() ) {
 				if ( $primary_unique_meta = get_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'], true ) ) {
-					add_action( 'admin_notices', array( $this, 'primary_email_not_unique' ) );
+					add_action( 'admin_notices', array( $this, 'primary_email_not_unique' ), 20 );
 					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'] );
 				} else if ( $primary_empty_meta = get_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_REQUEST['post'], true ) ) {
-					add_action( 'admin_notices', array( $this, 'primary_email_empty' ) );
-					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'unique_primary_email_' . $_REQUEST['post'] );
+					add_action( 'admin_notices', array( $this, 'primary_email_empty' ), 20 );
+					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_REQUEST['post'] );
+				}
+				if( $wp_user_not_connected = get_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_REQUEST['post'], true )){
+					add_action( 'admin_notices', array( $this, 'wp_user_not_connected' ), 20 );
+					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_REQUEST['post'] );
 				}
 			}
+		}
+
+		function wp_user_not_connected(){
+			?>
+			<div class="error">
+				<p><?php _e( 'There is no Wordpress User with primary email.', RTBIZ_TEXT_DOMAIN ); ?></p>
+			</div>
+			<?php
 		}
 
 		function primary_email_empty() {
@@ -546,6 +558,18 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function save_meta_values( $post_id, $post ) {
 
 			$meta_fields = $this->get_meta_fields();
+			if ( isset( $_POST['post_ID'] ) && ! empty ( $_REQUEST['rtbiz_is_staff_member'] ) && 'yes' == $_REQUEST['rtbiz_is_staff_member'] ) {
+				$users = rtbiz_get_wp_user_for_contact( $_POST['post_ID'] );
+				if ( empty( $users[0] ) ) {
+					$primary_email = rtbiz_get_entity_meta($_POST['post_ID'], self::$primary_email_key, true);
+					$userid = email_exists( $primary_email );
+					if ( rtbiz_is_primary_email_unique( $primary_email, $_POST['post_ID'] ) && ! is_wp_error( $userid ) && ! p2p_connection_exists( $this->post_type . '_to_user', array( 'to' => $userid ) ) ) {
+						rtbiz_connect_contact_to_user( $_POST['post_ID'], $userid );
+					} else {
+						update_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_POST[ 'post_ID' ], true );
+					}
+				}
+			}
 
 			if ( isset( $_POST['contact_meta'][ self::$primary_email_key ] ) && empty( $_POST['contact_meta'][ self::$primary_email_key ] ) ) {
 				update_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_POST['post_ID'], true );
