@@ -747,6 +747,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 									<?php $hdZendEmail->render_folders_checkbox( $all_folders, $element_name = 'mail_folders[' . esc_attr( $email ) . ']', $values = $mail_folders, $data_str = 'data-email-id=' . $mailbox->id ); ?>
 								</div>
 							</div>
+							<?php do_action( 'rt_mailbox_assignee_ui', $mailbox->email_data, $module );?>
 							<div class="clear"></div>
 							<div class="rtmailbox-row">
 								<label></label>
@@ -804,6 +805,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					if ( empty( $mail_folders[ $email ] ) ) {
 						$mail_folders[ $email ] = array();
 					}
+					$email_data = apply_filters( 'rt_mailbox_assignee_save', $email_data, $obj_data );
 					$email_data['mail_folders'] = implode( ',', array_filter( $mail_folders[ $email ] ) );
 					$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
 					$result['status']    = true;

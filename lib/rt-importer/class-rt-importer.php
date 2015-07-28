@@ -287,7 +287,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			$countFlag = ( 1 == count( $this->post_type ) );
 			$style = '';
 			if ( $countFlag ) {
-				$style = 'style=display:none;';
+				$style = 'style="display:none; padding:0; margin:0;"';
 			}
 			$form_posttype = '<select name="mapPostType" id="mapPostType" ' . $class . ' '. $style .'>';
 			if ( ! $countFlag ) {
@@ -316,7 +316,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					?>
 					<table>
 						<tr>
-							<td>
+							<td <?php echo $style ;?>>
 								<?php echo balanceTags( $form_posttype ); ?>
 							</td>
 							<td>
@@ -530,7 +530,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 						<tr>
 							<td colspan="4">	<hr>
-								<strong>Other settings</strong><hr></td>
+								<strong>Other Settings</strong><hr></td>
 						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );
 
@@ -634,7 +634,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					<input type='button' id='futureYes' value='Yes' class="button button-primary"/>&nbsp;
 					<input type='button' id='futureNo' value='No' class="button "/>
 				<?php } else { ?>
-					<h3><?php _e( 'Done !' ); ?></h3>
+					<h4 class="rt-import-success-message"><?php _e( 'Success !' ); ?></h4>
 					<span id="extra-data-importer"></span>
 				<?php } ?>
 				</div>

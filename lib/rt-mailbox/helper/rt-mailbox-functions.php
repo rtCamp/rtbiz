@@ -206,4 +206,13 @@ function rtmb_get_module_mailbox_email( $email, $module ) {
 	return $rt_mail_settings->get_email_acc( $email, $module );
 }
 
+/**
+ * Mail box settings save
+ * @return array
+ */
+function rtmb_set_module_mailbox_data( $email, $email_data ) {
+	global $rt_mail_settings;
+	$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
+}
+
 ?>
