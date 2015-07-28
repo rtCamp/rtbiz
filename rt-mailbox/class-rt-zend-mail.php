@@ -420,10 +420,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				}
 
 				global $rt_mail_uid;
+				$arrayMailIds = array();
 				if ( $rt_mail_uid[ $sync_inbox_type ] > 0 ) {
 					$allMail = $storage->protocol->requestAndResponse( "UID FETCH {$rt_mail_uid[$sync_inbox_type]}:* (UID)", array() );
-					foreach ( $allMail as $tempEmail ) {
-						$arrayMailIds[] = array( 'uid' => $tempEmail[2][1], 'msgid' => $tempEmail[0] );
+					if ( is_array( $allMail ) ) {
+						foreach ( $allMail as $tempEmail ) {
+							$arrayMailIds[] = array( 'uid' => $tempEmail[2][1], 'msgid' => $tempEmail[0] );
+						}
 					}
 				} else {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
@@ -737,13 +740,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 
 					$offset = strpos( $htmlBody, ':: Reply Above This Line ::' );
-					if ( empty( $offset ) ){
+					if ( empty( $offset ) ) {
 						$offset = strpos( $htmlBody, '::Reply Above This Line::' );
 					}
 					$visibleText = substr( $htmlBody, 0, ( false === $offset ) ? strlen( $htmlBody ) : $offset );
 
 					$offset = strpos( $txtBody, ':: Reply Above This Line ::' );
-					if ( empty( $offset ) ){
+					if ( empty( $offset ) ) {
 						$offset = strpos( $txtBody, '::Reply Above This Line::' );
 					}
 					$txtBody = substr( $txtBody, 0, ( false === $offset ) ? strlen( $txtBody ) : $offset );

@@ -50,9 +50,8 @@ input#futureYes, input#futureNo{
 }
 
 .sucessmessage {
-	text-align: center;
 	display: none;
-	margin: 25px 15px 10px;
+	margin: 20px 0;
 }
 
 table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th, table.wp-list-table.widefat.rtlib-gravity-mapping th, table.wp-list-table.widefat.rtlib-gravity-mapping td,table.wp-list-table.widefat.fixed td, table.wp-list-table.widefat.fixed th {
@@ -63,9 +62,16 @@ table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.po
 }
 
 #progressbar{
-	margin: 5px 15px 10px;
+	margin: 15px 0;
 }
 
 div#map_message div{
 	margin: 5px;
+}
+
+h4.rt-import-success-message{
+	color:#81C341;
+}
+h4.rt-import-warning-message{
+	color: #fcefa1;
 }
