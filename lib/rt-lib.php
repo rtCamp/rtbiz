@@ -4,7 +4,7 @@
   Plugin URI: http://rtcamp.com/
   Description: This plugin contains common libs that are used in many rtcamp plugins
   Version: 1.4
-  Author: rtcamp
+  Author: rtCamp
   Author URI: http://rtcamp.com/
  */
 $rt_lib_version = '1.4';
