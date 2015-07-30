@@ -32,8 +32,8 @@ ul.rtmailbox_provider_list li{
 }
 
 div.mailbox-folder-list{
-    float: right;
-    width: 75%;
+    display: inline-block;
+    width: 74%;
 }
 
 div.mailbox-folder-list>ul{
