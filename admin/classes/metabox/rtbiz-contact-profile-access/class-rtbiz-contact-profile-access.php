@@ -25,12 +25,12 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				return;
 			} ?>
 			<div>
-				<?php $selected = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? 'Checked="Checked"' : ''; ?>
+				<?php $selected = ( ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) || ( ! empty( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group']  ) ) ? 'Checked="Checked"' : ''; ?>
 				<label><input type="checkbox" id="rtbiz_is_staff_member" <?php echo $selected; ?>
 				              name="rtbiz_is_staff_member" value="yes"><span
 						class="checkbox-title"><?php _e( 'Staff Member ', RTBIZ_TEXT_DOMAIN ) ?></span></label>
 			</div>
-			<?php $class = ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) ? '' : 'rtbiz-hide'; ?>
+			<?php $class = ( 'Checked="Checked"' == $selected ) ? '' : 'rtbiz-hide'; ?>
 			<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
 				<table class="form-table">
 					<tbody>
