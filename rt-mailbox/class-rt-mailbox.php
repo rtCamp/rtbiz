@@ -645,10 +645,17 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			if ( ! empty( $obj_data['email'] ) && ! empty( $obj_data['password'] ) && ! empty( $obj_data['provider'] ) ) {
 				$email       = $obj_data['email'];
 				$password    = $obj_data['password'];
+
+				$Imap_folder = 'INBOX';
+				if ( $obj_data['provider'] = 2 ) {
+					$Imap_folder = 'Inbox';
+				}
+
 				$email_data  = array(
 					'email'        => $email,
-					'mail_folders' => 'INBOX',
+					'mail_folders' => $Imap_folder,
 				);
+
 				$email_type  = 'imap';
 				$module      = $obj_data['module'];
 				$imap_server = $obj_data['provider'];
