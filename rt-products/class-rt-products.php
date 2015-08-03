@@ -291,8 +291,8 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 					break;
 				case 'product_count':
 					$posttypes = $this->post_types;
-					if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], $posttypes ) ) {
-						$posttypes = array( $_GET['post_type'] );
+					if ( isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], $posttypes ) ) {
+						$posttypes = array( $_REQUEST['post_type'] );
 					}
 
 					foreach ( $posttypes as $posttype ) {
