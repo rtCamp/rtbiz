@@ -643,10 +643,13 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$result['status'] = false;
 
 			if ( ! empty( $obj_data['email'] ) && ! empty( $obj_data['password'] ) && ! empty( $obj_data['provider'] ) ) {
-				$available_email = rtmb_get_module_mailbox_email( $obj_data['email'], $obj_data['module'] );
+
+				$email       =  trim ( $obj_data['email'] );
+
+				$available_email = rtmb_get_module_mailbox_email( $email, $obj_data['module'] );
 
 				if ( empty ( $available_email ) ) {
-					$email       = $obj_data['email'];
+
 					$password    = $obj_data['password'];
 
 					$Imap_folder = 'INBOX';
