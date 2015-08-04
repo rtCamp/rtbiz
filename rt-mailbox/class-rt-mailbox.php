@@ -653,7 +653,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					$password    = $obj_data['password'];
 
 					$Imap_folder = 'INBOX';
-					if ( $obj_data['provider'] == 2 ) {
+					if ( $obj_data['provider'] == 2 || $obj_data['provider'] == 3 ) {
 						$Imap_folder = 'Inbox';
 					}
 
