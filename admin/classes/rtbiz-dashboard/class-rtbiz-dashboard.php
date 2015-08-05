@@ -134,7 +134,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 			//todo: product move into rtbiz
 			//			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
-			add_meta_box( 'rtbiz-product-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Offering', RTBIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-product-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Products', RTBIZ_TEXT_DOMAIN ), array(
 				$this,
 				'product_wise_contacts',
 			), $this->screen_id, 'column5' );
@@ -425,7 +425,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$taxonomy    = Rt_Products::$product_slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Offerings', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Products', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;

@@ -416,7 +416,6 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					<?php
 					break;
 				case 'dashboard_overview':
-					$settings  = rtbiz_get_redux_settings();
 					?>
 					<p>
 						<?php echo sprintf( __( 'Welcome to your rtBiz Dashboard!' ) ); ?>
@@ -482,14 +481,12 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					<?php
 					break;
 				case 'acl_roles':
-					$settings  = rtbiz_get_redux_settings();
-					$menu_label = $settings['menu_label'];
 					?>
 					<ul>
 						<li>
-							<?php echo sprintf( __( 'First column consists of all the module that has been registered with %s.' ), $menu_label ); ?>
-							<?php echo sprintf( __( '%s will itself be registered for its ACL use.' ), $menu_label ); ?>
-							<?php echo sprintf( __( 'Hence, %s will be there on the first row by default.' ), $menu_label ); ?>
+							<?php echo sprintf( __( 'First column consists of all the module that has been registered with %s.' ), 'rtBiz' ); ?>
+							<?php echo sprintf( __( '%s will itself be registered for its ACL use.' ), 'rtBiz'); ?>
+							<?php echo sprintf( __( 'Hence, %s will be there on the first row by default.' ), 'rtBiz'); ?>
 						</li>
 						<li><?php _e( 'Each row will represent the ACL for that particular module.' ); ?></li>
 						<li>
@@ -512,11 +509,9 @@ if ( ! class_exists( 'Rtbiz_Help' ) ) {
 					<?php
 					break;
 				case 'settings_overview':
-					$settings  = rtbiz_get_redux_settings();
-					$menu_label = $settings['menu_label'];
 					?>
 					<p>
-						<?php echo sprintf( __( 'This screen consists of all the %s settings.' ), $menu_label ); ?>
+						<?php echo sprintf( __( 'This screen consists of all the %s settings.' ), 'rtBiz' ); ?>
 						<?php _e( 'The settings are divided into different tabs depending upon their functionality.' ); ?>
 						<?php _e( 'You can configure & update them according to your choice from here.' ); ?>
 						<?php _e( 'There\'s also a buttom named "Reset to Default" which will put all settings to its default values.' ); ?>
