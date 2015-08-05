@@ -60,6 +60,8 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				'separate_items_with_commas' => __( 'Separate Teams with commas' ),
 				'add_or_remove_items'        => __( 'Add or remove Teams' ),
 				'choose_from_most_used'      => __( 'Choose from the most popular Teams' ),
+				'not_found' 				 => __( 'No team found.' ) ,
+				'no_terms'					 => __( 'No team' ),
 			);
 			return $this->labels;
 		}
