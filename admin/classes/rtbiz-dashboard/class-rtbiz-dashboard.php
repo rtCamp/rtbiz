@@ -331,7 +331,6 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			return true;
 		}
 
-		//todo: check data empty
 		public function team_by_contacts( $obj, $args ) {
 			$taxonomy    = Rtbiz_Teams::$slug;
 			$terms       = get_terms( $taxonomy );
@@ -340,6 +339,11 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
+
+			if ( empty( $terms ) ) {
+				printf( 'No team found. <a href="%s" >Add new team</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug ) );
+				return;
+			}
 
 			if ( ! $terms instanceof WP_Error ) {
 				foreach ( $terms as $t ) {
@@ -419,7 +423,6 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			<div id="<?php echo 'rtbiz_pie_' . $args['id']; ?>"></div> <?php
 		}
 
-		//todo: check data empty
 		public function product_wise_contacts( $obj, $args ) {
 
 			$taxonomy    = Rt_Products::$product_slug;
@@ -429,6 +432,11 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
+
+			if ( empty( $terms ) ) {
+				printf( 'No products found available [ products / downloads ]. <a href="%s" >Add new product</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Products::$product_slug ) );
+				return;
+			}
 
 			if ( ! $terms instanceof WP_Error ) {
 				foreach ( $terms as $t ) {
