@@ -3,8 +3,8 @@ Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, 
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
-Tested up to:      4.2
-Stable tag:        1.3.5
+Tested up to:      4.2.4
+Stable tag:        1.3.6
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.3.6 =
+* rtBiz Library updates
+* Bug fixed
 
 = 1.3.5 =
 * Bug fixed
