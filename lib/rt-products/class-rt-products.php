@@ -134,6 +134,8 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 				'separate_items_with_commas' => __( 'Separate product with commas' ),
 				'add_or_remove_items' => __( 'Add or remove product' ),
 				'choose_from_most_used' => __( 'Choose from the most popular product' ),
+				'not_found' => __( 'No product found.' ) ,
+				'no_terms' => __( 'No product' ),
 			);
 		}
 
