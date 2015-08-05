@@ -91,8 +91,8 @@ Please refer to the documentation.
 ## Changelog ##
 
 ### 1.3.6 ###
-* rtBiz Library updates
-* Bug fixed
+* Mailbox library enhancements
+* Minor bug fixes
 
 ### 1.3.5 ###
 * Bug fixed
