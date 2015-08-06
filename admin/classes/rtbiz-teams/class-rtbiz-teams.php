@@ -216,7 +216,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				case 'contacts':
 					$term = get_term( $term_id, self::$slug );
 					$contacts_count = count( rtbiz_get_team_contacts( $term_id ) );
-					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type().'&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type().'&contact_group=staff&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'email_address';
 					$email_address = $this->get_team_meta( 'email_address', $term_id );
@@ -239,7 +239,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 
 			unset( $columns['posts'], $columns['slug'] );
 
-			$columns['contacts']         = __( 'Contacts', RTBIZ_TEXT_DOMAIN );
+			$columns['contacts']         = __( 'Staff', RTBIZ_TEXT_DOMAIN );
 			//			$columns['color']         = __( 'Color', RTBIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RTBIZ_TEXT_DOMAIN );
 
