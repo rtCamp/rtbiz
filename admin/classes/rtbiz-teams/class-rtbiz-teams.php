@@ -157,7 +157,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 							       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 							       value="<?php echo esc_html( $this->get_team_meta( 'email_address' ) ); ?>"/>
 
-							<p class="description"><?php _e( 'Enter a email address for Team', 'rtcamp' ); ?></p>
+							<p class="description"><?php _e( 'Enter an email address for Team', 'rtcamp' ); ?></p>
 						</td>
 					</tr>
 					</tbody>
@@ -171,7 +171,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 						<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 						       id="<?php echo esc_attr( self::$slug ); ?>[email_address]" value="">
 					</p>
-					<p class="description"><?php _e( 'Enter a email address for Team', 'rtcamp' ); ?></p>
+					<p class="description"><?php _e( 'Enter an email address for Team', 'rtcamp' ); ?></p>
 				</div>
 			<?php }
 		}
