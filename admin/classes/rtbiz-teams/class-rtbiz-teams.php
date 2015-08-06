@@ -216,9 +216,9 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				case 'contacts':
 					$term = get_term( $term_id, self::$slug );
 					$contacts_count = count( rtbiz_get_team_contacts( $term_id ) );
-					$module = RTBIZ_TEXT_DOMAIN;
+					$module = '';
 					$module = apply_filters( 'rtbiz_current_module_name', $module );
-					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type().'&contact_group=staff&module=' . $module . '&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type().'&contact_group=staff' . $module . '&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'email_address';
 					$email_address = $this->get_team_meta( 'email_address', $term_id );
