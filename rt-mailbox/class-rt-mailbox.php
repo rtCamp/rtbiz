@@ -911,7 +911,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					<tr>
 						<th>Mail Account</th>
 						<th>Module</th>
-						<th></th>
+						<th>Setting Page</th>
 					</tr>
 					<?php
 					foreach ( $mailbox_list as $mailbox ) {
@@ -930,8 +930,12 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 							<td>
 								<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['label'] ) ) { echo $rtbiz_modules[ $mailbox->module ]['label'];} else { echo $mailbox->module; } ?>
 							</td>
-							<td class="rtmailbox-maillist-action">
-								<a class='button show-mailbox-settings' href="<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['setting_page_url'] ) ) { echo $rtbiz_modules[ $mailbox->module ]['setting_page_url']; } else { echo 'javascript:;'; } ?>"><?php echo __( 'Settings' ); ?></a>
+							<td>
+								<?php if ( isset( $rtbiz_modules[ $mailbox->module ]['setting_page_url'] ) ) { ?>
+									<a class='button show-mailbox-settings' href="<?php echo $rtbiz_modules[ $mailbox->module ]['setting_page_url']; ?>"><?php echo __( 'Settings' ); ?></a>
+							<?php } else { ?>
+									<span>Not found.</span>
+							<?php } ?>
 							</td>
 						</tr>
 					<?php
