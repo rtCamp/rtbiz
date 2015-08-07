@@ -150,9 +150,9 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			$general_fields = array(
 				array(
 					'id'       => 'product_plugin',
-					'title'    => __( 'Offering Sync Option' ),
+					'title'    => __( 'Product Sync Option' ),
 					'subtitle' => __( 'Select the plugin you want to use for product sync.' ),
-					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Offerings. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
+					'desc'     => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Products. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.' ),
 					'type'     => 'checkbox',
 					'options'  => array(
 						//'none'         => __( 'None' ),
