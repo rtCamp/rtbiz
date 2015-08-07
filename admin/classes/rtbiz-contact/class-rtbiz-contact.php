@@ -476,7 +476,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( $rtbiz_products ) {
 				$cols[ 'taxonomy-' . Rt_Products::$product_slug ] = $columns[ 'taxonomy-' . Rt_Products::$product_slug ];
 			}
-			$cols[ 'p2p-from-' . $rtbiz_contact->post_type . '_to_user' ] = __( 'User' );
+			//			$cols[ 'p2p-from-' . $rtbiz_contact->post_type . '_to_user' ] = __( 'User' );
 
 			/*$cols[ 'taxonomy-' . Rtbiz_Contact::$user_category_taxonomy ] = $columns[ 'taxonomy-' . Rtbiz_Contact::$user_category_taxonomy ];*/
 			/*$cols['author'] = $columns['author'];*/
