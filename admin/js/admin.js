@@ -123,11 +123,17 @@ jQuery( document ).ready(function($) {
 		countselect = jQuery( '#rtbiz-contact-count-proceed' );
 
 		var param = {
-			action: 'export_all_contacts',
+			action: 'rtbiz_export_all_contacts',
 			nonce: nonce,
 			offset: offset
 		};
 		jQuery.post( rtbiz_ajax_url_admin, param ,function( data ){
+			if ( ! data.length ) {
+				jQuery( '#rtbiz-import-spinner' ).hide();
+				jQuery( '.rtbiz-export-button' ).removeAttr( 'disabled' );
+				console.log('Error in js');
+				return;
+			}
 			if ( data.complete ) {
 				jQuery( '#rtbiz-import-spinner' ).hide();
 				jQuery( '.contact-update' ).hide();
