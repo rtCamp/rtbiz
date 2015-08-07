@@ -19,6 +19,10 @@ if ( ! class_exists( 'Rtbiz_Post_To_Post' ) ) {
 
 
 		function __construct() {
+			// if posts to posts plugin exists don't use lib let posts to posts plugin handle this
+			if ( function_exists('_p2p_load') ) {
+				return;
+			}
 
 			$this->_p2p_load_framework();
 			add_action( 'wp_loaded', array( $this, '_p2p_init' ) );
