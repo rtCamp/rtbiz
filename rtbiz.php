@@ -103,4 +103,34 @@ require_once RTBIZ_PATH . 'includes/class-rtbiz.php';
 function run_rtbiz() {
 	$plugin = Rtbiz::instance();
 }
-run_rtbiz();
+
+function _rtbiz_running_older_php_version(){
+	global $rtbiz_version_not_compatible;
+	$rtbiz_version_not_compatible = true;
+	$php_version = phpversion();
+	?>
+	<div class="error rtbiz-php-older-version">
+		<p>
+			You are running php version <strong><?php echo $php_version; ?></strong>. rtBiz supports php <strong>5.3 and above</strong> version, Please upgrade php version to run this plugin.
+		</p>
+	</div> <?php
+}
+
+function _rtbiz_php_version_check(){
+	$php_version = phpversion();
+	if ( version_compare( $php_version ,'5.3', '<' ) ) {
+		// running older version do not load our plugins.
+		add_action( 'admin_notices','_rtbiz_running_older_php_version' );
+		return false;
+	}
+	return true;
+}
+if ( _rtbiz_php_version_check() ) {
+	run_rtbiz();
+} else {
+	add_action('admin_init','_rtbiz_deactive_self');
+}
+
+function _rtbiz_deactive_self(){
+	deactivate_plugins(plugin_basename(__FILE__));
+}
