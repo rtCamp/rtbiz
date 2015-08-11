@@ -801,7 +801,8 @@ function rtbiz_is_google_doc_supported_type( $post_mime_type, $extation = '' ) {
 		'xls'		=> 'application/vnd.ms-excel',
 		'xlsx'		=> 'application/vnd.openxmlformats-officedocument.spreadsheetml',
 		'xps'		=> 'application/vnd.ms-xpsdocument',
-		'zip'		=> 'application/zip',
+		// zip can not be previewed and most user wants to download it anyways so let's send them direct download link rather then sending preview link.
+		//		'zip'		=> 'application/zip',
 		'txt'		=> 'text/plain',
 	);
 	if ( ! empty( $extation ) ) {
