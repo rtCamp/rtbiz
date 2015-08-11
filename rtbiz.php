@@ -111,7 +111,7 @@ function _rtbiz_running_older_php_version(){
 	?>
 	<div class="error rtbiz-php-older-version">
 		<p>
-			You are running php version <strong><?php echo $php_version; ?></strong>. rtBiz supports php <strong>5.3 and above</strong> version, Please upgrade php version to run this plugin.
+			You are running an older php version. Please upgrade to php <strong>5.3 or above</strong> to run rtBiz plugin.
 		</p>
 	</div> <?php
 }
