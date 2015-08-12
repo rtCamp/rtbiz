@@ -52,7 +52,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 		public  function rtbiz_on_redux_save( $setting, $old_setting ) {
 			//removed product sync option
 			$diff = array();
-			if ( isset( $setting['product_plugin'] ) && isset( $old_setting['product_plugin'] ) ) {
+			if ( ! empty( $setting['product_plugin'] ) && ! empty( $old_setting['product_plugin'] ) ) {
 				$diff = array_diff( $setting['product_plugin'], $old_setting['product_plugin'] );
 				$diff = array_unique( $diff );
 			}
