@@ -104,16 +104,8 @@ function run_rtbiz() {
 	$plugin = Rtbiz::instance();
 }
 
-function _rtbiz_running_older_php_version(){
-	global $rtbiz_version_not_compatible;
-	$rtbiz_version_not_compatible = true;
-	$php_version = phpversion();
-	?>
-	<div class="error rtbiz-php-older-version">
-		<p>
-			You are running an older PHP version. Please upgrade to PHP <strong>5.3 or above</strong> to run rtBiz plugin.
-		</p>
-	</div> <?php
+if ( _rtbiz_php_version_check() ) {
+	run_rtbiz();
 }
 
 function _rtbiz_php_version_check(){
@@ -121,14 +113,16 @@ function _rtbiz_php_version_check(){
 	if ( version_compare( $php_version ,'5.3', '<' ) ) {
 		// running older version do not load our plugins.
 		add_action( 'admin_notices','_rtbiz_running_older_php_version' );
+		add_action( 'admin_init','_rtbiz_deactive_self' );
 		return false;
 	}
 	return true;
 }
-if ( _rtbiz_php_version_check() ) {
-	run_rtbiz();
-} else {
-	add_action('admin_init','_rtbiz_deactive_self');
+
+function _rtbiz_running_older_php_version(){ ?>
+	<div class="error rtbiz-php-older-version">
+		<p><?php _e( 'You are running an older PHP version. Please upgrade to PHP <strong>5.3 or above</strong> to run rtBiz plugin.', RTBIZ_TEXT_DOMAIN ) ?></p>
+	</div> <?php
 }
 
 function _rtbiz_deactive_self(){
