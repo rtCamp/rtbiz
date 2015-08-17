@@ -234,7 +234,7 @@ function rtmb_add_message_id_in_ref_id( $message_id, $reference_id, $post_id = 0
 	$reference_ids = array_unique( $reference_ids );
 	$reference_id = implode( '', $reference_ids );
 	if ( ! empty( $post_id ) ) {
-		update_post_meta( $post_id, '_rtlib_references', implode( '' ,$reference_ids ) );
+		update_post_meta( $post_id, '_rtlib_references', $reference_id );
 	}
 	return $reference_id;
 }
@@ -257,5 +257,17 @@ function rtmb_get_reference_id_array( $reference_string ) {
 		$post_reference_ids[] = $parts[ $n ];
 	}
 	return $post_reference_ids;
+}
+
+function rtmb_generate_message_id( $post_id, $email_id, $type = 'post' ) {
+	if ( 'comment' == $type ) {
+		$comment = get_comment( $post_id );
+		$post_id = $comment->comment_post_ID;
+	}
+	$domain_name = preg_replace( '/^www\./', '', $_SERVER['SERVER_NAME'] );
+	$domain_name = '@'.$domain_name;
+	$post_date = current_time( 'mysql' );
+	$unique_id = md5( 'rt_lib_' . get_post_type( $post_id ) . '_' . $post_date . '_' . $post_id. '-'. $email_id );
+	return '<'.$post_id.'-'.$type.'-'.$unique_id.$domain_name.'>';
 }
 ?>
