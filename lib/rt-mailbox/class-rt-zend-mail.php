@@ -229,7 +229,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function sendemail( $fromname, $fromemail, $accessToken, $email_type, $imap_server, $subject, $body, $toEmail, $ccEmail, $bccEmail, $attachemnts, $mailtype = 'notification' ) {
+		public function sendemail( $fromname, $fromemail, $accessToken, $email_type, $imap_server, $subject, $body, $toEmail, $ccEmail, $bccEmail, $attachemnts, $email = null, $mailtype = 'notification' ) {
 			set_time_limit( 0 );
 			if ( ! $this->try_imap_login( $fromemail, $accessToken, $email_type, $imap_server ) ) {
 				return false;
@@ -273,8 +273,45 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 			$message = new Message();
 			$message->addFrom( $fromemail, $fromname );
+			if ( ! empty( $email ) ) {
+				$message_id = $reference_id = $in_reply_to = '';
+				if ( 'comment' == $email->refrence_type ) {
+					$message_id = get_comment_meta( $email->refrence_id, '_rtlib_messageid', true );
+					$reference_id = get_comment_meta( $email->refrence_id, '_rtlib_references', true );
+					if ( empty( $message_id ) ) {
+						$comment = get_comment( $email->refrence_id );
+						$post_id = $comment->comment_post_ID;
+					}
+				} else if ( 'post' == $email->refrence_type ) {
+					$post_id = $email->refrence_id;
+				}
 
-			$message->addCustomeHeader( 'X-Helpdesk', $mailtype );
+				if ( isset( $post_id ) ) {
+					$reference_id = get_post_meta( $post_id, '_rtlib_references', true );
+					$message_id = rtmb_get_reply_to_from_ref_id( $reference_id );
+				}
+
+				//Get reply to header
+				if ( ! empty( $message_id ) ) {
+					$message->addCustomeHeader( 'In-Reply-To', trim( $message_id ) );
+				}
+
+				//Get References header
+				if ( ! empty( $message_id ) ) {
+					$reference_id = rtmb_add_message_id_in_ref_id( $message_id, $reference_id );
+				}
+				if ( ! empty( $reference_id ) ) {
+					$reference_ids = rtmb_get_reference_id_array( $reference_id );
+					$reference_id = implode( ' ', $reference_ids );
+					$message->addCustomeHeader( 'References', $reference_id );
+				}
+
+				// Add x-mailer
+				if ( ! empty( $email->refrence_id ) ) {
+					$message->addCustomeHeader( 'X-Mailer', 'Rtcamp-mail-lib' );
+					$message->addCustomeHeader( 'Keywords', 'Helpdesk-'.$email->refrence_id );
+				}
+			}
 
 			//$mail->setFrom($fromemail);
 

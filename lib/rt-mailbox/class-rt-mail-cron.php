@@ -140,7 +140,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 					$updateFlag = false;
 					try {
 						$fromname = ( ! empty( $email->fromname ) ) ? $email->fromname : get_bloginfo();
-						$result = $rtZendEmail->sendemail( $fromname, $email->fromemail, $accessTokenArray[ $email->fromemail ]['token'], $accessTokenArray[ $email->fromemail ]['email_type'], $accessTokenArray[ $email->fromemail ]['imap_server'], $email->subject, $email->body, unserialize( $email->toemail ), unserialize( $email->ccemail ), unserialize( $email->bccemail ), unserialize( $email->attachement ) );
+						$result = $rtZendEmail->sendemail( $fromname, $email->fromemail, $accessTokenArray[ $email->fromemail ]['token'], $accessTokenArray[ $email->fromemail ]['email_type'], $accessTokenArray[ $email->fromemail ]['imap_server'], $email->subject, $email->body, unserialize( $email->toemail ), unserialize( $email->ccemail ), unserialize( $email->bccemail ), unserialize( $email->attachement ), $email );
 						error_log( var_export( 'Email id :'.$email->id.' Status :' . $result, true ) );
 						if ( $result ) {
 							$updateFlag = true;
