@@ -215,4 +215,47 @@ function rtmb_set_module_mailbox_data( $email, $email_data ) {
 	$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
 }
 
+function rtmb_add_message_id_in_ref_id( $message_id, $reference_id, $post_id = 0 ) {
+	if ( empty( $message_id ) ) {
+		return $reference_id;
+	}
+	if ( empty( $reference_id ) ) {
+		return $message_id;
+	}
+	$reference_ids  = rtmb_get_reference_id_array( $reference_id );
+	if ( ! empty( $post_id ) ) {
+		$post_reference_id = get_post_meta( $post_id, '_rtlib_references', true );
+		if ( ! empty( $post_reference_id ) ) {
+			$post_reference_ids = rtmb_get_reference_id_array( $post_reference_id );
+			$reference_ids = array_merge( $post_reference_ids, $reference_ids );
+		}
+	}
+	$reference_ids[] = $message_id;
+	$reference_ids = array_unique( $reference_ids );
+	$reference_id = implode( '', $reference_ids );
+	if ( ! empty( $post_id ) ) {
+		update_post_meta( $post_id, '_rtlib_references', implode( '' ,$reference_ids ) );
+	}
+	return $reference_id;
+}
+
+function rtmb_get_reply_to_from_ref_id( $reference_id ) {
+	if ( empty( $reference_id ) ) {
+		return '';
+	}
+	$reference_ids = rtmb_get_reference_id_array( $reference_id );
+	return end( $reference_ids );
+}
+
+function rtmb_get_reference_id_array( $reference_string ) {
+	$parts = preg_split( '/([>])/', $reference_string, -1, PREG_SPLIT_DELIM_CAPTURE );
+	$post_reference_ids = array();
+	for ( $i = 0, $n = count( $parts ) - 1; $i < $n; $i += 2 ) {
+		$post_reference_ids[] = $parts[ $i ] . $parts[ $i + 1 ];
+	}
+	if ( '' != $parts[ $n ] ) {
+		$post_reference_ids[] = $parts[ $n ];
+	}
+	return $post_reference_ids;
+}
 ?>
