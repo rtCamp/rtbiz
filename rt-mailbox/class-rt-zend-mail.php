@@ -302,13 +302,22 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				}
 				if ( ! empty( $reference_id ) ) {
 					$reference_ids = rtmb_get_reference_id_array( $reference_id );
-					$reference_id = implode( ' ', $reference_ids );
-					$message->addCustomeHeader( 'References', $reference_id );
+					$_reference_id = implode( ' ', $reference_ids );
+					$message->addCustomeHeader( 'References', $_reference_id );
 				}
 
 				// Add x-mailer
 				if ( ! empty( $email->refrence_id ) ) {
 					$message->addCustomeHeader( 'X-Mailer', 'Rtcamp-mail-lib' );
+					if ( 'comment' == $email->refrence_type ) {
+						$comment = get_comment( $email->refrence_id );
+						$post_id = $comment->comment_post_ID;
+					} else {
+						$post_id = $email->refrence_id;
+					}
+					$new_message_id = rtmb_generate_message_id( $post_id, $email->id );
+					rtmb_add_message_id_in_ref_id( $new_message_id ,$reference_id, $post_id );
+					$message->addCustomeHeader( 'Message-ID', $new_message_id );
 					$message->addCustomeHeader( 'Keywords', 'Helpdesk-'.$email->refrence_id );
 				}
 			}
