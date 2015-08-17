@@ -892,7 +892,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			$limit = 25;
 			$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => $limit, 'offset' => $offset ) );
 
-			$count = rtbiz_export_contact( $users->get_results() );
+			$count = $this->export_biz_contacts( $users->get_results() );
 			$return['count'] = $count;
 			$return['offset'] = $limit + $offset;
 			$return['contact_processed'] = count( $users->get_results() );
