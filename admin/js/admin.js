@@ -128,7 +128,7 @@ jQuery( document ).ready(function($) {
 			offset: offset
 		};
 		jQuery.post( rtbiz_ajax_url_admin, param ,function( data ){
-			if ( ! data.length ) {
+			if ( ! data.hasOwnProperty('complete') ) {
 				jQuery( '#rtbiz-import-spinner' ).hide();
 				jQuery( '.rtbiz-export-button' ).removeAttr( 'disabled' );
 				console.log('Error in js');
