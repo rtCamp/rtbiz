@@ -267,7 +267,7 @@ function rtmb_generate_message_id( $post_id, $email_id, $type = 'post' ) {
 	$domain_name = preg_replace( '/^www\./', '', $_SERVER['SERVER_NAME'] );
 	$domain_name = '@'.$domain_name;
 	$post_date = current_time( 'mysql' );
-	$unique_id = md5( 'rt_lib_' . get_post_type( $post_id ) . '_' . $post_date . '_' . $post_id. '-'. $email_id );
-	return '<'.$post_id.'-'.$type.'-'.$unique_id.$domain_name.'>';
+	$unique_id = md5( 'rt_lib_' . get_post_type( $post_id ) . '_' . $post_date . '_' . $post_id. '-'. $email_id . '-' . wp_rand() );
+	return '<'.$post_id.'-'.$unique_id.$domain_name.'>';
 }
 ?>
