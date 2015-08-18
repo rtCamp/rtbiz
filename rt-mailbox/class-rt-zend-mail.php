@@ -308,7 +308,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 				// Add x-mailer
 				if ( ! empty( $email->refrence_id ) ) {
-					$message->addCustomeHeader( 'X-Mailer', 'Rtcamp-mail-lib' );
+					$message->addCustomeHeader( 'X-Mailer', 'rtCamp-mail-lib' );
 					if ( 'comment' == $email->refrence_type ) {
 						$comment = get_comment( $email->refrence_id );
 						$post_id = $comment->comment_post_ID;
@@ -318,7 +318,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$new_message_id = rtmb_generate_message_id( $post_id, $email->id );
 					rtmb_add_message_id_in_ref_id( $new_message_id ,$reference_id, $post_id );
 					$message->addCustomeHeader( 'Message-ID', $new_message_id );
-					$message->addCustomeHeader( 'Keywords', 'Helpdesk-'.$email->refrence_id );
 				}
 			}
 
