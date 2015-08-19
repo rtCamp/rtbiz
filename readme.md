@@ -8,7 +8,7 @@ rtBiz - WordPress 4 Business!
 **Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
 **Tested up to:** 4.2.4  
-**Stable tag:** 1.3.6  
+**Stable tag:** 1.3.7  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -89,6 +89,13 @@ Please refer to the documentation.
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.3.7 ###
+* Mailbox library enhancements
+* Fix import contact button
+* Staff issue fixed
+* Php version check added on plugin active
+* Minor bug fixes
 
 ### 1.3.6 ###
 * Mailbox library enhancements
