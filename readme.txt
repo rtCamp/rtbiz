@@ -3,7 +3,7 @@ Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, 
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
-Tested up to:      4.2.4
+Tested up to:      4.3
 Stable tag:        1.3.7
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
