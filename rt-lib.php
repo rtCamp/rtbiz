@@ -2,7 +2,7 @@
 /*
   Plugin Name: rtLib
   Plugin URI: http://rtcamp.com/
-  Description: This plugin contains common libs that are used in many rtcamp plugins
+  Description: This plugin contains common libs that are used in many rtCamp plugins
   Version: 1.4
   Author: rtCamp
   Author URI: http://rtcamp.com/
