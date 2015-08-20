@@ -117,14 +117,21 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		function rt_send_email() {
 			global $rt_mail_settings;
 
-			$emailRow = $rt_mail_settings->get_new_sent_mail();
-			if ( empty( $emailRow ) ) {
+			$emailRows = $rt_mail_settings->get_new_sent_mail();
+			if ( empty( $emailRows ) ) {
 				return;
 			}
 			$rtZendEmail      = new Rt_Zend_Mail();
 			$accessTokenArray = array();
 			$signature        = '';
-			foreach ( $emailRow as $email ) {
+			foreach ( $emailRows as $email ) {
+				// skip sending email filter.
+				$do_send = apply_filters( 'rt_lib_before_sending_email', true, $email );
+				if ( ! $do_send ) {
+					error_log( 'Skip email : '. var_export( $email->id, true ) );
+					$rt_mail_settings->update_sent_email( $email->id, 'skip', 'no' );
+					continue;
+				}
 				error_log( 'Sending email : '. var_export( $email->id, true ) );
 				if ( ! isset( $accessTokenArray[ $email->fromemail ] ) ) {
 					$email_type                            = '';
@@ -152,10 +159,10 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 						$rt_mail_settings->update_sent_email( $email->id, 'yes', 'p' );
 					} else {
 						$rt_mail_settings->update_sent_email( $email->id, 'error', 'p' );
-						echo 'Error: ' . esc_attr( $email->id ). '<br />';
+						error_log( 'Error: ' . esc_attr( $email->id ). '<br />' );
 					}
 				} else {
-					echo 'Error: ' . esc_attr( $email->id ). '<br />';
+					error_log( 'Error: ' . esc_attr( $email->id ). '<br />' );
 				}
 			}
 		}
