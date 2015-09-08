@@ -90,6 +90,9 @@ Please refer to the documentation.
 
 ## Changelog ##
 
+### 1.3.8 ###
+* error_log now only logs on wp_debug_log true
+
 ### 1.3.7 ###
 * Mailbox library enhancements
 * Fix import contact button
