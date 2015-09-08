@@ -140,7 +140,7 @@ function rtmb_log( $msg, $filename = 'error_log.txt' ) {
  */
 if ( ! function_exists( 'rt_log' ) ) {
 	function rt_log( $msg ) {
-		if ( defined( 'WP_DEBUG_LOG' ) && ! empty( WP_DEBUG_LOG ) ) {
+		if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
 			error_log( $msg );
 		}
 	}
