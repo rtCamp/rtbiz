@@ -136,13 +136,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				$response = '';
 				$is_plus  = $imap->readLine( $response, '+', true );
 				if ( $is_plus ) {
-					error_log( "got an extra server challenge: $response" );
+					rt_log( "got an extra server challenge: $response" );
 					// Send empty client response.
 					$imap->sendRequest( '' );
 				} else {
 					if ( preg_match( '/^NO /i', $response ) || preg_match( '/^BAD /i', $response )
 					) {
-						error_log( "got failure response: $response" );
+						rt_log( "got failure response: $response" );
 
 						return false;
 					} else {
@@ -426,7 +426,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			global $signature, $rt_mail_settings;
 			if ( ! $this->try_imap_login( $email, $accessToken, $email_type, $imap_server ) ) {
 				$rt_mail_settings->update_sync_status( $email, false );
-				error_log( 'login fail' );
+				rt_log( 'login fail' );
 
 				return false;
 			}
@@ -437,7 +437,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			if ( empty( $email_acc ) ) {
 				$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 				$rt_mail_settings->update_sync_status( $email, false );
-				error_log( 'email fail' );
+				rt_log( 'email fail' );
 
 				return false;
 			}
@@ -447,7 +447,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			if ( empty( $email_data['mail_folders'] ) ) {
 				$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 				$rt_mail_settings->update_sync_status( $email, false );
-				error_log( 'inbox folder fail' );
+				rt_log( 'inbox folder fail' );
 
 				return false;
 			}
@@ -458,7 +458,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 			foreach ( $mail_folders as $folder ) {
 				$storage->selectFolder( $folder );
-				error_log( ' Reading folder - ' . esc_attr( $folder ) . "\r\n" );
+				rt_log( ' Reading folder - ' . esc_attr( $folder ) . "\r\n" );
 				$sync_inbox_type = $folder;
 				if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
 					$rt_mail_uid[ $sync_inbox_type ] = 0;
@@ -477,7 +477,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $module );
-				error_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
+				rt_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -654,7 +654,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					if ( ! isset( $message->subject ) ) {
 						$message->subject = ' ';
 					}
-					error_log( sanitize_email( $email ) . ' Parsing Mail ' . esc_attr( $message->subject ) . "\r\n" );
+					rt_log( sanitize_email( $email ) . ' Parsing Mail ' . esc_attr( $message->subject ) . "\r\n" );
 
 					$from       = array();
 					$allEmails  = array();
@@ -914,9 +914,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 						$response['attachements'][]        = $file;
 					} else {
-						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
+						rt_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
-						error_log( var_export( $uploaded, true ) );
+						rt_log( var_export( $uploaded, true ) );
 						$data = ob_get_clean();
 						rtmb_log( "[Attachement Failed] Email: {$email};Message-Id: {$message->messageid}; Data : $data ", 'error-mail-attachement.txt' );
 					}

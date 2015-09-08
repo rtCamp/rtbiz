@@ -130,6 +130,21 @@ function rtmb_log( $msg, $filename = 'error_log.txt' ) {
 		fclose( $fp );
 	}
 }
+/**
+ * Logging errors in wordpress
+ *
+ * @param        $msg
+ * @param string $filename
+ *
+ * @since rt-Helpdesk 0.1
+ */
+if ( ! function_exists( 'rt_log' ) ) {
+	function rt_log( $msg ) {
+		if ( defined( 'WP_DEBUG_LOG' ) && ! empty( WP_DEBUG_LOG ) ) {
+			error_log( $msg );
+		}
+	}
+}
 
 
 
