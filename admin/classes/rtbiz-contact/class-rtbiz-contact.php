@@ -20,16 +20,16 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		/**
 		 * @var string
 		 */
-		public $email_key           = 'contact_email';
+		public $email_key = 'contact_email';
 
 		/**
 		 * @var string
 		 */
-		static $primary_email_key   = 'contact_primary_email';
+		static $primary_email_key = 'contact_primary_email';
 		/**
 		 * @var string
 		 */
-		public $website_url_key     = 'contact_website';
+		public $website_url_key = 'contact_website';
 
 		public function __construct() {
 			parent::__construct( 'contact' );
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			rtbiz_register_p2p_connection( $this->post_type, 'user', array(
 				'cardinality'  => 'one-to-one',
 				'admin_column' => 'any',
-				'title' => '',
+				'title'        => '',
 				'from_labels'  => array(
 					'column_title' => 'User',
 				),
@@ -87,226 +87,226 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
-					'key' => 'contact_primary_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Primary Email Address' ),
+					'key'         => 'contact_primary_email',
+					'text'        => __( 'Email' ),
+					'label'       => __( 'Primary Email Address' ),
 					'is_multiple' => false,
-					'type' => 'email',
-					'name' => 'contact_meta[contact_primary_email]',
+					'type'        => 'email',
+					'name'        => 'contact_meta[contact_primary_email]',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'contact_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Secondary Email Address' ),
+					'key'         => 'contact_email',
+					'text'        => __( 'Email' ),
+					'label'       => __( 'Secondary Email Address' ),
 					'is_multiple' => true,
-					'type' => 'email',
-					'name' => 'contact_meta[contact_email][]',
-					'class' => 'input-multiple',
+					'type'        => 'email',
+					'name'        => 'contact_meta[contact_email][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'contact_phone',
-					'text' => __( 'Phone' ),
-					'label' => __( 'Phone Number' ),
+					'key'         => 'contact_phone',
+					'text'        => __( 'Phone' ),
+					'label'       => __( 'Phone Number' ),
 					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'contact_meta[contact_phone][]',
-					'class' => 'input-multiple',
+					'type'        => 'tel',
+					'name'        => 'contact_meta[contact_phone][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Phone number.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'contact_fax',
-					'text' => __( 'Fax' ),
-					'label' => __( 'Fax Number' ),
+					'key'         => 'contact_fax',
+					'text'        => __( 'Fax' ),
+					'label'       => __( 'Fax Number' ),
 					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'contact_meta[contact_fax][]',
-					'class' => 'input-multiple',
+					'type'        => 'tel',
+					'name'        => 'contact_meta[contact_fax][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Fax number.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'contact_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Website URL' ),
+					'key'         => 'contact_website',
+					'text'        => __( 'Website' ),
+					'label'       => __( 'Website URL' ),
 					'is_multiple' => true,
-					'type' => 'url',
-					'name' => 'contact_meta[contact_website][]',
-					'class' => 'input-multiple',
+					'type'        => 'url',
+					'name'        => 'contact_meta[contact_website][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Website URL.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'contact_dob',
-					'text' => __( 'Date of Birth' ),
-					'label' => __( 'Date of Birth' ),
-					'is_multiple' => false,
+					'key'           => 'contact_dob',
+					'text'          => __( 'Date of Birth' ),
+					'label'         => __( 'Date of Birth' ),
+					'is_multiple'   => false,
 					'is_datepicker' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_dob]',
-					'id' => 'contact_meta_contact_dob',
-					'description' => __( 'Date of Birth.' ),
-					'category' => 'Contact',
+					'type'          => 'text',
+					'name'          => 'contact_meta[contact_dob]',
+					'id'            => 'contact_meta_contact_dob',
+					'description'   => __( 'Date of Birth.' ),
+					'category'      => 'Contact',
 				),
 				array(
-					'key' => 'contact_address',
-					'text' => __( 'Address' ),
-					'label' => __( 'Address' ),
-					'is_multiple' => false,
-					'type' => 'textarea',
-					'name' => 'contact_meta[contact_address]',
-					'class' => '',
-					'description' => __( 'Address.' ),
+					'key'             => 'contact_address',
+					'text'            => __( 'Address' ),
+					'label'           => __( 'Address' ),
+					'is_multiple'     => false,
+					'type'            => 'textarea',
+					'name'            => 'contact_meta[contact_address]',
+					'class'           => '',
+					'description'     => __( 'Address.' ),
 					'hide_for_client' => true,
-					'category' => 'Contact',
+					'category'        => 'Contact',
 				),
 				array(
-					'key' => 'contact_postal_address',
-					'text' => __( 'Postal Address' ),
-					'label' => __( 'Postal Address' ),
-					'is_multiple' => false,
-					'type' => 'textarea',
-					'name' => 'contact_meta[contact_postal_address]',
-					'class' => '',
-					'description' => __( 'Postal Address.' ),
+					'key'             => 'contact_postal_address',
+					'text'            => __( 'Postal Address' ),
+					'label'           => __( 'Postal Address' ),
+					'is_multiple'     => false,
+					'type'            => 'textarea',
+					'name'            => 'contact_meta[contact_postal_address]',
+					'class'           => '',
+					'description'     => __( 'Postal Address.' ),
 					'hide_for_client' => true,
-					'category' => 'Contact',
+					'category'        => 'Contact',
 				),
 				array(
-					'key' => 'contact_tfn',
-					'text' => __( 'Tax File Number' ),
-					'label' => __( 'Tax File Number' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_tfn]',
-					'id' => 'contact_meta_contact_tfn',
-					'description' => __( 'Tax File Number.' ),
+					'key'             => 'contact_tfn',
+					'text'            => __( 'Tax File Number' ),
+					'label'           => __( 'Tax File Number' ),
+					'is_multiple'     => false,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_tfn]',
+					'id'              => 'contact_meta_contact_tfn',
+					'description'     => __( 'Tax File Number.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_skype_id',
-					'text' => __( 'Skype' ),
-					'label' => __( 'Skype Id' ),
+					'key'         => 'contact_skype_id',
+					'text'        => __( 'Skype' ),
+					'label'       => __( 'Skype Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_skype_id][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'contact_meta[contact_skype_id][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 				array(
-					'key' => 'contact_twitter',
-					'text' => __( 'Twitter' ),
-					'label' => __( 'Twitter Id' ),
+					'key'         => 'contact_twitter',
+					'text'        => __( 'Twitter' ),
+					'label'       => __( 'Twitter Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_twitter][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'contact_meta[contact_twitter][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 				array(
-					'key' => 'contact_facebook',
-					'text' => __( 'Facebook' ),
-					'label' => __( 'Facebook Id' ),
+					'key'         => 'contact_facebook',
+					'text'        => __( 'Facebook' ),
+					'label'       => __( 'Facebook Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_facebook][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'contact_meta[contact_facebook][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 
 				),
 				array(
-					'key' => 'contact_linkedin',
-					'text' => __( 'Linked In' ),
-					'label' => __( 'LinkedIn Id' ),
+					'key'         => 'contact_linkedin',
+					'text'        => __( 'Linked In' ),
+					'label'       => __( 'LinkedIn Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_linkedin][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'contact_meta[contact_linkedin][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 
 				),
 				array(
-					'key' => 'contact_kin_name',
-					'text' => __( 'Next of Kin Name' ),
-					'label' => __( 'Next of Kin Name' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_kin_name]',
-					'id' => 'contact_meta_contact_kin_name',
-					'description' => __( 'Next of Kin Name.' ),
+					'key'             => 'contact_kin_name',
+					'text'            => __( 'Next of Kin Name' ),
+					'label'           => __( 'Next of Kin Name' ),
+					'is_multiple'     => false,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_kin_name]',
+					'id'              => 'contact_meta_contact_kin_name',
+					'description'     => __( 'Next of Kin Name.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_kin_address',
-					'text' => __( 'Next of Kin Address' ),
-					'label' => __( 'Next of Kin Address' ),
-					'is_multiple' => false,
-					'type' => 'textarea',
-					'name' => 'contact_meta[contact_kin_address]',
-					'id' => 'contact_meta_contact_kin_address',
-					'description' => __( 'Next of Kin Address.' ),
+					'key'             => 'contact_kin_address',
+					'text'            => __( 'Next of Kin Address' ),
+					'label'           => __( 'Next of Kin Address' ),
+					'is_multiple'     => false,
+					'type'            => 'textarea',
+					'name'            => 'contact_meta[contact_kin_address]',
+					'id'              => 'contact_meta_contact_kin_address',
+					'description'     => __( 'Next of Kin Address.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_kin_number',
-					'text' => __( 'Next of Kin Number' ),
-					'label' => __( 'Next of Kin Number' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_kin_number]',
-					'id' => 'contact_meta_contact_kin_number',
-					'description' => __( 'Next of Kin Number.' ),
+					'key'             => 'contact_kin_number',
+					'text'            => __( 'Next of Kin Number' ),
+					'label'           => __( 'Next of Kin Number' ),
+					'is_multiple'     => false,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_kin_number]',
+					'id'              => 'contact_meta_contact_kin_number',
+					'description'     => __( 'Next of Kin Number.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_kin_relation',
-					'text' => __( 'Next of Kin Relation' ),
-					'label' => __( 'Next of Kin Relation' ),
-					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_kin_relation]',
-					'id' => 'contact_meta_contact_kin_relation',
-					'description' => __( 'Next of Kin Relation.' ),
+					'key'             => 'contact_kin_relation',
+					'text'            => __( 'Next of Kin Relation' ),
+					'label'           => __( 'Next of Kin Relation' ),
+					'is_multiple'     => false,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_kin_relation]',
+					'id'              => 'contact_meta_contact_kin_relation',
+					'description'     => __( 'Next of Kin Relation.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_commence_date',
-					'text' => __( 'Date of Commencement' ),
-					'label' => __( 'Date of Commencement' ),
-					'is_multiple' => false,
-					'is_datepicker' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_commence_date]',
-					'id' => 'contact_meta_contact_commence_date',
-					'description' => __( 'Date of Commencement.' ),
+					'key'             => 'contact_commence_date',
+					'text'            => __( 'Date of Commencement' ),
+					'label'           => __( 'Date of Commencement' ),
+					'is_multiple'     => false,
+					'is_datepicker'   => true,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_commence_date]',
+					'id'              => 'contact_meta_contact_commence_date',
+					'description'     => __( 'Date of Commencement.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 				array(
-					'key' => 'contact_terminate_date',
-					'text' => __( 'Date of Termination' ),
-					'label' => __( 'Date of Termination' ),
-					'is_multiple' => false,
-					'is_datepicker' => true,
-					'type' => 'text',
-					'name' => 'contact_meta[contact_terminate_date]',
-					'id' => 'contact_meta_contact_terminate_date',
-					'description' => __( 'Date of Termination.' ),
+					'key'             => 'contact_terminate_date',
+					'text'            => __( 'Date of Termination' ),
+					'label'           => __( 'Date of Termination' ),
+					'is_multiple'     => false,
+					'is_datepicker'   => true,
+					'type'            => 'text',
+					'name'            => 'contact_meta[contact_terminate_date]',
+					'id'              => 'contact_meta_contact_terminate_date',
+					'description'     => __( 'Date of Termination.' ),
 					'hide_for_client' => true,
-					'category' => 'HR',
+					'category'        => 'HR',
 				),
 			);
 		}
@@ -320,17 +320,17 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function init_labels() {
 			$this->labels = apply_filters( 'rtbiz_contact_labels', array(
-				'name' => __( 'Contacts' ),
-				'singular_name' => __( 'Contact' ),
-				'menu_name' => __( 'Contact' ),
-				'all_items' => __( 'All Contacts' ),
-				'add_new' => __( 'Add New' ),
-				'add_new_item' => __( 'Add Contact' ),
-				'edit_item' => __( 'Edit Contact' ),
-				'new_item' => __( 'New Contact' ),
-				'view_item' => __( 'View Contact' ),
-				'search_items' => __( 'Search Contact' ),
-				'not_found' => __( 'No Contact found' ),
+				'name'               => __( 'Contacts' ),
+				'singular_name'      => __( 'Contact' ),
+				'menu_name'          => __( 'Contact' ),
+				'all_items'          => __( 'All Contacts' ),
+				'add_new'            => __( 'Add New' ),
+				'add_new_item'       => __( 'Add Contact' ),
+				'edit_item'          => __( 'Edit Contact' ),
+				'new_item'           => __( 'New Contact' ),
+				'view_item'          => __( 'View Contact' ),
+				'search_items'       => __( 'Search Contact' ),
+				'not_found'          => __( 'No Contact found' ),
 				'not_found_in_trash' => __( 'No Contact found in Trash' ),
 			) );
 		}
@@ -340,9 +340,9 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		public function metabox_rearrange() {
 			global $wp_meta_boxes;
-			$custom_order['submitdiv'] = $wp_meta_boxes[ $this->post_type ]['side']['core']['submitdiv'];
+			$custom_order['submitdiv']                                   = $wp_meta_boxes[ $this->post_type ]['side']['core']['submitdiv'];
 			$custom_order[ 'p2p-from-' . $this->post_type . '_to_user' ] = $wp_meta_boxes[ $this->post_type ]['side']['default'][ 'p2p-from-' . $this->post_type . '_to_user' ];
-			$admin_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' );
+			$admin_cap                                                   = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' );
 			if ( current_user_can( $admin_cap ) ) {
 				$custom_order['rt-biz-acl-details'] = $wp_meta_boxes[ $this->post_type ]['side']['default']['rt-biz-acl-details'];
 			}
@@ -364,14 +364,14 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 					add_action( 'admin_notices', array( $this, 'primary_email_empty' ), 20 );
 					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'empty_primary_email_' . $_REQUEST['post'] );
 				}
-				if( $wp_user_not_connected = get_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_REQUEST['post'], true )){
+				if ( $wp_user_not_connected = get_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_REQUEST['post'], true ) ) {
 					add_action( 'admin_notices', array( $this, 'wp_user_not_connected' ), 20 );
 					delete_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_REQUEST['post'] );
 				}
 			}
 		}
 
-		function wp_user_not_connected(){
+		function wp_user_not_connected() {
 			?>
 			<div class="error">
 				<p><?php _e( 'There is no Wordpress User with primary email.', RTBIZ_TEXT_DOMAIN ); ?></p>
@@ -384,7 +384,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			<div class="error">
 				<p><?php _e( 'Primary email is necessary.', RTBIZ_TEXT_DOMAIN ); ?></p>
 			</div>
-		<?php
+			<?php
 		}
 
 		function primary_email_not_unique() {
@@ -392,11 +392,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			<div class="error">
 				<p><?php _e( 'Primary email is required to be unique.', RTBIZ_TEXT_DOMAIN ); ?></p>
 			</div>
-		<?php
+			<?php
 		}
 
 		/**
 		 * Filter contact
+		 *
 		 * @param $query
 		 */
 		function contact_posts_filter( $query ) {
@@ -405,15 +406,15 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type && rtbiz_get_contact_post_type() == $query->get( 'post_type' ) ) {
 
 				if ( ! empty( $_GET['fall_back'] ) ) {
-					return ;
+					return;
 				}
 				$_GET['fall_back'] = 'yes';
 
 				$module_where = isset( $_GET['module'] ) ? "acl.module =  '" . $_GET['module'] . "' and" : '';
-				$sql = 'SELECT DISTINCT(posts.ID) FROM '.$rtbiz_acl_model->table_name.' as acl INNER JOIN '.$wpdb->prefix.'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN '.$wpdb->posts.' as posts on (p2p.p2p_from = posts.ID )  where ' . $module_where . " acl.permission > 0 and p2p.p2p_type = '".rtbiz_get_contact_post_type()."_to_user' and posts.post_status= 'publish' and posts.post_type= '".rtbiz_get_contact_post_type()."' ";
-				$contacts = $wpdb->get_col( $sql );
+				$sql          = 'SELECT DISTINCT(posts.ID) FROM ' . $rtbiz_acl_model->table_name . ' as acl INNER JOIN ' . $wpdb->prefix . 'p2p as p2p on ( acl.userid = p2p.p2p_to ) INNER JOIN ' . $wpdb->posts . ' as posts on (p2p.p2p_from = posts.ID )  where ' . $module_where . " acl.permission > 0 and p2p.p2p_type = '" . rtbiz_get_contact_post_type() . "_to_user' and posts.post_status= 'publish' and posts.post_type= '" . rtbiz_get_contact_post_type() . "' ";
+				$contacts     = $wpdb->get_col( $sql );
 
-				$module_user = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
+				$module_user   = get_users( array( 'fields' => 'ID', 'role' => 'administrator' ) );
 				$admin_contact = rtbiz_get_contact_for_wp_user( $module_user );
 				foreach ( $admin_contact as $contact ) {
 					$contacts[] = $contact->ID;
@@ -421,7 +422,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 
 				if ( isset( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group'] ) {
 					if ( empty( $contacts ) ) {
-						$contacts = array( -1 );
+						$contacts = array( - 1 );
 					}
 					$query->set( 'post__in', $contacts );
 				} elseif ( isset( $_GET['contact_group'] ) && 'customer' == $_GET['contact_group'] && ! empty( $contacts ) ) {
@@ -440,12 +441,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function before_contact_deleted( $contactid ) {
 			// remove acl table entry
 			global $rtbiz_acl_model, $wpdb;
-			$query = $wpdb->prepare( "SELECT `p2p_to` FROM $wpdb->p2p WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
+			$query  = $wpdb->prepare( "SELECT `p2p_to` FROM $wpdb->p2p WHERE `p2p_type` = '%s' and `p2p_from` = %d", $this->post_type . '_to_user', $contactid );
 			$userid = $wpdb->get_col( $query );
 			if ( ! empty( $userid ) ) {
 				$userid = $userid[0];
 				do_action( 'rtbiz_before_delete_contact_acl_remove', $contactid, $userid );
-				$sql = $wpdb->prepare( "select module, max( permission ) as permission from $rtbiz_acl_model->table_name where userid = %d group by module", $userid );
+				$sql         = $wpdb->prepare( "select module, max( permission ) as permission from $rtbiz_acl_model->table_name where userid = %d group by module", $userid );
 				$permissions = $rtbiz_acl_model->get_result_by_query( $sql );
 				//$rtbiz_acl_model->delete( array( 'userid' => $userid ) );
 				foreach ( $permissions as $permission ) {
@@ -464,14 +465,15 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * Columns in List View
 		 *
 		 * @param $columns
+		 *
 		 * @return mixed|void
 		 */
 		function post_table_columns( $columns ) {
 
 			global $rtbiz_company, $rtbiz_contact, $rtbiz_products;
 
-			$cols = array();
-			$cols['cb'] = $columns['cb'];
+			$cols          = array();
+			$cols['cb']    = $columns['cb'];
 			$cols['title'] = __( 'Name' );
 			if ( $rtbiz_products ) {
 				$cols[ 'taxonomy-' . Rt_Products::$product_slug ] = $columns[ 'taxonomy-' . Rt_Products::$product_slug ];
@@ -535,7 +537,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 					}
 					if ( ! empty( $user_id ) ) {
 						$user_info = get_userdata( $user_id );
-						$url = esc_url( add_query_arg( array(
+						$url       = esc_url( add_query_arg( array(
 							'post_type'  => $this->post_type,
 							'created_by' => $user_id,
 						), 'edit.php' ) );
@@ -561,12 +563,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( isset( $_POST['post_ID'] ) && ! empty ( $_REQUEST['rtbiz_is_staff_member'] ) && 'yes' == $_REQUEST['rtbiz_is_staff_member'] ) {
 				$users = rtbiz_get_wp_user_for_contact( $_POST['post_ID'] );
 				if ( empty( $users[0] ) ) {
-					$primary_email = rtbiz_get_entity_meta($_POST['post_ID'], self::$primary_email_key, true);
-					$userid = email_exists( $primary_email );
+					$primary_email = rtbiz_get_entity_meta( $_POST['post_ID'], self::$primary_email_key, true );
+					$userid        = email_exists( $primary_email );
 					if ( rtbiz_is_primary_email_unique( $primary_email, $_POST['post_ID'] ) && ! is_wp_error( $userid ) && ! p2p_connection_exists( $this->post_type . '_to_user', array( 'to' => $userid ) ) ) {
 						rtbiz_connect_contact_to_user( $_POST['post_ID'], $userid );
 					} else {
-						update_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_POST[ 'post_ID' ], true );
+						update_user_meta( get_current_user_id(), Rtbiz_Entity::$meta_key_prefix . 'wp_user_not_connected_' . $_POST['post_ID'], true );
 					}
 				}
 			}
@@ -616,21 +618,21 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			?>
 			<script>
 
-				function IsEmail( email ) {
+				function IsEmail(email) {
 					var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-					if ( ! regex.test( email ) ) {
+					if (!regex.test(email)) {
 						return false;
 					} else {
 						return true;
 					}
 				}
 
-				jQuery( document ).ready( function( $ ) {
+				jQuery(document).ready(function ($) {
 
-					if ( jQuery( ".user-autocomplete" ).length > 0 ) {
-						jQuery( ".user-autocomplete" ).autocomplete( {
-							source: function( request, response ) {
-								$.ajax( {
+					if (jQuery(".user-autocomplete").length > 0) {
+						jQuery(".user-autocomplete").autocomplete({
+							source: function (request, response) {
+								$.ajax({
 									url: ajaxurl,
 									dataType: "json",
 									type: 'post',
@@ -639,81 +641,83 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 										maxRows: 10,
 										query: request.term
 									},
-									success: function( data ) {
-										response( $.map( data, function( item ) {
+									success: function (data) {
+										response($.map(data, function (item) {
 											return {
 												id: item.id,
 												imghtml: item.imghtml,
 												label: item.label
 											}
-										} ) );
+										}));
 									}
-								} );
+								});
 							}, minLength: 2,
-							select: function( event, ui ) {
-								jQuery( "#selected-user-contact" ).html( "<div id='subscribe-auth-" + ui.item.id + "'>" + ui.item.imghtml + ui.item.label + " &nbsp;<a href='#deleteContactUser'>X</a></div>" )
-								jQuery( ".user-autocomplete" ).val( "" );
-								jQuery( "#contact_meta_userid" ).val( ui.item.id );
+							select: function (event, ui) {
+								jQuery("#selected-user-contact").html("<div id='subscribe-auth-" + ui.item.id + "'>" + ui.item.imghtml + ui.item.label + " &nbsp;<a href='#deleteContactUser'>X</a></div>")
+								jQuery(".user-autocomplete").val("");
+								jQuery("#contact_meta_userid").val(ui.item.id);
 								return false;
 							}
-						} ).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-							return $( "<li></li>" ).data( "ui-autocomplete-item", item ).append( "<a class='ac-subscribe-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>" ).appendTo( ul );
+						}).data("ui-autocomplete")._renderItem = function (ul, item) {
+							return $("<li></li>").data("ui-autocomplete-item", item).append("<a class='ac-subscribe-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>").appendTo(ul);
 						};
 
-						$( document ).on( "click", "a[href=#deleteContactUser]", function() {
-							$( this ).parent().remove();
-							jQuery( "#contact_meta_userid" ).val( "" );
-						} );
+						$(document).on("click", "a[href=#deleteContactUser]", function () {
+							$(this).parent().remove();
+							jQuery("#contact_meta_userid").val("");
+						});
 					}
 
-					jQuery( document ).on( 'click', ".delete-multiple", function( e ) {
-						$( this ).prev().remove();
-						$( this ).remove();
-					} );
-					function addError( selector, msg ){
-						$( selector ).next().next().html( msg );
-						$( selector ).next().next().addClass('rtbiz-error');
+					jQuery(document).on('click', ".delete-multiple", function (e) {
+						$(this).prev().remove();
+						$(this).remove();
+					});
+					function addError(selector, msg) {
+						$(selector).next().next().html(msg);
+						$(selector).next().next().addClass('rtbiz-error');
 					}
-					function removeError( selector ){
-						$( selector ).next().next().html( '' );
-						$( selector ).next().next().removeClass( 'rtbiz-error' );
+
+					function removeError(selector) {
+						$(selector).next().next().html('');
+						$(selector).next().next().removeClass('rtbiz-error');
 					}
-					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
-						var tempVal = $( this ).prev().val();
-						var name = $( this ).prev().attr( "name" );
-						if ( tempVal == '' ){
-							addError( this, 'You must enter value to add more' );
+
+					jQuery(document).on('click', ".add-multiple", function (e) {
+						var tempVal = $(this).prev().val();
+						var name = $(this).prev().attr("name");
+						if (tempVal == '') {
+							addError(this, 'You must enter value to add more');
 							return;
 						}
-						else{
-							removeError( this );
+						else {
+							removeError(this);
 						}
-						if ( $( this ).data( "type" ) != undefined ) {
-							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) ) {
-									addError( this, 'Please enter valid email address' );
+						if ($(this).data("type") != undefined) {
+							if ($(this).data("type") == 'email') {
+								if (!IsEmail(tempVal)) {
+									addError(this, 'Please enter valid email address');
 									return;
 								} else {
-									removeError( this );
+									removeError(this);
 								}
-							} else if ( $( this ).data( "type" ) == 'tel' ) {
-								if ( ! validatePhone( tempVal ) ) {
-									addError( this, 'Please Enter Valid Number' );
+							} else if ($(this).data("type") == 'tel') {
+								if (!validatePhone(tempVal)) {
+									addError(this, 'Please Enter Valid Number');
 									return;
 								} else {
-									removeError( this );
+									removeError(this);
 								}
 							}
 						}
 
-						$( this ).prev().val( '' );
+						$(this).prev().val('');
 
-						$( this ).after( "<button type='button' class='button delete-multiple'> - </button>" );
-						$( this ).after( "<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />" );
-					} );
-				} );
+						$(this).after("<button type='button' class='button delete-multiple'> - </button>");
+						$(this).after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
+					});
+				});
 			</script>
-		<?php
+			<?php
 		}
 
 		/************************************* Helper Method *************************************/
@@ -728,10 +732,14 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			$query = $_POST['query'];
 			global $wpdb;
 
-			$results = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
+			$results   = $wpdb->get_results( "select ID,display_name,user_email from $wpdb->users where user_email like '%{$query}%' or display_name like '%{$query}%' or user_nicename like '%{$query}%' ;" );
 			$arrReturn = array();
 			foreach ( $results as $author ) {
-				$arrReturn[] = array( 'id' => $author->ID, 'label' => $author->display_name, 'imghtml' => get_avatar( $author->user_email, 25 ), 'editlink' => rtbiz_get_contact_edit_link( $author->user_email ) );
+				$arrReturn[] = array( 'id'       => $author->ID,
+				                      'label'    => $author->display_name,
+				                      'imghtml'  => get_avatar( $author->user_email, 25 ),
+				                      'editlink' => rtbiz_get_contact_edit_link( $author->user_email )
+				);
 			}
 			header( 'Content-Type: application/json' );
 			echo json_encode( $arrReturn );
@@ -746,13 +754,13 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function contact_create_for_wp_user( $user_id ) {
 			$contact_id = '';
-			$user = get_user_by( 'id', $user_id );
+			$user       = get_user_by( 'id', $user_id );
 			/* Check for existing contact using contact primary email. */
 			$check_exist_contact = get_posts(
 				array(
-					'post_type' 	=> $this->post_type,
-					'meta_key' 		=> self::$meta_key_prefix.self::$primary_email_key,
-					'meta_value' 	=> $user->user_email,
+					'post_type'  => $this->post_type,
+					'meta_key'   => self::$meta_key_prefix . self::$primary_email_key,
+					'meta_value' => $user->user_email,
 				)
 			);
 			if ( count( $check_exist_contact ) > 0 ) {
@@ -784,6 +792,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			if ( ! empty( $email ) ) {
 				rtbiz_update_entity_meta( $contact_id, self::$primary_email_key, $email );
 			}
+
 			return $contact_id;
 		}
 
@@ -791,6 +800,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * Returns a contact if found with passed email.
 		 *
 		 * @param $email
+		 *
 		 * @return array
 		 */
 		function get_by_email( $email ) {
@@ -821,6 +831,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 				'nopaging'        => true,
 			) );
 			add_action( 'pre_get_posts', array( $this, 'contact_posts_filter' ) );
+
 			return $posts;
 		}
 
@@ -834,7 +845,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function get_wp_user_for_contact( $contact_id ) {
 			return get_users(
 				array(
-					'connected_type' => $this->post_type . '_to_user',
+					'connected_type'  => $this->post_type . '_to_user',
 					'connected_items' => $contact_id,
 				)
 			);
@@ -846,16 +857,18 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * @param $column_name
 		 * @param $id
 		 *  Call back for managing user columns for exporter
+		 *
 		 * @return string
 		 */
 		function manage_export_user_columns( $value, $column_name, $id ) {
-			if ( 'p2p-to-'.$this->post_type.'_to_user' == $column_name ) {
+			if ( 'p2p-to-' . $this->post_type . '_to_user' == $column_name ) {
 				$posts = rtbiz_get_contact_for_wp_user( $id );
 				if ( ! empty( $posts ) ) {
-					return '<a href="'.get_edit_post_link( $posts[0]->ID ).'">'.$posts[0]->post_title.'</a>';
+					return '<a href="' . get_edit_post_link( $posts[0]->ID ) . '">' . $posts[0]->post_title . '</a>';
 				} else {
-					$nonce = wp_create_nonce( 'rt-biz-export-'.$id );
-					return '<button type="button" class="rtbiz-export button" data-id="'.$id.'">Export</button><input type="hidden" class="rtbiz-export-nonce" value="'.$nonce.'">';
+					$nonce = wp_create_nonce( 'rt-biz-export-' . $id );
+
+					return '<button type="button" class="rtbiz-export button" data-id="' . $id . '">Export</button><input type="hidden" class="rtbiz-export-nonce" value="' . $nonce . '">';
 				}
 			}
 
@@ -865,12 +878,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * AJAX callback for single user export from user.php
 		 */
 		function export_contact() {
-			check_ajax_referer( 'rt-biz-export-'.$_POST['id'], 'nonce' );
+			check_ajax_referer( 'rt-biz-export-' . $_POST['id'], 'nonce' );
 			$return_array = array();
-			$postid = $this->export_biz_contact( $_POST['id'] );
+			$postid       = $this->export_biz_contact( $_POST['id'] );
 			if ( ! empty( $postid ) ) {
-				$post = get_post( $postid );
-				$return_array['html'] = '<a href="'.get_edit_post_link( $postid ).'">'.$post->post_title.'</a>';
+				$post                   = get_post( $postid );
+				$return_array['html']   = '<a href="' . get_edit_post_link( $postid ) . '">' . $post->post_title . '</a>';
 				$return_array['status'] = true;
 			}
 			echo json_encode( $return_array );
@@ -882,7 +895,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function export_all_contacts() {
 			check_ajax_referer( 'rt-biz-export-all', 'nonce' );
-			$return = array();
+			$return             = array();
 			$return['complete'] = false;
 			//			$return['message'] = '';
 			$offset = 0;
@@ -892,9 +905,9 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 			$limit = 25;
 			$users = new WP_User_Query( array( 'fields' => 'ID', 'number' => $limit, 'offset' => $offset ) );
 
-			$count = $this->export_biz_contacts( $users->get_results() );
-			$return['count'] = $count;
-			$return['offset'] = $limit + $offset;
+			$count                       = $this->export_biz_contacts( $users->get_results() );
+			$return['count']             = $count;
+			$return['offset']            = $limit + $offset;
 			$return['contact_processed'] = count( $users->get_results() );
 			if ( $users->get_total() <= $return['offset'] ) {
 				$return['complete'] = true;
@@ -920,7 +933,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 */
 		function callback_bulk_action() {
 			if ( empty( $_REQUEST['users'] ) || empty( $_REQUEST['action'] ) || 'rtexport' != $_REQUEST['action'] ) {
-				return ;
+				return;
 			}
 			check_admin_referer( 'bulk-users' );
 			$userids = $_REQUEST['users'];
@@ -952,6 +965,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 					}
 				}
 			}
+
 			return $count;
 		}
 
@@ -959,33 +973,35 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		 * @param $id int WP_USER ID
 		 * export single contact from user to rtbiz contact
 		 * it will check if contact exists then it will map or else create new contact and will map with p2p
+		 *
 		 * @return mixed|null
 		 */
 		function export_biz_contact( $id ) {
 
 			$user = get_userdata( $id );
-			if ( empty( $user ) ){
+			if ( empty( $user ) ) {
 				return false;
 			}
-			$email = $user->user_email;
-			$post_id = null;
+			$email           = $user->user_email;
+			$post_id         = null;
 			$meta_query_args = array(
 				array(
 					'key'   => Rtbiz_Entity::$meta_key_prefix . self::$primary_email_key,
 					'value' => $email,
 				),
 			);
-			$args = array( 'post_type' => rtbiz_get_contact_post_type(), 'meta_query' => $meta_query_args );
-			$posts = get_posts( $args );
+			$args            = array( 'post_type' => rtbiz_get_contact_post_type(), 'meta_query' => $meta_query_args );
+			$posts           = get_posts( $args );
 
 			if ( rtbiz_is_primary_email_unique( $email ) && empty( $posts ) ) {
-				$post_id = rtbiz_add_contact( $user->display_name, '',$email );
+				$post_id = rtbiz_add_contact( $user->display_name, '', $email );
 			} else if ( ! empty( $posts ) ) {
 				$post_id = $posts[0]->ID;
 			}
 			if ( ! empty( $post_id ) ) {
 				rtbiz_connect_contact_to_user( $post_id, $id );
 			}
+
 			return $post_id;
 		}
 
@@ -996,12 +1012,12 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function add_export_user_bulk_action() {
 			?>
 			<script type="text/javascript">
-				jQuery(document).ready(function() {
+				jQuery(document).ready(function () {
 					jQuery('<option>').val('rtexport').text('<?php _e( 'Export to contacts' )?>').appendTo("select[name='action']");
 				});
 			</script>
 
-		<?php
+			<?php
 		}
 
 		/************************************* Metabox Method *************************************/

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-$settings = rtbiz_get_redux_settings();
+$settings   = rtbiz_get_redux_settings();
 $menu_label = __( 'rtBiz' );
 $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 ?>
@@ -26,11 +26,12 @@ $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 		if ( $hide ) {
 			$classes .= ' hidden';
 		}
-	?>
+		?>
 
 		<div id="rtbiz-welcome-panel" class="<?php echo esc_attr( $classes ); ?>">
 			<?php wp_nonce_field( 'rtbiz-welcome-panel-nonce', 'rtbizwelcomepanelnonce', false ); ?>
-			<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug . '&rtbizwelcome=0' ) ); ?>"><?php _e( 'Dismiss' ); ?></a>
+			<a class="welcome-panel-close"
+			   href="<?php echo esc_url( admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug . '&rtbizwelcome=0' ) ); ?>"><?php _e( 'Dismiss' ); ?></a>
 			<?php
 			/**
 			 * Add content to the welcome panel on the admin dashboard.
@@ -43,7 +44,7 @@ $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 			do_action( 'rtbiz_welcome_panel' );
 			?>
 		</div>
-<?php } ?>
+	<?php } ?>
 
 	<div id="poststuff">
 
@@ -69,11 +70,13 @@ $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 				<?php do_meta_boxes( '', 'column5', null ); ?>
 			</div>
 
-		</div> <!-- #post-body -->
+		</div>
+		<!-- #post-body -->
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<?php do_action( 'rtbiz_after_dashboard' ); ?>
 
-	</div> <!-- #poststuff -->
+	</div>
+	<!-- #poststuff -->
 
 </div><!-- .wrap -->

@@ -56,10 +56,10 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 				return;
 			}
 
-			$rtbiz_attributes_model = new RT_Attributes_Model();
+			$rtbiz_attributes_model              = new RT_Attributes_Model();
 			$rtbiz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
-			$relations = $rtbiz_attributes_relationship_model->get_relations_by_post_type( $typenow );
-			$taxonomies = array();
+			$relations                           = $rtbiz_attributes_relationship_model->get_relations_by_post_type( $typenow );
+			$taxonomies                          = array();
 
 			foreach ( $relations as $r ) {
 				$attr = $rtbiz_attributes_model->get_attribute( $r->attr_id );
@@ -67,9 +67,9 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 					$taxonomies[] = $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
 					if ( ! empty( $qv[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
 						$qv['taxonomy'] = $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
-						$qv['term_id'] = $qv[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
-						$term = get_term_by( 'id', $qv['term_id'], $qv['taxonomy'] );
-						$qv['term'] = $term->slug;
+						$qv['term_id']  = $qv[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];
+						$term           = get_term_by( 'id', $qv['term_id'], $qv['taxonomy'] );
+						$qv['term']     = $term->slug;
 						unset( $qv[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] );
 					} else {
 						unset( $qv[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] );
@@ -84,9 +84,9 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 			$post_types = array( rtbiz_get_contact_post_type(), rtbiz_get_company_post_type() );
 
 			if ( in_array( $typenow, $post_types ) ) {
-				$rtbiz_attributes_model = new RT_Attributes_Model();
+				$rtbiz_attributes_model              = new RT_Attributes_Model();
 				$rtbiz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
-				$relations = $rtbiz_attributes_relationship_model->get_relations_by_post_type( $typenow );
+				$relations                           = $rtbiz_attributes_relationship_model->get_relations_by_post_type( $typenow );
 				foreach ( $relations as $r ) {
 					$attr = $rtbiz_attributes_model->get_attribute( $r->attr_id );
 					if ( 'taxonomy' == $attr->attribute_store_as ) {
@@ -94,13 +94,13 @@ if ( ! class_exists( 'Rtbiz_Attributes' ) ) {
 						if ( ! empty( $tax ) ) {
 							$args = array(
 								'show_option_all' => __( "Show All {$tax->label}" ),
-								'taxonomy' => $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
-								'name' => $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
-								'orderby' => 'name',
-								'hierarchical' => true,
-								'depth' => 3,
-								'show_count' => false, // Show # listings in parens
-								'hide_empty' => true, // Don't show businesses w/o listings
+								'taxonomy'        => $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
+								'name'            => $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ),
+								'orderby'         => 'name',
+								'hierarchical'    => true,
+								'depth'           => 3,
+								'show_count'      => false, // Show # listings in parens
+								'hide_empty'      => true, // Don't show businesses w/o listings
 							);
 							if ( isset( $wp_query->query[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ] ) ) {
 								$args['selected'] = $wp_query->query[ $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name ) ];

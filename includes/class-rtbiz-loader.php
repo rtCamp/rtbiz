@@ -22,7 +22,6 @@
  * @subpackage rtbiz/includes
  * @author     Dipesh <dipesh.kakadiya@rtcamp.com>
  */
-
 class Rtbiz_Loader {
 
 	/**
@@ -30,7 +29,7 @@ class Rtbiz_Loader {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $actions    The actions registered with WordPress to fire when the plugin loads.
+	 * @var      array $actions The actions registered with WordPress to fire when the plugin loads.
 	 */
 	protected $actions;
 
@@ -39,7 +38,7 @@ class Rtbiz_Loader {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $filters    The filters registered with WordPress to fire when the plugin loads.
+	 * @var      array $filters The filters registered with WordPress to fire when the plugin loads.
 	 */
 	protected $filters;
 
@@ -59,9 +58,10 @@ class Rtbiz_Loader {
 	 * Add a new action to the collection to be registered with WordPress.
 	 *
 	 * @since    1.0.0
-	 * @param      string               $hook             The name of the WordPress action that is being registered.
-	 * @param      object               $component        A reference to the instance of the object on which the action is defined.
-	 * @param      string               $callback         The name of the function definition on the $component.
+	 *
+	 * @param      string $hook The name of the WordPress action that is being registered.
+	 * @param      object $component A reference to the instance of the object on which the action is defined.
+	 * @param      string $callback The name of the function definition on the $component.
 	 * @param      int      Optional    $priority         The priority at which the function should be fired.
 	 * @param      int      Optional    $accepted_args    The number of arguments that should be passed to the $callback.
 	 */
@@ -73,9 +73,10 @@ class Rtbiz_Loader {
 	 * Add a new filter to the collection to be registered with WordPress.
 	 *
 	 * @since    1.0.0
-	 * @param      string               $hook             The name of the WordPress filter that is being registered.
-	 * @param      object               $component        A reference to the instance of the object on which the filter is defined.
-	 * @param      string               $callback         The name of the function definition on the $component.
+	 *
+	 * @param      string $hook The name of the WordPress filter that is being registered.
+	 * @param      object $component A reference to the instance of the object on which the filter is defined.
+	 * @param      string $callback The name of the function definition on the $component.
 	 * @param      int      Optional    $priority         The priority at which the function should be fired.
 	 * @param      int      Optional    $accepted_args    The number of arguments that should be passed to the $callback.
 	 */
@@ -89,12 +90,14 @@ class Rtbiz_Loader {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param      array                $hooks            The collection of hooks that is being registered (that is, actions or filters).
-	 * @param      string               $hook             The name of the WordPress filter that is being registered.
-	 * @param      object               $component        A reference to the instance of the object on which the filter is defined.
-	 * @param      string               $callback         The name of the function definition on the $component.
+	 *
+	 * @param      array $hooks The collection of hooks that is being registered (that is, actions or filters).
+	 * @param      string $hook The name of the WordPress filter that is being registered.
+	 * @param      object $component A reference to the instance of the object on which the filter is defined.
+	 * @param      string $callback The name of the function definition on the $component.
 	 * @param      int      Optional    $priority         The priority at which the function should be fired.
 	 * @param      int      Optional    $accepted_args    The number of arguments that should be passed to the $callback.
+	 *
 	 * @return   type                                   The collection of actions and filters registered with WordPress.
 	 */
 	private function add( $hooks, $hook, $component, $callback, $priority, $accepted_args ) {
@@ -118,11 +121,17 @@ class Rtbiz_Loader {
 	 */
 	public function run() {
 		foreach ( $this->filters as $hook ) {
-			add_filter( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
+			add_filter( $hook['hook'], array(
+				$hook['component'],
+				$hook['callback']
+			), $hook['priority'], $hook['accepted_args'] );
 		}
 
 		foreach ( $this->actions as $hook ) {
-			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
+			add_action( $hook['hook'], array(
+				$hook['component'],
+				$hook['callback']
+			), $hook['priority'], $hook['accepted_args'] );
 		}
 
 	}

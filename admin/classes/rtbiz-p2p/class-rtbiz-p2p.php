@@ -8,29 +8,30 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 
 		public function __construct() {
 			add_action( 'p2p_init', array( $this, 'create_connection' ) );
-			add_filter( 'p2p_post_admin_column_link', array( $this,'change_link_to_admin' ), 10, 2 );
+			add_filter( 'p2p_post_admin_column_link', array( $this, 'change_link_to_admin' ), 10, 2 );
 		}
 
-		public function change_link_to_admin( $link, $item ){
-			$cpt = rtbiz_get_contact_post_type() ;
-			if ( $cpt == get_current_screen()->post_type && $cpt.'_to_user' === $item->p2p_type && current_user_can('edit_users') ){
+		public function change_link_to_admin( $link, $item ) {
+			$cpt = rtbiz_get_contact_post_type();
+			if ( $cpt == get_current_screen()->post_type && $cpt . '_to_user' === $item->p2p_type && current_user_can( 'edit_users' ) ) {
 				return get_edit_user_link( $item->ID );
 			}
+
 			return $link;
 		}
 
 		public function init_connection( $from_post_type, $to_post_type, $args ) {
-			$default_args = array(
+			$default_args                                          = array(
 				'admin_column' => 'any',
-				'title' => 'Connection',
-				'from_labels' => array(
+				'title'        => 'Connection',
+				'from_labels'  => array(
 					'column_title' => 'From',
 				),
-				'to_labels' => array(
+				'to_labels'    => array(
 					'column_title' => 'To',
 				),
 			);
-			$args = wp_parse_args( $args, $default_args );
+			$args                                                  = wp_parse_args( $args, $default_args );
 			$this->p2p_mapping[ $to_post_type ][ $from_post_type ] = $args;
 		}
 
@@ -43,7 +44,7 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 					$args = array_merge( array(
 						'name' => $from_post_type . '_to_' . $to_post_type,
 						'from' => $from_post_type,
-						'to' => $to_post_type,
+						'to'   => $to_post_type,
 					), $args );
 					p2p_register_connection_type( $args );
 				}
@@ -56,10 +57,14 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 
 
 		public function connect_post_to_entity( $from_post_type, $to_post_type, $from = '', $to = '' ) {
-			if ( ! p2p_connection_exists( $from_post_type . '_to_' . $to_post_type, array( 'from' => $from, 'to' => $to ) ) ) {
+			if ( ! p2p_connection_exists( $from_post_type . '_to_' . $to_post_type, array(
+				'from' => $from,
+				'to'   => $to
+			) )
+			) {
 				p2p_create_connection( $from_post_type . '_to_' . $to_post_type, array(
 					'from' => $from,
-					'to' => $to,
+					'to'   => $to,
 					'meta' => array(
 						'date' => current_time( 'mysql' ),
 					),
@@ -68,14 +73,14 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 		}
 
 		public static function connection_to_string( $post_id, $from_post_type, $to_post_type, $term_seperator = ' , ' ) {
-			$post = get_post( $post_id );
+			$post     = get_post( $post_id );
 			$termsArr = get_posts( array(
-				'connected_type' => $from_post_type . '_to_' . $to_post_type,
-				'connected_items' => $post,
-				'nopaging' => true,
+				'connected_type'   => $from_post_type . '_to_' . $to_post_type,
+				'connected_items'  => $post,
+				'nopaging'         => true,
 				'suppress_filters' => false,
 			) );
-			$tmpStr = '';
+			$tmpStr   = '';
 			if ( $termsArr ) {
 				$sep = '';
 				foreach ( $termsArr as $tObj ) {
@@ -83,16 +88,17 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 					$sep = $term_seperator;
 				}
 			}
+
 			return $tmpStr;
 		}
 
 		public function get_posts_for_entity( $post_id, $from_post_type, $to_post_type, $fetch_entity = false ) {
 			$args = array(
-				'post_type' => $from_post_type,
-				'post_status' => 'any',
-				'connected_type' => $from_post_type . '_to_' . $to_post_type,
-				'connected_items' => $post_id,
-				'nopaging' => true,
+				'post_type'        => $from_post_type,
+				'post_status'      => 'any',
+				'connected_type'   => $from_post_type . '_to_' . $to_post_type,
+				'connected_items'  => $post_id,
+				'nopaging'         => true,
 				'suppress_filters' => false,
 			);
 
@@ -104,7 +110,10 @@ if ( ! class_exists( 'Rtbiz_P2p' ) ) {
 		}
 
 		public function clear_post_connection_to_entity( $from_post_type, $to_post_type, $from = '', $to = '' ) {
-			return p2p_delete_connections( $from_post_type . '_to_' . $to_post_type, array( 'from' => $from, 'to' => $to ) );
+			return p2p_delete_connections( $from_post_type . '_to_' . $to_post_type, array(
+				'from' => $from,
+				'to'   => $to
+			) );
 		}
 
 	}

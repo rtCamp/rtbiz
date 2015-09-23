@@ -103,7 +103,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		 * Called on admin_footer-*
 		 */
 		public function footer_scripts() {
-	?>
+			?>
 			<script> postboxes.add_postbox_toggles(pagenow);</script> <?php
 		}
 
@@ -143,11 +143,11 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			//todo: create function to get all attribute in attribute class
 			$rtbiz_attributes_model              = new RT_Attributes_Model();
 			$rtbiz_attributes_relationship_model = new RT_Attributes_Relationship_Model();
-			$relations                            = $rtbiz_attributes_relationship_model->get_relations_by_post_type( rtbiz_get_contact_post_type() );
+			$relations                           = $rtbiz_attributes_relationship_model->get_relations_by_post_type( rtbiz_get_contact_post_type() );
 			foreach ( $relations as $r ) {
 				$attr = $rtbiz_attributes_model->get_attribute( $r->attr_id );
 				if ( 'taxonomy' == $attr->attribute_store_as ) {
-					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name,  $contact_labels['name'] . __( ' by ' ) . $attr->attribute_label, array(
+					add_meta_box( 'rtbiz-people-by-' . $attr->attribute_name, $contact_labels['name'] . __( ' by ' ) . $attr->attribute_label, array(
 						$this,
 						'dashboard_widget_content',
 					), $this->screen_id, 'column4', 'default', array( 'attribute_id' => $attr->id ) );
@@ -262,30 +262,30 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			<div id="comment-<?php echo $comment->comment_ID; ?>" <?php echo $comment_class ?> ><?php
 			echo get_avatar( $comment, 50, 'mystery' ); ?>
 			<div class="dashboard-comment-wrap"><?php
-			if ( ! $comment->comment_type || 'comment' == $comment->comment_type ) { ?>
-				<h4 class="comment-meta">
-				<?php /* translators: 1: comment author, 2: post link, 3: notification if the comment is pending */
-				printf( __( 'From %1$s on %2$s%3$s' ), '<cite class="comment-author">' . get_comment_author_link() . '</cite>', $comment_post_link . ' ' . $comment_link, ' <span class="approve">' . __( '[Pending]' ) . '</span>' ); ?>
-				</h4><?php
-			} else {
-				switch ( $comment->comment_type ) {
-					case 'pingback' :
-						$type = __( 'Pingback' );
-						break;
-					case 'trackback' :
-						$type = __( 'Trackback' );
-						break;
-					case 'rt_bot' :
-						$type = __( 'Bot Comment' );
-						break;
-					default :
-						$type = apply_filters( 'rtbiz_dashboard_recent_comments_row_comment_type', $comment->comment_type );
-				}
-				$type = esc_html( $type ); ?>
-				<h4 class="comment-meta"><?php printf( _x( '%1$s on %2$s', 'dashboard' ), "<strong>$type</strong>", $comment_post_link . ' ' . $comment_link ); ?></h4>
+				if ( ! $comment->comment_type || 'comment' == $comment->comment_type ) { ?>
+					<h4 class="comment-meta">
+					<?php /* translators: 1: comment author, 2: post link, 3: notification if the comment is pending */
+					printf( __( 'From %1$s on %2$s%3$s' ), '<cite class="comment-author">' . get_comment_author_link() . '</cite>', $comment_post_link . ' ' . $comment_link, ' <span class="approve">' . __( '[Pending]' ) . '</span>' ); ?>
+					</h4><?php
+				} else {
+					switch ( $comment->comment_type ) {
+						case 'pingback' :
+							$type = __( 'Pingback' );
+							break;
+						case 'trackback' :
+							$type = __( 'Trackback' );
+							break;
+						case 'rt_bot' :
+							$type = __( 'Bot Comment' );
+							break;
+						default :
+							$type = apply_filters( 'rtbiz_dashboard_recent_comments_row_comment_type', $comment->comment_type );
+					}
+					$type = esc_html( $type ); ?>
+					<h4 class="comment-meta"><?php printf( _x( '%1$s on %2$s', 'dashboard' ), "<strong>$type</strong>", $comment_post_link . ' ' . $comment_link ); ?></h4>
 
-				<p class="comment-author"><?php comment_author_link(); ?></p><?php
-			} ?>
+					<p class="comment-author"><?php comment_author_link(); ?></p><?php
+				} ?>
 				<blockquote><p><?php comment_text(); ?></p></blockquote>
 			</div>
 			</div><?php
@@ -342,6 +342,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 			if ( empty( $terms ) ) {
 				printf( 'No team found. <a href="%s" >Add new team</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug ) );
+
 				return;
 			}
 
@@ -435,6 +436,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 
 			if ( empty( $terms ) ) {
 				printf( 'No products found available [ products / downloads ]. <a href="%s" >Add new product</a>', admin_url( 'edit-tags.php?taxonomy=' . Rt_Products::$product_slug ) );
+
 				return;
 			}
 
@@ -476,15 +478,15 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 		public function dashboard_widget_content( $obj, $args ) {
 			global $rtbiz_rt_attributes;
 			$rtbiz_attributes_model = new RT_Attributes_Model();
-			$attribute_id            = $args['args']['attribute_id'];
-			$attr                    = $rtbiz_attributes_model->get_attribute( $attribute_id );
-			$taxonomy                = $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
-			$post_type               = rtbiz_get_contact_post_type();
-			$terms                   = get_terms( $taxonomy );
-			$data_source             = array();
-			$cols                    = array( $attr->attribute_label, __( 'People' ) );
-			$rows                    = array();
-			$total                   = 0;
+			$attribute_id           = $args['args']['attribute_id'];
+			$attr                   = $rtbiz_attributes_model->get_attribute( $attribute_id );
+			$taxonomy               = $rtbiz_rt_attributes->get_taxonomy_name( $attr->attribute_name );
+			$post_type              = rtbiz_get_contact_post_type();
+			$terms                  = get_terms( $taxonomy );
+			$data_source            = array();
+			$cols                   = array( $attr->attribute_label, __( 'People' ) );
+			$rows                   = array();
+			$total                  = 0;
 
 			if ( ! $terms instanceof WP_Error ) {
 				foreach ( $terms as $t ) {
@@ -575,18 +577,18 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 					<div class="welcome-panel-column">
 						<h4><?php _e( 'Next Steps' ); ?></h4>
 						<ul><?php
-						if ( current_user_can( $editor_cap ) ) {
-							$rtbiz_setting_url = admin_url( 'admin.php?page=rt-biz-settings' );
-							echo '<li>';
-							echo '<a class="welcome-icon welcome-admin-users" href="' . $rtbiz_setting_url . '" style="display: inline-block;" >' . __( 'Import' ) . ' ' . strtolower( $contact_labels['name'] ) . '</a>';
-							echo '</li>';
-						}
-						if ( current_user_can( $editor_cap ) ) { ?>
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Team & assign them to' ) . ' ' . strtolower( $contact_labels['singular_name'] ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
-						<?php }
-						if ( current_user_can( $admin_cap ) ) { ?>
-							<li><?php printf( '<a href="%s" class="welcome-icon welcome-lock">' . __( 'Define your Access Control for' ) . ' ' . $welcome_label . '</a>', admin_url( 'admin.php?page=' . Rtbiz_Access_Control::$page_slug ) ); ?></li>
-						<?php } ?>
+							if ( current_user_can( $editor_cap ) ) {
+								$rtbiz_setting_url = admin_url( 'admin.php?page=rt-biz-settings' );
+								echo '<li>';
+								echo '<a class="welcome-icon welcome-admin-users" href="' . $rtbiz_setting_url . '" style="display: inline-block;" >' . __( 'Import' ) . ' ' . strtolower( $contact_labels['name'] ) . '</a>';
+								echo '</li>';
+							}
+							if ( current_user_can( $editor_cap ) ) { ?>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-universal-access-alt">' . __( 'Add new Team & assign them to' ) . ' ' . strtolower( $contact_labels['singular_name'] ) . '</a>', admin_url( 'edit-tags.php?taxonomy=' . Rtbiz_Teams::$slug . '&post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
+							<?php }
+							if ( current_user_can( $admin_cap ) ) { ?>
+								<li><?php printf( '<a href="%s" class="welcome-icon welcome-lock">' . __( 'Define your Access Control for' ) . ' ' . $welcome_label . '</a>', admin_url( 'admin.php?page=' . Rtbiz_Access_Control::$page_slug ) ); ?></li>
+							<?php } ?>
 						</ul>
 					</div>
 

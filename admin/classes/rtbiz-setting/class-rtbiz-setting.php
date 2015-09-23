@@ -49,7 +49,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			//add_action("redux/options/{$this->args[ 'opt_name' ]}/register", array( $this, 'test') );
 		}
 
-		public  function rtbiz_on_redux_save( $setting, $old_setting ) {
+		public function rtbiz_on_redux_save( $setting, $old_setting ) {
 			//removed product sync option
 			$diff = array();
 			if ( ! empty( $setting['product_plugin'] ) && ! empty( $old_setting['product_plugin'] ) ) {
@@ -131,7 +131,10 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 
 			// Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
 			if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
-				remove_filter( 'plugin_row_meta', array( ReduxFrameworkPlugin::instance(), 'plugin_metalinks' ), null, 2 );
+				remove_filter( 'plugin_row_meta', array(
+					ReduxFrameworkPlugin::instance(),
+					'plugin_metalinks'
+				), null, 2 );
 
 				// Used to hide the activation notice informing users of the demo panel. Only used when Redux is a plugin.
 				remove_action( 'admin_notices', array( ReduxFrameworkPlugin::instance(), 'admin_notices' ) );
@@ -144,7 +147,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 		 */
 		public function rtbiz_set_sections() {
 			$admin_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'admin' );
-			$editor_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
+			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 
 			// ACTUAL DECLARATION OF SECTIONS
 			$general_fields = array(
@@ -157,7 +160,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 					'options'  => array(
 						//'none'         => __( 'None' ),
 						'woocommerce' => __( 'WooCommerce' ),
-						'edd' => __( 'Easy Digital Download' ),
+						'edd'         => __( 'Easy Digital Download' ),
 					),
 					'default'  => 'none',
 				),
@@ -177,7 +180,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			$contact_importer_subtitle .= '<a href="' . admin_url( 'users.php' ) . '">WP users</a> page.';
 			$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as ' . $contact_labels['name'] . '.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing ' . $contact_labels['name'] . ' is a heavy process. So please be patient.</span></p><br/>' );
 			$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
-			$this->sections[]   = array(
+			$this->sections[] = array(
 				'title'       => $contact_labels['singular_name'] . ' ' . __( 'Importer' ),
 				'icon'        => 'el-icon-list-alt',
 				'permissions' => $editor_cap,
@@ -197,9 +200,9 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 				'permissions' => $admin_cap,
 				'fields'      => array(
 					array(
-						'id'      => 'rtbiz_Mailbox_list',
-						'type'    => 'callback',
-						'title'   => 'Mailbox List',
+						'id'       => 'rtbiz_Mailbox_list',
+						'type'     => 'callback',
+						'title'    => 'Mailbox List',
 						'subtitle' => __( 'All Configured Mailbox(s)' ),
 						//'desc'    => 'Following mailboxes have been configured for various modules. Emails from these mailboxes will be parsed and Helpdesk will use them to create new ticket / add new followup accordingly. You can configure these mailboxes from <a href="'.add_query_arg( 'page', RT_BIZ_Configuration::$page_slug, admin_url( 'admin.php' ) ).'"rtBiz</a>',
 						'callback' => 'rtbiz_mailbox_list_view',
@@ -215,8 +218,9 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 					'title'       => __( 'Add-ons' ),
 					'permissions' => $admin_cap,
 				);
-				$this->sections = array_merge( $this->sections, $addons );
+				$this->sections   = array_merge( $this->sections, $addons );
 			}
+
 			return true;
 		}
 
@@ -228,7 +232,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 		public function rtbiz_set_arguments() {
 
 			//$theme = wp_get_theme(); // For use with some settings. Not necessary.
-			$editor_cap  = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
+			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
 			$this->args = array(
 				// TYPICAL -> Change these values as you need/desire
 				'opt_name'           => self::$biz_opt,
@@ -322,6 +326,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 					),
 				),
 			);
+
 			return true;
 		}
 

@@ -1,20 +1,21 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: spock
  * Date: 21/1/15
  * Time: 5:36 PM
  */
-
-class Test_Rt_Access_Control extends RT_WP_TestCase  {
+class Test_Rt_Access_Control extends RT_WP_TestCase {
 
 	var $access_control;
+
 	function setUp() {
 		parent::setUp();
 		$this->access_control = new Rtbiz_Access_Control();
 	}
 
-	function test_functions(){
+	function test_functions() {
 		$this->assertTrue( method_exists( $this->access_control, 'filter_caps' ), 'method filter_caps does not exist in Rt_Access_Control' );
 		$this->assertTrue( method_exists( $this->access_control, 'init_acl' ), 'method init_acl does not exist in Rt_Access_Control' );
 		$this->assertTrue( method_exists( $this->access_control, 'get_capability_from_access_role' ), 'method get_capability_from_access_role does not exist in Rt_Access_Control' );

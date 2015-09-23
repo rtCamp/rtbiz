@@ -67,12 +67,13 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 				self::$instance = new Rtbiz();
 				add_action( 'plugins_loaded', array( self::$instance, 'init_plugin' ) );
 			}
+
 			return self::$instance;
 		}
 
 		private static function _p2p_load() {
 			require_once RTBIZ_PATH . 'includes/class-rtbiz-posts-to-posts.php';
-			global $rtbiz_posts_to_posts ;
+			global $rtbiz_posts_to_posts;
 			// Load p2p library and init
 			$rtbiz_posts_to_posts = new Rtbiz_Post_To_Post();
 		}
@@ -192,7 +193,7 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 
 			self::$templateURL = apply_filters( 'rtbiz_template_url', 'rtbiz/' );
 
-			$plugin_admin = new Rtbiz_Admin( );
+			$plugin_admin = new Rtbiz_Admin();
 
 			if ( is_admin() ) {
 				// update menu order of rtbiz menu

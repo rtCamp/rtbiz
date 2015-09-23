@@ -65,22 +65,24 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 */
 		private function register_post_type( $name, $labels = array() ) {
 			$args = apply_filters( 'rtbiz_entity_register_post_type_args', array(
-				'labels' => $labels,
-				'public' => false,
+				'labels'             => $labels,
+				'public'             => false,
 				'publicly_queryable' => false,
-				'show_ui' => true, // Show the UI in admin panel
-				'show_in_nav_menus' => false,
-				'show_in_menu' => Rtbiz_Dashboard::$page_slug,
-				'show_in_admin_bar' => false,
-				'supports' => array( 'title', 'comments', 'thumbnail' ),
-				'capability_type' => $name,
-				'map_meta_cap' => true, //Required For ACL Without map_meta_cap Cap ACL isn't working.
+				'show_ui'            => true,
+				// Show the UI in admin panel
+				'show_in_nav_menus'  => false,
+				'show_in_menu'       => Rtbiz_Dashboard::$page_slug,
+				'show_in_admin_bar'  => false,
+				'supports'           => array( 'title', 'comments', 'thumbnail' ),
+				'capability_type'    => $name,
+				'map_meta_cap'       => true,
+				//Required For ACL Without map_meta_cap Cap ACL isn't working.
 				//Default WordPress check post capability on admin page so we need to map custom post type capability with post capability.
 			), $name );
 			register_post_type( $name, $args );
 		}
 
-		public function get_meta_fields(){
+		public function get_meta_fields() {
 			return $this->meta_fields;
 		}
 
@@ -118,6 +120,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * Overridden in Child Classes
 		 *
 		 * @param $columns
+		 *
 		 * @return mixed|void
 		 */
 		public function post_table_columns( $columns ) {
@@ -152,7 +155,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		public function entity_meta_boxes() {
 			add_meta_box( 'rt-biz-entity-details', __( 'Additional Details' ), 'Rtbiz_Entity_Additional_Detail::ui', $this->post_type, 'normal', 'default' );
 			add_meta_box( 'rt-biz-entity-assigned_to', __( 'Assigned To' ), 'Rtbiz_Entity_Assignee::ui', $this->post_type, 'side', 'default' );
-			do_action( 'rtbiz_entity_meta_boxes-' . $this->post_type , $this->post_type );
+			do_action( 'rtbiz_entity_meta_boxes-' . $this->post_type, $this->post_type );
 			do_action( 'rtbiz_entity_meta_boxes', $this->post_type );
 		}
 
@@ -208,7 +211,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 */
 		protected function save_meta_values( $post_id, $post ) {
 			do_action( 'rtbiz_save_entity_meta', $post_id, $post, $this );
-			do_action( 'rtbiz_save_entity_meta-' . $this->post_type , $post_id, $post, $this );
+			do_action( 'rtbiz_save_entity_meta-' . $this->post_type, $post_id, $post, $this );
 		}
 
 		public function save_old_data( $post_id ) {
@@ -267,19 +270,19 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 				}
 
 				if ( 'true' == $field['is_multiple'] ) {
-					$val = self::get_meta( $post_id, $field['key'] );
-					$filerval = array_filter( $val );
+					$val       = self::get_meta( $post_id, $field['key'] );
+					$filerval  = array_filter( $val );
 					$filerpost = array_filter( $_POST[ $meta_key ][ $field['key'] ] );
-					$diff = array_diff( $filerval, $filerpost );
-					$diff2 = array_diff( $filerpost, $filerval );
-					$difftxt = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
+					$diff      = array_diff( $filerval, $filerpost );
+					$diff2     = array_diff( $filerpost, $filerval );
+					$difftxt   = rtbiz_text_diff( implode( ' ', $diff ), implode( ' ', $diff2 ) );
 					if ( ! empty( $difftxt ) || '' != $difftxt ) {
 						$skip_enter = str_replace( 'Enter', '', $field['label'] );
 						$body .= "<strong>{ $skip_enter }</strong> : " . $difftxt;
 						$flag = true;
 					}
 				} else {
-					$val = self::get_meta( $post_id, $field['key'], true );
+					$val    = self::get_meta( $post_id, $field['key'], true );
 					$newval = $_POST[ $meta_key ][ $field['key'] ];
 					if ( $val != $newval ) {
 						$difftxt = rtbiz_text_diff( $val, $newval );
@@ -296,11 +299,11 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 				$user = wp_get_current_user();
 				$body = 'Updated by <strong>' . $user->display_name . '</strong> <br/>' . $body;
 				$data = array(
-					'comment_post_ID' => $post_id,
-					'comment_content' => $body,
-					'comment_type' => 'rt_bot',
+					'comment_post_ID'  => $post_id,
+					'comment_content'  => $body,
+					'comment_type'     => 'rt_bot',
 					'comment_approved' => 1,
-					'comment_author' => 'rtBiz' . ' Bot',
+					'comment_author'   => 'rtBiz' . ' Bot',
 				);
 				wp_insert_comment( $data );
 			}
@@ -308,43 +311,46 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 
 		/**
 		 * Filter the bulk action updated messages for '. $singular .'.
+		 *
 		 * @param $bulk_messages
 		 * @param $bulk_counts
 		 *
 		 * @return $bulk_messages
 		 */
 		public function bulk_entity_update_messages( $bulk_messages, $bulk_counts ) {
-			$singular = strtolower( $this->labels['singular_name'] );
-			$plural = strtolower( $this->labels['name'] );
+			$singular                          = strtolower( $this->labels['singular_name'] );
+			$plural                            = strtolower( $this->labels['name'] );
 			$bulk_messages[ $this->post_type ] = array(
-				'updated' => _n( '%s ' . $singular . ' updated.', '%s ' . $plural . ' updated.', $bulk_counts['updated'] ),
-				'locked' => _n( '%s ' . $singular . ' not updated, somebody is editing it.', '%s ' . $plural . ' not updated, somebody is editing them.', $bulk_counts['locked'] ),
-				'deleted' => _n( '%s ' . $singular . ' permanently deleted.', '%s ' . $plural . ' permanently deleted.', $bulk_counts['deleted'] ),
-				'trashed' => _n( '%s ' . $singular . ' moved to the Trash.', '%s ' . $plural . ' moved to the Trash.', $bulk_counts['trashed'] ),
+				'updated'   => _n( '%s ' . $singular . ' updated.', '%s ' . $plural . ' updated.', $bulk_counts['updated'] ),
+				'locked'    => _n( '%s ' . $singular . ' not updated, somebody is editing it.', '%s ' . $plural . ' not updated, somebody is editing them.', $bulk_counts['locked'] ),
+				'deleted'   => _n( '%s ' . $singular . ' permanently deleted.', '%s ' . $plural . ' permanently deleted.', $bulk_counts['deleted'] ),
+				'trashed'   => _n( '%s ' . $singular . ' moved to the Trash.', '%s ' . $plural . ' moved to the Trash.', $bulk_counts['trashed'] ),
 				'untrashed' => _n( '%s ' . $singular . ' restored from the Trash.', '%s ' . $plural . ' restored from the Trash.', $bulk_counts['untrashed'] ),
 			);
+
 			return $bulk_messages;
 		}
 
 		/**
 		 * Added message when entity update
+		 *
 		 * @param $messages
 		 *
 		 * @return mixed
 		 */
 		public function entity_updated_messages( $messages ) {
-			$singular = $this->labels['singular_name'];
+			$singular                     = $this->labels['singular_name'];
 			$messages[ $this->post_type ] = array(
-				0 => '', // Unused. Messages start at index 1.
-				1 => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
-				2 => __( 'Custom field updated.', RTBIZ_TEXT_DOMAIN ),
-				3 => __( 'Custom field deleted.', RTBIZ_TEXT_DOMAIN ),
-				4 => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
+				0  => '', // Unused. Messages start at index 1.
+				1  => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
+				2  => __( 'Custom field updated.', RTBIZ_TEXT_DOMAIN ),
+				3  => __( 'Custom field deleted.', RTBIZ_TEXT_DOMAIN ),
+				4  => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
 				/* translators: %s: date and time of the revision */
-				5 => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', RTBIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-				6 => __( $singular . ' published.', RTBIZ_TEXT_DOMAIN ),
-				7 => __( $singular . ' saved.', RTBIZ_TEXT_DOMAIN ),
-				8 => __( $singular . ' submitted.', RTBIZ_TEXT_DOMAIN ),
+				5  => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', RTBIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6  => __( $singular . ' published.', RTBIZ_TEXT_DOMAIN ),
+				7  => __( $singular . ' saved.', RTBIZ_TEXT_DOMAIN ),
+				8  => __( $singular . ' submitted.', RTBIZ_TEXT_DOMAIN ),
 				10 => __( $singular . ' draft updated.', RTBIZ_TEXT_DOMAIN ),
 			);
 
@@ -354,11 +360,13 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		/**
 		 * @param $where
 		 * skip rtbot comments from feeds
+		 *
 		 * @return string
 		 */
 		public function skip_feed_comments( $where ) {
 			global $wpdb;
 			$where .= $wpdb->prepare( ' AND comment_type != %s', 'rt_bot' );
+
 			return $where;
 		}
 
@@ -371,7 +379,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 					if ( ! is_array( $types ) ) {
 						$types = array( $types );
 					}
-					$types[] = 'rt_bot';
+					$types[]                                 = 'rt_bot';
 					$commentdata->query_vars['type__not_in'] = $types;
 				}
 			} else {
@@ -379,9 +387,10 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 				if ( ! is_array( $types ) ) {
 					$types = array( $types );
 				}
-				$types[] = 'rt_bot';
+				$types[]                                 = 'rt_bot';
 				$commentdata->query_vars['type__not_in'] = $types;
 			}
+
 			return $commentdata;
 		}
 
@@ -400,6 +409,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		 * @param $id
 		 * @param $key
 		 * @param bool $single
+		 *
 		 * @return mixed
 		 */
 		public static function get_meta( $id, $key, $single = false ) {
@@ -429,17 +439,18 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		/**
 		 * @param $query
 		 * @param $args
+		 *
 		 * @return array
 		 */
 		public function search_entity( $query, $args = array() ) {
 			$query_args = array(
-				'post_type' => $this->post_type,
-				'post_status' => 'any',
+				'post_type'      => $this->post_type,
+				'post_status'    => 'any',
 				'posts_per_page' => 10,
-				's' => $query,
+				's'              => $query,
 			);
-			$args = array_merge( $query_args, $args );
-			$entity = new WP_Query( $args );
+			$args       = array_merge( $query_args, $args );
+			$entity     = new WP_Query( $args );
 
 			return $entity->posts;
 		}
@@ -448,6 +459,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		/**
 		 * @param $translation
 		 * @param $text
+		 *
 		 * @return string
 		 */
 		/*public function change_publish_button( $translation, $text ) {

@@ -145,30 +145,30 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 		}
 
 		public function rtbiz_plugin_not_installed_admin_notice() {
-	?>
+			?>
 			<div class="error rtbiz-plugin-not-installed-error"><?php
-			foreach ( $this->plugins_dependency as $plugin_slug => $plugin ) {
-				if ( ! $this->rtbiz_is_plugin_installed( $plugin_slug ) ) {
-					$nonce = wp_create_nonce( 'rtbiz_install_plugin_' . $plugin_slug ); ?>
-					<p>
-					<b><?php _e( 'rtBiz:' ); ?></b><?php _e( 'Click' ) ?>
-				<a href="#"
-				   onclick="install_rtbiz_plugin( '<?php echo $plugin_slug; ?>', 'rtbiz_install_plugin', '<?php echo $nonce ?>' )">
-						here</a><?php
-						_e( ' to install ' . $plugin['name'] . '.', $plugin_slug ) ?>
-					</p><?php
-				} elseif ( $this->rtbiz_is_plugin_installed( $plugin_slug ) && ! $this->rtbiz_is_plugin_active( $plugin_slug ) ) {
-					$path  = $this->rtbiz_get_path_for_plugin( $plugin_slug );
-					$nonce = wp_create_nonce( 'rtbiz_activate_plugin_' . $path ); ?>
-					<p>
-					<b><?php _e( 'rtBiz:' ); ?></b><?php _e( 'Click' ) ?>
+				foreach ( $this->plugins_dependency as $plugin_slug => $plugin ) {
+					if ( ! $this->rtbiz_is_plugin_installed( $plugin_slug ) ) {
+						$nonce = wp_create_nonce( 'rtbiz_install_plugin_' . $plugin_slug ); ?>
+						<p>
+						<b><?php _e( 'rtBiz:' ); ?></b><?php _e( 'Click' ) ?>
 					<a href="#"
-					   onclick="activate_rtbiz_plugin( '<?php echo $path ?>', 'rtbiz_activate_plugin', '<?php echo $nonce; ?>' )">
-						here</a> <?php
+					   onclick="install_rtbiz_plugin( '<?php echo $plugin_slug; ?>', 'rtbiz_install_plugin', '<?php echo $nonce ?>' )">
+							here</a><?php
+						_e( ' to install ' . $plugin['name'] . '.', $plugin_slug ) ?>
+						</p><?php
+					} elseif ( $this->rtbiz_is_plugin_installed( $plugin_slug ) && ! $this->rtbiz_is_plugin_active( $plugin_slug ) ) {
+						$path  = $this->rtbiz_get_path_for_plugin( $plugin_slug );
+						$nonce = wp_create_nonce( 'rtbiz_activate_plugin_' . $path ); ?>
+						<p>
+						<b><?php _e( 'rtBiz:' ); ?></b><?php _e( 'Click' ) ?>
+						<a href="#"
+						   onclick="activate_rtbiz_plugin( '<?php echo $path ?>', 'rtbiz_activate_plugin', '<?php echo $nonce; ?>' )">
+							here</a> <?php
 						_e( ' to activate ' . $plugin['name'] . '.', $plugin_slug ) ?>
-					</p><?php
-				}
-			} ?>
+						</p><?php
+					}
+				} ?>
 			</div> <?php
 		}
 

@@ -11,6 +11,7 @@ if ( ! class_exists( 'Rtbiz_Migration' ) ) {
 	/*
 	 *
 	 */
+
 	class Rtbiz_Migration {
 
 		/*

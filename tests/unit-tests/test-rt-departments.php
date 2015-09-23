@@ -1,22 +1,24 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: spock
  * Date: 21/1/15
  * Time: 5:50 PM
  */
-
 class Test_RT_Departments extends RT_WP_TestCase {
 	var $dept;
+
 	function setUp() {
 		parent::setUp();
 		$this->dept = new RT_Departments();
 	}
-	function test_dept_exist(){
+
+	function test_dept_exist() {
 		$this->assertEquals( true, taxonomy_exists( RT_Departments::$slug ) );
 	}
 
-	function test_method_exist(){
+	function test_method_exist() {
 		$this->assertTrue( method_exists( $this->dept, 'get_lables' ), 'method get_lables does not exist in RT_Departments' );
 		$this->assertTrue( method_exists( $this->dept, 'row_actions' ), 'method row_actions does not exist in RT_Departments' );
 		$this->assertTrue( method_exists( $this->dept, 'save_department' ), 'method save_department does not exist in RT_Departments' );

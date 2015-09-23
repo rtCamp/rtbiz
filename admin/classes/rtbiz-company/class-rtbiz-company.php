@@ -39,124 +39,124 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		function setup_meta_fields() {
 			$this->meta_fields = array(
 				array(
-					'key' => 'company_address',
-					'text' => __( 'Address' ),
-					'label' => __( 'Address' ),
+					'key'         => 'company_address',
+					'text'        => __( 'Address' ),
+					'label'       => __( 'Address' ),
 					'is_multiple' => false,
-					'type' => 'textarea',
-					'name' => 'company_meta[company_address]',
-					'id' => 'company_meta_address',
+					'type'        => 'textarea',
+					'name'        => 'company_meta[company_address]',
+					'id'          => 'company_meta_address',
 					'description' => __( 'Organization address.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_country',
-					'text' => __( 'Country' ),
-					'label' => __( 'Country' ),
+					'key'         => 'company_country',
+					'text'        => __( 'Country' ),
+					'label'       => __( 'Country' ),
 					'is_multiple' => false,
-					'type' => 'text',
-					'name' => 'company_meta[company_country]',
-					'id' => 'company_meta_address',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_country]',
+					'id'          => 'company_meta_address',
 					'description' => __( 'Organization country.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_phone',
-					'text' => __( 'Phone' ),
-					'label' => __( 'Phone Number' ),
+					'key'         => 'company_phone',
+					'text'        => __( 'Phone' ),
+					'label'       => __( 'Phone Number' ),
 					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'company_meta[company_phone][]',
-					'class' => 'input-multiple',
+					'type'        => 'tel',
+					'name'        => 'company_meta[company_phone][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Phone number.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_fax',
-					'text' => __( 'Fax' ),
-					'label' => __( 'Fax Number' ),
+					'key'         => 'company_fax',
+					'text'        => __( 'Fax' ),
+					'label'       => __( 'Fax Number' ),
 					'is_multiple' => true,
-					'type' => 'tel',
-					'name' => 'company_meta[company_fax][]',
-					'class' => 'input-multiple',
+					'type'        => 'tel',
+					'name'        => 'company_meta[company_fax][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Fax number.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_primary_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Primary Email Address' ),
+					'key'         => 'company_primary_email',
+					'text'        => __( 'Email' ),
+					'label'       => __( 'Primary Email Address' ),
 					'is_multiple' => false,
-					'type' => 'email',
-					'name' => 'company_meta[company_primary_email]',
+					'type'        => 'email',
+					'name'        => 'company_meta[company_primary_email]',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_email',
-					'text' => __( 'Email' ),
-					'label' => __( 'Email Address' ),
+					'key'         => 'company_email',
+					'text'        => __( 'Email' ),
+					'label'       => __( 'Email Address' ),
 					'is_multiple' => true,
-					'type' => 'email',
-					'name' => 'company_meta[company_email][]',
-					'class' => 'input-multiple',
+					'type'        => 'email',
+					'name'        => 'company_meta[company_email][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Valid email address.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_website',
-					'text' => __( 'Website' ),
-					'label' => __( 'Website URL' ),
+					'key'         => 'company_website',
+					'text'        => __( 'Website' ),
+					'label'       => __( 'Website URL' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'company_meta[company_website][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_website][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Website URL.' ),
-					'category' => 'Contact',
+					'category'    => 'Contact',
 				),
 				array(
-					'key' => 'company_skype_id',
-					'text' => __( 'Skype' ),
-					'label' => __( 'Skype Id' ),
+					'key'         => 'company_skype_id',
+					'text'        => __( 'Skype' ),
+					'label'       => __( 'Skype Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'company_meta[company_skype_id][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_skype_id][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Skype Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 				array(
-					'key' => 'company_twitter',
-					'text' => __( 'Twitter' ),
-					'label' => __( 'Twitter Id' ),
+					'key'         => 'company_twitter',
+					'text'        => __( 'Twitter' ),
+					'label'       => __( 'Twitter Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'company_meta[company_twitter][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_twitter][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Twitter Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 				array(
-					'key' => 'company_facebook',
-					'text' => __( 'Facebook' ),
-					'label' => __( 'Facebook Id' ),
+					'key'         => 'company_facebook',
+					'text'        => __( 'Facebook' ),
+					'label'       => __( 'Facebook Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'company_meta[company_facebook][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_facebook][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Facebook Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 				array(
-					'key' => 'company_linkedin',
-					'text' => __( 'Linked In' ),
-					'label' => __( 'LinkedIn Id' ),
+					'key'         => 'company_linkedin',
+					'text'        => __( 'Linked In' ),
+					'label'       => __( 'LinkedIn Id' ),
 					'is_multiple' => true,
-					'type' => 'text',
-					'name' => 'company_meta[company_linkedin][]',
-					'class' => 'input-multiple',
+					'type'        => 'text',
+					'name'        => 'company_meta[company_linkedin][]',
+					'class'       => 'input-multiple',
 					'description' => __( 'Linked IN Id.' ),
-					'category' => 'Social',
+					'category'    => 'Social',
 				),
 			);
 
@@ -165,17 +165,17 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 
 		function init_labels() {
 			$this->labels = apply_filters( 'rtbiz_company_labels', array(
-				'name' => __( 'Companies' ),
-				'singular_name' => __( 'Company' ),
-				'menu_name' => __( 'Companies' ),
-				'all_items' => __( 'All Companies' ),
-				'add_new' => __( 'Add New' ),
-				'add_new_item' => __( 'Add Company' ),
-				'edit_item' => __( 'Edit Company' ),
-				'new_item' => __( 'New Company' ),
-				'view_item' => __( 'View Company' ),
-				'search_items' => __( 'Search Company' ),
-				'not_found' => __( 'No Companies found' ),
+				'name'               => __( 'Companies' ),
+				'singular_name'      => __( 'Company' ),
+				'menu_name'          => __( 'Companies' ),
+				'all_items'          => __( 'All Companies' ),
+				'add_new'            => __( 'Add New' ),
+				'add_new_item'       => __( 'Add Company' ),
+				'edit_item'          => __( 'Edit Company' ),
+				'new_item'           => __( 'New Company' ),
+				'view_item'          => __( 'View Company' ),
+				'search_items'       => __( 'Search Company' ),
+				'not_found'          => __( 'No Companies found' ),
 				'not_found_in_trash' => __( 'No Companies found in Trash' ),
 			) );
 		}
@@ -187,16 +187,17 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 * Columns in List View
 		 *
 		 * @param $columns
+		 *
 		 * @return mixed|void
 		 */
 		public function post_table_columns( $columns ) {
 
-			$cols = array();
-			$cols['cb'] = $columns['cb'];
+			$cols          = array();
+			$cols['cb']    = $columns['cb'];
 			$cols['title'] = __( 'Name' );
 			global $rtbiz_products;
 			if ( isset( $rtbiz_products ) ) {
-				$cols[ 'taxonomy-'.Rt_Products::$product_slug ] = $columns[ 'taxonomy-'.Rt_Products::$product_slug ];
+				$cols[ 'taxonomy-' . Rt_Products::$product_slug ] = $columns[ 'taxonomy-' . Rt_Products::$product_slug ];
 			}
 			$cols['date'] = $columns['date'];
 
@@ -204,14 +205,16 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			unset( $columns['author'] );
 			unset( $columns['date'] );
 			unset( $columns['comments'] );
-			unset( $columns[ 'taxonomy-'.Rt_Products::$product_slug ] );
+			unset( $columns[ 'taxonomy-' . Rt_Products::$product_slug ] );
 
 			$cols = array_merge( $cols, $columns );
+
 			return parent::post_table_columns( $cols );
 		}
 
 		/**
 		 * Managing post table columns
+		 *
 		 * @param $column
 		 * @param $post_id
 		 */
@@ -262,65 +265,67 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 			?>
 			<script>
 
-				function IsEmail( email ) {
+				function IsEmail(email) {
 					var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-					if ( ! regex.test( email ) ) {
+					if (!regex.test(email)) {
 						return false;
 					} else {
 						return true;
 					}
 				}
 
-				jQuery( document ).ready( function( $ ) {
+				jQuery(document).ready(function ($) {
 
-					jQuery( document ).on( 'click', ".delete-multiple", function( e ) {
-						$( this ).prev().remove();
-						$( this ).remove();
-					} );
-					function addError( selector, msg ){
-						$( selector ).next().next().html( msg );
-						$( selector ).next().next().addClass('rtbiz-error');
+					jQuery(document).on('click', ".delete-multiple", function (e) {
+						$(this).prev().remove();
+						$(this).remove();
+					});
+					function addError(selector, msg) {
+						$(selector).next().next().html(msg);
+						$(selector).next().next().addClass('rtbiz-error');
 					}
-					function removeError( selector ){
-						$( selector ).next().next().html( '' );
-						$( selector ).next().next().removeClass( 'rtbiz-error' );
+
+					function removeError(selector) {
+						$(selector).next().next().html('');
+						$(selector).next().next().removeClass('rtbiz-error');
 					}
-					jQuery( document ).on( 'click', ".add-multiple", function( e ) {
-						var tempVal = $( this ).prev().val();
-						var name = $( this ).prev().attr( "name" );
-						if ( tempVal == '' ){
-							addError( this, 'You must enter value to add more' );
+
+					jQuery(document).on('click', ".add-multiple", function (e) {
+						var tempVal = $(this).prev().val();
+						var name = $(this).prev().attr("name");
+						if (tempVal == '') {
+							addError(this, 'You must enter value to add more');
 							return;
 						}
-						else{
-							removeError( this );
+						else {
+							removeError(this);
 						}
-						if ( $( this ).data( "type" ) != undefined ) {
-							if ( $( this ).data( "type" ) == 'email' ) {
-								if ( ! IsEmail( tempVal ) ) {
-									addError( this, 'Please enter valid email address' );
+						if ($(this).data("type") != undefined) {
+							if ($(this).data("type") == 'email') {
+								if (!IsEmail(tempVal)) {
+									addError(this, 'Please enter valid email address');
 									return;
 								} else {
-									removeError( this );
+									removeError(this);
 								}
-							} else if ( $( this ).data( "type" ) == 'tel' ) {
-								if ( ! validatePhone( tempVal ) ) {
-									addError( this, 'Please Enter Valid Number' );
+							} else if ($(this).data("type") == 'tel') {
+								if (!validatePhone(tempVal)) {
+									addError(this, 'Please Enter Valid Number');
 									return;
 								} else {
-									removeError( this );
+									removeError(this);
 								}
 							}
 						}
 
-						$( this ).prev().val( '' );
+						$(this).prev().val('');
 
-						$( this ).after( "<button type='button' class='button delete-multiple'> - </button>" );
-						$( this ).after( "<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />" );
-					} );
-				} );
+						$(this).after("<button type='button' class='button delete-multiple'> - </button>");
+						$(this).after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
+					});
+				});
 			</script>
-		<?php
+			<?php
 
 		}
 
@@ -332,6 +337,7 @@ if ( ! class_exists( 'Rtbiz_Company' ) ) {
 		 * @param string $address
 		 * @param string $country
 		 * @param array $meta
+		 *
 		 * @return int|WP_Error
 		 */
 		function add_company( $name, $note = '', $address = '', $country = '', $meta = array() ) {

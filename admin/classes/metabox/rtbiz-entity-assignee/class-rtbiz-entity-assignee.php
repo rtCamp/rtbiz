@@ -13,10 +13,10 @@ if ( ! class_exists( 'Rtbiz_Entity_Assignee' ) ) {
 
 		public static function ui( $post ) {
 
-			$assigned = rtbiz_get_entity_meta( $post->ID, 'assgin_to', true );
+			$assigned     = rtbiz_get_entity_meta( $post->ID, 'assgin_to', true );
 			$assignedHTML = '';
 			if ( $assigned && ! empty( $assigned ) ) {
-				$author = get_user_by( 'id', $assigned );
+				$author       = get_user_by( 'id', $assigned );
 				$assignedHTML = "<li id='assign-auth-" . $author->ID . "' class='contact-list'>" .
 				                get_avatar( $author->user_email, 24 ) .
 				                "<a href='#removeAssign' class='delete_row'>×</a>" .
@@ -28,12 +28,12 @@ if ( ! class_exists( 'Rtbiz_Entity_Assignee' ) ) {
 			$arrSubscriberUser = array();
 			foreach ( $emps as $author ) {
 				$arrSubscriberUser[] = array(
-					'id' => $author->ID,
-					'label' => $author->display_name,
-					'imghtml' => get_avatar( $author->user_email, 24 ),
+					'id'             => $author->ID,
+					'label'          => $author->display_name,
+					'imghtml'        => get_avatar( $author->user_email, 24 ),
 					'user_edit_link' => get_edit_user_link( $author->ID ),
 				);
-			}?>
+			} ?>
 			<div>
 				<span class="prefix"
 				      title="<?php __( 'Assign to' ); ?>"><label><strong><?php __( 'Assign to' ); ?></strong></label></span>

@@ -22,10 +22,11 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 			$user = rtbiz_get_wp_user_for_contact( $post->ID );
 			if ( isset( $user[0]->roles ) && in_array( 'administrator', $user[0]->roles ) ) {
 				_e( "Admin have full access for all plugins. You can't change it", RTBIZ_TEXT_DOMAIN );
+
 				return;
 			} ?>
 			<div>
-				<?php $selected = ( ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) || ( ! empty( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group']  ) ) ? 'Checked="Checked"' : ''; ?>
+				<?php $selected = ( ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) || ( ! empty( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group'] ) ) ? 'Checked="Checked"' : ''; ?>
 				<label><input type="checkbox" id="rtbiz_is_staff_member" <?php echo $selected; ?>
 				              name="rtbiz_is_staff_member" value="yes"><span
 						class="checkbox-title"><?php _e( 'Staff Member ', RTBIZ_TEXT_DOMAIN ) ?></span></label>
@@ -42,15 +43,15 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 							<th><?php echo $m['label']; ?></th>
 							<td>
 								<select name="rtbiz_profile_permissions[<?php echo $mkey ?>]"><?php
-								if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
-									<option title="<?php _e( 'No Profile Access Override' ); ?>"
-									        value=""><?php _e( 'Use Group Access' ); ?></option><?php
-								}
-								foreach ( $permissions as $pkey => $p ) {
-									$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
-									<option title="<?php echo $p['tooltip']; ?>"
-									        value="<?php echo $p['value']; ?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option><?php
-								} ?>
+									if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) { ?>
+										<option title="<?php _e( 'No Profile Access Override' ); ?>"
+										        value=""><?php _e( 'Use Group Access' ); ?></option><?php
+									}
+									foreach ( $permissions as $pkey => $p ) {
+										$selected = ( isset( $user_permissions[ $mkey ] ) && intval( $user_permissions[ $mkey ] ) == $p['value'] && 0 != strlen( $user_permissions[ $mkey ] ) ) ? 'selected="selected"' : ''; ?>
+										<option title="<?php echo $p['tooltip']; ?>"
+										        value="<?php echo $p['value']; ?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option><?php
+									} ?>
 								</select>
 							</td>
 						</tr>
@@ -68,18 +69,18 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				return;
 			}
 			$profile_permissions = array();
-			if ( ! empty( $_REQUEST['rtbiz_is_staff_member'] )  && 'yes' == $_REQUEST['rtbiz_is_staff_member'] ) {
+			if ( ! empty( $_REQUEST['rtbiz_is_staff_member'] ) && 'yes' == $_REQUEST['rtbiz_is_staff_member'] ) {
 				if ( isset( $_REQUEST['rtbiz_profile_permissions'] ) && is_array( $_REQUEST['rtbiz_profile_permissions'] ) ) {
-					$teams = wp_get_post_terms( $contact_id, Rtbiz_Teams::$slug );
+					$teams              = wp_get_post_terms( $contact_id, Rtbiz_Teams::$slug );
 					$module_permissions = get_site_option( 'rtbiz_acl_module_permissions' );
 
-					$profile_permissions = $_REQUEST['rtbiz_profile_permissions'];
+					$profile_permissions     = $_REQUEST['rtbiz_profile_permissions'];
 					$old_profile_permissions = get_post_meta( $contact_id, 'rtbiz_profile_permissions', true );
 
 					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
 					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
-						$profile_permissions[ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_HD_TEXT_DOMAIN ];
-						$_REQUEST['rtbiz_profile_permissions'][ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_TEXT_DOMAIN ] ;
+						$profile_permissions[ RTBIZ_TEXT_DOMAIN ]                   = $profile_permissions[ RTBIZ_HD_TEXT_DOMAIN ];
+						$_REQUEST['rtbiz_profile_permissions'][ RTBIZ_TEXT_DOMAIN ] = $profile_permissions[ RTBIZ_TEXT_DOMAIN ];
 					}
 
 					foreach ( $profile_permissions as $module_Key => $module_permission ) {
@@ -88,7 +89,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 							$old_profile_permissions[ $module_Key ] = '';
 						}
 						$old_permission_len = strlen( $old_profile_permissions[ $module_Key ] );
-						$isOldPermission = isset( $old_profile_permissions[ $module_Key ] );
+						$isOldPermission    = isset( $old_profile_permissions[ $module_Key ] );
 						switch ( $module_permission ) {
 							case 0:
 								if ( 0 == strlen( $module_permission ) ) {
@@ -98,17 +99,17 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 									if ( $isOldPermission && 0 == $old_permission_len ) {
 
 										//get old group and its old permission from custom table
-										$where = array(
-											'userid'     => $user[0]->ID,
-											'module'     => $module_Key,
+										$where                = array(
+											'userid' => $user[0]->ID,
+											'module' => $module_Key,
 										);
 										$old_group_permission = $rtbiz_acl_model->get_acl( $where );
 
 										if ( ! empty( $old_group_permission ) ) {
-											$old_group = array_unique( wp_list_pluck( $old_group_permission, 'groupid' ) );
+											$old_group            = array_unique( wp_list_pluck( $old_group_permission, 'groupid' ) );
 											$old_group_permission = array_unique( wp_list_pluck( $old_group_permission, 'permission' ) );
 										} else {
-											$old_group = array();
+											$old_group            = array();
 											$old_group_permission = array();
 										}
 
@@ -120,13 +121,13 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 												// check id group permission update or not
 												if ( $module_permission[ $team->term_id ] != $old_group_permission[ $position ] ) {
 													// update group level permission
-													$data = array(
+													$data  = array(
 														'permission' => $module_permission[ $team->term_id ],
 													);
 													$where = array(
-														'userid'     => $user[0]->ID,
-														'module'     => $module_Key,
-														'groupid'    => $team->term_id,
+														'userid'  => $user[0]->ID,
+														'module'  => $module_Key,
+														'groupid' => $team->term_id,
 													);
 													$rtbiz_acl_model->update_acl( $data, $where );
 												}
@@ -153,9 +154,9 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 											// remove group level acl
 											foreach ( $group_removed as $group ) {
 												$where = array(
-													'userid'     => $user[0]->ID,
-													'groupid'    => $group,
-													'module'     => $module_Key,
+													'userid'  => $user[0]->ID,
+													'groupid' => $group,
+													'module'  => $module_Key,
 												);
 												$rtbiz_acl_model->remove_acl( $where );
 											}
@@ -165,8 +166,8 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 										if ( $isOldPermission && 0 != $old_permission_len ) {
 											// remove old profile level permission
 											$where = array(
-												'userid'     => $user[0]->ID,
-												'module'     => $module_Key,
+												'userid' => $user[0]->ID,
+												'module' => $module_Key,
 											);
 											$rtbiz_acl_model->remove_acl( $where );
 										}
@@ -187,8 +188,8 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 									//remove all permission
 									if ( $isOldPermission ) {
 										$where = array(
-											'userid'     => $user[0]->ID,
-											'module'     => $module_Key,
+											'userid' => $user[0]->ID,
+											'module' => $module_Key,
 										);
 										$rtbiz_acl_model->remove_acl( $where );
 									}
@@ -201,13 +202,13 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 								if ( $isOldPermission && 0 != $old_permission_len && 0 != $old_profile_permissions[ $module_Key ] ) {
 									//check if profile level permission changed
 									if ( $module_permission != $old_profile_permissions[ $module_Key ] ) {
-										$data = array(
+										$data  = array(
 											'permission' => $module_permission,
 										);
 										$where = array(
-											'userid'     => $user[0]->ID,
-											'module'     => $module_Key,
-											'groupid'    => 0,
+											'userid'  => $user[0]->ID,
+											'module'  => $module_Key,
+											'groupid' => 0,
 										);
 										$rtbiz_acl_model->update_acl( $data, $where );
 									}
@@ -215,8 +216,8 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 									// remove old group level permission if already set
 									if ( $isOldPermission && 0 == $old_permission_len ) {
 										$where = array(
-											'userid'     => $user[0]->ID,
-											'module'     => $module_Key,
+											'userid' => $user[0]->ID,
+											'module' => $module_Key,
 										);
 										$rtbiz_acl_model->remove_acl( $where );
 									}
@@ -235,7 +236,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				}
 			} else {
 				$where = array(
-					'userid'     => $user[0]->ID,
+					'userid' => $user[0]->ID,
 				);
 				$rtbiz_acl_model->remove_acl( $where );
 			}

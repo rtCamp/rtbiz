@@ -68,12 +68,14 @@ if ( ! class_exists( 'Rtbiz_ACL_Model' ) ) {
 
 		/**
 		 * get acl records
+		 *
 		 * @param $querystr
 		 *
 		 * @return mixed
 		 */
 		public function get_result_by_query( $query ) {
 			global $wpdb;
+
 			return $wpdb->get_results( $query );
 		}
 	}

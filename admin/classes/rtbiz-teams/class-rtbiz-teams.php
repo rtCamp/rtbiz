@@ -24,7 +24,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		/**
 		 * Constructor
 		 */
-		public function __construct(  ) {
+		public function __construct() {
 			$this->get_lables();
 
 			Rtbiz::$loader->add_action( 'init', $this, 'register_taxonomy_team', 20 );
@@ -44,7 +44,6 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		}
 
 
-
 		function get_lables() {
 			$this->labels = array(
 				'name'                       => __( 'Teams' ),
@@ -60,9 +59,10 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 				'separate_items_with_commas' => __( 'Separate Teams with commas' ),
 				'add_or_remove_items'        => __( 'Add or remove Teams' ),
 				'choose_from_most_used'      => __( 'Choose from the most popular Teams' ),
-				'not_found' 				 => __( 'No team found.' ) ,
-				'no_terms'					 => __( 'No team' ),
+				'not_found'                  => __( 'No team found.' ),
+				'no_terms'                   => __( 'No team' ),
 			);
+
 			return $this->labels;
 		}
 
@@ -72,14 +72,22 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		function register_taxonomy_team() {
 
 			$editor_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'editor' );
-			$caps = array(
+			$caps       = array(
 				'manage_terms' => $editor_cap,
 				'edit_terms'   => $editor_cap,
 				'delete_terms' => $editor_cap,
 				'assign_terms' => $editor_cap,
 			);
 
-			$arg = array( 'public' => false, 'show_ui' => true, 'labels' => $this->labels, 'rewrite' => false, 'capabilities' => $caps, 'hierarchical' => true, 'show_admin_column' => true );
+			$arg                 = array(
+				'public'            => false,
+				'show_ui'           => true,
+				'labels'            => $this->labels,
+				'rewrite'           => false,
+				'capabilities'      => $caps,
+				'hierarchical'      => true,
+				'show_admin_column' => true
+			);
 			$supported_posttypes = array();
 			$supported_posttypes = apply_filters( 'rtbiz_team_support', $supported_posttypes );
 			$supported_posttypes = array_unique( $supported_posttypes );
@@ -88,12 +96,13 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		}
 
 		public function add_team_support( $supports ) {
-			$modules          = rtbiz_get_modules();
+			$modules = rtbiz_get_modules();
 			foreach ( $modules as $key => $value ) {
 				if ( ! empty( $value['team_support'] ) ) {
 					$supports = array_merge( $supports, $value['team_support'] );
 				}
 			}
+
 			return $supports;
 		}
 
@@ -151,7 +160,8 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 					<tbody>
 					<tr class="form-field">
 						<th scope="row" valign="top"><label
-								for="term_meta[email_address]"><?php _e( 'Email Address', RTBIZ_TEXT_DOMAIN ); ?></label></th>
+								for="term_meta[email_address]"><?php _e( 'Email Address', RTBIZ_TEXT_DOMAIN ); ?></label>
+						</th>
 						<td>
 							<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 							       id="<?php echo esc_attr( self::$slug ); ?>[email_address]"
@@ -171,6 +181,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 						<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
 						       id="<?php echo esc_attr( self::$slug ); ?>[email_address]" value="">
 					</p>
+
 					<p class="description"><?php _e( 'Enter an email address for Team', 'rtcamp' ); ?></p>
 				</div>
 			<?php }
@@ -214,11 +225,11 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		function manage_team_column_body( $display, $column, $term_id ) {
 			switch ( $column ) {
 				case 'contacts':
-					$term = get_term( $term_id, self::$slug );
+					$term           = get_term( $term_id, self::$slug );
 					$contacts_count = count( rtbiz_get_team_contacts( $term_id ) );
-					$module = '';
-					$module = apply_filters( 'rtbiz_current_module_name', $module );
-					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type='.rtbiz_get_contact_post_type().'&contact_group=staff' . $module . '&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
+					$module         = '';
+					$module         = apply_filters( 'rtbiz_current_module_name', $module );
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=' . rtbiz_get_contact_post_type() . '&contact_group=staff' . $module . '&' . self::$slug . '=' . $term->slug ) ) . '">' . $contacts_count . '</a>';
 					break;
 				case 'email_address';
 					$email_address = $this->get_team_meta( 'email_address', $term_id );
@@ -227,6 +238,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 					}
 					break;
 			}
+
 			return;
 		}
 
@@ -241,7 +253,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 
 			unset( $columns['posts'], $columns['slug'] );
 
-			$columns['contacts']         = __( 'Staff', RTBIZ_TEXT_DOMAIN );
+			$columns['contacts'] = __( 'Staff', RTBIZ_TEXT_DOMAIN );
 			//			$columns['color']         = __( 'Color', RTBIZ_TEXT_DOMAIN );
 			$columns['email_address'] = __( 'Email Address', RTBIZ_TEXT_DOMAIN );
 
@@ -252,7 +264,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 * get meta for team
 		 *
 		 * @param string $key
-		 * @param int    $term_id
+		 * @param int $term_id
 		 *
 		 * @return bool
 		 */
@@ -273,6 +285,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 					return $term_meta;
 				}
 			}
+
 			return false;
 		}
 

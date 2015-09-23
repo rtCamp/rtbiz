@@ -28,16 +28,16 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		 *
 		 * @since    1.0.0
 		 */
-		public function __construct( ) {
+		public function __construct() {
 
 		}
 
 		public function init_admin() {
-			global  $rtbiz_acl_model,
-					$rtbiz_attributes, $rtbiz_access_control, $rtbiz_p2p,
-			        $rtbiz_contact, $rtbiz_company, $rtbiz_team,
-			        $rtbiz_settings, $rtbiz_dashboard, $rt_migration,
-			        $rtbiz_reports, $rtbiz_help;
+			global $rtbiz_acl_model,
+			       $rtbiz_attributes, $rtbiz_access_control, $rtbiz_p2p,
+			       $rtbiz_contact, $rtbiz_company, $rtbiz_team,
+			       $rtbiz_settings, $rtbiz_dashboard, $rt_migration,
+			       $rtbiz_reports, $rtbiz_help;
 
 			$rtbiz_acl_model = new Rtbiz_ACL_Model();
 
@@ -184,7 +184,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 		public function plugin_action_links( $links ) {
 			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Get Started', RTBIZ_TEXT_DOMAIN ) . '</a>';
-			$links['settings'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', RTBIZ_TEXT_DOMAIN ) . '</a>';
+			$links['settings']    = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', RTBIZ_TEXT_DOMAIN ) . '</a>';
+
 			return $links;
 		}
 
@@ -194,6 +195,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				//$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RTBIZ_TEXT_DOMAIN ) . '</a>';
 				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/premium-support/' . '">' . __( 'Support', RTBIZ_TEXT_DOMAIN ) . '</a>';
 			}
+
 			return $plugin_meta;
 		}
 
@@ -225,8 +227,8 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			$modules[ rtbiz_sanitize_module_key( RTBIZ_TEXT_DOMAIN ) ] = array(
 				'label'               => $menu_label,
 				'post_types'          => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
-				'team_support'  => array( $rtbiz_contact->post_type ),
-				'product_support'    => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
+				'team_support'        => array( $rtbiz_contact->post_type ),
+				'product_support'     => array( $rtbiz_contact->post_type, $rtbiz_company->post_type ),
 				'setting_option_name' => Rtbiz_Setting::$biz_opt,
 				// Use For ACL
 				'setting_page_url'    => admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ),
@@ -259,7 +261,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			);
 
 			$settings             = rtbiz_get_product_selection_setting();
-			$product_plugin      = ! empty( $settings ) ? $settings : array();
+			$product_plugin       = ! empty( $settings ) ? $settings : array();
 			$to_register_posttype = array();
 			foreach ( Rtbiz_Access_Control::$modules as $key => $value ) {
 				if ( ! empty( $value['product_support'] ) ) {
@@ -315,12 +317,19 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			global $post;
 
 			// Taxonomy menu hack for rtBiz
-			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array( rtbiz_get_contact_post_type(), rtbiz_get_company_post_type() ) ) ) {
+			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
+					rtbiz_get_contact_post_type(),
+					rtbiz_get_company_post_type()
+				) )
+			) {
 				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_dashboard_screen', Rtbiz_Dashboard::$page_slug );
 				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
 			}
 
-			wp_enqueue_script( 'jquery-ui-autocomplete', '', array( 'jquery-ui-widget', 'jquery-ui-position' ), '1.9.2', true );
+			wp_enqueue_script( 'jquery-ui-autocomplete', '', array(
+				'jquery-ui-widget',
+				'jquery-ui-position'
+			), '1.9.2', true );
 			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . 'admin-js', RTBIZ_URL . 'admin/js/admin.js', array( 'jquery' ), RTBIZ_VERSION, true );
 			wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_ajax_url_admin', admin_url( 'admin-ajax.php' ) );
 

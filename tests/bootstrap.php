@@ -2,7 +2,7 @@
 
 // Activates this plugin in WordPress so it can be tested.
 $GLOBALS['wp_tests_options'] = array(
-	'active_plugins' => array( 'posts-to-posts/posts-to-posts.php','rtbiz/index.php' ),
+	'active_plugins' => array( 'posts-to-posts/posts-to-posts.php', 'rtbiz/index.php' ),
 );
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -21,6 +21,7 @@ function _manually_load_plugin() {
 	require_once dirname( __FILE__ ) . '/../../posts-to-posts/posts-to-posts.php';
 	require_once dirname( __FILE__ ) . '/../rtbiz.php';
 }
+
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 function _manually_init() {
@@ -28,6 +29,7 @@ function _manually_init() {
 	wp_set_current_user( 1 );
 	do_action( 'admin_notices' );
 }
+
 tests_add_filter( 'plugins_loaded', '_manually_init', 15 );
 
 require $_tests_dir . '/includes/bootstrap.php';
