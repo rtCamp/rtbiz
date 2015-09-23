@@ -1,26 +1,29 @@
-# EditorConfig helps developers define and maintain consistent
-# coding styles between different editors and IDEs
+# This file is for unifying the coding style for different editors and IDEs
 # editorconfig.org
 
-# Reference : http://editorconfig.org/#file-location
+# WordPress Coding Standards
+# https://make.wordpress.org/core/handbook/coding-standards/
+
+# Based from https://github.com/ntwb/wp.editorconfig/blob/master/.editorconfig
+#
+# Need an IDE plugin? http://editorconfig.org/#download
+
 root = true
 
 [*]
-# We recommend you to keep these unchanged
-end_of_line = lf
 charset = utf-8
-trim_trailing_whitespace = true
+end_of_line = lf
 insert_final_newline = true
-
-# PHP http://make.wordpress.org/core/handbook/coding-standards/php/
-# HTML http://make.wordpress.org/core/handbook/coding-standards/html/
-# CSS http://make.wordpress.org/core/handbook/coding-standards/css/
-# JavaScript http://make.wordpress.org/core/handbook/coding-standards/javascript/
-[*.php, *.css,*.scss, *.html, *.js]
+trim_trailing_whitespace = true
 indent_style = tab
-indent_size = 4
 
-# package.json uses spaces instead of tabs
 [*.json]
 indent_style = space
 indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 4
+
+[*.txt,wp-config-sample.php]
+end_of_line = crlf
