@@ -4,7 +4,7 @@ Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
 Tested up to:      4.3
-Stable tag:        1.3.8
+Stable tag:        1.3.9
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.3.9 =
+* Mail lib updated
+* Filters added for reply to header
 
 = 1.3.8 =
 * error_log now only logs on wp_debug_log true
