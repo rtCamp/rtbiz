@@ -58,17 +58,18 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		}
 
 		function enable_cron_on_activation(){
+			//activation hook
+		}
+
+		function setup_schedule(){
+			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
+			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 			if ( ! wp_next_scheduled( 'rt_parse_email_cron' ) ) {
 				wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron' );
 			}
 			if ( ! wp_next_scheduled( 'rt_send_email_cron' ) ) {
 				wp_schedule_event( time(), 'every_minute', 'rt_send_email_cron' );
 			}
-		}
-
-		function setup_schedule(){
-			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
-			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 
 		/**
