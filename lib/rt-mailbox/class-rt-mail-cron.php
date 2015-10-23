@@ -58,7 +58,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		}
 
 		function enable_cron_on_activation(){
-			//activation hook
+			//ACTIVATION HOOK
 		}
 
 		function setup_schedule(){
