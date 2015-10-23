@@ -47,7 +47,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 		 * @since
 		 */
 		public function __construct( $parent_page_slug = false, $page_cap = false, $pageflag = true ) {
-			$this->pageflag = $pageflag;
+			$this->pageflag         = $pageflag;
 			$this->parent_page_slug = $parent_page_slug;
 			if ( $this->pageflag ) {
 				$this->page_cap = $page_cap;
@@ -70,11 +70,17 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 
 		}
 
-		function register_attribute_menu(){
+		function register_attribute_menu() {
 			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), '--- ' . __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'ui' ) );
+				add_submenu_page( $this->parent_page_slug, __( ucfirst( self::$page_name ) ), '--- ' . __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array(
+					$this,
+					'ui'
+				) );
 			} else {
-				add_menu_page( __( ucfirst( self::$page_name ) ), '--- ' . __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array( $this, 'ui' ) );
+				add_menu_page( __( ucfirst( self::$page_name ) ), '--- ' . __( ucfirst( self::$page_name ) ), $this->page_cap, self::$page_slug, array(
+					$this,
+					'ui'
+				) );
 			}
 		}
 
@@ -113,24 +119,25 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			die( 0 );
 		}
 
-		public function get_current_tab(){
-			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] )? $this->base_url . '&type='.$_REQUEST['type']: $this->base_url .'&type=gravity' ) : $this->base_url .'&type=gravity';
+		public function get_current_tab() {
+			return isset( $_REQUEST['page'] ) ? ( isset( $_REQUEST['type'] ) ? $this->base_url . '&type=' . $_REQUEST['type'] : $this->base_url . '&type=gravity' ) : $this->base_url . '&type=gravity';
 		}
 
-		public function importer_tab(){
+		public function importer_tab() {
 			// Declare local variables
-			$tabs_html    = '';
+			$tabs_html = '';
 
 			// Setup core admin tabs
-			$tabs = array(
+			$tabs        = array(
 				/*array(
 					'href' => $this->base_url . '&type=CSV',
 					'name' => __( 'CSV' ),
 					'slug' => self::$page_slug . '&type=CSV' ,
-				),*/ array(
+				),*/
+				array(
 					'href' => $this->base_url . '&type=gravity',
 					'name' => __( 'Gravity' ),
-					'slug' => $this->base_url .'&type=gravity',
+					'slug' => $this->base_url . '&type=gravity',
 				),
 			);
 			$filterd_tab = apply_filters( 'rt_importer_add_tab', $tabs );
@@ -166,7 +173,7 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 							$tab_class .= ' ' . implode( ' ', $tab_data['class'] );
 						}
 						$separator = ( count( $filterd_tab ) - 1 ) != $i ? ' | ' : '';
-						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>'. $separator .'</li>';
+						$tabs_html .= '<li class="' . $tab_data['name'] . '"><a href="' . $tab_data['href'] . '" class="' . $tab_class . '">' . $tab_data['name'] . '</a>' . $separator . '</li>';
 					}
 					$tabs_html .= '</ul></div>';
 				}
@@ -201,10 +208,11 @@ if ( ! class_exists( 'Rt_Importer_Mapper' ) ) {
 			}
 			$args['gravity_fields'] = $gravity_fields;
 
-			$title_ele = $this->pageflag ? 'h2' : 'h3';?>
+			$title_ele = $this->pageflag ? 'h2' : 'h3'; ?>
 			<div class="wrap">
 			<?php if ( $this->pageflag ) {
-				echo '<h2>' .  __( 'Importer Mapping List' ) . '</h2>'; }
+				echo '<h2>' . __( 'Importer Mapping List' ) . '</h2>';
+			}
 
 			//$this->importer_tab();
 

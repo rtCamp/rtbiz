@@ -10,8 +10,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 	/**
 	 * Class RT_Plugin_Update_Checker
 	 */
-	class RT_Plugin_Update_Checker
-	{
+	class RT_Plugin_Update_Checker {
 
 		/**
 		 * @var string The URL of the plugin's metadata file.
@@ -24,7 +23,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		/**
 		 * @var string Plugin slug.
 		 */
-		public $slug	= '';
+		public $slug = '';
 		/**
 		 * @var int How often to check for updates (in hours).
 		 */
@@ -49,15 +48,14 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		/**
 		 * Class constructor.
 		 *
-		 * @param string  $metadataUrl The URL of the plugin's metadata file.
-		 * @param string  $pluginFile  Fully qualified path to the main plugin file.
-		 * @param string  $slug        The plugin's 'slug'. If not specified, the filename part of $pluginFile sans '.php' will be used as the slug.
+		 * @param string $metadataUrl The URL of the plugin's metadata file.
+		 * @param string $pluginFile Fully qualified path to the main plugin file.
+		 * @param string $slug The plugin's 'slug'. If not specified, the filename part of $pluginFile sans '.php' will be used as the slug.
 		 * @param integer $checkPeriod How often to check for updates (in hours). Defaults to checking every 12 hours. Set to 0 to disable automatic update checks.
-		 * @param string  $optionName  Where to store book-keeping info about update checks. Defaults to 'external_updates-$slug'.
+		 * @param string $optionName Where to store book-keeping info about update checks. Defaults to 'external_updates-$slug'.
 		 */
 
-		public function __construct( $metadataUrl, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '' )
-		{
+		public function __construct( $metadataUrl, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '' ) {
 			if ( false !== strpos( $metadataUrl, 'https:' ) ) {
 				$metadataUrl = str_replace( 'https:', 'http:', $metadataUrl );
 			}
@@ -87,8 +85,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 *
 		 * @return void
 		 */
-		protected function install_hooks()
-		{
+		protected function install_hooks() {
 			//Override requests for plugin information
 			add_filter( 'plugins_api', array( $this, 'injectInfo' ), 20, 3 );
 
@@ -133,11 +130,13 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return array
 		 */
 
-		public function _add_custom_schedule( $schedules )
-		{
+		public function _add_custom_schedule( $schedules ) {
 			if ( $this->checkPeriod && ( $this->checkPeriod > 0 ) ) {
 				$scheduleName               = 'every' . $this->checkPeriod . 'hours';
-				$schedules[ $scheduleName ] = array( 'interval' => $this->checkPeriod * 3600, 'display' => sprintf( __( 'Every %d hours', 'rtmedia' ), $this->checkPeriod ), );
+				$schedules[ $scheduleName ] = array(
+					'interval' => $this->checkPeriod * 3600,
+					'display'  => sprintf( __( 'Every %d hours', 'rtmedia' ), $this->checkPeriod ),
+				);
 			}
 
 			return $schedules;
@@ -148,8 +147,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 *
 		 * @return void
 		 */
-		public function _remove_updater_cron()
-		{
+		public function _remove_updater_cron() {
 			wp_clear_scheduled_hook( $this->cronHook );
 		}
 
@@ -159,8 +157,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return string
 		 */
 
-		public function get_cron_hook_name()
-		{
+		public function get_cron_hook_name() {
 			return $this->cronHook;
 		}
 
@@ -174,18 +171,18 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return RT_Plugin_Update_Info
 		 */
 
-		public function request_info( $queryArgs = array() )
-		{
+		public function request_info( $queryArgs = array() ) {
 			//Query args to append to the URL. Plugins can add their own by using a filter callback (see addQueryArgFilter()).
-			$installedVersion                 = $this->get_installed_version();
+			$installedVersion               = $this->get_installed_version();
 			$queryArgs['installed_version'] = ( null !== $installedVersion ) ? $installedVersion : '';
 			$queryArgs['admin_email']       = get_option( 'admin_email' );
 			$queryArgs['slug']              = $this->slug;
-			$queryArgs                        = apply_filters( 'puc_request_info_query_args-' . $this->slug, $queryArgs );
+			$queryArgs                      = apply_filters( 'puc_request_info_query_args-' . $this->slug, $queryArgs );
 			//Various options for the wp_remote_get() call. Plugins can filter these, too.
 			$options = array(
 				'timeout' => 10, //seconds
-				'headers' => array( 'Accept' => 'application/json' ), );
+				'headers' => array( 'Accept' => 'application/json' ),
+			);
 			$options = apply_filters( 'puc_request_info_options-' . $this->slug, $options );
 
 			//The plugin info should be at 'http://your-api.com/url/here/$slug/info.json'
@@ -228,8 +225,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return RT_Plugin_Update_Info An instance of PluginUpdate, or NULL when no updates are available.
 		 */
 
-		public function request_update()
-		{
+		public function request_update() {
 			//For the sake of simplicity, this function just calls requestInfo()
 			//and transforms the result accordingly.
 			$pluginInfo = $this->request_info( array( 'checking_for_updates' => '1' ) );
@@ -246,8 +242,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return string Version number.
 		 */
 
-		public function get_installed_version()
-		{
+		public function get_installed_version() {
 
 			if ( ! function_exists( 'get_plugins' ) ) {
 				if ( is_multisite() ) {
@@ -276,8 +271,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return RT_Plugin_Update|null
 		 */
 
-		public function check_for_updates()
-		{
+		public function check_for_updates() {
 			$installedVersion = $this->get_installed_version();
 			//Fail silently if we can't find the plugin or read its header.
 			if ( null === $installedVersion ) {
@@ -312,8 +306,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return void
 		 */
 
-		public function maybe_check_for_updates()
-		{
+		public function maybe_check_for_updates() {
 			if ( empty( $this->checkPeriod ) ) {
 				return;
 			}
@@ -332,8 +325,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return StdClass|null
 		 */
 
-		public function get_update_state()
-		{
+		public function get_update_state() {
 			$state = get_site_option( $this->optionName, null );
 			if ( empty( $state ) || ! is_object( $state ) ) {
 				$state = null;
@@ -354,8 +346,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return void
 		 */
 
-		private function set_update_state( $state )
-		{
+		private function set_update_state( $state ) {
 			if ( isset( $state->update ) && is_object( $state->update ) && method_exists( $state->update, 'toStdClass' ) ) {
 				$update = $state->update;
 				/** @var PluginUpdate $update */
@@ -370,8 +361,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * Call this when your plugin is being uninstalled, or if you want to
 		 * clear the update cache.
 		 */
-		public function reset_update_state()
-		{
+		public function reset_update_state() {
 			delete_site_option( $this->optionName );
 		}
 
@@ -381,15 +371,14 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 *
 		 * @see plugins_api()
 		 *
-		 * @param mixed        $result
-		 * @param string       $action
+		 * @param mixed $result
+		 * @param string $action
 		 * @param array|object $args
 		 *
 		 * @return mixed
 		 */
 
-		public function inject_info( $result, $action = null, $args = null )
-		{
+		public function inject_info( $result, $action = null, $args = null ) {
 			$relevant = ( 'plugin_information' == $action ) && isset( $args->slug ) && ( $args->slug == $this->slug );
 			if ( ! $relevant ) {
 				return $result;
@@ -412,8 +401,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return StdClass Modified update list.
 		 */
 
-		public function inject_update( $updates )
-		{
+		public function inject_update( $updates ) {
 			//Is there an update to insert?
 			$update = $this->get_update();
 			if ( ! empty( $update ) ) {
@@ -445,8 +433,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return RT_Plugin_Update|null
 		 */
 
-		public function get_update()
-		{
+		public function get_update() {
 			$state = $this->get_update_state();
 			/**
 			 * @var StdClass $state
@@ -474,18 +461,20 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * You can change the link text by using the "puc_manual_check_link-$slug" filter.
 		 * Returning an empty string from the filter will disable the link.
 		 *
-		 * @param array       $pluginMeta Array of meta links.
-		 * @param string      $pluginFile
-		 * @param array|null  $pluginData Currently ignored.
-		 * @param string|null $status     Currently ignored.
+		 * @param array $pluginMeta Array of meta links.
+		 * @param string $pluginFile
+		 * @param array|null $pluginData Currently ignored.
+		 * @param string|null $status Currently ignored.
 		 *
 		 * @return array
 		 */
 
-		public function add_check_for_updates_link( $pluginMeta, $pluginFile, $pluginData = null, $status = null )
-		{
+		public function add_check_for_updates_link( $pluginMeta, $pluginFile, $pluginData = null, $status = null ) {
 			if ( $pluginFile == $this->pluginFile && current_user_can( 'update_plugins' ) ) {
-				$linkUrl = wp_nonce_url( add_query_arg( array( 'puc_check_for_updates' => 1, 'puc_slug' => $this->slug, ), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ), 'puc_check_for_updates' );
+				$linkUrl = wp_nonce_url( add_query_arg( array(
+					'puc_check_for_updates' => 1,
+					'puc_slug'              => $this->slug,
+				), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ), 'puc_check_for_updates' );
 
 				$linkText = apply_filters( 'puc_manual_check_link-' . $this->slug, __( 'Check for updates', 'rtmedia' ) );
 				if ( ! empty( $linkText ) ) {
@@ -503,14 +492,16 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 *
 		 * @return void
 		 */
-		public function handle_manual_check()
-		{
+		public function handle_manual_check() {
 			$shouldCheck = isset( $_GET['puc_check_for_updates'], $_GET['puc_slug'] ) && $_GET['puc_slug'] == $this->slug && current_user_can( 'update_plugins' ) && check_admin_referer( 'puc_check_for_updates' );
 
 			if ( $shouldCheck ) {
 				$update = $this->check_for_updates();
 				$status = ( null === $update ) ? 'no_update' : 'update_available';
-				wp_redirect( esc_url_raw( add_query_arg( array( 'puc_update_check_result' => $status, 'puc_slug' => $this->slug, ), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array(
+					'puc_update_check_result' => $status,
+					'puc_slug'                => $this->slug,
+				), is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ) ) ) );
 			}
 		}
 
@@ -521,8 +512,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 *
 		 * You can change the result message by using the "puc_manual_check_message-$slug" filter.
 		 */
-		public function display_manual_check_result()
-		{
+		public function display_manual_check_result() {
 			if ( isset( $_GET['puc_update_check_result'], $_GET['puc_slug'] ) && ( $_GET['puc_slug'] == $this->slug ) ) {
 				$status = strval( $_GET['puc_update_check_result'] );
 				if ( 'no_update' == $status ) {
@@ -551,8 +541,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return void
 		 */
 
-		public function add_query_arg_filter( $callback )
-		{
+		public function add_query_arg_filter( $callback ) {
 			add_filter( 'puc_request_info_query_args-' . $this->slug, $callback );
 		}
 
@@ -570,8 +559,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return void
 		 */
 
-		public function add_http_request_arg_filter( $callback )
-		{
+		public function add_http_request_arg_filter( $callback ) {
 			add_filter( 'puc_request_info_options-' . $this->slug, $callback );
 		}
 
@@ -592,8 +580,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * @return void
 		 */
 
-		public function add_result_filter( $callback )
-		{
+		public function add_result_filter( $callback ) {
 			add_filter( 'puc_request_info_result-' . $this->slug, $callback, 10, 2 );
 		}
 
@@ -604,22 +591,20 @@ if ( ! class_exists( 'RT_Plugin_Update_Checker' ) ) {
 		 * and the "-$plugin_slug" suffix to the filter name. For example, "request_info_result"
 		 * becomes "puc_request_info_result-your_plugin_slug".
 		 *
-		 * @param string   $tag
+		 * @param string $tag
 		 * @param callable $callback
-		 * @param int      $priority
-		 * @param int      $acceptedArgs
+		 * @param int $priority
+		 * @param int $acceptedArgs
 		 */
 
-		public function add_filter( $tag, $callback, $priority = 10, $acceptedArgs = 1 )
-		{
+		public function add_filter( $tag, $callback, $priority = 10, $acceptedArgs = 1 ) {
 			add_filter( 'puc_' . $tag . '-' . $this->slug, $callback, $priority, $acceptedArgs );
 		}
 
 		/**
 		 * Initialize the update checker Debug Bar plugin/add-on thingy.
 		 */
-		public function init_debug_bar_panel()
-		{
+		public function init_debug_bar_panel() {
 			if ( class_exists( 'Debug_Bar' ) ) {
 				require_once dirname( __FILE__ ) . '/debug-bar-plugin.php';
 				$this->debugBarPlugin = new PucDebugBarPlugin( $this );

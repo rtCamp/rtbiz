@@ -45,7 +45,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 */
 		public $authString;
 
-		function __construct() { }
+		function __construct() {
+		}
 
 		/**
 		 * UI for folders dropdown
@@ -61,7 +62,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				$folder = $folders->current();
 				if ( $folder->getChildren() ) {
 					?>
-					<optgroup label="<?php echo esc_attr( $folder->getGlobalName() ); ?>">
+				<optgroup label="<?php echo esc_attr( $folder->getGlobalName() ); ?>">
 					<?php $this->render_folders_dropdown( $folder, $value ); ?>
 					</optgroup><?php
 				} else {
@@ -87,13 +88,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				echo '<ul>';
 				$folder = $folders->current();
 				if ( $folder->getChildren() ) {
-					echo '<li class="folder_title"><strong>' .esc_html( $folder->getGlobalName() ) . '</strong></li>';
+					echo '<li class="folder_title"><strong>' . esc_html( $folder->getGlobalName() ) . '</strong></li>';
 					echo '<li  class="has_children">';
 					$this->render_folders_checkbox( $folder, $element_name, $values, $data_str );
 					echo '</li>';
 				} else {
 					echo '<li class="folder_item">&nbsp;&nbsp;&nbsp;<label><input type="checkbox" ' . esc_attr( $data_str ) . ' name="' . esc_attr( $element_name ) . '[]" value="' . esc_attr( $folder->getGlobalName() ) . '" ' . esc_attr( ( in_array( $folder->getGlobalName(), $values ) ) ? 'checked="checked"' : '' ) . ' />';
-					echo esc_html( $folder->getGlobalName() ). '</label></li>';
+					echo esc_html( $folder->getGlobalName() ) . '</label></li>';
 				}
 				$folders->next();
 				echo '</ul>';
@@ -207,6 +208,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 */
 		function try_imap_connect( $host, $port, $ssl ) {
 			$this->imap = new Zend\Mail\Protocol\Imap();
+
 			return $this->imap->connect( $host, $port, $ssl );
 		}
 
@@ -276,7 +278,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			if ( ! empty( $email ) ) {
 				$message_id = $reference_id = $in_reply_to = '';
 				if ( 'comment' == $email->refrence_type ) {
-					$message_id = get_comment_meta( $email->refrence_id, '_rtlib_messageid', true );
+					$message_id   = get_comment_meta( $email->refrence_id, '_rtlib_messageid', true );
 					$reference_id = get_comment_meta( $email->refrence_id, '_rtlib_references', true );
 					if ( empty( $message_id ) ) {
 						$comment = get_comment( $email->refrence_id );
@@ -288,7 +290,12 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 				if ( isset( $post_id ) ) {
 					$reference_id = get_post_meta( $post_id, '_rtlib_references', true );
-					$message_id = rtmb_get_reply_to_from_ref_id( $reference_id );
+					$message_id   = rtmb_get_reply_to_from_ref_id( $reference_id );
+
+					$reply_to = apply_filters( 'rtlib_reply_to_header', '', $fromemail, $post_id );
+					if ( ! empty( $reply_to ) ) {
+						$message->addCustomeHeader( 'Reply-To', trim( $reply_to ) );
+					}
 				}
 
 				//Get reply to header
@@ -316,7 +323,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$post_id = $email->refrence_id;
 					}
 					$new_message_id = rtmb_generate_message_id( $post_id, $email->id );
-					rtmb_add_message_id_in_ref_id( $new_message_id ,$reference_id, $post_id );
+					rtmb_add_message_id_in_ref_id( $new_message_id, $reference_id, $post_id );
 					$message->addCustomeHeader( 'Message-ID', $new_message_id );
 				}
 			}
@@ -369,6 +376,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$message->setBody( $bodyPart );
 
 			$transport->send( $message );
+
 			return true;
 		}
 
@@ -431,7 +439,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				return false;
 			}
 
-			$storage = new ImapStorage( $this->imap );
+			$storage   = new ImapStorage( $this->imap );
 			$email_acc = $rt_mail_settings->get_email_acc( $email, $module );
 
 			if ( empty( $email_acc ) ) {
@@ -476,8 +484,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				} else {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
-				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $module );
-				rt_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
+				$this->rt_parse_email( $from_email, $email, $storage, $arrayMailIds, $user_id, $module );
+				rt_log( ' Reading finish - ' . esc_attr( $folder ) . "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
@@ -519,6 +527,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				}
 			} else {
 				echo 'here --> $UmailId ';
+
 				//var_dump( $cMail );
 
 				return $cMail;
@@ -618,11 +627,11 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$tempUIDArray = $UmailId;
 						$UmailId      = $tempUIDArray['uid'];
 					}
-					$mailId    = $this->get_number_by_unique_id( $UmailId, $storage );
+					$mailId = $this->get_number_by_unique_id( $UmailId, $storage );
 					if ( empty( $mailId ) ) {
 						continue;
 					}
-					$message   = $storage->getMessage( $mailId ); //1474);
+					$message = $storage->getMessage( $mailId ); //1474);
 
 					$lastFlags = $message->getFlags();
 					try {
@@ -656,14 +665,14 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					rt_log( sanitize_email( $email ) . ' Parsing Mail ' . esc_attr( $message->subject ) . "\r\n" );
 
-					$from       = array();
-					$allEmails  = array();
+					$from      = array();
+					$allEmails = array();
 					if ( isset( $message->from ) ) { // or $message->headerExists('cc');
 						$arrFrom = $message->getHeader( 'from' )->getAddressList();
 						foreach ( $arrFrom as $tFrom ) {
-							$from['address']   = $tFrom->getEmail();
-							$from['name']      = $tFrom->getName();
-							$allEmails[] = array(
+							$from['address'] = $tFrom->getEmail();
+							$from['name']    = $tFrom->getName();
+							$allEmails[]     = array(
 								'address' => $tFrom->getEmail(),
 								'name'    => $tFrom->getName(),
 								'key'     => 'from',
@@ -676,7 +685,11 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tTo->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tTo->getEmail(), 'name' => $tTo->getName(), 'key' => 'to' );
+							$allEmails[] = array(
+								'address' => $tTo->getEmail(),
+								'name'    => $tTo->getName(),
+								'key'     => 'to'
+							);
 						}
 					}
 					if ( isset( $message->cc ) ) { // or $message->headerExists('cc');
@@ -685,7 +698,11 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tCc->getEmail(), 'name' => $tCc->getName(), 'key' => 'cc' );
+							$allEmails[] = array(
+								'address' => $tCc->getEmail(),
+								'name'    => $tCc->getName(),
+								'key'     => 'cc'
+							);
 						}
 					}
 					if ( isset( $message->bcc ) ) { // or $message->headerExists('cc');
@@ -694,7 +711,11 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							if ( ! is_email( $tBCc->getEmail() ) ) {
 								continue;
 							}
-							$allEmails[] = array( 'address' => $tBCc->getEmail(), 'name' => $tBCc->getName(), 'key' => 'bcc' );
+							$allEmails[] = array(
+								'address' => $tBCc->getEmail(),
+								'name'    => $tBCc->getName(),
+								'key'     => 'bcc'
+							);
 						}
 					}
 					$htmlBody     = '';
@@ -772,10 +793,10 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 					}
 
-					$subject      = $message->subject;
-					$htmlBody     = rtmb_force_utf_8( $htmlBody );
-					$subject      = rtmb_force_utf_8( $subject );
-					$txtBody      = rtmb_force_utf_8( $txtBody );
+					$subject  = $message->subject;
+					$htmlBody = rtmb_force_utf_8( $htmlBody );
+					$subject  = rtmb_force_utf_8( $subject );
+					$txtBody  = rtmb_force_utf_8( $txtBody );
 
 					$htmlBody = balanceTags( $htmlBody, true );
 
@@ -796,19 +817,19 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					$txtBody = substr( $txtBody, 0, ( false === $offset ) ? strlen( $txtBody ) : $offset );
 
-					$visibleText = balanceTags( $visibleText, true );
+					$visibleText  = balanceTags( $visibleText, true );
 					$originalBody = '';
-					$tmp  = $message->getHeaders();
+					$tmp          = $message->getHeaders();
 					foreach ( $tmp as $header ) {
-						$originalBody .= htmlentities( $header->toString() ) ."\n";
+						$originalBody .= htmlentities( $header->toString() ) . "\n";
 					}
 					$txtBody = rtrim( $txtBody, '\r\n' );
 					$originalBody .= "Body:\r\n" . $txtBody;
 					$originalBody .= "\r\n -- End of Body -- ";
 
 					global $rt_mail_settings;
-					$ac = $rt_mail_settings -> get_email_acc( $email, $module );
-					do_action( 'read_rt_mailbox_email_'.$ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $from_email, $originalBody );
+					$ac = $rt_mail_settings->get_email_acc( $email, $module );
+					do_action( 'read_rt_mailbox_email_' . $ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $from_email, $originalBody );
 
 					//					global $threadPostId;
 					//					if ( ! isset( $threadPostId ) ) {
@@ -839,6 +860,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 		/**
 		 * Function to divided multipart mail into different part
+		 *
 		 * @param $part
 		 * @param $email
 		 * @param $message
@@ -847,19 +869,19 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function parse_message ( $part, $email, $message, $response = array(), $part_index = 0 ) {
-			$part_index = $part_index + 1;
+		function parse_message( $part, $email, $message, $response = array(), $part_index = 0 ) {
+			$part_index  = $part_index + 1;
 			$ContentType = strtok( $part->contentType, ';' );
 			if ( ! ( false === strpos( $ContentType, 'multipart/related' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
-					$tPart = $part->getPart( $rCount );
+					$tPart    = $part->getPart( $rCount );
 					$response = $this->parse_message( $tPart, $email, $message, $response, $part_index );
 				}
 			} else if ( ! ( false === strpos( $ContentType, 'multipart/alternative' ) ) ) {
 				$totParts = $part->countParts();
 				for ( $rCount = 1; $rCount <= $totParts; $rCount ++ ) {
-					$tPart = $part->getPart( $rCount );
+					$tPart    = $part->getPart( $rCount );
 					$response = $this->parse_message( $tPart, $email, $message, $response, $part_index );
 				}
 			} else {
@@ -888,7 +910,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					/* append current time and part index with file name
 					   Fixed inline images parse with same name images.png*/
-					$filename   = time() . $part_index . '-' . sanitize_file_name( $filename );
+					$filename = time() . $part_index . '-' . sanitize_file_name( $filename );
 
 					if ( ! file_exists( $upload_dir ['path'] . "/$filename" ) ) {
 						$uploaded = wp_upload_bits( $filename, null, $filedata );
@@ -899,20 +921,20 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 					if ( false == $uploaded['error'] ) {
 						rtmb_log( "[Attachement Created] File:{$uploaded['file']} ; URL: {$uploaded['url']}", 'mail-attachement.txt' );
-						$file                  = array();
-						$extn_array            = explode( '.', $filename );
-						$extn                  = $extn_array[ count( $extn_array ) - 1 ];
-						$file['file']          = $uploaded['file'];
-						$file['url']           = $uploaded['url'];
-						$file['filename']      = $filename;
-						$file['extn']          = $extn;
-						$file['type']          = $ContentType;
+						$file             = array();
+						$extn_array       = explode( '.', $filename );
+						$extn             = $extn_array[ count( $extn_array ) - 1 ];
+						$file['file']     = $uploaded['file'];
+						$file['url']      = $uploaded['url'];
+						$file['filename'] = $filename;
+						$file['extn']     = $extn;
+						$file['type']     = $ContentType;
 
 						if ( $part->__isset( 'Content-ID' ) ) {
-							$tmpval = $part->getHeader( 'Content-ID' );
+							$tmpval             = $part->getHeader( 'Content-ID' );
 							$file['Content-ID'] = trim( $tmpval->getFieldValue(), '<>' );
 						}
-						$response['attachements'][]        = $file;
+						$response['attachements'][] = $file;
 					} else {
 						rt_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
@@ -922,6 +944,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					}
 				}
 			}
+
 			return $response;
 		}
 

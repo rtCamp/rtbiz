@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Description: Infrastructure plugin which implements metadata functionality for taxonomy terms, including for tags
  * and categories. Version: 0.4 Author: mitcho (Michael Yoshitaka Erlewine), sirzooro Author URI: http://mitcho.com/
  */
-
 class Taxonomy_Metadata {
 	function __construct() {
 		add_action( 'init', array( $this, 'wpdbfix' ) );
@@ -102,10 +101,10 @@ class Taxonomy_Metadata {
 /**
  * Add meta data field to a term.
  *
- * @param int    $term_id Post ID.
- * @param string $meta_key     Metadata name.
- * @param mixed  $meta_value   Metadata value.
- * @param bool   $unique  Optional, default is false. Whether the same key should not be added.
+ * @param int $term_id Post ID.
+ * @param string $meta_key Metadata name.
+ * @param mixed $meta_value Metadata value.
+ * @param bool $unique Optional, default is false. Whether the same key should not be added.
  *
  * @return bool False for failure. True for success.
  */
@@ -120,9 +119,9 @@ function add_term_meta( $term_id, $meta_key, $meta_value, $unique = false ) {
  * value, will keep from removing duplicate metadata with the same key. It also
  * allows removing all metadata matching key, if needed.
  *
- * @param int    $term_id    term ID
- * @param string $meta_key   Metadata name.
- * @param mixed  $meta_value Optional. Metadata value.
+ * @param int $term_id term ID
+ * @param string $meta_key Metadata name.
+ * @param mixed $meta_value Optional. Metadata value.
  *
  * @return bool False for failure. True for success.
  */
@@ -133,9 +132,9 @@ function delete_term_meta( $term_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve term meta field for a term.
  *
- * @param int    $term_id Term ID.
- * @param string $key     The meta key to retrieve.
- * @param bool   $single  Whether to return a single value.
+ * @param int $term_id Term ID.
+ * @param string $key The meta key to retrieve.
+ * @param bool $single Whether to return a single value.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single
  *  is true.
@@ -152,10 +151,10 @@ function get_term_meta( $term_id, $key, $single = false ) {
  *
  * If the meta field for the term does not exist, it will be added.
  *
- * @param int    $term_id    Term ID.
- * @param string $meta_key        Metadata key.
- * @param mixed  $meta_value      Metadata value.
- * @param mixed  $prev_value Optional. Previous value to check before removing.
+ * @param int $term_id Term ID.
+ * @param string $meta_key Metadata key.
+ * @param mixed $meta_value Metadata value.
+ * @param mixed $prev_value Optional. Previous value to check before removing.
  *
  * @return bool False on failure, true if success.
  */

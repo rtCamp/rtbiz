@@ -103,9 +103,9 @@ if ( ! class_exists( 'RT_Email_Table' ) ) {
 		/**
 		 *
 		 * @param array $data_array
-		 * @param bool  $alternate
+		 * @param bool $alternate
 		 *
-		 * @param int   $count
+		 * @param int $count
 		 *
 		 * @return string
 		 */
@@ -123,7 +123,7 @@ if ( ! class_exists( 'RT_Email_Table' ) ) {
 			}
 
 			foreach ( $data_array as $td_data ) {
-				$return_html .= '<td style="' . esc_attr( $td_css ). '">' . esc_html( $td_data ) . '</td>';
+				$return_html .= '<td style="' . esc_attr( $td_css ) . '">' . esc_html( $td_data ) . '</td>';
 			}
 			$return_html .= '</tr>';
 

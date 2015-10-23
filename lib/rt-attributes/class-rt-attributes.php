@@ -114,7 +114,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		function register_attribute_mappings() {
 			global $wpdb;
-			$querystr = $wpdb->prepare( 'SELECT attr.*, attr_rel.post_type  FROM ' . $this->attributes_relationship_model->table_name . ' as attr_rel, ' . $this->attributes_db_model->table_name . " as attr where 2=2 and attr_rel.attr_id=attr.id and attr.module_name = '%s' and attr.attribute_store_as = '%s' ORDER BY attr.id desc", $this->module_name, 'taxonomy' );
+			$querystr  = $wpdb->prepare( 'SELECT attr.*, attr_rel.post_type  FROM ' . $this->attributes_relationship_model->table_name . ' as attr_rel, ' . $this->attributes_db_model->table_name . " as attr where 2=2 and attr_rel.attr_id=attr.id and attr.module_name = '%s' and attr.attribute_store_as = '%s' ORDER BY attr.id desc", $this->module_name, 'taxonomy' );
 			$relations = $this->attributes_relationship_model->get_attributes_by_query( $querystr );
 			foreach ( $relations as $relation ) {
 				$label = ( isset( $relation->attribute_label ) && $relation->attribute_label ) ? $relation->attribute_label : $relation->attribute_name;
@@ -132,11 +132,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 				$tax = $attr_attr_id;
 			}
 
-			$name = $this->get_taxonomy_name( $tax->attribute_name );
-			$hierarchical = true;
+			$name              = $this->get_taxonomy_name( $tax->attribute_name );
+			$hierarchical      = true;
 			$show_admin_column = true;
 			if ( $name ) {
-				$label = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
+				$label             = ( isset( $tax->attribute_label ) && $tax->attribute_label ) ? $tax->attribute_label : $tax->attribute_name;
 				$show_in_nav_menus = apply_filters( 'rt_wp_attributes_show_in_nav_menus', false, $name );
 
 				register_taxonomy(
@@ -145,28 +145,28 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 					apply_filters(
 						'rt_wp_attributes_taxonomy_args_' . $name,
 						array(
-						'public'                    => false,
-						'hierarchical' 				=> $hierarchical,
-						'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
-						'labels' => array(
-								'name' 						=> $label,
-								'singular_name' 			=> $label,
-								'search_items' 				=> __( 'Search' ) . ' ' . sanitize_title( $label ),
-								'all_items' 				=> __( 'All' ) . ' ' . sanitize_title( $label ),
-								'parent_item' 				=> __( 'Parent' ) . ' ' . sanitize_title( $label ),
-								'parent_item_colon' 		=> __( 'Parent' ) . ' ' . sanitize_title( $label ) . ':',
-								'edit_item' 				=> __( 'Edit' ) . ' ' . sanitize_title( $label ),
-								'update_item' 				=> __( 'Update' ) . ' ' . sanitize_title( $label ),
-								'add_new_item' 				=> __( 'Add New' ) . ' ' . sanitize_title( $label ),
-								'new_item_name' 			=> __( 'New' ) . ' ' . sanitize_title( $label ),
+							'public'                => false,
+							'hierarchical'          => $hierarchical,
+							'update_count_callback' => array( $this, 'update_post_term_count' ),
+							'labels'                => array(
+								'name'              => $label,
+								'singular_name'     => $label,
+								'search_items'      => __( 'Search' ) . ' ' . sanitize_title( $label ),
+								'all_items'         => __( 'All' ) . ' ' . sanitize_title( $label ),
+								'parent_item'       => __( 'Parent' ) . ' ' . sanitize_title( $label ),
+								'parent_item_colon' => __( 'Parent' ) . ' ' . sanitize_title( $label ) . ':',
+								'edit_item'         => __( 'Edit' ) . ' ' . sanitize_title( $label ),
+								'update_item'       => __( 'Update' ) . ' ' . sanitize_title( $label ),
+								'add_new_item'      => __( 'Add New' ) . ' ' . sanitize_title( $label ),
+								'new_item_name'     => __( 'New' ) . ' ' . sanitize_title( $label ),
 							),
-						'show_ui' 					=> true,
-						'query_var' 				=> true,
-						'capabilities'				=> $caps,
-						'show_in_nav_menus' 		=> $show_in_nav_menus,
-						'show_admin_column'			=> $show_admin_column,
-						//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
-						'rewrite' => false,
+							'show_ui'               => true,
+							'query_var'             => true,
+							'capabilities'          => $caps,
+							'show_in_nav_menus'     => $show_in_nav_menus,
+							'show_admin_column'     => $show_admin_column,
+							//'rewrite' 					=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
+							'rewrite'               => false,
 						)
 					)
 				);
@@ -225,10 +225,10 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 * @param string $parent_page_slug
 		 * @param string $post_type
 		 * @param string $page_cap
-		 * @param array  $attr_cap
-		 * @param bool   $render_type_required
-		 * @param bool   $storage_type_required
-		 * @param bool   $orderby_required
+		 * @param array $attr_cap
+		 * @param bool $render_type_required
+		 * @param bool $storage_type_required
+		 * @param bool $orderby_required
 		 */
 		function add_attributes_page( $page_slug, $parent_page_slug = '', $post_type = '', $page_cap = 'manage_options', $attr_cap = array(), $render_type_required = false, $storage_type_required = false, $orderby_required = false, $admin_menu = true ) {
 
@@ -251,9 +251,15 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		 */
 		function register_attribute_menu() {
 			if ( ! empty( $this->parent_page_slug ) ) {
-				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
+				add_submenu_page( $this->parent_page_slug, __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array(
+					$this,
+					'render_attributes_page',
+				) );
 			} else {
-				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array( $this, 'render_attributes_page' ) );
+				add_menu_page( __( 'Attributes' ), __( 'Attributes' ), $this->page_cap, $this->page_slug, array(
+					$this,
+					'render_attributes_page',
+				) );
 			}
 		}
 
@@ -309,6 +315,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		/**
 		 * @param $attribute
+		 *
 		 * @return string
 		 */
 		function get_taxonomy_name( $attribute ) {
@@ -329,7 +336,82 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function error_check( $action = '', $attribute_id = '', $attribute_name = '', $attribute_render_type = '', $attribute_store_as = 'taxonomy' ) {
 			// Forbidden attribute names
 			// http://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms
-			$reserved_terms = array( 'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and', 'category__in', 'category__not_in', 'category_name', 'comments_per_page', 'comments_popup', 'cpage', 'day', 'debug', 'error', 'exact', 'feed', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more', 'name', 'nav_menu', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm', 'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type', 'post_status', 'post_tag', 'post_type', 'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 's', 'search', 'second', 'sentence', 'showposts', 'static', 'subpost', 'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id', 'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'type', 'w', 'withcomments', 'withoutcomments', 'year', );
+			$reserved_terms = array(
+				'attachment',
+				'attachment_id',
+				'author',
+				'author_name',
+				'calendar',
+				'cat',
+				'category',
+				'category__and',
+				'category__in',
+				'category__not_in',
+				'category_name',
+				'comments_per_page',
+				'comments_popup',
+				'cpage',
+				'day',
+				'debug',
+				'error',
+				'exact',
+				'feed',
+				'hour',
+				'link_category',
+				'm',
+				'minute',
+				'monthnum',
+				'more',
+				'name',
+				'nav_menu',
+				'nopaging',
+				'offset',
+				'order',
+				'orderby',
+				'p',
+				'page',
+				'page_id',
+				'paged',
+				'pagename',
+				'pb',
+				'perm',
+				'post',
+				'post__in',
+				'post__not_in',
+				'post_format',
+				'post_mime_type',
+				'post_status',
+				'post_tag',
+				'post_type',
+				'posts',
+				'posts_per_archive_page',
+				'posts_per_page',
+				'preview',
+				'robots',
+				's',
+				'search',
+				'second',
+				'sentence',
+				'showposts',
+				'static',
+				'subpost',
+				'subpost_id',
+				'tag',
+				'tag__and',
+				'tag__in',
+				'tag__not_in',
+				'tag_id',
+				'tag_slug__and',
+				'tag_slug__in',
+				'taxonomy',
+				'tb',
+				'term',
+				'type',
+				'w',
+				'withcomments',
+				'withoutcomments',
+				'year',
+			);
 
 			$error = '';
 
@@ -358,13 +440,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 
 		/**
 		 * Add Attribute to Post Types Mapping. Save it to database
+		 *
 		 * @param $attribute_id
 		 * @param $post_types
 		 */
 		function add_attribute_relations( $attribute_id, $post_types ) {
 			foreach ( $post_types as $pt ) {
 				$data = array(
-					'attr_id' => $attribute_id,
+					'attr_id'   => $attribute_id,
 					'post_type' => $pt,
 				);
 				$this->attributes_relationship_model->add_relation( $data );
@@ -375,11 +458,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function update_attribute_relations( $attribute_id, $post_types ) {
 			$old_relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
 			foreach ( $old_relations as $or ) {
-				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $or->attr_id, 'post_type' => $or->post_type ) );
+				$this->attributes_relationship_model->delete_relation( array(
+					'attr_id'   => $or->attr_id,
+					'post_type' => $or->post_type,
+				) );
 			}
 			foreach ( $post_types as $pt ) {
 				$data = array(
-					'attr_id' => $attribute_id,
+					'attr_id'   => $attribute_id,
 					'post_type' => $pt,
 				);
 				$this->attributes_relationship_model->add_relation( $data );
@@ -388,11 +474,14 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		}
 
 		function delete_attribute_relations( $attribute_id ) {
-			$relations = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
+			$relations  = $this->attributes_relationship_model->get_relations_by_attribute( $attribute_id );
 			$post_types = array();
 			foreach ( $relations as $r ) {
 				$post_types[] = $r->post_type;
-				$this->attributes_relationship_model->delete_relation( array( 'attr_id' => $r->attr_id, 'post_type' => $r->post_type ) );
+				$this->attributes_relationship_model->delete_relation( array(
+					'attr_id'   => $r->attr_id,
+					'post_type' => $r->post_type,
+				) );
 			}
 			do_action( 'rt_attributes_relations_deleted', $attribute_id, $post_types );
 		}
@@ -409,12 +498,12 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function add_attribute( $attribute_label, $attribute_name, $attribute_store_as = 'taxonomy', $attribute_render_type = '', $attribute_orderby = '' ) {
 
 			$attribute = array(
-				'module_name' => $this->module_name,
-				'attribute_label' => $attribute_label,
-				'attribute_name' => $attribute_name,
-				'attribute_store_as' => $attribute_store_as,
+				'module_name'           => $this->module_name,
+				'attribute_label'       => $attribute_label,
+				'attribute_name'        => $attribute_name,
+				'attribute_store_as'    => $attribute_store_as,
 				'attribute_render_type' => $attribute_render_type,
-				'attribute_orderby' => $attribute_orderby,
+				'attribute_orderby'     => $attribute_orderby,
 			);
 
 			return $this->attributes_db_model->add_attribute( $attribute );
@@ -433,11 +522,11 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 		function edit_attribute( $attribute_id, $attribute_label, $attribute_name, $attribute_store_as = 'taxonomy', $attribute_render_type = '', $attribute_orderby = '' ) {
 
 			$attribute = array(
-				'attribute_label' => $attribute_label,
-				'attribute_name' => $attribute_name,
-				'attribute_store_as' => $attribute_store_as,
+				'attribute_label'       => $attribute_label,
+				'attribute_name'        => $attribute_name,
+				'attribute_store_as'    => $attribute_store_as,
 				'attribute_render_type' => $attribute_render_type,
-				'attribute_orderby' => $attribute_orderby,
+				'attribute_orderby'     => $attribute_orderby,
 			);
 
 			$this->attributes_db_model->update_attribute( $attribute, array( 'id' => $attribute_id ) );
@@ -545,6 +634,7 @@ if ( ! class_exists( 'RT_Attributes' ) ) {
 					$action_completed = true;
 				}
 			}
+
 			return $action_completed;
 		}
 

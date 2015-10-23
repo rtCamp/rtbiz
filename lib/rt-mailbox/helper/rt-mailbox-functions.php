@@ -67,11 +67,12 @@ function rtmb_is_system_email( $email ) {
 
 	foreach ( $google_acs as $ac ) {
 		$ac->email_data = unserialize( $ac->email_data );
-		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+		$ac_email       = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
 		if ( $ac_email == $email ) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -98,17 +99,17 @@ function rtmb_force_utf_8( $string ) {
 	// UTF-8
 
 	//reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-	$string = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-		'|[\x00-\x7F][\x80-\xBF]+'.
-		'|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-		'|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
-		'|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
+	$string = preg_replace( '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
+	                        '|[\x00-\x7F][\x80-\xBF]+' .
+	                        '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
+	                        '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
+	                        '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
 		'?', $string
 	);
 
 	//reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
-	$string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]'.
-		'|\xED[\xA0-\xBF][\x80-\xBF]/S','?', $string
+	$string = preg_replace( '/\xE0[\x80-\x9F][\x80-\xBF]' .
+	                        '|\xED[\xA0-\xBF][\x80-\xBF]/S', '?', $string
 	);
 
 	return $string;
@@ -130,6 +131,7 @@ function rtmb_log( $msg, $filename = 'error_log.txt' ) {
 		fclose( $fp );
 	}
 }
+
 /**
  * Logging errors in wordpress
  *
@@ -145,8 +147,6 @@ if ( ! function_exists( 'rt_log' ) ) {
 		}
 	}
 }
-
-
 
 
 /**
@@ -198,17 +198,18 @@ function rtmb_get_mime_type( $file ) {
 function rtmb_get_module_mailbox_emails( $module ) {
 	global $rt_mail_settings;
 
-	$emails   = array();
+	$emails     = array();
 	$google_acs = $rt_mail_settings->get_user_google_ac( array( 'module' => $module ) );
 
 	foreach ( $google_acs as $ac ) {
 		$ac->email_data = unserialize( $ac->email_data );
-		$ac_email          = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
-		$hdZendEmail = new Rt_Zend_Mail();
+		$ac_email       = filter_var( $ac->email_data['email'], FILTER_SANITIZE_EMAIL );
+		$hdZendEmail    = new Rt_Zend_Mail();
 		if ( $hdZendEmail->try_imap_login( $ac_email, $ac->outh_token, $ac->type, $ac->imap_server ) ) {
 			$emails[] = $ac_email;
 		}
 	}
+
 	return $emails;
 }
 
@@ -218,6 +219,7 @@ function rtmb_get_module_mailbox_emails( $module ) {
  */
 function rtmb_get_module_mailbox_email( $email, $module ) {
 	global $rt_mail_settings;
+
 	return $rt_mail_settings->get_email_acc( $email, $module );
 }
 
@@ -237,20 +239,21 @@ function rtmb_add_message_id_in_ref_id( $message_id, $reference_id, $post_id = 0
 	if ( empty( $reference_id ) ) {
 		return $message_id;
 	}
-	$reference_ids  = rtmb_get_reference_id_array( $reference_id );
+	$reference_ids = rtmb_get_reference_id_array( $reference_id );
 	if ( ! empty( $post_id ) ) {
 		$post_reference_id = get_post_meta( $post_id, '_rtlib_references', true );
 		if ( ! empty( $post_reference_id ) ) {
 			$post_reference_ids = rtmb_get_reference_id_array( $post_reference_id );
-			$reference_ids = array_merge( $post_reference_ids, $reference_ids );
+			$reference_ids      = array_merge( $post_reference_ids, $reference_ids );
 		}
 	}
 	$reference_ids[] = $message_id;
-	$reference_ids = array_unique( $reference_ids );
-	$reference_id = implode( '', $reference_ids );
+	$reference_ids   = array_unique( $reference_ids );
+	$reference_id    = implode( '', $reference_ids );
 	if ( ! empty( $post_id ) ) {
 		update_post_meta( $post_id, '_rtlib_references', $reference_id );
 	}
+
 	return $reference_id;
 }
 
@@ -259,11 +262,12 @@ function rtmb_get_reply_to_from_ref_id( $reference_id ) {
 		return '';
 	}
 	$reference_ids = rtmb_get_reference_id_array( $reference_id );
+
 	return end( $reference_ids );
 }
 
 function rtmb_get_reference_id_array( $reference_string ) {
-	$parts = preg_split( '/([>])/', $reference_string, -1, PREG_SPLIT_DELIM_CAPTURE );
+	$parts              = preg_split( '/([>])/', $reference_string, - 1, PREG_SPLIT_DELIM_CAPTURE );
 	$post_reference_ids = array();
 	for ( $i = 0, $n = count( $parts ) - 1; $i < $n; $i += 2 ) {
 		$post_reference_ids[] = $parts[ $i ] . $parts[ $i + 1 ];
@@ -271,6 +275,7 @@ function rtmb_get_reference_id_array( $reference_string ) {
 	if ( '' != $parts[ $n ] ) {
 		$post_reference_ids[] = $parts[ $n ];
 	}
+
 	return $post_reference_ids;
 }
 
@@ -280,9 +285,11 @@ function rtmb_generate_message_id( $post_id, $email_id, $type = 'post' ) {
 		$post_id = $comment->comment_post_ID;
 	}
 	$domain_name = preg_replace( '/^www\./', '', $_SERVER['SERVER_NAME'] );
-	$domain_name = '@'.$domain_name;
-	$post_date = current_time( 'mysql' );
-	$unique_id = md5( 'rt_lib_' . get_post_type( $post_id ) . '_' . $post_date . '_' . $post_id. '-'. $email_id . '-' . wp_rand() );
-	return '<'.$post_id.'-'.$unique_id.$domain_name.'>';
+	$domain_name = '@' . $domain_name;
+	$post_date   = current_time( 'mysql' );
+	$unique_id   = md5( 'rt_lib_' . get_post_type( $post_id ) . '_' . $post_date . '_' . $post_id . '-' . $email_id . '-' . wp_rand() );
+
+	return '<' . $post_id . '-' . $unique_id . $domain_name . '>';
 }
+
 ?>

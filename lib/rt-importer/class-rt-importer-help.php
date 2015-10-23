@@ -22,33 +22,33 @@ if ( ! class_exists( 'Rt_Importer_Help' ) ) {
 			$this->tabs = apply_filters( 'rt_biz_help_tabs', array(
 				'admin.php' => array(
 					array(
-						'id' => 'importer_overview',
-						'title' => __( 'Overview' ),
+						'id'      => 'importer_overview',
+						'title'   => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Importer::$page_slug,
+						'page'    => Rt_Importer::$page_slug,
 					),
 					array(
-						'id' => 'importer_screen_content',
-						'title' => __( 'Screen Content' ),
+						'id'      => 'importer_screen_content',
+						'title'   => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Importer::$page_slug,
+						'page'    => Rt_Importer::$page_slug,
 					),
 					array(
-						'id' => 'importer_mapper_overview',
-						'title' => __( 'Overview' ),
+						'id'      => 'importer_mapper_overview',
+						'title'   => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Importer_Mapper::$page_slug,
+						'page'    => Rt_Importer_Mapper::$page_slug,
 					),
 					array(
-						'id' => 'importer_mapper_screen_content',
-						'title' => __( 'Screen Content' ),
+						'id'      => 'importer_mapper_screen_content',
+						'title'   => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Importer_Mapper::$page_slug,
+						'page'    => Rt_Importer_Mapper::$page_slug,
 					),
 				),
 			) );
 
-			$documentation_link = apply_filters( 'rt_biz_help_documentation_link', 'https://github.com/rtCamp/rt-lib/' );
+			$documentation_link         = apply_filters( 'rt_biz_help_documentation_link', 'https://github.com/rtCamp/rt-lib/' );
 			$this->help_sidebar_content = apply_filters( 'rt_biz_help_sidebar_content', '<p><strong>' . __( 'For More Information : ' ) . '</strong></p><p><a href="' . $documentation_link . '">' . __( 'Documentation' ) . '</a></p>' );
 
 			add_action( 'current_screen', array( $this, 'check_tabs' ) );
@@ -74,10 +74,10 @@ if ( ! class_exists( 'Rt_Importer_Help' ) ) {
 
 		function add_tab( $args ) {
 			get_current_screen()->add_help_tab( array(
-				                                    'id' => $args['id'],
-				                                    'title' => $args['title'],
-				                                    'callback' => array( $this, 'tab_content' ),
-			                                    ) );
+				'id'       => $args['id'],
+				'title'    => $args['title'],
+				'callback' => array( $this, 'tab_content' ),
+			) );
 			get_current_screen()->set_help_sidebar( $this->help_sidebar_content );
 		}
 

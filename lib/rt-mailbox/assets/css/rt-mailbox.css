@@ -1,87 +1,85 @@
-.clear{
-    clear: both;
+.clear {
+	clear: both;
 }
 
-.rtmailbox-wrap{
-    margin-bottom: 10px;
+.rtmailbox-wrap {
+	margin-bottom: 10px;
 }
 
-.rtmailbox-row{
-    margin-bottom: 10px;
+.rtmailbox-row {
+	margin-bottom: 10px;
 }
 
-.rtmailbox-row>label{
-    display: inline-block;
-    width: 25%;
-    vertical-align:top;
+.rtmailbox-row > label {
+	display: inline-block;
+	width: 25%;
+	vertical-align: top;
 }
 
 /* provider list css */
-ul.rtmailbox_provider_list{
-    display: inline-block;
-    margin: 0px;
+ul.rtmailbox_provider_list {
+	display: inline-block;
+	margin: 0px;
 }
 
-ul.rtmailbox_provider_list li input{
-    margin-right: 0px;
+ul.rtmailbox_provider_list li input {
+	margin-right: 0px;
 }
 
-ul.rtmailbox_provider_list li{
-    margin-right: 7px;
-    float: left;
+ul.rtmailbox_provider_list li {
+	margin-right: 7px;
+	float: left;
 }
 
-div.mailbox-folder-list{
-    display: inline-block;
-    width: 74%;
+div.mailbox-folder-list {
+	display: inline-block;
+	width: 74%;
 }
 
-div.mailbox-folder-list>ul{
-    margin: 0px;
+div.mailbox-folder-list > ul {
+	margin: 0px;
 }
 
-div.mailbox-folder-list>ul ul{
-    display: inline-block;
-    width: 50%;
+div.mailbox-folder-list > ul ul {
+	display: inline-block;
+	width: 50%;
 }
 
 div.mailbox-folder-list ul li {
-    padding-bottom: 5px;
+	padding-bottom: 5px;
 }
 
-.rtmailbox-mail-folder{
-    display: none;
+.rtmailbox-mail-folder {
+	display: none;
 }
 
-.mailbox-list>div{
-    background-color: #F1F1F1;
-    padding: 10px;
+.mailbox-list > div {
+	background-color: #F1F1F1;
+	padding: 10px;
 }
 
-.rtmailbox-avtar{
-    display: inline-block;
+.rtmailbox-avtar {
+	display: inline-block;
 }
 
-.rtmailbox-avtar a{
-    line-height: 30px;
-    text-decoration: none;
+.rtmailbox-avtar a {
+	line-height: 30px;
+	text-decoration: none;
 }
 
-.rtmailbox-avtar a img{
-    float: left;
-    margin-right: 10px;
+.rtmailbox-avtar a img {
+	float: left;
+	margin-right: 10px;
 }
 
-
-.rtmailbox-maillist-action{
-    display: inline-block;
-    float: right;
+.rtmailbox-maillist-action {
+	display: inline-block;
+	float: right;
 }
 
 .rtmailbox-spinner {
-    display: none;
+	display: none;
 }
-
 
 /*
 .nav-tab-wrapper{

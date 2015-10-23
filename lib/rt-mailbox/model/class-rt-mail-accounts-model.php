@@ -94,14 +94,15 @@ if ( ! class_exists( 'Rt_Mail_Accounts_Model' ) ) {
 			return parent::get( array() );
 		}
 
-		function get_unique_modules(){
+		function get_unique_modules() {
 			global $wpdb;
-			$query = 'SELECT DISTINCT (module) from '.$this->table_name;
+			$query       = 'SELECT DISTINCT (module) from ' . $this->table_name;
 			$all_modules = $wpdb->get_results( $query );
-			$modules = array();
+			$modules     = array();
 			foreach ( $all_modules as $module ) {
 				$modules[] = $module;
 			}
+
 			return array_unique( wp_list_pluck( $modules, 'module' ) );
 		}
 	}

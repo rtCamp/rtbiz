@@ -8,14 +8,15 @@
   Author URI: http://rtcamp.com/
  */
 $rt_lib_version = '1.4';
-$rt_lib_path = __FILE__;
+$rt_lib_path    = __FILE__;
 
 #. '/rt-wp-autoloader/class-rt-wp-autoload.php';
 
 global $rt_lib;
 if ( ! isset( $rt_lib ) ) {
 	$rt_lib = array(
-		'version' => $rt_lib_version, 'rt_lib_path' => $rt_lib_path,
+		'version'     => $rt_lib_version,
+		'rt_lib_path' => $rt_lib_path,
 	);
 	function rt_lib_loader() {
 		global $rt_lib;
@@ -37,10 +38,11 @@ if ( ! isset( $rt_lib ) ) {
 		}
 
 	}
+
 	add_action( 'plugins_loaded', 'rt_lib_loader', 1 );
 } else {
 	if ( version_compare( $rt_lib_version, $rt_lib['version'], '>' ) ) {
-		$rt_lib['version']        = $rt_lib_version;
+		$rt_lib['version']     = $rt_lib_version;
 		$rt_lib['rt_lib_path'] = $rt_lib_path;
 	}
 }

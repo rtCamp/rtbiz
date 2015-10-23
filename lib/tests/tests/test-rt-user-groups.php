@@ -28,20 +28,20 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 		);
 
 		$this->RT_User_Groups = new RT_User_Groups( 'user-group', array(
-				'name'                       => __( 'Departments' ),
-				'singular_name'              => __( 'Departmet' ),
-				'menu_name'                  => __( 'Departments' ),
-				'search_items'               => __( 'Search Departments' ),
-				'popular_items'              => __( 'Popular Departments' ),
-				'all_items'                  => __( 'All User Departments' ),
-				'edit_item'                  => __( 'Edit Department' ),
-				'update_item'                => __( 'Update Department' ),
-				'add_new_item'               => __( 'Add New Department' ),
-				'new_item_name'              => __( 'New Department Name' ),
-				'separate_items_with_commas' => __( 'Separate departments with commas' ),
-				'add_or_remove_items'        => __( 'Add or remove departments' ),
-				'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
-			), $terms_cap, array()
+			'name'                       => __( 'Departments' ),
+			'singular_name'              => __( 'Departmet' ),
+			'menu_name'                  => __( 'Departments' ),
+			'search_items'               => __( 'Search Departments' ),
+			'popular_items'              => __( 'Popular Departments' ),
+			'all_items'                  => __( 'All User Departments' ),
+			'edit_item'                  => __( 'Edit Department' ),
+			'update_item'                => __( 'Update Department' ),
+			'add_new_item'               => __( 'Add New Department' ),
+			'new_item_name'              => __( 'New Department Name' ),
+			'separate_items_with_commas' => __( 'Separate departments with commas' ),
+			'add_or_remove_items'        => __( 'Add or remove departments' ),
+			'choose_from_most_used'      => __( 'Choose from the most popular departments' ),
+		), $terms_cap, array()
 		);
 	}
 
@@ -49,7 +49,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 	 * testing constructor is working correctly or not
 	 */
 	function test_construct() {
-		$this->assertEquals( 'user-group', RT_User_Groups::$user_group_slug , 'Slug value is not set or invalid' );
+		$this->assertEquals( 'user-group', RT_User_Groups::$user_group_slug, 'Slug value is not set or invalid' );
 
 		$this->assertEquals(
 			array(
@@ -115,7 +115,7 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 	 *
 	 */
 	function test_remove_user_groups() {
-		if ( ! taxonomy_exists( 'user-group' ) ){
+		if ( ! taxonomy_exists( 'user-group' ) ) {
 			$this->RT_User_Groups->register_user_group();
 		}
 		$termsid1 = wp_insert_term(
@@ -144,4 +144,4 @@ class Test_RT_User_Groups extends RT_WP_TestCase {
 		$this->assertFalse( $this->RT_User_Groups->is_user_has_group( 1, $termsid1['term_taxonomy_id'] ) );
 		$this->assertFalse( $this->RT_User_Groups->is_user_has_group( 1, $termsid2['term_taxonomy_id'] ) );
 	}
-} 
+}
