@@ -10,8 +10,7 @@ if ( ! class_exists( 'RT_Theme_Info' ) ) {
 	/**
 	 * Class RT_Plugin_Info
 	 */
-	class RT_Theme_Info
-	{
+	class RT_Theme_Info {
 
 		/**
 		 * @var string plugin loader file path
@@ -65,8 +64,7 @@ if ( ! class_exists( 'RT_Theme_Info' ) ) {
 		/**
 		 * @param null $path
 		 */
-		public function __construct( $path = null )
-		{
+		public function __construct( $path = null ) {
 			$this->set_current_theme_path( $path );
 			$this->set_theme_data();
 		}
@@ -74,8 +72,7 @@ if ( ! class_exists( 'RT_Theme_Info' ) ) {
 		/**
 		 * @return array plugin info in array
 		 */
-		function get_theme_data()
-		{
+		function get_theme_data() {
 			require_once( ABSPATH . 'wp-admin/includes/theme.php' );
 
 			return wp_get_theme( basename( $this->theme_path ) );
@@ -85,8 +82,7 @@ if ( ! class_exists( 'RT_Theme_Info' ) ) {
 		 * Set plugin data
 		 * @return null
 		 */
-		function set_theme_data()
-		{
+		function set_theme_data() {
 			$this->theme_data  = $this->get_theme_data();
 			$this->name        = $this->theme_data->get( 'Name' );
 			$this->title       = $this->theme_data->get( 'Name' );
@@ -102,10 +98,10 @@ if ( ! class_exists( 'RT_Theme_Info' ) ) {
 
 		/**
 		 * Set current plugin loader path
+		 *
 		 * @param $path string plugin loader file path
 		 */
-		function set_current_theme_path( $path )
-		{
+		function set_current_theme_path( $path ) {
 			if ( null != $path ) {
 				$this->theme_path = $path;
 			} else {

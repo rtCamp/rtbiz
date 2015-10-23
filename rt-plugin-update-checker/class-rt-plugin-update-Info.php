@@ -9,8 +9,7 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ) {
 	/**
 	 * Class RT_Plugin_Update_Info for parse the metadata file information
 	 */
-	class RT_Plugin_Update_Info
-	{
+	class RT_Plugin_Update_Info {
 
 		/**
 		 * @var string plugin name
@@ -82,13 +81,12 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ) {
 		 * returned by an external update API.
 		 *
 		 * @param string $json Valid JSON string representing plugin info.
-		 * @param bool   $triggerErrors
+		 * @param bool $triggerErrors
 		 *
 		 * @return RT_Plugin_Update_Info|null New instance of PluginInfo, or NULL on error.
 		 */
 
-		public static function from_json( $json, $triggerErrors = false )
-		{
+		public static function from_json( $json, $triggerErrors = false ) {
 			/**
 			 * @var StdClass $apiResponse
 			 */
@@ -131,13 +129,24 @@ if ( ! class_exists( 'RT_Plugin_Update_Info' ) ) {
 		 *
 		 * @return \StdClass
 		 */
-		public function to_wp_format()
-		{
+		public function to_wp_format() {
 			$info = new StdClass;
 
 			//The custom update API is built so that many fields have the same name and format
 			//as those returned by the native WordPress.org API. These can be assigned directly.
-			$sameFormat = array( 'name', 'slug', 'version', 'requires', 'tested', 'rating', 'upgrade_notice', 'num_ratings', 'downloaded', 'homepage', 'last_updated', );
+			$sameFormat = array(
+				'name',
+				'slug',
+				'version',
+				'requires',
+				'tested',
+				'rating',
+				'upgrade_notice',
+				'num_ratings',
+				'downloaded',
+				'homepage',
+				'last_updated',
+			);
 			foreach ( $sameFormat as $field ) {
 				if ( isset( $this->$field ) ) {
 					$info->$field = $this->$field;

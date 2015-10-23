@@ -102,6 +102,7 @@ if ( ! class_exists( 'Rt_IMAP_Server_Model' ) ) {
 
 		function get_servers( $data ) {
 			$servers = parent::get( $data );
+
 			return $servers;
 		}
 	}

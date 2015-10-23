@@ -133,14 +133,20 @@ class Test_RT_DB_Model extends RT_WP_TestCase {
 
 	function inset_media( $count = 1 ) {
 		while ( $count > 0 ) {
-			$this->rtdbmodel->insert( array( 'media_id' => $count, 'meta_key' => 'test_key', 'meta_value' => 'test_value' ) );
+			$this->rtdbmodel->insert( array( 'media_id'   => $count,
+			                                 'meta_key'   => 'test_key',
+			                                 'meta_value' => 'test_value'
+			) );
 			$count --;
 		}
 	}
 
 	function test_insert_with_right_input() {
 		$this->rtdbmodel->set_table_name( 'test_table' );
-		$this->assertGreaterThan( 0, $this->rtdbmodel->insert( array( 'media_id' => 1, 'meta_key' => 'test_key', 'meta_value' => 'test_value' ) ) );
+		$this->assertGreaterThan( 0, $this->rtdbmodel->insert( array( 'media_id'   => 1,
+		                                                              'meta_key'   => 'test_key',
+		                                                              'meta_value' => 'test_value'
+		) ) );
 	}
 
 

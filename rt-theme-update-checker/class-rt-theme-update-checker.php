@@ -20,10 +20,10 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 		/**
 		 * Class constructor.
 		 *
-		 * @param string  $theme                   Theme slug, e.g. "twentyten".
+		 * @param string $theme Theme slug, e.g. "twentyten".
 		 * @param         $theme_update_slug
-		 * @param string  $metadataUrl             The URL of the theme metadata file.
-		 * @param string  $details_url
+		 * @param string $metadataUrl The URL of the theme metadata file.
+		 * @param string $details_url
 		 * @param boolean $enableAutomaticChecking Enable/disable automatic update checking. If set to FALSE, you'll need to explicitly call checkForUpdates() to, err, check for updates.
 		 */
 		public function __construct( $theme, $theme_update_slug, $metadataUrl, $details_url = '', $enableAutomaticChecking = true ) {
@@ -78,7 +78,7 @@ if ( ! class_exists( 'RT_Theme_Update_Checker' ) ) {
 			$queryArgs['checking_for_updates'] = true;
 			$queryArgs['admin_email']          = get_option( 'admin_email' );
 			$queryArgs['slug']                 = $this->theme_update_slug;
-			$queryArgs                           = apply_filters( self::$filterPrefix . 'query_args-' . $this->theme, $queryArgs );
+			$queryArgs                         = apply_filters( self::$filterPrefix . 'query_args-' . $this->theme, $queryArgs );
 
 			$options = array(
 				'timeout' => 20, //seconds

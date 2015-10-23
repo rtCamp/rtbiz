@@ -29,15 +29,15 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 		 * @var array
 		 */
 		static $data_type_map = array(
-			'text' => 'string',
-			'email' => 'string',
-			'select' => 'string',
-			'radio' => 'string',
-			'number' => 'number',
+			'text'        => 'string',
+			'email'       => 'string',
+			'select'      => 'string',
+			'radio'       => 'string',
+			'number'      => 'number',
 			'multiselect' => 'string',
-			'date' => 'string',
-			'time' => 'string',
-			'list' => 'string',
+			'date'        => 'string',
+			'time'        => 'string',
+			'list'        => 'string',
 		);
 
 		/**
@@ -59,6 +59,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			if ( isset( $field['inputs'] ) && ! empty( $field['inputs'] ) ) {
 				$inputs = $field['inputs'];
 			}
+
 			return $inputs;
 		}
 
@@ -76,6 +77,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 					return $field;
 				}
 			}
+
 			return false;
 		}
 
@@ -91,6 +93,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			if ( isset( $field['choices'] ) && ! empty( $field['choices'] ) ) {
 				$choices = $field['choices'];
 			}
+
 			return $choices;
 		}
 
@@ -113,7 +116,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 		 */
 		static function array_merge_recursive_distinct() {
 			$arrays = func_get_args();
-			$base = array_shift( $arrays );
+			$base   = array_shift( $arrays );
 
 			if ( ! is_array( $base ) ) {
 				$base = empty( $base ) ? array() : array( $base );
@@ -158,11 +161,11 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 			// generate data source - make a query
 			// Save chart in user meta / flat table
 
-			$leads = array();
+			$leads  = array();
 			$fields = array();
 			if ( class_exists( 'GFFormsModel' ) && class_exists( 'RGFormsModel' ) ) {
-				$leads = GFFormsModel::get_leads( $form_id );
-				$meta = RGFormsModel::get_form_meta( $form_id );
+				$leads  = GFFormsModel::get_leads( $form_id );
+				$meta   = RGFormsModel::get_form_meta( $form_id );
 				$fields = ( isset( $meta['fields'] ) ) ? $meta['fields'] : array();
 			}
 
@@ -181,8 +184,8 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								$inputs = self::get_field_inputs( $field );
 								foreach ( $inputs as $i_id => $input ) {
 									$cols[] = array(
-										'type' => self::$data_type_map['text'],
-										'label' => isset( $input['label'] ) ? $input['label'] : 'Input '.( $i_id + 1 ),
+										'type'  => self::$data_type_map['text'],
+										'label' => isset( $input['label'] ) ? $input['label'] : 'Input ' . ( $i_id + 1 ),
 									);
 								}
 								break;
@@ -193,27 +196,27 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								$choices = self::get_field_choices( $field );
 								foreach ( $choices as $ch_id => $choice ) {
 									$cols[] = array(
-										'type' => self::$data_type_map['text'],
-										'label' => isset( $choice['text'] ) ? $choice['text'] : 'Choice '.( $ch_id + 1 ),
+										'type'  => self::$data_type_map['text'],
+										'label' => isset( $choice['text'] ) ? $choice['text'] : 'Choice ' . ( $ch_id + 1 ),
 									);
 								}
 								if ( isset( $field['enableOtherChoice'] ) && $field['enableOtherChoice'] ) {
 									$cols[] = array(
-										'type' => self::$data_type_map['text'],
+										'type'  => self::$data_type_map['text'],
 										'label' => __( 'Others' ),
 									);
 								}
 								if ( 'checkbox' == $field['type'] && 1 === sizeof( $choices ) ) {
 									$cols[] = array(
-										'type' => self::$data_type_map['text'],
+										'type'  => self::$data_type_map['text'],
 										'label' => __( 'Others' ),
 									);
 								}
 								break;
 							default:
 								$cols[] = array(
-									'type' => ( class_exists( 'GFFormsModel' ) ) ? self::$data_type_map[ GFFormsModel::get_input_type( $field ) ] : self::$data_type_map['text'],
-									'label' => isset( $field['label'] ) ? $field['label'] : 'Column '.( $f_id + 1 ),
+									'type'  => ( class_exists( 'GFFormsModel' ) ) ? self::$data_type_map[ GFFormsModel::get_input_type( $field ) ] : self::$data_type_map['text'],
+									'label' => isset( $field['label'] ) ? $field['label'] : 'Column ' . ( $f_id + 1 ),
 								);
 								break;
 						}
@@ -229,7 +232,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							switch ( $field['type'] ) {
 								case 'checkbox':
 									$choices = self::get_field_choices( $field );
-									$inputs = self::get_field_inputs( $field );
+									$inputs  = self::get_field_inputs( $field );
 									$options = self::array_merge_recursive_distinct( $choices, $inputs );
 									foreach ( $options as $option ) {
 										$val = ( isset( $lead[ strval( $option['id'] ) ] ) ) ? $lead[ strval( $option['id'] ) ] : '';
@@ -241,7 +244,8 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									}
 									if ( 1 === sizeof( $options ) ) {
 										if ( ! isset( $lead[ strval( $options[0]['id'] ) ] ) ||
-											empty( $lead[ strval( $options[0]['id'] ) ] ) ) {
+										     empty( $lead[ strval( $options[0]['id'] ) ] )
+										) {
 											$temp[] = '&#10004;';
 										} else {
 											$temp[] = '';
@@ -256,7 +260,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									}
 									break;
 								case 'multiselect':
-									$vals = ( isset( $lead[ $field['id'] ] ) ) ? explode( ',', $lead[ $field['id'] ] ) : array();
+									$vals    = ( isset( $lead[ $field['id'] ] ) ) ? explode( ',', $lead[ $field['id'] ] ) : array();
 									$choices = self::get_field_choices( $field );
 									foreach ( $choices as $choice ) {
 										if ( isset( $choice['value'] ) && in_array( $choice['value'], $vals ) ) {
@@ -268,12 +272,12 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									break;
 								case 'select':
 								case 'radio':
-									$val = isset( $lead[ $field['id'] ] ) ? $lead [ $field['id'] ] : '';
-									$choices = self::get_field_choices( $field );
+									$val         = isset( $lead[ $field['id'] ] ) ? $lead [ $field['id'] ] : '';
+									$choices     = self::get_field_choices( $field );
 									$others_flag = false;
 									foreach ( $choices as $choice ) {
 										if ( isset( $choice['value'] ) && $val == $choice['value'] ) {
-											$temp[] = '&#10004;';
+											$temp[]      = '&#10004;';
 											$others_flag = true;
 										} else {
 											$temp[] = '';
@@ -302,7 +306,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 				case 'pie':
 				case 'gauge':
 					$field = self::get_field_by_id( $selected_fields[0], $fields );
-					$cols = array( $field['label'], __( 'Count' ) );
+					$cols  = array( $field['label'], __( 'Count' ) );
 
 					$counts = array();
 
@@ -328,11 +332,11 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							break;
 						case 'checkbox':
 							$choices = self::get_field_choices( $field );
-							$inputs = self::get_field_inputs( $field );
+							$inputs  = self::get_field_inputs( $field );
 							$options = self::array_merge_recursive_distinct( $choices, $inputs );
 							foreach ( $options as $option ) {
 								$counts[] = array(
-									'id' => $option['id'],
+									'id'    => $option['id'],
 									'label' => $option['label'],
 									'value' => $option['value'],
 									'count' => 0,
@@ -340,7 +344,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							}
 							if ( 1 === sizeof( $options ) ) {
 								$counts['others'] = array(
-									'id' => 'others',
+									'id'    => 'others',
 									'label' => __( 'Others' ),
 									'value' => '',
 									'count' => 0,
@@ -375,11 +379,11 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									break;
 								case 'checkbox':
 									$choices = self::get_field_choices( $label );
-									$inputs = self::get_field_inputs( $label );
+									$inputs  = self::get_field_inputs( $label );
 									$options = self::array_merge_recursive_distinct( $choices, $inputs );
 									foreach ( $options as $option ) {
 										$counts[] = array(
-											'id' => $option['id'],
+											'id'    => $option['id'],
 											'label' => $option['label'],
 											'value' => $option['value'],
 											'count' => 0,
@@ -387,7 +391,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									}
 									if ( 1 === sizeof( $options ) ) {
 										$counts['others'] = array(
-											'id' => 'others',
+											'id'    => 'others',
 											'label' => __( 'Others' ),
 											'value' => '',
 											'count' => 0,
@@ -411,7 +415,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								$vals = ( isset( $lead[ $field['id'] ] ) ) ? explode( ',', $lead[ $field['id'] ] ) : array();
 								foreach ( $counts as $key => $count ) {
 									if ( in_array( $count['value'], $vals ) ) {
-										$counts[ $key ]['count']++;
+										$counts[ $key ]['count'] ++;
 									}
 								}
 								break;
@@ -420,14 +424,14 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								$others_flag = false;
 								foreach ( $counts as $key => $count ) {
 									if ( isset( $lead[ $field['id'] ] ) && $lead[ $field['id'] ] == $count['value'] ) {
-										$counts[ $key ]['count']++;
+										$counts[ $key ]['count'] ++;
 										$others_flag = true;
 									}
 								}
 								if ( isset( $field['enableOtherChoice'] ) && $field['enableOtherChoice'] && ! $others_flag ) {
 									foreach ( $counts as $key => $count ) {
 										if ( 'others' == $count['value'] ) {
-											$counts[ $key ]['count']++;
+											$counts[ $key ]['count'] ++;
 										}
 									}
 								}
@@ -435,14 +439,14 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							case 'checkbox':
 								if ( array_key_exists( 'others', $counts ) ) {
 									if ( isset( $lead[ $counts[0]['id'] ] ) && $lead[ $counts[0]['id'] ] == $counts[0]['value'] ) {
-										$counts[0]['count']++;
+										$counts[0]['count'] ++;
 									} else {
-										$counts['others']['count']++;
+										$counts['others']['count'] ++;
 									}
 								} else {
 									foreach ( $counts as $key => $count ) {
 										if ( isset( $lead[ $count['id'] ] ) && $lead[ $count['id'] ] == $count['value'] ) {
-											$counts[ $key ]['count']++;
+											$counts[ $key ]['count'] ++;
 										}
 									}
 								}
@@ -458,7 +462,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 										$vals = ( isset( $lead[ $label['id'] ] ) ) ? explode( ',', $lead[ $label['id'] ] ) : array();
 										foreach ( $counts as $key => $count ) {
 											if ( in_array( $count['value'], $vals ) ) {
-												$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;
+												$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
 											}
 										}
 										break;
@@ -467,28 +471,29 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 										$others_flag = false;
 										foreach ( $counts as $key => $count ) {
 											if ( isset( $lead[ $label['id'] ] ) && $lead[ $label['id'] ] == $count['value'] ) {
-												$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;
+												$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
 												$others_flag = true;
 											}
 										}
 										if ( isset( $label['enableOtherChoice'] ) && $label['enableOtherChoice'] && ! $others_flag ) {
 											foreach ( $counts as $key => $count ) {
 												if ( 'others' == $count['value'] ) {
-													$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;												}
+													$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
+												}
 											}
 										}
 										break;
 									case 'checkbox':
 										if ( array_key_exists( 'others', $counts ) ) {
 											if ( isset( $lead[ $counts[0]['id'] ] ) && $lead[ $counts[0]['id'] ] == $counts[0]['value'] ) {
-												$counts[0]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;
+												$counts[0]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
 											} else {
-												$counts['others']['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;
+												$counts['others']['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
 											}
 										} else {
 											foreach ( $counts as $key => $count ) {
 												if ( isset( $lead[ $count['id'] ] ) && $lead[ $count['id'] ] == $count['value'] ) {
-													$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0 ;
+													$counts[ $key ]['count'] += ( isset( $lead[ $field['id'] ] ) && ! empty( $lead[ $field['id'] ] ) ) ? $lead[ $field['id'] ] : 0;
 												}
 											}
 										}
@@ -504,7 +509,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 						}
 					}
 
-					$rows = array();
+					$rows                       = array();
 					$data_source['total_count'] = 0;
 					foreach ( $counts as $count ) {
 						$rows[] = array( $count['label'], $count['count'] );
@@ -532,7 +537,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 						break;
 					}
 
-					$cols = array( array() );
+					$cols   = array( array() );
 					$counts = array();
 					foreach ( $selected_fields as $selected_field ) {
 
@@ -543,8 +548,8 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							case 'radio':
 							case 'multiselect':
 								$cols[0][] = $field['label'];
-								$cols[] = __( 'Count' );
-								$choices = self::get_field_choices( $field );
+								$cols[]    = __( 'Count' );
+								$choices   = self::get_field_choices( $field );
 								foreach ( $choices as $choice ) {
 									$counts[] = array(
 										'label' => $choice['text'],
@@ -562,13 +567,13 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								break;
 							case 'checkbox':
 								$cols[0][] = $field['label'];
-								$cols[] = __( 'Count' );
-								$choices = self::get_field_choices( $field );
-								$inputs = self::get_field_inputs( $field );
-								$options = self::array_merge_recursive_distinct( $choices, $inputs );
+								$cols[]    = __( 'Count' );
+								$choices   = self::get_field_choices( $field );
+								$inputs    = self::get_field_inputs( $field );
+								$options   = self::array_merge_recursive_distinct( $choices, $inputs );
 								foreach ( $options as $option ) {
 									$counts[] = array(
-										'id' => $option['id'],
+										'id'    => $option['id'],
 										'label' => $option['label'],
 										'value' => $option['value'],
 										'count' => 0,
@@ -576,7 +581,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								}
 								if ( 1 === sizeof( $options ) ) {
 									$counts['others'] = array(
-										'id' => 'others',
+										'id'    => 'others',
 										'label' => __( 'Others' ),
 										'value' => '',
 										'count' => 0,
@@ -585,7 +590,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								break;
 							case 'number':
 								$cols[0][] = $field['label'];
-								$cols[] = __( $field['label'] );
+								$cols[]    = __( $field['label'] );
 								break;
 							default:
 								$data_source = null;
@@ -605,7 +610,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									$vals = ( isset( $lead[ $field['id'] ] ) ) ? explode( ',', $lead[ $field['id'] ] ) : array();
 									foreach ( $counts as $key => $count ) {
 										if ( in_array( $count['value'], $vals ) ) {
-											$counts[ $key ]['count']++;
+											$counts[ $key ]['count'] ++;
 										}
 									}
 									break;
@@ -614,14 +619,14 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 									$others_flag = false;
 									foreach ( $counts as $key => $count ) {
 										if ( isset( $lead[ $field['id'] ] ) && $lead[ $field['id'] ] == $count['value'] ) {
-											$counts[ $key ]['count']++;
+											$counts[ $key ]['count'] ++;
 											$others_flag = true;
 										}
 									}
 									if ( isset( $field['enableOtherChoice'] ) && $field['enableOtherChoice'] && ! $others_flag ) {
 										foreach ( $counts as $key => $count ) {
 											if ( 'others' == $count['value'] ) {
-												$counts[ $key ]['count']++;
+												$counts[ $key ]['count'] ++;
 											}
 										}
 									}
@@ -629,14 +634,14 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 								case 'checkbox':
 									if ( array_key_exists( 'others', $counts ) ) {
 										if ( isset( $lead[ $counts[0]['id'] ] ) && $lead[ $counts[0]['id'] ] == $counts[0]['value'] ) {
-											$counts[0]['count']++;
+											$counts[0]['count'] ++;
 										} else {
-											$counts['others']['count']++;
+											$counts['others']['count'] ++;
 										}
 									} else {
 										foreach ( $counts as $key => $count ) {
 											if ( isset( $lead[ $count['id'] ] ) && $lead[ $count['id'] ] == $count['value'] ) {
-												$counts[ $key ]['count']++;
+												$counts[ $key ]['count'] ++;
 											}
 										}
 									}
@@ -655,10 +660,10 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 							$user = get_user_by( 'id', $lead['created_by'] );
 
 							$counts[] = array(
-								'label' => __( ( isset( $user->display_name ) ? $user->display_name : 'Annonymous' ).' - '.$date->format( 'j M Y' ) ),
+								'label' => __( ( isset( $user->display_name ) ? $user->display_name : 'Annonymous' ) . ' - ' . $date->format( 'j M Y' ) ),
 								'count' => $temp,
 							);
-							$temp = array();
+							$temp     = array();
 						}
 					}
 
@@ -671,7 +676,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 						}
 					}
 
-					$cols[0] = implode( ' & ', $cols[0] );
+					$cols[0]             = implode( ' & ', $cols[0] );
 					$data_source['cols'] = $cols;
 					$data_source['rows'] = $rows;
 					break;
@@ -686,7 +691,7 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 		static function get_form_fields( $form_id, $field_type = 'others' ) {
 			$fields = array();
 			if ( class_exists( 'GFFormsModel' ) && class_exists( 'RGFormsModel' ) ) {
-				$meta = RGFormsModel::get_form_meta( $form_id );
+				$meta   = RGFormsModel::get_form_meta( $form_id );
 				$fields = ( isset( $meta['fields'] ) ) ? $meta['fields'] : array();
 			}
 
@@ -697,39 +702,48 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 					case 'enum':
 						if ( in_array( $field['type'], array( 'radio', 'select', 'checkbox', 'multiselect' ) ) ) {
 							$return_fields[] = array(
-								'id' => $field['id'],
+								'id'    => $field['id'],
 								'label' => $field['label'],
-								'type' => 'enum',
+								'type'  => 'enum',
 							);
 						}
 						break;
-						//					case 'poll':
-						//						var_dump($field);
-						//						break;
+					//					case 'poll':
+					//						var_dump($field);
+					//						break;
 					case 'numerics':
 						if ( 'number' === $field['type'] ) {
 							$return_fields[] = array(
-								'id' => $field['id'],
+								'id'    => $field['id'],
 								'label' => $field['label'],
-								'type' => 'numerics',
+								'type'  => 'numerics',
 							);
 						}
 						break;
 					case 'range':
 						if ( in_array( $field['type'], array( 'date', 'time' ) ) ) {
 							$return_fields[] = array(
-								'id' => $field['id'],
+								'id'    => $field['id'],
 								'label' => $field['label'],
-								'type' => 'range',
+								'type'  => 'range',
 							);
 						}
 						break;
 					default:
-						if ( ! in_array( $field['type'], array( 'radio', 'select', 'checkbox', 'multiselect', 'number', 'date', 'time' ) ) ) {
+						if ( ! in_array( $field['type'], array(
+							'radio',
+							'select',
+							'checkbox',
+							'multiselect',
+							'number',
+							'date',
+							'time'
+						) )
+						) {
 							$return_fields[] = array(
-								'id' => $field['id'],
+								'id'    => $field['id'],
 								'label' => $field['label'],
-								'type' => 'others',
+								'type'  => 'others',
 							);
 						}
 						break;
@@ -738,9 +752,9 @@ if ( ! class_exists( 'Rt_Gravity_Reports' ) ) {
 
 			if ( 'range' == $field_type ) {
 				$return_fields[] = array(
-					'id' => '-1',
+					'id'    => '-1',
 					'label' => __( 'Form Entry Date' ),
-					'type' => 'range',
+					'type'  => 'range',
 				);
 			}
 

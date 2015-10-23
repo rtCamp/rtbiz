@@ -28,21 +28,21 @@ if ( ! class_exists( 'Rt_Mailbox_Help' ) ) {
 			$this->tabs = apply_filters( 'rt_biz_help_tabs', array(
 				'admin.php' => array(
 					array(
-						'id' => 'mailbox_overview',
-						'title' => __( 'Overview' ),
+						'id'      => 'mailbox_overview',
+						'title'   => __( 'Overview' ),
 						'content' => '',
-						'page' => Rt_Mailbox::$page_name,
+						'page'    => Rt_Mailbox::$page_name,
 					),
 					array(
-						'id' => 'mailbox_screen_content',
-						'title' => __( 'Screen Content' ),
+						'id'      => 'mailbox_screen_content',
+						'title'   => __( 'Screen Content' ),
 						'content' => '',
-						'page' => Rt_Mailbox::$page_name,
+						'page'    => Rt_Mailbox::$page_name,
 					),
 				),
 			) );
 
-			$documentation_link = apply_filters( 'rt_biz_help_documentation_link', 'https://github.com/rtCamp/rt-lib/' );
+			$documentation_link         = apply_filters( 'rt_biz_help_documentation_link', 'https://github.com/rtCamp/rt-lib/' );
 			$this->help_sidebar_content = apply_filters( 'rt_biz_help_sidebar_content', '<p><strong>' . __( 'For More Information : ' ) . '</strong></p><p><a href="' . $documentation_link . '">' . __( 'Documentation' ) . '</a></p>' );
 
 			add_action( 'current_screen', array( $this, 'check_tabs' ) );
@@ -68,10 +68,10 @@ if ( ! class_exists( 'Rt_Mailbox_Help' ) ) {
 
 		function add_tab( $args ) {
 			get_current_screen()->add_help_tab( array(
-				                                    'id' => $args['id'],
-				                                    'title' => $args['title'],
-				                                    'callback' => array( $this, 'tab_content' ),
-			                                    ) );
+				'id'       => $args['id'],
+				'title'    => $args['title'],
+				'callback' => array( $this, 'tab_content' ),
+			) );
 			get_current_screen()->set_help_sidebar( $this->help_sidebar_content );
 		}
 

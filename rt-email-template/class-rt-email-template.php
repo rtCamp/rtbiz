@@ -59,6 +59,7 @@ if ( ! class_exists( 'RT_Email_Template' ) ) {
 
 		/**
 		 * Return template content by reading that file
+		 *
 		 * @param $template_name string header/footer
 		 *
 		 * @return string content of template file
@@ -70,8 +71,7 @@ if ( ! class_exists( 'RT_Email_Template' ) ) {
 		/**
 		 * Register AutoLoader for email-template
 		 */
-		function auto_loader()
-		{
+		function auto_loader() {
 			$this->auto_loader = new RT_WP_Autoload( trailingslashit( dirname( __FILE__ ) ) . 'generator/' );
 		}
 	}

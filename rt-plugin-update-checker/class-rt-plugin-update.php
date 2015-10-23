@@ -10,8 +10,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 	/**
 	 * Class RT_Plugin_Update
 	 */
-	class RT_Plugin_Update
-	{
+	class RT_Plugin_Update {
 
 		/**
 		 * @var int
@@ -46,13 +45,12 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 		 * Create a new instance of PluginUpdate from its JSON-encoded representation.
 		 *
 		 * @param string $json
-		 * @param bool   $triggerErrors
+		 * @param bool $triggerErrors
 		 *
 		 * @return RT_Plugin_Update|null
 		 */
 
-		public static function from_json( $json, $triggerErrors = false )
-		{
+		public static function from_json( $json, $triggerErrors = false ) {
 			//Since update-related information is simply a subset of the full plugin info,
 			//we can parse the update JSON as if it was a plugin info string, then copy over
 			//the parts that we care about.
@@ -73,8 +71,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 		 * @return RT_Plugin_Update
 		 */
 
-		public static function from_plugin_info( $info )
-		{
+		public static function from_plugin_info( $info ) {
 			return self::from_object( $info );
 		}
 
@@ -87,8 +84,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 		 * @return RT_Plugin_Update The new copy.
 		 */
 
-		public static function from_object( $object )
-		{
+		public static function from_object( $object ) {
 			$update = new self();
 			foreach ( self::$fields as $field ) {
 				$update->$field = $object->$field;
@@ -106,8 +102,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 		 * @return StdClass
 		 */
 
-		public function to_std_class()
-		{
+		public function to_std_class() {
 			$object = new StdClass();
 			foreach ( self::$fields as $field ) {
 				$object->$field = $this->$field;
@@ -122,8 +117,7 @@ if ( ! class_exists( 'RT_Plugin_Update' ) ) {
 		 * @return object
 		 */
 
-		public function to_wp_format()
-		{
+		public function to_wp_format() {
 			$update = new StdClass;
 
 			$update->id          = $this->id;

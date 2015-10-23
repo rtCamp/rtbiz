@@ -4,35 +4,37 @@
 	vertical-align: -webkit-baseline-middle;
 }
 
-.nav-tab-wrapper{
+.nav-tab-wrapper {
 	margin-top: 10px;
 	margin-bottom: 30px;
 	border-bottom: 1px solid #CCC;
 }
 
-.nav-tab-wrapper .nav-tab{
+.nav-tab-wrapper .nav-tab {
 	font-size: 16px;
 }
 
-.sub-nav-tab-wrapper{
+.sub-nav-tab-wrapper {
 	height: 40px;
 }
 
-#map_mapping_import{
+#map_mapping_import {
 	margin: 10px 0;
 }
 
-#sucessmessage{
+#sucessmessage {
 	margin-left: 15px;
 }
-table.rt-importer select{
+
+table.rt-importer select {
 	max-width: 100%;
 }
 
-input#futureYes, input#futureNo{
+input#futureYes, input#futureNo {
 	vertical-align: middle;
 }
-.rt-lib-sync{
+
+.rt-lib-sync {
 	color: #81C341;
 }
 
@@ -54,24 +56,26 @@ input#futureYes, input#futureNo{
 	margin: 20px 0;
 }
 
-table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th, table.wp-list-table.widefat.rtlib-gravity-mapping th, table.wp-list-table.widefat.rtlib-gravity-mapping td,table.wp-list-table.widefat.fixed td, table.wp-list-table.widefat.fixed th {
+table.wp-list-table.widefat.fixed.posts td, table.wp-list-table.widefat.fixed.posts th, table.wp-list-table.widefat.rtlib-gravity-mapping th, table.wp-list-table.widefat.rtlib-gravity-mapping td, table.wp-list-table.widefat.fixed td, table.wp-list-table.widefat.fixed th {
 	padding: 10px;
 }
-.gravity_importer_tab table td{
+
+.gravity_importer_tab table td {
 	padding: 0 10px 0 0;
 }
 
-#progressbar{
+#progressbar {
 	margin: 15px 0;
 }
 
-div#map_message div{
+div#map_message div {
 	margin: 5px;
 }
 
-h4.rt-import-success-message{
-	color:#81C341;
+h4.rt-import-success-message {
+	color: #81C341;
 }
-h4.rt-import-warning-message{
+
+h4.rt-import-warning-message {
 	color: #fcefa1;
 }

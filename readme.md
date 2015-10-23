@@ -4,7 +4,7 @@
 
 
 
-**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [faishal](https://profiles.wordpress.org/faishal), [desaiuditd](https://profiles.wordpress.org/desaiuditd)  
+**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [dipeshkakadiya](https://profiles.wordpress.org/dipeshkakadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel), [faishal](https://profiles.wordpress.org/faishal), [desaiuditd](https://profiles.wordpress.org/desaiuditd)  
 **Tags:** [library](https://wordpress.org/plugins/tags/library), [autoloader](https://wordpress.org/plugins/tags/autoloader), [database model](https://wordpress.org/plugins/tags/database model), [database updater](https://wordpress.org/plugins/tags/database updater), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups)  
 **Requires at least:** 3.6  
 **Tested up to:** 4.1  

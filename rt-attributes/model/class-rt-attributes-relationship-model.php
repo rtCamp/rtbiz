@@ -39,6 +39,7 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 
 		function get_relations_by_attribute( $attr_id ) {
 			$args = array( 'attr_id' => $attr_id );
+
 			return parent::get( $args );
 		}
 
@@ -48,6 +49,7 @@ if ( ! class_exists( 'RT_Attributes_Relationship_Model' ) ) {
 
 		function get_attributes_by_query( $querystr ) {
 			global $wpdb;
+
 			return $wpdb->get_results( $querystr );
 		}
 

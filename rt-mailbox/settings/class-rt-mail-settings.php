@@ -38,7 +38,8 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function __construct() {}
+		public function __construct() {
+		}
 
 		/**
 		 * update sync meta time
@@ -170,10 +171,10 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				$client->setClientSecret( $google_client_secret );
 				$client->setRedirectUri( $google_client_redirect_url );
 				$client->setScopes( array(
-					                    'https://mail.google.com/',
-					                    'https://www.googleapis.com/auth/userinfo.email',
-					                    'https://www.googleapis.com/auth/userinfo.profile',
-				                    ) );
+					'https://mail.google.com/',
+					'https://www.googleapis.com/auth/userinfo.email',
+					'https://www.googleapis.com/auth/userinfo.profile',
+				) );
 				$client->setAccessType( 'offline' );
 
 				$token = json_decode( $ac->outh_token );
@@ -214,7 +215,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 
 		public function set_accounts( $rCount ) {
 			global $rt_lib;
-			$log_file = realpath( dirname( $rt_lib['rt_lib_path'] ) ). '/mailaccount.txt';
+			$log_file = realpath( dirname( $rt_lib['rt_lib_path'] ) ) . '/mailaccount.txt';
 			if ( $fp = fopen( $log_file, 'w+' ) ) {
 				fwrite( $fp, $rCount );
 				fclose( $fp );
@@ -229,7 +230,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 * @param        $email_data
 		 * @param        $user_id
 		 * @param string $type
-		 * @param null   $imap_server
+		 * @param null $imap_server
 		 *
 		 * @return bool
 		 *
@@ -317,8 +318,8 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function delete_user_google_ac( $email, $module, $mailboxid =  '', $user_id = ''   ) {
-			if ( -1 == $user_id ) {
+		public function delete_user_google_ac( $email, $module, $mailboxid = '', $user_id = '' ) {
+			if ( - 1 == $user_id ) {
 				$user_id = get_current_user_id();
 			}
 			if ( empty( $email ) && empty( $mailboxid ) ) {
@@ -339,6 +340,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 			global $rt_mail_accounts_model;
 			$result = $rt_mail_accounts_model->remove_mail_account( $args );
 			$this->update_gmail_ac_count();
+
 			return $result;
 		}
 
@@ -461,11 +463,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 * @param        $fromemail
 		 * @param        $subject
 		 * @param        $body
-		 * @param array  $toemail
-		 * @param array  $ccemail
-		 * @param array  $bccemail
-		 * @param array  $attachement
-		 * @param int    $refrence_id
+		 * @param array $toemail
+		 * @param array $ccemail
+		 * @param array $bccemail
+		 * @param array $attachement
+		 * @param int $refrence_id
 		 * @param string $refrence_type
 		 *
 		 * @return mixed
@@ -522,6 +524,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				'id'   => $sentEmailID,
 				'sent' => $oldStatus,
 			) );
+
 			return $rows_affected;
 		}
 
@@ -533,6 +536,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 */
 		public function get_all_mailbox() {
 			global $rt_mail_accounts_model;
+
 			return $rt_mail_accounts_model->get_all_mail_accounts();
 		}
 	}

@@ -1,5 +1,5 @@
 === rtLib [![Build Status](https://travis-ci.org/rtCamp/rt-lib.svg?branch=master)](https://travis-ci.org/rtCamp/rt-lib) ===
-Contributors:      rtcamp, rahul286, faishal, desaiuditd
+Contributors:      rtcamp, rahul286, dipeshkakadiya, utkarshpatel, faishal, desaiuditd
 Tags:              library, autoloader, database model, database updater, attributes, user groups
 Requires at least: 3.6
 Tested up to:      4.1

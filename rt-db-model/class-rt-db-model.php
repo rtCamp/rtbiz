@@ -11,8 +11,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 	/**
 	 * Class RT_DB_Model
 	 */
-	class RT_DB_Model
-	{
+	class RT_DB_Model {
 
 		/**
 		 *
@@ -34,10 +33,10 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 		/**
 		 *
-		 * @param string  $table_name Table name for model
+		 * @param string $table_name Table name for model
 		 * @param boolean $is_tablename_with_prefix Set true if $table_name is with prefix otherwise it will prepend WordPress prefix with "rt_"
-		 * @param int     $per_page Set number of record per page
-		 * @param bool    $mu_single_table set true if common table shared with all the sites in WordPress MultiSite
+		 * @param int $per_page Set number of record per page
+		 * @param bool $mu_single_table set true if common table shared with all the sites in WordPress MultiSite
 		 */
 		function __construct( $table_name, $is_tablename_with_prefix = false, $per_page = 10, $mu_single_table = false ) {
 			$this->mu_single_table = $mu_single_table;
@@ -47,7 +46,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 		/**
 		 *
-		 * @global WPDB  $wpdb
+		 * @global WPDB $wpdb
 		 *
 		 * @param string $table_name Table name for model
 		 * @param boolean $is_tablename_with_prefix Set true if $table_name is with prefix otherwise it will prepend WordPress prefix with "rt_"
@@ -75,13 +74,12 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @global wpdb $wpdb
 		 *
-		 * @param string  $name - Added get_by_<coulmname>(value,pagging=true,page_no=1)
-		 * @param array  $arguments
+		 * @param string $name - Added get_by_<coulmname>(value,pagging=true,page_no=1)
+		 * @param array $arguments
 		 *
 		 * @return array result array
 		 */
-		function __call( $name, $arguments )
-		{
+		function __call( $name, $arguments ) {
 			if ( $arguments && ! empty( $arguments ) ) {
 				$column_name = str_replace( 'get_by_', '', strtolower( $name ) );
 
@@ -97,8 +95,8 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 					$page = $arguments[2];
 				}
 
-				$this->per_page           = apply_filters( 'rt_db_model_per_page', $this->per_page, $this->table_name );
-				$return_array             = array();
+				$this->per_page         = apply_filters( 'rt_db_model_per_page', $this->per_page, $this->table_name );
+				$return_array           = array();
 				$return_array['result'] = false;
 				global $wpdb;
 				$return_array['total'] = intval( $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $this->table_name . ' WHERE `' . $column_name . '`= %s', $arguments[0] ) ) );
@@ -125,7 +123,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 						}
 					}
 					//echo $wpdb->prepare("SELECT * FROM " . $this->table_name . " WHERE {$column_name} = %s {$other}", $arguments[0]);
-					$return_array['result'] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM  `' . $this->table_name . '` WHERE `' . $column_name . '` = %s ' . $other , $arguments[0] ), ARRAY_A );
+					$return_array['result'] = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM  `' . $this->table_name . '` WHERE `' . $column_name . '` = %s ' . $other, $arguments[0] ), ARRAY_A );
 				}
 
 				return $return_array;
@@ -138,10 +136,10 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @param $data array Data to insert (in column => value pairs)
 		 * @param $format array  An array of formats to be mapped to each of the value in $data
+		 *
 		 * @return int last inserted id
 		 */
-		function insert( $data, $format = null )
-		{
+		function insert( $data, $format = null ) {
 			global $wpdb;
 			$insertdata = array();
 			foreach ( $data as $key => $val ) {
@@ -164,9 +162,9 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @return false|int
 		 */
-		function update( $data, $where, $format = null, $where_format = null )
-		{
+		function update( $data, $where, $format = null, $where_format = null ) {
 			global $wpdb;
+
 			return $wpdb->update( $this->table_name, $data, $where, $format, $where_format );
 		}
 
@@ -174,19 +172,18 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 * Get all the rows according to the columns set in $columns parameter.
 		 * offset and rows per page can also be passed for pagination.
 		 *
-		 * @param array   $columns
+		 * @param array $columns
 		 *
-		 * @param bool   $offset
-		 * @param bool   $per_page
+		 * @param bool $offset
+		 * @param bool $per_page
 		 * @param string $order_by
 		 *
-		 * @global wpdb  $wpdb
+		 * @global wpdb $wpdb
 		 *
 		 * @return array
 		 */
-		function get( $columns, $offset = false, $per_page = false, $order_by = 'id desc' )
-		{
-			$select = 'SELECT * FROM ' . $this->table_name ;
+		function get( $columns, $offset = false, $per_page = false, $order_by = 'id desc' ) {
+			$select = 'SELECT * FROM ' . $this->table_name;
 			$where  = ' where 2=2 ';
 			foreach ( $columns as $colname => $colvalue ) {
 				if ( is_array( $colvalue ) ) {
@@ -225,6 +222,7 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 
 			}
 			global $wpdb;
+
 			return $wpdb->get_results( $sql );
 		}
 
@@ -232,12 +230,11 @@ if ( ! class_exists( 'RT_DB_Model' ) ) {
 		 *
 		 * @param array $where
 		 *
-		 * @param null  $where_format
+		 * @param null $where_format
 		 *
 		 * @return int
 		 */
-		function delete( $where, $where_format = null )
-		{
+		function delete( $where, $where_format = null ) {
 			global $wpdb;
 
 			return $wpdb->delete( $this->table_name, $where, $where_format );

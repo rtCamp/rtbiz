@@ -51,7 +51,7 @@ class test_rt_attributes extends RT_WP_TestCase {
 		$this->attributes->add_attribute_relations( $attid, array( 'post' ) );
 
 		$val = $this->attributes->attributes_relationship_model->get_relations_by_post_type( 'post' );
-		$this->assertEquals( $attid,  $val[0]->attr_id );
+		$this->assertEquals( $attid, $val[0]->attr_id );
 
 		$this->attributes->add_attributes_page( $page_slug = 'my_plugin_attribute_page_slug_1', $parent_page_slug = 'edit.php?post_type=post1', $post_type = 'post1', $page_cap = 'manage_attributes1', $terms_cap, $render_type = true, $storage_type = true, $orderby = true );
 		$this->attributes->update_attribute_relations( $attid, array( 'post1' ) );
@@ -63,4 +63,4 @@ class test_rt_attributes extends RT_WP_TestCase {
 		$this->assertEquals( 0, sizeof( $val ) );
 	}
 
-} 
+}

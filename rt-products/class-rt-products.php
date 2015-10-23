@@ -85,6 +85,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 			if ( ! empty( $this->pluginName ) && in_array( 'woocommerce', $this->pluginName ) && class_exists( 'WooCommerce' ) ) {
 				return true;
 			}
+
 			return false;
 		}
 
@@ -92,17 +93,19 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 			if ( ! empty( $this->pluginName ) && in_array( 'edd', $this->pluginName ) && class_exists( 'Easy_Digital_Downloads' ) ) {
 				return true;
 			}
+
 			return false;
 		}
 
 		function get_post_type() {
 			$result = array();
-			if ( $this->is_woocommerce_active( ) ) {
+			if ( $this->is_woocommerce_active() ) {
 				$result[] = 'product';
 			}
-			if ( $this->is_edd_active( ) ) {
+			if ( $this->is_edd_active() ) {
 				$result[] = 'download';
 			}
+
 			return $result;
 		}
 
@@ -121,21 +124,21 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 */
 		public function get_label() {
 			return $this->labels = array(
-				'name' => __( 'Products' ),
-				'singular_name' => __( 'Product' ),
-				'menu_name' => __( 'Products' ),
-				'search_items' => __( 'Search Products' ),
-				'popular_items' => __( 'Popular Products' ),
-				'all_items' => __( 'All Products' ),
-				'edit_item' => __( 'Edit Product' ),
-				'update_item' => __( 'Update Product' ),
-				'add_new_item' => __( 'Add New Product' ),
-				'new_item_name' => __( 'New Product Name' ),
+				'name'                       => __( 'Products' ),
+				'singular_name'              => __( 'Product' ),
+				'menu_name'                  => __( 'Products' ),
+				'search_items'               => __( 'Search Products' ),
+				'popular_items'              => __( 'Popular Products' ),
+				'all_items'                  => __( 'All Products' ),
+				'edit_item'                  => __( 'Edit Product' ),
+				'update_item'                => __( 'Update Product' ),
+				'add_new_item'               => __( 'Add New Product' ),
+				'new_item_name'              => __( 'New Product Name' ),
 				'separate_items_with_commas' => __( 'Separate product with commas' ),
-				'add_or_remove_items' => __( 'Add or remove product' ),
-				'choose_from_most_used' => __( 'Choose from the most popular product' ),
-				'not_found' => __( 'No product found.' ) ,
-				'no_terms' => __( 'No product' ),
+				'add_or_remove_items'        => __( 'Add or remove product' ),
+				'choose_from_most_used'      => __( 'Choose from the most popular product' ),
+				'not_found'                  => __( 'No product found.' ),
+				'no_terms'                   => __( 'No product' ),
 			);
 		}
 
@@ -143,18 +146,18 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * Register Product taxonomy if not-exist
 		 */
 		public function register_product_taxonomy() {
-			$arg = array(
-				'public'                    => false,
-				'hierarchical' 				=> true,
-				'update_count_callback' 	=> array( $this, 'update_post_term_count' ),
-				'labels'                    => $this->labels,
-				'show_ui' 					=> true,
-				'query_var' 				=> true,
-				'capabilities'				=> $this->caps,
-				'show_in_nav_menus' 		=> true,
-				'show_admin_column'			=> true,
+			$arg      = array(
+				'public'                => false,
+				'hierarchical'          => true,
+				'update_count_callback' => array( $this, 'update_post_term_count' ),
+				'labels'                => $this->labels,
+				'show_ui'               => true,
+				'query_var'             => true,
+				'capabilities'          => $this->caps,
+				'show_in_nav_menus'     => true,
+				'show_admin_column'     => true,
 				//'rewrite' 				=> array( 'slug' => $product_attribute_base . sanitize_title( $tax->attribute_name ), 'with_front' => false, 'hierarchical' => $hierarchical ),
-				'rewrite'                   => false,
+				'rewrite'               => false,
 			);
 			$supports = apply_filters( 'rtlib_products_support', $this->post_types );
 			register_taxonomy( self::$product_slug, $supports, $arg );
@@ -218,7 +221,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 
 			if ( true === $this->isSync ) {
 				$isSyncOpt = get_option( 'rt_product_plugin_sync' );
-				if ( empty( $isSyncOpt ) ||  'true' === $isSyncOpt ) {
+				if ( empty( $isSyncOpt ) || 'true' === $isSyncOpt ) {
 					add_action( 'init', array( $this, 'bulk_insert_products' ) );
 				}
 				add_action( 'save_post', array( $this, 'insert_products' ) );
@@ -237,7 +240,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		/**
 		 * Filter product as per store select
 		 */
-		public function product_filter( $terms, $taxonomies, $args  ) {
+		public function product_filter( $terms, $taxonomies, $args ) {
 			if ( in_array( self::$product_slug, $taxonomies ) ) {
 				$terms_filter = array();
 				foreach ( $terms as $term ) {
@@ -248,11 +251,13 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 				}
 				$terms = $terms_filter;
 			}
+
 			return $terms;
 		}
 
 		/**
 		 * dd column heading on product list page
+		 *
 		 * @param $columns
 		 *
 		 * @return mixed
@@ -263,9 +268,10 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 			}
 			unset( $columns['posts'] );
 			unset( $columns['slug'] );
-			$columns['product_count'] = __( 'Count' );
+			$columns['product_count']  = __( 'Count' );
 			$columns['product_detail'] = __( 'Product' );
-			return apply_filters( 'rt_product_columns' , $columns );
+
+			return apply_filters( 'rt_product_columns', $columns );
 		}
 
 		/**
@@ -278,11 +284,11 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * @return type
 		 */
 		function manage_product_column_body( $display, $column, $term_id ) {
-			$t = get_term( $term_id, Rt_Products::$product_slug );
+			$t       = get_term( $term_id, Rt_Products::$product_slug );
 			$content = '';
 			switch ( $column ) {
 				case 'product_detail':
-					$product_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
+					$product_id     = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_id_meta_key, true );
 					$product_plugin = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, self::$term_product_from_meta_key, true );
 					if ( ! empty( $product_id ) || ! empty( $product_plugin ) ) {
 						$content = '<span>' . ucfirst( $product_plugin ) . '</span> ';
@@ -298,24 +304,26 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 					}
 
 					foreach ( $posttypes as $posttype ) {
-						$posts = new WP_Query( array(
-							'post_type' => $posttype,
-							'post_status' => 'any',
-							'nopaging' => true,
-							Rt_Products::$product_slug  => $t->slug,
+						$posts          = new WP_Query( array(
+							'post_type'                => $posttype,
+							'post_status'              => 'any',
+							'nopaging'                 => true,
+							Rt_Products::$product_slug => $t->slug,
 						) );
 						$posttype_lable = explode( '_', $posttype );
 						$posttype_lable = $posttype_lable[ count( $posttype_lable ) - 1 ];
-						$content .= ucfirst( $posttype_lable.'s' ) . " -  <a href='edit.php?post_type=$posttype&". Rt_Products::$product_slug .'='.$t->slug."'>".count( $posts->posts ).'</a><br/>';
+						$content .= ucfirst( $posttype_lable . 's' ) . " -  <a href='edit.php?post_type=$posttype&" . Rt_Products::$product_slug . '=' . $t->slug . "'>" . count( $posts->posts ) . '</a><br/>';
 					}
 
 					break;
 			}
+
 			return apply_filters( 'rt_product_column_content', $content, $column, $term_id );
 		}
 
 		/**
 		 * Delete taxonomy meta if taxonomy deleted
+		 *
 		 * @param $term
 		 * @param $tt_id
 		 * @param $taxonomy
@@ -330,15 +338,18 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * Get taxonomy form product ID
 		 *
 		 * @access public
+		 *
 		 * @param $post_id
+		 *
 		 * @return int/void
 		 */
 		public function get_taxonomy( $post_id ) {
 			global $wpdb;
-			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='".self::$term_product_id_meta_key."' AND meta_value = $post_id " );
+			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='" . self::$term_product_id_meta_key . "' AND meta_value = $post_id " );
 			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
 				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$product_slug );
 			}
+
 			return false;
 		}
 
@@ -370,8 +381,8 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 				return;
 			}
 
-			$termname     = $_POST['post_title'];
-			$termid = $this->check_postid_term_exist( $_POST['post_ID'] );
+			$termname = $_POST['post_title'];
+			$termid   = $this->check_postid_term_exist( $_POST['post_ID'] );
 
 			if ( ! empty( $post_id ) ) {
 				$post = get_post( $post_id );
@@ -384,12 +395,12 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 							$termname, // the term
 							self::$product_slug, // the taxonomy
 							array(
-								'slug' => $slug.$i,
+								'slug' => $slug . $i,
 							)
 						);
 						if ( $term instanceof WP_Error ) {
 							$i = rand( 1, 1000 );
-							$i = '-'.$i;
+							$i = '-' . $i;
 						}
 					} while ( $term instanceof WP_Error );
 				} else {
@@ -419,16 +430,18 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 			} else if ( 'product' == $post_type ) {
 				return 'woocommerce';
 			}
+
 			return '';
 		}
 
 		public function check_postid_term_exist( $post_id ) {
 			global $wpdb;
-			$querystr = 'SELECT taxonomy_id FROM '.$wpdb->prefix.'taxonomymeta WHERE meta_value = '.$post_id.' limit 1';
-			$result = $wpdb -> get_results( $querystr );
+			$querystr = 'SELECT taxonomy_id FROM ' . $wpdb->prefix . 'taxonomymeta WHERE meta_value = ' . $post_id . ' limit 1';
+			$result   = $wpdb->get_results( $querystr );
 			if ( isset( $result[0]->taxonomy_id ) ) {
 				return $result[0]->taxonomy_id;
 			}
+
 			return false;
 		}
 
@@ -450,7 +463,11 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 				return false;
 			}
 
-			$args           = array( 'posts_per_page' => - 1, 'post_type' => $this->get_post_type(), 'post_status' => 'publish' );
+			$args          = array(
+				'posts_per_page' => - 1,
+				'post_type'      => $this->get_post_type(),
+				'post_status'    => 'publish'
+			);
 			$product_array = get_posts( $args ); // Get Woo Commerce post object
 
 			foreach ( $product_array as $product ) {
