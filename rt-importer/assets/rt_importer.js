@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
 	var successCount = 0;
 	var failCount = 0;
 	var forceImport = false;
-	var arr_failed_lead = {};
+	var arr_failed_lead = [];
 
 	jQuery.rtImporter = {
 		init: function () {
