@@ -42,7 +42,7 @@
                         $Parsedown = new Parsedown();
                         echo $Parsedown->text( wp_kses_post($this->field['content']) );
                     } else {
-                        echo wp_kses_post($this->field['content']);
+                        echo ($this->field['content']);
                     }
                 }
 
