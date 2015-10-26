@@ -945,7 +945,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 		public function enqueue_scripts() {
 			$page  = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
-			$pages = apply_filters( 'rt_lib_import_page', array( 'rtbiz-hd-settings' ) );
+			$pages = apply_filters( 'rt_lib_import_page', array() );
 			$pages = array_filter( $pages );
 			if ( ! empty( $pages ) && in_array( $page, $pages ) ) {
 				if ( ! wp_script_is( 'jquery-ui-progressbar' ) ) {
