@@ -227,9 +227,9 @@ function rtmb_get_module_mailbox_email( $email, $module ) {
  * Mail box settings save
  * @return array
  */
-function rtmb_set_module_mailbox_data( $email, $email_data ) {
+function rtmb_set_module_mailbox_data( $module, $email, $email_data, $imap_server = null, $user_id = null ) {
 	global $rt_mail_settings;
-	$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
+	$rt_mail_settings->update_mail_acl( $module, $email, null, maybe_serialize( $email_data ), $imap_server, $user_id );
 }
 
 function rtmb_add_message_id_in_ref_id( $message_id, $reference_id, $post_id = 0 ) {
