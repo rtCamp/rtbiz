@@ -770,6 +770,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 								</div>
 							</div>
 							<?php do_action( 'rt_mailbox_assignee_ui', $mailbox->email_data, $module ); ?>
+							<?php do_action( 'rt_mailbox_custom_ui', $mailbox->email_data, $module ); ?>
 							<div class="clear"></div>
 							<div class="rtmailbox-row">
 								<label></label>
@@ -807,6 +808,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			}
 
 			$mail_folders = $obj_data['mail_folders'];
+			$user_id = ( $obj_data['allow_user'] ) ? $obj_data['allow_user'] : null;
 			$obj_data     = $obj_data['rtmailbox'];
 			$email        = $obj_data['email'];
 			if ( 'rtmailbox_folder_update' == $obj_data['action'] ) {
@@ -830,7 +832,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 					}
 					$email_data                 = apply_filters( 'rt_mailbox_assignee_save', $email_data, $obj_data );
 					$email_data['mail_folders'] = implode( ',', array_filter( $mail_folders[ $email ] ) );
-					$rt_mail_settings->update_mail_acl( $email, null, maybe_serialize( $email_data ) );
+					$rt_mail_settings->update_mail_acl( $obj_data['module'], $email, null, maybe_serialize( $email_data ), null, $user_id );
 					$result['status'] = true;
 				}
 			}

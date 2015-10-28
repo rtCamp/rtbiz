@@ -355,7 +355,7 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 		 *
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function update_mail_acl( $email, $token = null, $email_data = null, $imap_server = null ) {
+		public function update_mail_acl( $module, $email, $token = null, $email_data = null, $imap_server = null, $user_id = null ) {
 			global $rt_mail_accounts_model;
 
 			$args = array();
@@ -369,7 +369,11 @@ if ( ! class_exists( 'Rt_Mail_Settings' ) ) {
 				$args['imap_server'] = $imap_server;
 			}
 
-			$rows_affected = $rt_mail_accounts_model->update_mail_account( $args, array( 'email' => $email ) );
+			if ( isset( $user_id ) ) {
+				$args['user_id'] = $user_id;
+			}
+
+			$rows_affected = $rt_mail_accounts_model->update_mail_account( $args, array( 'email' => $email, 'module' => $module, ) );
 		}
 
 		/**

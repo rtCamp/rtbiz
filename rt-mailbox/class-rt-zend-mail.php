@@ -414,7 +414,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		/**
 		 * Read Email
 		 *
-		 * @param        $from_email
+		 * @param        $mailbox_email
 		 * @param        $email
 		 * @param        $accessToken
 		 * @param        $email_type
@@ -428,7 +428,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @internal param $module
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function reademail( $from_email, $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $module, $signature = '' ) {
+		public function reademail( $mailbox_email, $email, $accessToken, $email_type, $imap_server, $lastDate, $user_id, $module, $signature = '' ) {
 
 			set_time_limit( 0 );
 			global $signature, $rt_mail_settings;
@@ -484,7 +484,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				} else {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
-				$this->rt_parse_email( $from_email, $email, $storage, $arrayMailIds, $user_id, $module );
+				$this->rt_parse_email( $mailbox_email, $email, $storage, $arrayMailIds, $user_id, $module );
 				rt_log( ' Reading finish - ' . esc_attr( $folder ) . "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
@@ -600,7 +600,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		/**
 		 * parse email message
 		 *
-		 * @param $from_email
+		 * @param $mailbox_email
 		 * @param $email
 		 * @param $storage
 		 * @param $arrayMailIds
@@ -612,7 +612,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 		 * @internal param $hdUser
 		 * @since rt-Helpdesk 0.1
 		 */
-		public function rt_parse_email( $from_email, $email, &$storage, &$arrayMailIds, $user_id, $module ) {
+		public function rt_parse_email( $mailbox_email, $email, &$storage, &$arrayMailIds, $user_id, $module ) {
 
 			$lastMessageId = '-1';
 			//			global $rt_hd_import_operation;
@@ -647,6 +647,13 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						$this->update_last_mail_uid( $email, $UmailId );
 						continue;
 					}
+
+					/*if (isset($message->xcrm)) {
+						$dt = new DateTime($message->date);
+						$this->update_last_mail_uid($email, $UmailId);
+						continue;
+					}*/
+
 					if ( $lastMessageId && rtmb_check_duplicate_from_message_id( $lastMessageId ) ) {
 
 						$dt = new DateTime( $message->date );
@@ -829,7 +836,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings->get_email_acc( $email, $module );
-					do_action( 'read_rt_mailbox_email_' . $ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $from_email, $originalBody );
+					do_action( 'read_rt_mailbox_email_' . $ac->module, $subject, $visibleText, $from, $message->date, $allEmails, $attachements, $txtBody, true, $user_id, $messageid, $inreplyto, $references, $mailbox_email, $originalBody );
 
 					//					global $threadPostId;
 					//					if ( ! isset( $threadPostId ) ) {
