@@ -22,6 +22,8 @@
 
             add_action( 'redux/loaded', array( $this, 'init' ) );
 
+            add_action( 'wp_ajax_redux_support_hash', array( $this, 'support_hash' ) );
+
         }
 
         public function init() {
@@ -38,33 +40,146 @@
                     $this->display_version = $version[0] . '.' . $version[1];
                     add_filter( 'admin_footer_text', array( $this, 'change_wp_footer' ) );
                     add_action( 'admin_head', array( $this, 'admin_head' ) );
-                    add_action( 'admin_init', array( $this, 'welcome' ) );
+                } else {
+                    $this->check_version();
                 }
+            } else {
+                $this->check_version();
             }
             update_option( 'redux_version_upgraded_from', ReduxFramework::$_version );
             set_transient( '_redux_activation_redirect', true, 30 );
 
         }
 
+
+        public function check_version() {
+            global $pagenow;
+
+            if ( $pagenow == "admin-ajax.php" || ( $GLOBALS['pagenow'] == "customize" && isset( $_GET['theme'] ) && ! empty( $_GET['theme'] ) ) ) {
+                return;
+            }
+
+            $saveVer = Redux_Helpers::major_version( get_option( 'redux_version_upgraded_from' ) );
+            $curVer  = Redux_Helpers::major_version( ReduxFramework::$_version );
+            $compare = false;
+
+            if ( Redux_Helpers::isLocalHost() ) {
+                $compare = true;
+            } else if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
+                $compare = true;
+            } else {
+                $redux = ReduxFrameworkInstances::get_all_instances();
+
+                if ( is_array( $redux ) ) {
+                    foreach ( $redux as $panel ) {
+                        if ( $panel->args['dev_mode'] == 1 ) {
+                            $compare = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ( $compare ) {
+                $redirect = false;
+                if ( empty( $saveVer ) ) {
+                    $redirect = true; // First time
+                } else if ( version_compare( $curVer, $saveVer, '>' ) ) {
+                    $redirect = true; // Previous version
+                }
+                if ( $redirect && ! defined( 'WP_TESTS_DOMAIN' ) ) {
+                    add_action( 'init', array( $this, 'do_redirect' ) );
+                }
+            }
+        }
+
+        public function do_redirect() {
+            wp_redirect( admin_url( 'tools.php?page=redux-about' ) );
+            exit();
+        }
+
         public function change_wp_footer() {
-            echo 'If you like <strong>Redux</strong> please leave us a <a href="https://wordpress.org/support/view/plugin-reviews/redux-framework?filter=5#postform" target="_blank" class="redux-rating-link" data-rated="Thanks :)">★★★★★</a> rating. A huge thank you from Redux in advance!';
+            echo __('If you like <strong>Redux</strong> please leave us a <a href="' . 'https://' . 'wordpress.org/support/view/plugin-reviews/redux-framework?filter=5#postform" target="_blank" class="redux-rating-link" data-rated="Thanks :)">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating. A huge thank you from Redux in advance!','redux-framework');
         }
 
         public function support_hash() {
 
-            $hash          = get_option( 'redux_support_hash' );
+            if ( ! wp_verify_nonce( $_POST['nonce'], 'redux-support-hash' ) ) {
+                die();
+            }
+
+            $data          = get_option( 'redux_support_hash' );
+            $data          = wp_parse_args( $data, array( 'check' => '', 'identifier' => '' ) );
             $generate_hash = true;
-            if ( ! empty( $hash ) ) {
-                $GLOBALS['redux_system_info'] = Redux_Helpers::compileSystemStatus();
-                $newHash = md5( json_encode( $GLOBALS['redux_system_info'] ) );
-                if ( $newHash == $hash ) {
-                    unset( $generate_hash );
+            $system_info   = Redux_Helpers::compileSystemStatus();
+            $newHash       = md5( json_encode( $system_info ) );
+            $return        = array();
+            if ( $newHash == $data['check'] ) {
+                unset( $generate_hash );
+            }
+            $post_data = array(
+                'hash'          => md5( network_site_url() . '-' . $_SERVER['REMOTE_ADDR'] ),
+                'site'          => esc_url( home_url( '/' ) ),
+                'tracking'      => Redux_Helpers::getTrackingObject(),
+                'system_status' => $system_info,
+            );
+            //$post_data = json_encode( $post_data );
+            $post_data = serialize( $post_data );
+
+            if ( isset( $generate_hash ) && $generate_hash ) {
+                $data['check']      = $newHash;
+                $data['identifier'] = "";
+                $response           = wp_remote_post( 'http://' . 'support.redux.io/v1/', array(
+                        'method'      => 'POST',
+                        'timeout'     => 65,
+                        'redirection' => 5,
+                        'httpversion' => '1.0',
+                        'blocking'    => true,
+                        'compress'    => true,
+                        'headers'     => array(),
+                        'body'        => array(
+                            'data'      => $post_data,
+                            'serialize' => 1
+                        )
+                    )
+                );
+
+                if ( is_wp_error( $response ) ) {
+                    echo json_encode( array(
+                        'status'  => 'error',
+                        'message' => $response->get_error_message()
+                    ) );
+                    die( 1 );
+                } else {
+                    $response_code = wp_remote_retrieve_response_code( $response );
+                    if ( $response_code == 200 ) {
+                        $response = wp_remote_retrieve_body( $response );
+                        $return   = json_decode( $response, true );
+                        if ( isset( $return['identifier'] ) ) {
+                            $data['identifier'] = $return['identifier'];
+                            update_option( 'redux_support_hash', $data );
+                        }
+                    } else {
+                        $response = wp_remote_retrieve_body( $response );
+                        echo json_encode( array(
+                            'status'  => 'error',
+                            'message' => $response
+                        ) );
+                    }
                 }
             }
-            if ( $generate_hash ) {
-                $nonce = wp_create_nonce( 'redux_support_hash' );
-                echo '<input type="hidden" id="nonce" value="' . $nonce . '"';
+
+            if ( ! empty( $data['identifier'] ) ) {
+                $return['status']     = "success";
+                $return['identifier'] = $data['identifier'];
+            } else {
+                $return['status']  = "error";
+                $return['message'] = esc_html__( "Support hash could not be generated. Please try again later.", 'redux-framework' );
             }
+
+            echo json_encode( $return );
+
+            die( 1 );
         }
 
         /**
@@ -77,33 +192,35 @@
          */
         public function admin_menus() {
 
+            $page = 'add_management_page';
+
             // About Page
-            add_management_page(
-                __( 'Welcome to Redux Framework', 'redux-framework' ), __( 'Redux Framework', 'redux-framework' ), $this->minimum_capability, 'redux-about', array(
+            $page(
+                esc_html__( 'Welcome to Redux Framework', 'redux-framework' ), esc_html__( 'Redux Framework', 'redux-framework' ), $this->minimum_capability, 'redux-about', array(
                     $this,
                     'about_screen'
                 )
             );
 
             // Changelog Page
-            add_management_page(
-                __( 'Redux Framework Changelog', 'redux-framework' ), __( 'Redux Framework Changelog', 'redux-framework' ), $this->minimum_capability, 'redux-changelog', array(
+            $page(
+                esc_html__( 'Redux Framework Changelog', 'redux-framework' ), esc_html__( 'Redux Framework Changelog', 'redux-framework' ), $this->minimum_capability, 'redux-changelog', array(
                     $this,
                     'changelog_screen'
                 )
             );
 
             // Support Page
-            add_management_page(
-                __( 'Get Support', 'redux-framework' ), __( 'Get Support', 'redux-framework' ), $this->minimum_capability, 'redux-support', array(
+            $page(
+                esc_html__( 'Get Support', 'redux-framework' ), esc_html__( 'Get Support', 'redux-framework' ), $this->minimum_capability, 'redux-support', array(
                     $this,
                     'get_support'
                 )
             );
 
             // Support Page
-            add_management_page(
-                __( 'Redux Extensions', 'redux-framework' ), __( 'Redux Extensions', 'redux-framework' ), $this->minimum_capability, 'redux-extensions', array(
+            $page(
+                esc_html__( 'Redux Extensions', 'redux-framework' ), esc_html__( 'Redux Extensions', 'redux-framework' ), $this->minimum_capability, 'redux-extensions', array(
                     $this,
                     'redux_extensions'
                 )
@@ -111,16 +228,16 @@
 
 
             // Credits Page
-            add_management_page(
-                __( 'The people that develop Redux Framework', 'redux-framework' ), __( 'The people that develop Redux Framework', 'redux-framework' ), $this->minimum_capability, 'redux-credits', array(
+            $page(
+                esc_html__( 'The people that develop Redux Framework', 'redux-framework' ), esc_html__( 'The people that develop Redux Framework', 'redux-framework' ), $this->minimum_capability, 'redux-credits', array(
                     $this,
                     'credits_screen'
                 )
             );
 
             // Status Page
-            add_management_page(
-                __( 'Redux Framework Status', 'redux-framework' ), __( 'Redux Framework Status', 'redux-framework' ), $this->minimum_capability, 'redux-status', array(
+            $page(
+                esc_html__( 'Redux Framework Status', 'redux-framework' ), esc_html__( 'Redux Framework Status', 'redux-framework' ), $this->minimum_capability, 'redux-status', array(
                     $this,
                     'status_screen'
                 )
@@ -145,25 +262,19 @@
          * @return void
          */
         public function admin_head() {
-            //remove_submenu_page( 'index.php', 'redux-about' );
-            //remove_submenu_page( 'index.php', 'redux-changelog' );
-            //remove_submenu_page( 'index.php', 'redux-getting-started' );
-            //remove_submenu_page( 'index.php', 'redux-credits' );
-            //remove_submenu_page( 'index.php', 'redux-support' );
-            //remove_submenu_page( 'index.php', 'redux-extensions' );
 
             // Badge for welcome page
-            $badge_url = ReduxFramework::$_url . 'assets/images/redux-badge.png';
+            //$badge_url = ReduxFramework::$_url . 'assets/images/redux-badge.png';
             ?>
 
             <script
                 id="redux-qtip-js"
-                src='<?php echo ReduxFramework::$_url ?>assets/js/vendor/qtip/jquery.qtip.js'>
+                src='<?php echo esc_url(ReduxFramework::$_url); ?>assets/js/vendor/qtip/jquery.qtip.js'>
             </script>
 
             <script
                 id="redux-welcome-admin-js"
-                src='<?php echo ReduxFramework::$_url ?>inc/welcome/js/redux-welcome-admin.js'>
+                src='<?php echo esc_url(ReduxFramework::$_url) ?>inc/welcome/js/redux-welcome-admin.js'>
             </script>
 
             <?php
@@ -171,46 +282,41 @@
                 ?>
                 <script
                     id="jquery-easing"
-                    src='<?php echo ReduxFramework::$_url ?>inc/welcome/js/jquery.easing.min.js'>
+                    src='<?php echo esc_url(ReduxFramework::$_url); ?>inc/welcome/js/jquery.easing.min.js'>
                 </script>
             <?php endif; ?>
 
-            <script
-                id="redux-zero-clipboard-js"
-                src='<?php echo ReduxFramework::$_url ?>inc/welcome/js/zeroclipboard/jquery.zeroclipboard.min.js'>
-            </script>
-
             <link rel='stylesheet' id='redux-qtip-css'
-                  href='<?php echo ReduxFramework::$_url ?>assets/css/vendor/qtip/jquery.qtip.css'
-                  type='text/css' media='all'/>
+                href='<?php echo esc_url(ReduxFramework::$_url); ?>assets/css/vendor/qtip/jquery.qtip.css'
+                type='text/css' media='all'/>
 
             <link rel='stylesheet' id='elusive-icons'
-                  href='<?php echo ReduxFramework::$_url ?>assets/css/vendor/elusive-icons/elusive-icons.css'
-                  type='text/css' media='all'/>
+                href='<?php echo esc_url(ReduxFramework::$_url); ?>assets/css/vendor/elusive-icons/elusive-icons.css'
+                type='text/css' media='all'/>
 
             <link rel='stylesheet' id='redux-welcome-css'
-                  href='<?php echo ReduxFramework::$_url ?>inc/welcome/css/redux-welcome.css'
-                  type='text/css' media='all'/>
+                href='<?php echo esc_url(ReduxFramework::$_url); ?>inc/welcome/css/redux-welcome.css'
+                type='text/css' media='all'/>
             <style type="text/css">
                 .redux-badge:before {
-                <?php echo is_rtl() ? 'right' : 'left'; ?> : 0;
+                <?php echo esc_js(is_rtl() ? 'right' : 'left'); ?> : 0;
                 }
 
                 .about-wrap .redux-badge {
-                <?php echo is_rtl() ? 'left' : 'right'; ?> : 0;
+                <?php echo esc_js(is_rtl() ? 'left' : 'right'); ?> : 0;
                 }
 
                 .about-wrap .feature-rest div {
-                    padding- <?php echo is_rtl() ? 'left' : 'right'; ?>: 100px;
+                    padding- <?php echo esc_js(is_rtl() ? 'left' : 'right'); ?>: 100px;
                 }
 
                 .about-wrap .feature-rest div.last-feature {
-                    padding- <?php echo is_rtl() ? 'right' : 'left'; ?>: 100px;
-                    padding- <?php echo is_rtl() ? 'left' : 'right'; ?>: 0;
+                    padding- <?php echo esc_js(is_rtl() ? 'right' : 'left'); ?>: 100px;
+                    padding- <?php echo esc_js(is_rtl() ? 'left' : 'right'); ?>: 0;
                 }
 
                 .about-wrap .feature-rest div.icon:before {
-                    margin: <?php echo is_rtl() ? '0 -100px 0 0' : '0 0 0 -100px'; ?>;
+                    margin: <?php echo esc_js(is_rtl() ? '0 -100px 0 0' : '0 0 0 -100px'); ?>;
                 }
             </style>
         <?php
@@ -225,31 +331,28 @@
          */
         public function tabs() {
             $selected = isset ( $_GET['page'] ) ? $_GET['page'] : 'redux-about';
+            $nonce    = wp_create_nonce( 'redux-support-hash' );
             ?>
+            <input type="hidden" id="redux_support_nonce" value="<?php echo esc_attr($nonce); ?>"/>
             <h2 class="nav-tab-wrapper">
                 <a class="nav-tab <?php echo $selected == 'redux-about' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-about' ), 'tools.php' ) ) ); ?>">
-                    <?php _e( "What's New", 'redux-framework' ); ?>
-                </a>
-                <a class="nav-tab <?php echo $selected == 'redux-extensions' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-extensions' ), 'tools.php' ) ) ); ?>">
-                    <?php _e( 'Extensions', 'redux-framework' ); ?>
-                </a>
-                <a class="nav-tab <?php echo $selected == 'redux-changelog' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-changelog' ), 'tools.php' ) ) ); ?>">
-                    <?php _e( 'Changelog', 'redux-framework' ); ?>
-                </a>
-                <a class="nav-tab <?php echo $selected == 'redux-credits' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-credits' ), 'tools.php' ) ) ); ?>">
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-about' ), 'tools.php' ) ) ); ?>">
+                    <?php esc_attr_e( "What's New", 'redux-framework' ); ?>
+                </a> <a class="nav-tab <?php echo $selected == 'redux-extensions' ? 'nav-tab-active' : ''; ?>"
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-extensions' ), 'tools.php' ) ) ); ?>">
+                    <?php esc_attr_e( 'Extensions', 'redux-framework' ); ?>
+                </a> <a class="nav-tab <?php echo $selected == 'redux-changelog' ? 'nav-tab-active' : ''; ?>"
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-changelog' ), 'tools.php' ) ) ); ?>">
+                    <?php esc_attr_e( 'Changelog', 'redux-framework' ); ?>
+                </a> <a class="nav-tab <?php echo $selected == 'redux-credits' ? 'nav-tab-active' : ''; ?>"
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-credits' ), 'tools.php' ) ) ); ?>">
                     <?php _e( 'Credits', 'redux-framework' ); ?>
-                </a>
-                <a class="nav-tab <?php echo $selected == 'redux-support' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-support' ), 'tools.php' ) ) ); ?>">
-                    <?php _e( 'Support', 'redux-framework' ); ?>
-                </a>
-                <a class="nav-tab <?php echo $selected == 'redux-status' ? 'nav-tab-active' : ''; ?>"
-                   href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-status' ), 'tools.php' ) ) ); ?>">
-                    <?php _e( 'Status', 'redux-framework' ); ?>
+                </a> <a class="nav-tab <?php echo $selected == 'redux-support' ? 'nav-tab-active' : ''; ?>"
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-support' ), 'tools.php' ) ) ); ?>">
+                    <?php esc_attr_e( 'Support', 'redux-framework' ); ?>
+                </a> <a class="nav-tab <?php echo $selected == 'redux-status' ? 'nav-tab-active' : ''; ?>"
+                    href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-status' ), 'tools.php' ) ) ); ?>">
+                    <?php esc_attr_e( 'Status', 'redux-framework' ); ?>
                 </a>
             </h2>
         <?php
@@ -263,8 +366,10 @@
          * @return void
          */
         public function about_screen() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/about.php' );
+            require_once 'views/about.php';
 
         }
 
@@ -276,8 +381,10 @@
          * @return void
          */
         public function changelog_screen() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/changelog.php' );
+            require_once 'views/changelog.php';
 
         }
 
@@ -289,8 +396,10 @@
          * @return void
          */
         public function redux_extensions() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/extensions.php' );
+            require_once 'views/extensions.php';
 
         }
 
@@ -303,8 +412,10 @@
          * @return void
          */
         public function get_support() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/support.php' );
+            require_once 'views/support.php';
 
         }
 
@@ -316,8 +427,10 @@
          * @return void
          */
         public function credits_screen() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/credits.php' );
+            require_once 'views/credits.php';
 
         }
 
@@ -329,8 +442,10 @@
          * @return void
          */
         public function status_screen() {
+            // Stupid hack for Wordpress alerts and warnings
+            echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
 
-            include_once( 'views/status_report.php' );
+            require_once 'views/status_report.php';
 
         }
 
@@ -341,29 +456,28 @@
          * @return string $readme HTML formatted readme file
          */
         public function parse_readme() {
-
-            if ( file_exists( dirname( __FILE__ ) . '/fields/raw/' . "/parsedown.php" ) ) {
-                require_once dirname( __FILE__ ) . '/fields/raw/' . "/parsedown.php";
+            if ( file_exists( ReduxFramework::$_dir . 'inc/fields/raw/parsedown.php' ) ) {
+                require_once ReduxFramework::$_dir . 'inc/fields/raw/parsedown.php';
                 $Parsedown = new Parsedown();
 
-                return $Parsedown->text( trim( str_replace( '# Redux Framework Changelog', '', wp_remote_retrieve_body( wp_remote_get( ReduxFramework::$_url . '../../CHANGELOG.md' ) ) ) ) );
+                return $Parsedown->text( trim( str_replace( '# Redux Framework Changelog', '', wp_remote_retrieve_body( wp_remote_get( ReduxFramework::$_url . '../CHANGELOG.md' ) ) ) ) );
             }
 
-            return '<script src="http://gist-it.appspot.com/https://github.com/reduxframework/redux-framework/blob/master/CHANGELOG.md?slice=2:0&footer=0">// <![CDATA[// ]]></script>';
+            return '<script src="'.'http://'.'gist-it.appspot.com/https://github.com/reduxframework/redux-framework/blob/master/CHANGELOG.md?slice=2:0&footer=0">// <![CDATA[// ]]></script>';
 
         }
 
         public function actions() {
             ?>
             <p class="redux-actions">
-                <a href="http://docs.reduxframework.com/" class="docs button button-primary">Docs</a>
-                <a href="https://wordpress.org/plugins/redux-framework/" class="review-us button button-primary"
-                   target="_blank">Review Us</a>
-                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MMFMHWUPKHKPW"
-                   class="review-us button button-primary" target="_blank">Donate</a>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://reduxframework.com"
-                   data-text="Reduce your dev time! Redux is the most powerful option framework for WordPress on the web"
-                   data-via="ReduxFramework" data-size="large" data-hashtags="Redux">Tweet</a>
+                <a href="<?php echo 'http://';?>docs.reduxframework.com/" class="docs button button-primary">Docs</a>
+                <a href="<?php echo 'http://';?>wordpress.org/plugins/redux-framework/" class="review-us button button-primary"
+                    target="_blank">Review Us</a>
+                <a href="<?php echo 'https://';?>www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MMFMHWUPKHKPW"
+                    class="review-us button button-primary" target="_blank">Donate</a>
+                <a href="<?php echo 'https://';?>twitter.com/share" class="twitter-share-button" data-url="http://reduxframework.com"
+                    data-text="Reduce your dev time! Redux is the most powerful option framework for WordPress on the web"
+                    data-via="ReduxFramework" data-size="large" data-hashtags="Redux">Tweet</a>
                 <script>!function( d, s, id ) {
                         var js, fjs = d.getElementsByTagName( s )[0], p = /^http:/.test( d.location ) ? 'http' : 'https';
                         if ( !d.getElementById( id ) ) {
@@ -395,7 +509,7 @@
 
             foreach ( $contributors as $contributor ) {
                 $contributor_list .= '<li class="wp-person">';
-                $contributor_list .= sprintf( '<a href="%s" title="%s" target="_blank">', esc_url( 'https://github.com/' . $contributor->login ), esc_html( sprintf( __( 'View %s', 'redux-framework' ), $contributor->login ) )
+                $contributor_list .= sprintf( '<a href="%s" title="%s" target="_blank">', esc_url( 'https://github.com/' . $contributor->login ), esc_html( sprintf( __( 'View %s', 'redux-framework' ), esc_html($contributor->login) ) )
                 );
                 $contributor_list .= sprintf( '<img src="%s" width="64" height="64" class="gravatar" alt="%s" />', esc_url( $contributor->avatar_url ), esc_html( $contributor->login ) );
                 $contributor_list .= '</a>';
@@ -439,70 +553,7 @@
 
             return $contributors;
         }
-
-        /**
-         * Sends user to the Welcome page on first activation of Redux as well as each
-         * time Redux is upgraded to a new version
-         *
-         * @access public
-         * @since  1.4
-         * @global $redux_options Array of all the Redux Options
-         * @return void
-         */
-        public function welcome() {
-            //logconsole( 'welcome.php' );
-            //return;
-            // Bail if no activation redirect
-            if ( ! get_transient( '_redux_activation_redirect' ) ) {
-                return;
-            }
-
-            // Delete the redirect transient
-            delete_transient( '_redux_activation_redirect' );
-
-            // Bail if activating from network, or bulk
-            if ( is_network_admin() || isset ( $_GET['activate-multi'] ) ) {
-                return;
-            }
-
-            $upgrade = get_option( 'redux_version_upgraded_from' );
-//
-//        if ( !$upgrade ) { // First time install
-//            wp_safe_redirect ( admin_url ( 'index.php?page=redux-getting-started' ) );
-//            exit;
-//        } else { // Update
-//            wp_safe_redirect ( admin_url ( 'index.php?page=redux-about' ) );
-//            exit;
-//        }
-        }
     }
 
     new Redux_Welcome();
 
-
-
-
-//DOVY!!  HERE!!!
-// Getting started page
-//                    if (  is_admin () && $this->args['dev_mode'] ) {
-//
-//                        if ( isset($_GET['page']) && ($_GET['page'] == 'redux-about' || $_GET['page'] == 'redux-getting-started' || $_GET['page'] == 'redux-credits' || $_GET['page'] == 'redux-changelog' )) {
-//                            //logconsole('inc');
-
-//                        } else {
-//                            //logconsole('compare');
-//                            if (isset($_GET['page']) && $_GET['page'] == $this->args['page_slug']) {
-//                                $saveVer = get_option('redux_version_upgraded_from');
-//                                $curVer = self::$_version;
-//
-//                                if (empty($saveVer)) {
-//                                    //logconsole('redir');
-//                                    wp_safe_redirect ( admin_url ( 'index.php?page=redux-getting-started' ) );
-//                                    exit;
-//                                } else if (version_compare($curVer, $saveVer, '>')) {
-//                                    wp_safe_redirect ( admin_url ( 'index.php?page=redux-about' ) );
-//                                    exit;
-//                                }
-//                            }
-//                        }
-//                    }

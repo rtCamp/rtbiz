@@ -27,7 +27,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+return;
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -69,7 +69,7 @@ if (!( defined('TIVWP_DM_NETWORK_ACTIVATION_ALLOWED') && TIVWP_DM_NETWORK_ACTIVA
  * Launch the Controller only after plugins_loaded, so we can do necessary validation
  * @see TIVWP_DM_Controller::construct
  */
-require_once dirname( __FILE__ ) . '/includes/class-tivwp-dm-controller.php';
+require_once dirname(__FILE__) . '/includes/class-tivwp-dm-controller.php';
 add_action('plugins_loaded', array(
     'TIVWP_DM_Controller',
     'construct'

@@ -13,10 +13,67 @@
         }
     );
 
+
     $.redux_welcome.supportHash = function() {
-        jQuery('.redux_support_hash' ).click(function() {
-            console.log('here');
-        });
+
+        jQuery( "#support_hash" ).focus(
+            function() {
+                var $this = jQuery( this );
+                $this.select();
+
+                // Work around Chrome's little problem
+                $this.mouseup(
+                    function() {
+                        // Prevent further mouseup intervention
+                        $this.unbind( "mouseup" );
+                        return false;
+                    }
+                );
+            }
+        );
+
+        jQuery( '.redux_support_hash' ).click(
+            function( e ) {
+
+                var $button = jQuery( this );
+                if ( $button.hasClass( 'disabled' ) ) {
+                    return;
+                }
+                var $nonce = jQuery( '#redux_support_nonce' ).val();
+                $button.addClass( 'disabled' );
+                $button.parent().append( '<span class="spinner" style="display:block;float: none;margin: 10px auto;"></span>' );
+                $button.closest( '.spinner' ).fadeIn();
+                if ( !window.console ) console = {};
+                console.log = console.log || function( name, data ) {};
+                jQuery.ajax(
+                    {
+                        type: "post",
+                        dataType: "json",
+                        url: ajaxurl,
+                        data: {
+                            action: "redux_support_hash",
+                            nonce: $nonce
+                        },
+                        error: function( response ) {
+                            console.log( response );
+                            $button.removeClass( 'disabled' );
+                            $button.parent().find( '.spinner' ).remove();
+                            alert( 'There was an error. Please try again later.' );
+                        },
+                        success: function( response ) {
+                            if ( response.status == "success" ) {
+                                jQuery( '#support_hash' ).val( 'http://support.redux.io/?id=' + response.identifier );
+                                $button.parents( 'fieldset:first' ).find( '.next' ).removeAttr( 'disabled' ).click();
+                            } else {
+                                console.log( response );
+                                alert( 'There was an error. Please try again later.' );
+                            }
+                        }
+                    }
+                );
+                e.preventDefault();
+            }
+        );
     };
 
     $.redux_welcome.initSupportPage = function() {
@@ -52,7 +109,7 @@
                     }
                 }
             );
-            jQuery( '#support_div' ).height( $height + 10 );
+            jQuery( '#support_div' ).height( $height + 20 );
         }
 
         setHeight();
@@ -61,28 +118,18 @@
                 setHeight();
             }
         );
-
-        jQuery( '#support_div input.checkbox' ).change(
+        jQuery( '#is_user' ).click(
             function() {
-                if ( jQuery( "#support_div input.checkbox:checked" ).length > 0 ) {
-                    jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).removeAttr( 'disabled' );
-                } else {
-                    jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).attr( 'disabled', 'disabled' );
-                }
-                if ( jQuery( this ).is( ":checked" ) ) {
-                    if ( jQuery( this ).attr( 'id' ) == "is_developer" ) {
-                        jQuery( '#final_support .is_user' ).hide();
-                        jQuery( '#final_support .is_developer' ).show();
-                        jQuery( '#support_div input.plugins' ).removeAttr( 'checked' );
-                        jQuery( '#support_div input.theme' ).removeAttr( 'checked' );
-                        jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).removeAttr( 'disabled' );
-                        jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).click();
-                    } else {
-                        jQuery( '#support_div #is_developer' ).removeAttr( 'checked' );
-                        jQuery( '#final_support .is_user' ).show();
-                        jQuery( '#final_support .is_developer' ).hide();
-                    }
-                }
+                jQuery( '#final_support .is_user' ).show();
+                jQuery( '#final_support .is_developer' ).hide();
+                jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).click();
+            }
+        );
+        jQuery( '#is_developer' ).click(
+            function() {
+                jQuery( '#final_support .is_user' ).hide();
+                jQuery( '#final_support .is_developer' ).show();
+                jQuery( this ).parents( 'fieldset:first' ).find( '.next' ).click();
             }
         );
 

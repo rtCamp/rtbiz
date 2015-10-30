@@ -27,7 +27,6 @@ if ( ! class_exists( 'ReduxFramework_sortable' ) ) {
          * @since Redux_Options 2.0.1
          */
         function render() {
-
             if ( empty( $this->field['mode'] ) ) {
                 $this->field['mode'] = "text";
             }
@@ -78,7 +77,7 @@ if ( ! class_exists( 'ReduxFramework_sortable' ) ) {
                 }
                 unset( $this->value );
                 $this->value = $dummyArr;
-                unset( $dummytArr );
+                unset( $dummyArr );
             }
 
             $use_labels = false;
@@ -94,7 +93,6 @@ if ( ! class_exists( 'ReduxFramework_sortable' ) ) {
 
 
             foreach ( $this->value as $k => $nicename ) {
-
                 echo '<li>';
 
                 $checked = "";
@@ -112,6 +110,7 @@ if ( ! class_exists( 'ReduxFramework_sortable' ) ) {
                     echo '<div class="checkbox-container">';
                 } else {
                     $value_display = isset( $this->value[ $k ] ) ? $this->value[ $k ] : '';
+                    $nicename = $this->field['options'][$k];
 
                 }
 
@@ -131,7 +130,7 @@ if ( ! class_exists( 'ReduxFramework_sortable' ) ) {
                         //echo "<br />";
                         //echo '<label for="' . $this->field['id'] . '[' . $k . ']"><strong>' . $k . '</strong></label>';
                     } else {
-                        echo '<label for="' . $this->field['id'] . '[' . $k . ']"><strong>' .  $k . '</strong></label>';
+                        echo '<label for="' . $this->field['id'] . '[' . $k . ']"><strong>' .  $options[$k] . '</strong></label>';
                     }
                 }
                 if ( $this->field['mode'] == "checkbox" ) {

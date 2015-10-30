@@ -28,52 +28,26 @@
              */
             function render() {
 
-                // If align value is not set, set it to false, the default
-                if ( ! isset( $this->field['align'] ) ) {
-                    $this->field['align'] = false;
-                }
-
-                if (!isset($this->field['overflow'])) {
-                    $this->field['overflow'] = 'auto';
-                }
-                
-                // Set align flag.
-                $doAlign = $this->field['align'];
-
-                // The following could needs to be omitted if align is true.
-                // Only print it if allign is false.
-                if ( false == $doAlign ) {
-                    echo '<style>#' . $this->parent->args['opt_name'] . '-' . $this->field['id'] . ' {padding: 0;}</style>';
-                    echo '</td></tr>';
-                    echo '</table>';
-                    echo '<table id="' . $this->parent->args['opt_name'] . '-' . $this->field['id'] . '" class="form-table no-border redux-group-table redux-raw-table" style="overflow: ' . $this->field['overflow'] . ';">';
-                    echo '<tbody><tr><td>';
-                }
-
-                echo '<fieldset id="' . $this->parent->args['opt_name'] . '-' . $this->field['id'] . '" class="redux-field redux-container-' . $this->field['type'] . ' ' . $this->field['class'] . '" data-id="' . $this->field['id'] . '">';
-
                 if ( ! empty( $this->field['include'] ) && file_exists( $this->field['include'] ) ) {
-                    require_once( $this->field['include'] );
+                    require_once $this->field['include'];
+                }
+
+                if ( isset( $this->field['content_path'] ) && ! empty( $this->field['content_path'] ) && file_exists( $this->field['content_path'] ) ) {
+                    $this->field['content'] = $this->parent->filesystem->execute( 'get_contents', $this->field['content_path'] );
                 }
 
                 if ( ! empty( $this->field['content'] ) && isset( $this->field['content'] ) ) {
                     if ( isset( $this->field['markdown'] ) && $this->field['markdown'] == true ) {
                         require_once dirname( __FILE__ ) . "/parsedown.php";
                         $Parsedown = new Parsedown();
-                        echo $Parsedown->text( $this->field['content'] );
+                        echo $Parsedown->text( wp_kses_post($this->field['content']) );
                     } else {
-                        echo $this->field['content'];
+                        echo ($this->field['content']);
                     }
                 }
 
                 do_action( 'redux-field-raw-' . $this->parent->args['opt_name'] . '-' . $this->field['id'] );
 
-                echo '</fieldset>';
-
-                // Only print is align is false.
-                if ( false == $doAlign ) {
-                    echo '</td></tr></table><table class="form-table no-border" style="margin-top: 0;"><tbody><tr style="border-bottom: 0;"><th></th><td>';
-                }
             }
         }
     }
