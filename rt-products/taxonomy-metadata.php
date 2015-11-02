@@ -19,6 +19,26 @@ class Taxonomy_Metadata {
 		add_action( 'init', array( $this, 'wpdbfix' ) );
 		add_action( 'switch_blog', array( $this, 'wpdbfix' ) );
 		add_action( 'wpmu_new_blog', array( $this, 'new_blog' ), 10, 6 );
+		add_action( 'admin_init', array( $this, 'migration' ) );
+	}
+
+	public function migration() {
+		global $wpdb;
+		if ( ! empty( $wpdb->termmeta ) ) {
+			$is_migration_done = get_option( 'rtbiz_taxonomy_metadata_migration_complete' );
+			if ( empty( $is_migration_done ) ) {
+				// because we don't want to check table exist or not every time.
+				$tables = $wpdb->get_results( "show tables like '{$wpdb->prefix}taxonomymeta'" );
+				if ( count( $tables ) ) {
+					// migration
+					$wpdb->query( "INSERT INTO {$wpdb->termmeta} (term_id, meta_key, meta_value ) SELECT taxonomy_id,meta_key,meta_value FROM {$wpdb->prefix}taxonomymeta" );
+					//one less table to worry about
+					$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}taxonomymeta" );
+				}
+				// update even if table does not exist because maybe we never created table in first place in case of wordpress 4.4 or above fresh installation.
+				update_option( 'rtbiz_taxonomy_metadata_migration_complete', 1 );
+			}
+		}
 	}
 
 	/*
@@ -54,6 +74,11 @@ class Taxonomy_Metadata {
 
 	function setup_blog( $id = false ) {
 		global $wpdb;
+
+		if ( ! empty( $wpdb->termmeta ) ) {
+			// wordpress 4.4+ no need to create meta table
+			return;
+		}
 
 		if ( false != $id ) {
 			switch_to_blog( $id );
@@ -108,8 +133,15 @@ class Taxonomy_Metadata {
  *
  * @return bool False for failure. True for success.
  */
+
 function add_term_meta( $term_id, $meta_key, $meta_value, $unique = false ) {
-	return add_metadata( 'taxonomy', $term_id, $meta_key, $meta_value, $unique );
+	global $wpdb;
+	if ( function_exists( 'add_term_meta' ) && ! empty( $wpdb->termmeta ) ) {
+		// call global name space function add_term_meta
+		return \add_term_meta( $term_id, $meta_key, $meta_value, $unique );
+	} else {
+		return add_metadata( 'taxonomy', $term_id, $meta_key, $meta_value, $unique );
+	}
 }
 
 /**
@@ -126,7 +158,12 @@ function add_term_meta( $term_id, $meta_key, $meta_value, $unique = false ) {
  * @return bool False for failure. True for success.
  */
 function delete_term_meta( $term_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'taxonomy', $term_id, $meta_key, $meta_value );
+	global $wpdb;
+	if ( function_exists( 'delete_term_meta' ) && ! empty( $wpdb->termmeta ) ) {
+		return \delete_term_meta( $term_id, $meta_value, $meta_value );
+	} else {
+		return delete_metadata( 'taxonomy', $term_id, $meta_key, $meta_value );
+	}
 }
 
 /**
@@ -140,7 +177,12 @@ function delete_term_meta( $term_id, $meta_key, $meta_value = '' ) {
  *  is true.
  */
 function get_term_meta( $term_id, $key, $single = false ) {
-	return get_metadata( 'taxonomy', $term_id, $key, $single );
+	global $wpdb;
+	if ( function_exists( 'get_term_meta' ) && ! empty( $wpdb->termmeta ) ) {
+		return \get_term_meta( $term_id, $key, $single );
+	} else {
+		return get_metadata( 'taxonomy', $term_id, $key, $single );
+	}
 }
 
 /**
@@ -159,5 +201,10 @@ function get_term_meta( $term_id, $key, $single = false ) {
  * @return bool False on failure, true if success.
  */
 function update_term_meta( $term_id, $meta_key, $meta_value, $prev_value = '' ) {
-	return update_metadata( 'taxonomy', $term_id, $meta_key, $meta_value, $prev_value );
+	global $wpdb;
+	if ( function_exists( 'update_term_meta' ) && ! empty( $wpdb->termmeta ) ) {
+		return \update_term_meta( $term_id, $meta_key, $meta_value, $prev_value );
+	} else {
+		return update_metadata( 'taxonomy', $term_id, $meta_key, $meta_value, $prev_value );
+	}
 }

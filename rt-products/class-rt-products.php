@@ -345,9 +345,17 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 */
 		public function get_taxonomy( $post_id ) {
 			global $wpdb;
-			$taxonomymeta = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}taxonomymeta WHERE meta_key ='" . self::$term_product_id_meta_key . "' AND meta_value = $post_id " );
-			if ( ! empty( $taxonomymeta->taxonomy_id ) && is_numeric( $taxonomymeta->taxonomy_id ) ) {
-				return get_term_by( 'id', $taxonomymeta->taxonomy_id, self::$product_slug );
+			if ( ! empty( $wpdb->termmeta ) ) {
+				$table_name = $wpdb->termmeta;
+				$column     = 'term_id';
+			} else {
+				$table_name = "{$wpdb->prefix}taxonomymeta";
+				$column     = 'taxonomy_id';
+			}
+			$t_id = $wpdb->get_var( "SELECT $column FROM $table_name WHERE meta_key ='" . self::$term_product_id_meta_key . "' AND meta_value = $post_id limit 1" );
+
+			if ( ! empty( $t_id ) && is_numeric( $t_id ) ) {
+				return get_term_by( 'id', $t_id, self::$product_slug );
 			}
 
 			return false;
@@ -436,10 +444,14 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 
 		public function check_postid_term_exist( $post_id ) {
 			global $wpdb;
-			$querystr = 'SELECT taxonomy_id FROM ' . $wpdb->prefix . 'taxonomymeta WHERE meta_value = ' . $post_id . ' limit 1';
-			$result   = $wpdb->get_results( $querystr );
-			if ( isset( $result[0]->taxonomy_id ) ) {
-				return $result[0]->taxonomy_id;
+			if ( ! empty( $wpdb->termmeta ) ) {
+				$querystr = "SELECT term_id FROM {$wpdb->termmeta} WHERE meta_value = {$post_id} limit 1";
+			} else {
+				$querystr = 'SELECT taxonomy_id FROM ' . $wpdb->prefix . 'taxonomymeta WHERE meta_value = ' . $post_id . ' limit 1';
+			}
+			$result = $wpdb->get_var( $querystr );
+			if ( ! empty ( $result ) ) {
+				return $result;
 			}
 
 			return false;
