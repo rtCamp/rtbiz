@@ -3,8 +3,8 @@ Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, 
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
-Tested up to:      4.3
-Stable tag:        1.3.9
+Tested up to:      4.4
+Stable tag:        1.4
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,11 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.4 =
+* Added support for term meta (WordPress 4.4 and above)
+* Gravity form importer update
+* Redux updated
 
 = 1.3.9 =
 * Mail lib updated

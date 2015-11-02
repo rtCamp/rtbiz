@@ -7,8 +7,8 @@ rtBiz - WordPress 4 Business!
 **Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya)  
 **Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user groups), [access control](https://wordpress.org/plugins/tags/access control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
 **Requires at least:** 4.1  
-**Tested up to:** 4.3  
-**Stable tag:** 1.3.9  
+**Tested up to:** 4.4  
+**Stable tag:** 1.4  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 **Donate Link:** http://rtcamp.com/donate  
 
@@ -89,6 +89,11 @@ Please refer to the documentation.
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.4 ###
+* Added support for term meta (WordPress 4.4 and above)
+* Gravity form importer update
+* Redux updated
 
 ### 1.3.9 ###
 * Mail lib updated
