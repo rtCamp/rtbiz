@@ -20,6 +20,10 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				$is_staff_member = 'yes';
 			}
 			$user = rtbiz_get_wp_user_for_contact( $post->ID );
+			if ( empty( $user ) ) {
+				_e( 'You can not change Helpdesk role until User is not connected with this customer/staff.', RTBIZ_TEXT_DOMAIN );
+				return;
+			}
 			if ( isset( $user[0]->roles ) && in_array( 'administrator', $user[0]->roles ) ) {
 				_e( "Admin have full access for all plugins. You can't change it", RTBIZ_TEXT_DOMAIN );
 
