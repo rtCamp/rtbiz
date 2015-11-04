@@ -53,10 +53,15 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 			//removed product sync option
 			$diff = array();
 			if ( ! empty( $setting['product_plugin'] ) && ! empty( $old_setting['product_plugin'] ) ) {
-				$diff = array_diff( $setting['product_plugin'], $old_setting['product_plugin'] );
+				$arr_diff = array_diff_assoc( $setting['product_plugin'], $old_setting['product_plugin'] );
+				while ( $val = current( $arr_diff ) ) {
+					if ( '1' == $val ) {
+						$diff[] = key( $arr_diff );
+					}
+					next( $arr_diff );
+				}
 				$diff = array_unique( $diff );
 			}
-
 			if ( ! empty( $diff ) ) {
 				update_option( 'rt_product_plugin_sync', 'true' );
 			} else {
