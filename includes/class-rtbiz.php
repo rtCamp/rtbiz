@@ -161,6 +161,7 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/metabox' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/helper/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/migration/' );
+			new RT_WP_Autoload( RTBIZ_PATH . 'admin/classes/settings' );
 
 			self::$loader = new Rtbiz_Loader();
 		}
