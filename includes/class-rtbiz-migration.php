@@ -25,7 +25,7 @@ if ( ! class_exists( 'Rtbiz_Migration' ) ) {
 		 * load current migration class
 		 */
 		public function init() {
-
+			new rtBiz_Settings_Migration();
 		}
 	}
 }

@@ -742,18 +742,32 @@ function rtbiz_set_redux_setting( $key, $val ) {
 }
 
 function rtbiz_get_product_selection_setting() {
-	$return                  = array();
-	$redux                   = rtbiz_get_redux_settings();
-	$redux['product_plugin'] = apply_filters( 'rtbiz_product_setting', ( ! empty( $redux['product_plugin'] ) ) ? $redux['product_plugin'] : '' );
-	if ( ! empty( $redux['product_plugin'] ) && is_array( $redux['product_plugin'] ) ) {
-		foreach ( $redux['product_plugin'] as $key => $val ) {
+	$woo    = get_option( 'rtbiz_product_plugin_woo' );
+	$edd    = get_option( 'rtbiz_product_plugin_edd' );
+	$product_filter = array();
+	$return= array();
+
+	if ( ! empty( $woo ) && $woo == 'yes' ) {
+		$product_filter['woocommerce'] = '1';
+	} else {
+		$product_filter['woocommerce'] = '0';
+	}
+	if ( ! empty( $edd ) && $edd == 'yes' ) {
+		$product_filter['edd'] = '1';
+	} else {
+		$product_filter['edd'] = '0';
+	}
+
+	$product_filter = apply_filters( 'rtbiz_product_setting', $product_filter );
+	if ( ! empty( $product_filter ) && is_array( $product_filter ) ) {
+		foreach ( $product_filter as $key => $val ) {
 			if ( ! empty( $val ) ) {
 				$return[] = $key;
 			}
 		}
 	}
 
-	return $return;
+	return $product_filter;
 }
 
 /**
@@ -765,6 +779,8 @@ function rtbiz_mailbox_list_view() {
 	$rtbiz_mailBox->rtmailbox_list_all( $rtbiz_modules );
 }
 
+add_action( 'rtbiz_admin_field_rtbiz_mailbox', 'rtbiz_mailbox_list_view' );
+
 
 function rtbiz_gravity_importer_view( $module ) {
 	global $rtbiz_importer;
@@ -774,6 +790,19 @@ function rtbiz_gravity_importer_view( $module ) {
 
 	return $gravity_importer_view;
 }
+
+function rtbiz_contact_importer() {
+	$contact_labels            = rtbiz_get_contact_labels();
+	$contact_importer_subtitle = __( '<div class="redux_field_th">Import WordPress Users to ' . $contact_labels['name'] . '</div>' );
+	$contact_importer_subtitle .= __( 'Use this tool to import all current users to ' . $contact_labels['name'] . '. You can also import selected users from ' );
+	$contact_importer_subtitle .= '<a href="' . admin_url( 'users.php' ) . '">WP users</a> page.';
+	$contact_importer_subtitle .= __( '<br/>All new users will automatically get exported as ' . $contact_labels['name'] . '.<br/> <p class="redux-container-multi_text rtbiz-import-contact-warning"><span class="redux-multi-text-remove">Importing ' . $contact_labels['name'] . ' is a heavy process. So please be patient.</span></p><br/>' );
+	$contact_importer_subtitle .= rtbiz_export_wp_users_to_contacts();
+	echo $contact_importer_subtitle;
+}
+
+add_action( 'rtbiz_admin_field_contact_importer', 'rtbiz_contact_importer' );
+
 
 function rtbiz_gravity_importer_mapper_view() {
 	global $rtlib_importer_mapper;

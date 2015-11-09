@@ -21,7 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="icon32 icon32-rtbiz-settings" id="icon-rtbiz"><br /></div><h2 class="nav-tab-wrapper rtbiz-nav-tab-wrapper">
 			<?php
 			foreach ( $tabs as $name => $label ) {
-				echo '<a href="' . admin_url( 'edit.php?post_type='.$slug.'&page=rtbiz-'.$slug.'-settings&tab=' . $name ) . '" class="nav-tab ' . ( $current_tab == $name ? 'nav-tab-active' : '' ) . '">' . $label . '</a>';
+				if (!empty($setting_page_url)){
+					$href = $setting_page_url. '&tab='.$name;
+				} else {
+					$href = admin_url( 'edit.php?post_type='.$slug.'&page=rtbiz-'.$slug.'-settings&tab=' . $name );
+				}
+				echo '<a href="' . $href . '" class="nav-tab ' . ( $current_tab == $name ? 'nav-tab-active' : '' ) . '">' . $label . '</a>';
 			}
 
 			do_action( 'rtbiz_settings_tabs' );

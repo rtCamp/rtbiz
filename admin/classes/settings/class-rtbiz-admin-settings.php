@@ -97,7 +97,7 @@ class rtBiz_Admin_Settings {
 	 *
 	 * Handles the display of the main rtbiz settings page in admin.
 	 */
-	public static function output( $slug ) {
+	public static function output( $slug, $setting_page_url = '' ) {
 		global $current_section, $current_tab;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -227,6 +227,9 @@ class rtBiz_Admin_Settings {
 			// Description handling
 			$field_description = self::get_field_description( $value );
 			extract( $field_description );
+
+//			var_dump($value);
+
 
 			// Switch based on type
 			switch ( $value['type'] ) {
@@ -607,7 +610,7 @@ class rtBiz_Admin_Settings {
 		}
 
 		if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
-			$description = '<p style="margin-top:0">' . wp_kses_post( $description ) . '</p>';
+			$description = '<p class="description" style="margin-top:0">' . wp_kses_post( $description ) . '</p>';
 		} elseif ( $description && in_array( $value['type'], array( 'checkbox' ) ) ) {
 			$description = wp_kses_post( $description );
 		} elseif ( $description ) {
@@ -735,6 +738,7 @@ class rtBiz_Admin_Settings {
 			 */
 			do_action( 'rtbiz_update_option', $option );
 		}
+		do_action( 'rtbiz_update_option_values', $update_options );
 
 		// Save all options in our array
 		foreach ( $update_options as $name => $value ) {

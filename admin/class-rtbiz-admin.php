@@ -52,7 +52,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			$rtbiz_team = new Rtbiz_Teams();
 
-			$rtbiz_settings = new Rtbiz_Setting();
+			//$rtbiz_settings = new Rtbiz_Setting();
 
 			$rtbiz_dashboard = new Rtbiz_Dashboard();
 
@@ -72,6 +72,33 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			$rtbiz_help = new Rtbiz_Help();
 
+			add_action( 'admin_menu', array( $this, 'settings_menu' ), 50 );
+			add_action( 'rtbiz_get_settings_pages_contact', array( $this, 'setting_tabs' ) );
+
+		}
+
+		public function settings_menu() {
+			$settings_page = add_submenu_page( Rtbiz_Dashboard::$page_slug, __( 'rtBiz Settings', RTBIZ_TEXT_DOMAIN ), __( 'Settings', RTBIZ_TEXT_DOMAIN ), 'manage_options', 'rtbiz-settings', array(
+				$this,
+				'settings_page'
+			) );
+		}
+
+		public function setting_tabs( $tabs ) {
+			$tabs[] = include( RTBIZ_PATH . 'admin/classes/settings/tabs/class-rtbiz-settings-general.php' );
+			$tabs[] = include( RTBIZ_PATH . 'admin/classes/settings/tabs/class-rtbiz-settings-importer.php' );
+			$tabs[] = include( RTBIZ_PATH . 'admin/classes/settings/tabs/class-rtbiz-settings-mailbox.php' );
+
+			return $tabs;
+		}
+
+		/**
+		 * Init the settings page.
+		 */
+		public function settings_page() {
+
+			$slug = rtbiz_get_contact_post_type();
+			rtBiz_Admin_Settings::output( $slug, admin_url( 'admin.php?page=rtbiz-settings' ) );
 		}
 
 		public function register_menu() {
@@ -173,10 +200,6 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			if ( class_exists( 'Rt_Importer_Mapper' ) ) {
 				$rtbizMenuOrder[] = Rt_Importer_Mapper::$page_slug;
-			}
-
-			if ( ! empty( self::$settings_slug ) ) {
-				$rtbizMenuOrder[] = self::$settings_slug;
 			}
 
 			return $rtbizMenuOrder;
