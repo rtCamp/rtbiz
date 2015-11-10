@@ -15,7 +15,7 @@ class rtBiz_Settings_Importer extends rtBiz_Settings_Page{
 	public function __construct() {
 
 		$this->id    = 'rtbiz_contact_importer';
-		$this->label = __( 'Contact Importer', 'rtbiz_idea' );
+		$this->label = __( 'Contact Importer', RTBIZ_TEXT_DOMAIN );
 		add_filter( 'rtbiz_settings_tabs_array', array( $this, 'add_settings_page' ) );
 		add_action( 'rtbiz_settings_' . $this->id, array( $this, 'output' ) );
 		add_action( 'rtbiz_settings_save_' . $this->id, array( $this, 'save' ) );

@@ -15,7 +15,7 @@ if ( ! class_exists( 'rtBiz_Settings_General ' ) ) :
 		public function __construct() {
 
 			$this->id    = 'rtbiz_contact_general';
-			$this->label = __( 'General', 'rtbiz_idea' );
+			$this->label = __( 'General', RTBIZ_TEXT_DOMAIN );
 			add_filter( 'rtbiz_settings_tabs_array', array( $this, 'add_settings_page' ) );
 			add_action( 'rtbiz_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'rtbiz_settings_save_' . $this->id, array( $this, 'save' ) );
