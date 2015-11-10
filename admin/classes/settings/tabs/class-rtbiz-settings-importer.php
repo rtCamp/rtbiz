@@ -33,7 +33,6 @@ class rtBiz_Settings_Importer extends rtBiz_Settings_Page{
 			array( 'title' => __( 'Importer', RTBIZ_TEXT_DOMAIN ), 'type' => 'title', 'desc' => '', 'id' => 'option_contact_importer' ),
 
 			array(
-				'title'         => __( 'Contact Importer', RTBIZ_TEXT_DOMAIN),
 				'id'            => 'rtbiz_contact_importer',
 				'default'       => 'no',
 				'type'          => 'contact_importer',

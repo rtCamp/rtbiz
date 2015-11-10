@@ -33,7 +33,6 @@ class rtBiz_Settings_Mailbox extends rtBiz_Settings_Page{
 			array( 'title' => __( 'Mailbox', RTBIZ_TEXT_DOMAIN ), 'type' => 'title', 'desc' => '', 'id' => 'mailbox_option' ),
 
 			array(
-				'title'         => __( 'Contact Importer', RTBIZ_TEXT_DOMAIN ),
 				'id'            => 'rtbiz_mailbox',
 				'default'       => 'no',
 				'type'          => 'rtbiz_mailbox',

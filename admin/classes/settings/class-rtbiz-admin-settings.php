@@ -581,7 +581,15 @@ class rtBiz_Admin_Settings {
 
 				// Default: run an action
 				default:
+					if (!empty($value['title'])){
+						?><tr valign="top">
+							<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tooltip_html; echo $disabled_message; ?></th>
+							<td class="forminp image_width_settings"> <?php
+					}
 					do_action( 'rtbiz_admin_field_' . $value['type'], $value );
+					if (!empty($value['title'])){
+					?></td></tr> <?php
+					}
 					break;
 			}
 		}
