@@ -284,6 +284,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 			);
 
 			$settings             = rtbiz_get_product_selection_setting();
+
 			$product_plugin       = ! empty( $settings ) ? $settings : array();
 			$to_register_posttype = array();
 			foreach ( Rtbiz_Access_Control::$modules as $key => $value ) {

@@ -402,6 +402,48 @@ class rtBiz_Admin_Settings {
 					</tr><?php
 					break;
 
+				// Checkbox inputs
+				case 'multicheckbox' :
+
+					if ( strstr( $value['id'], '[' ) ) {
+						parse_str( $value['id'], $option_name_array );
+						$option_name  = current( array_keys( $option_name_array ) );
+					}
+
+					$option_value = self::get_option( $option_name, $value['default'] );
+
+					?><tr valign="top">
+						<th scope="row" class="titledesc">
+							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+							<?php echo $tooltip_html; ?>
+						</th>
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<fieldset>
+								<?php echo $description; ?>
+								<ul>
+								<?php
+									foreach ( $value['options'] as $key => $val ) {
+										?>
+										<li>
+											<label><input
+												name="<?php echo esc_attr( $value['id'] ); ?>"
+												value="<?php echo $key; ?>"
+												type="checkbox"
+												style="<?php echo esc_attr( $value['css'] ); ?>"
+												class="<?php echo esc_attr( $value['class'] ); ?>"
+												<?php echo implode( ' ', $custom_attributes ); ?>
+												<?php checked( 1, $option_value[ $key ] ); ?>
+												/> <?php echo $val ?></label>
+										</li>
+										<?php
+									}
+								?>
+								</ul>
+							</fieldset>
+						</td>
+					</tr><?php
+					break;
+
 				// Checkbox input
 				case 'checkbox' :
 
@@ -661,7 +703,12 @@ class rtBiz_Admin_Settings {
 			}
 
 			// Get posted value
-			if ( strstr( $option['id'], '[' ) ) {
+			if ( strstr( $option['id'], '[]' ) && in_array( $option['type'], array( 'multicheckbox' ) ) ) {
+				parse_str( $option['id'], $option_name_array );
+				$option_name  = current( array_keys( $option_name_array ) );
+				$setting_name = '';
+				$raw_value    = isset( $_POST[ $option_name ] ) ? wp_unslash( $_POST[ $option_name ] ) : null;
+			} else if ( strstr( $option['id'], '[' ) ) {
 				parse_str( $option['id'], $option_name_array );
 				$option_name  = current( array_keys( $option_name_array ) );
 				$setting_name = key( $option_name_array[ $option_name ] );
@@ -676,6 +723,14 @@ class rtBiz_Admin_Settings {
 			switch ( $option['type'] ) {
 				case 'checkbox' :
 					$value = is_null( $raw_value ) ? 'no' : 'yes';
+					break;
+				case 'multicheckbox':
+					$new_raw_value = array();
+					foreach ( $raw_value as $value ) {
+						$new_raw_value[ $value ] = 1;
+					}
+					$raw_value = $new_raw_value;
+					$value = rtbiz_clean( $raw_value );
 					break;
 				case 'textarea' :
 					$value = wp_kses_post( trim( $raw_value ) );

@@ -24,23 +24,19 @@ if ( ! class_exists( 'rtBiz_Settings_General ' ) ) :
 
 		public function product_sync( $option ) {
 
-			if ( ! isset( $option['rtbiz_product_plugin_woo'], $option['rtbiz_product_plugin_edd'] ) ) {
+			if ( ! isset( $option['rtbiz_product_plugin'] ) ) {
 				return;
 			}
 
-			$product = array(
-				get_option( 'rtbiz_product_plugin_woo' ),
-				get_option( 'rtbiz_product_plugin_edd' )
-			);
+			$old_value = get_option( 'rtbiz_product_plugin' );
 
-			$before_save = array( $option['rtbiz_product_plugin_woo'], $option['rtbiz_product_plugin_edd'] );
+			$new_value = $option['rtbiz_product_plugin'];
 
-			$diff = array_diff_assoc( $before_save, $product );
+			$diff = array_diff_assoc( $new_value, $old_value );
 			if ( ! empty( $diff ) ) {
 				update_option( 'rt_product_plugin_sync', 'true' );
-			} else {
-				update_option( 'rt_product_plugin_sync', 'false' );
 			}
+
 		}
 
 		/**
@@ -59,22 +55,15 @@ if ( ! class_exists( 'rtBiz_Settings_General ' ) ) :
 					'id'    => 'general_options'
 				),
 				array(
-					'title'         => __( 'Product Sync Option', RTBIZ_TEXT_DOMAIN ),
-					'desc'          => __( 'WooCommerce', RTBIZ_TEXT_DOMAIN ),
-					'id'            => 'rtbiz_product_plugin_woo',
-					'default'       => 'no',
-					'type'          => 'checkbox',
-					'checkboxgroup' => 'start',
-					'autoload'      => true
-				),
-				array(
-					'desc'          => __( 'Easy Digital Downloads (EDD)', RTBIZ_TEXT_DOMAIN ),
-					'id'            => 'rtbiz_product_plugin_edd',
-					'default'       => 'no',
-					'type'          => 'checkbox',
-					'checkboxgroup' => 'end',
-					'desc_tip'      => __( 'The option you choose here will define which existing products needs to be taken from either WooCommerce or Easy Digital Downloads and synchronize them with the terms of this special attribute taxonomy Products. So that rtBiz / any other plugin can assign these products to any custom post types that are registered with this taxonomy.', RTBIZ_TEXT_DOMAIN ),
-					'autoload'      => true
+					'title'         => __( 'Connected Store', RTBIZ_HD_TEXT_DOMAIN ),
+					'id'            => 'rtbiz_product_plugin[]',
+					'default'       => '',
+					'type'          => 'multicheckbox',
+					'options'  => array(
+						'woocommerce'  => __( 'woocommerce', RTBIZ_HD_TEXT_DOMAIN ),
+						'edd' => __( 'edd', RTBIZ_HD_TEXT_DOMAIN ),
+					),
+					'autoload'      => true,
 				),
 				array( 'type' => 'sectionend', 'id' => 'general_options' ),
 

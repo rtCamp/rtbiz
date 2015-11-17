@@ -30,8 +30,7 @@ if ( ! class_exists( 'rtBiz_Settings_Migration' ) ) :
 			if ( empty( $flag ) ) {
 				if ( version_compare( RTBIZ_VERSION, '1.4.1', '>=' ) ) {
 					$redux = rtbiz_get_redux_settings();
-					update_option( 'rtbiz_product_plugin_woo', ! empty( $redux['product_plugin']['woocommerce'] ) ? 'yes' : 'no' );
-					update_option( 'rtbiz_product_plugin_edd', ! empty( $redux['product_plugin']['edd'] ) ? 'yes' : 'no' );
+					update_option( 'rtbiz_product_plugin', ! empty( $redux['product_plugin'] ) ? $redux['product_plugin'] : array() );
 				}
 				update_option( 'rtbiz_setting_migration_complete', 'yes' );
 			}

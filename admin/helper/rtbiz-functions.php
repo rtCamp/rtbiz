@@ -742,19 +742,14 @@ function rtbiz_set_redux_setting( $key, $val ) {
 }
 
 function rtbiz_get_product_selection_setting() {
-	$woo    = get_option( 'rtbiz_product_plugin_woo' );
-	$edd    = get_option( 'rtbiz_product_plugin_edd' );
-	$product_filter = array();
+	$product_filter  = get_option( 'rtbiz_product_plugin' );
 	$return= array();
 
-	if ( ! empty( $woo ) && $woo == 'yes' ) {
-		$product_filter['woocommerce'] = '1';
-	} else {
+	if ( ! isset( $product_filter['woocommerce'] ) || empty( $product_filter['woocommerce'] ) ) {
 		$product_filter['woocommerce'] = '0';
 	}
-	if ( ! empty( $edd ) && $edd == 'yes' ) {
-		$product_filter['edd'] = '1';
-	} else {
+
+	if ( ! isset( $product_filter['edd'] ) || empty( $product_filter['edd'] ) ) {
 		$product_filter['edd'] = '0';
 	}
 
@@ -766,8 +761,7 @@ function rtbiz_get_product_selection_setting() {
 			}
 		}
 	}
-
-	return $product_filter;
+	return $return;
 }
 
 /**
