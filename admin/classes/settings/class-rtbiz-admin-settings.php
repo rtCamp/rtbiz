@@ -830,9 +830,9 @@ function rtbiz_help_tip( $tip, $allow_html = false ) {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="rtbiz-tooltip rthd-followup-type-tolltip">
+	return '<span class="rtbiz-tooltip">
 							<i class="dashicons dashicons-info rtmicon"></i>
-							<span class="rtbiz-tip">'.$tip.'
+							<span class="rtbiz-tip-bottom">'.$tip.'
 							</span>';
 //	return '<span class="rtbiz-help-tip" data-tip="' . $tip . '"></span>';
 }
