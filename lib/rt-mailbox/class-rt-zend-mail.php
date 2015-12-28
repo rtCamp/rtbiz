@@ -274,7 +274,16 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$transport->setOptions( $options );
 
 			$message = new Message();
-			$message->addFrom( $fromemail, $fromname );
+			
+			/**
+			 * Filter the from email address.
+			 * @param string $fromemail Actual from email address.
+			 * @param int $post_id Ticket ID.
+			 */
+			$new_fromemail = apply_filters( 'rtlib_from_header', $fromemail, $post_id );
+			
+			$message->addFrom( $new_fromemail, $fromname );
+			
 			if ( ! empty( $email ) ) {
 				$message_id = $reference_id = $in_reply_to = '';
 				if ( 'comment' == $email->refrence_type ) {
@@ -291,8 +300,14 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 				if ( isset( $post_id ) ) {
 					$reference_id = get_post_meta( $post_id, '_rtlib_references', true );
 					$message_id   = rtmb_get_reply_to_from_ref_id( $reference_id );
-
-					$reply_to = apply_filters( 'rtlib_reply_to_header', '', $fromemail, $post_id );
+					
+					/**
+					 * Filter the reply_to email address.
+					 * @param string $fromemail Actual from email address.
+					 * @param int $post_id Ticket ID.
+					 */
+					$reply_to = apply_filters( 'rtlib_reply_to_header', $fromemail, $post_id );
+					
 					if ( ! empty( $reply_to ) ) {
 						$message->addCustomeHeader( 'Reply-To', trim( $reply_to ) );
 					}
