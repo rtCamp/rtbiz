@@ -190,6 +190,9 @@ jQuery(document).ready(function () {
 						},
 						success: function (data) {
 							if (data.status) {
+								if (typeof reload_url !== 'undefined') {
+									window.location.replace(decodeURI(reload_url));
+								}
 								jQuery('#mailbox-' + data.moduleid).remove();
 								if (jQuery('#mailbox-list>.rtmailbox-row').length === 0) {
 									jQuery('#mailbox-list').html('<p>No mailbox Found! Please connect mailbox with helpdesk.</p>');
