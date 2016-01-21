@@ -63,6 +63,13 @@ Great! There are several ways you can get involved to help make Stream better:
 
 == Changelog ==
 
+= 1.5 =
+* Mailbox filters added
+* Logging error updated
+* Term meta migration added and function updated for WordPress 4.4 support
+* Cron updated
+* Email Message id and reference id logic added for mailbox thread
+
 = 1.4 =
 * Mailbox bug fixes
 * Mailbox inline images fix

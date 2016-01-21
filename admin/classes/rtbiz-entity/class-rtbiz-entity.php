@@ -373,14 +373,16 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		public function preprocess_comment_handler( $commentdata ) {
 			// Contact and company comments needed on from end in furture need to remove else condition.
 			if ( is_admin() ) {
+				if (  function_exists( 'get_current_screen' ) ){		
 				$screen = get_current_screen();
-				if ( ( isset( $screen->post_type ) && ( rtbiz_get_contact_post_type() != $screen->post_type && rtbiz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rtbiz_Dashboard::$page_slug ) {
-					$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
-					if ( ! is_array( $types ) ) {
-						$types = array( $types );
+					if ( ( isset( $screen->post_type ) && ( rtbiz_get_contact_post_type() != $screen->post_type && rtbiz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rtbiz_Dashboard::$page_slug ) {
+						$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
+						if ( ! is_array( $types ) ) {
+							$types = array( $types );
+						}
+						$types[]                                 = 'rt_bot';
+						$commentdata->query_vars['type__not_in'] = $types;
 					}
-					$types[]                                 = 'rt_bot';
-					$commentdata->query_vars['type__not_in'] = $types;
 				}
 			} else {
 				$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();
