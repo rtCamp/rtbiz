@@ -274,7 +274,6 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$transport->setOptions( $options );
 
 			$message = new Message();
-			$message->addFrom( $fromemail, $fromname );
 			if ( ! empty( $email ) ) {
 				$message_id = $reference_id = $in_reply_to = '';
 				if ( 'comment' == $email->refrence_type ) {
@@ -344,6 +343,8 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					rtmb_add_message_id_in_ref_id( $new_message_id, $reference_id, $post_id );
 					$message->addCustomeHeader( 'Message-ID', $new_message_id );
 				}
+			} else {
+				$message->addFrom( $fromemail, $fromname );
 			}
 
 			//$mail->setFrom($fromemail);
