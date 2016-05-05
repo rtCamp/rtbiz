@@ -662,7 +662,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 							return $("<li></li>").data("ui-autocomplete-item", item).append("<a class='ac-subscribe-selected'>" + item.imghtml + "&nbsp;" + item.label + "</a>").appendTo(ul);
 						};
 
-						$(document).on("click", "a[href=#deleteContactUser]", function () {
+						$(document).on("click", "a[href='#deleteContactUser']", function () {
 							$(this).parent().remove();
 							jQuery("#contact_meta_userid").val("");
 						});

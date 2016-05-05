@@ -61,7 +61,7 @@ jQuery(document).ready(function ($) {
 				return jQuery('<li></li>').data('ui-autocomplete-item', item).append('<a class="ac-assign-selected">' + item.imghtml + '&nbsp;' + item.label + '</a> ').appendTo(ul);
 			};
 
-			jQuery(document).on('click', 'a[href=#removeAssign]', function (e) {
+			jQuery(document).on('click', "a[href='#removeAssign']", function (e) {
 				e.preventDefault();
 				jQuery(this).parent().remove();
 			});
