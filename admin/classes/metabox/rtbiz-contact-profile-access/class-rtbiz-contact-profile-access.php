@@ -21,11 +21,11 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 			}
 			$user = rtbiz_get_wp_user_for_contact( $post->ID );
 			if ( empty( $user ) ) {
-				_e( 'You can not change Helpdesk role until User is not connected with this customer/staff.', RTBIZ_TEXT_DOMAIN );
+				_e( 'You can not change Helpdesk role until User is not connected with this customer/staff.', 'rtbiz' );
 				return;
 			}
 			if ( isset( $user[0]->roles ) && in_array( 'administrator', $user[0]->roles ) ) {
-				_e( "Admin have full access for all plugins. You can't change it", RTBIZ_TEXT_DOMAIN );
+				_e( "Admin have full access for all plugins. You can't change it", 'rtbiz' );
 
 				return;
 			} ?>
@@ -33,7 +33,7 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 				<?php $selected = ( ( isset( $is_staff_member ) && 'yes' == $is_staff_member ) || ( ! empty( $_GET['contact_group'] ) && 'staff' == $_GET['contact_group'] ) ) ? 'Checked="Checked"' : ''; ?>
 				<label><input type="checkbox" id="rtbiz_is_staff_member" <?php echo $selected; ?>
 				              name="rtbiz_is_staff_member" value="yes"><span
-						class="checkbox-title"><?php _e( 'Staff Member ', RTBIZ_TEXT_DOMAIN ) ?></span></label>
+						class="checkbox-title"><?php _e( 'Staff Member ', 'rtbiz' ) ?></span></label>
 			</div>
 			<?php $class = ( 'Checked="Checked"' == $selected ) ? '' : 'rtbiz-hide'; ?>
 			<div id="rtbiz-permission-container" class="<?php echo $class; ?>">
