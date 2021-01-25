@@ -160,7 +160,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 					<tbody>
 					<tr class="form-field">
 						<th scope="row" valign="top"><label
-								for="term_meta[email_address]"><?php _e( 'Email Address', RTBIZ_TEXT_DOMAIN ); ?></label>
+								for="term_meta[email_address]"><?php _e( 'Email Address', 'rtbiz' ); ?></label>
 						</th>
 						<td>
 							<input type="text" name="<?php echo esc_attr( self::$slug ); ?>[email_address]"
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 		 * add view action for Team
 		 */
 		function row_actions( $actions, $term ) {
-			$actions['view'] = sprintf( __( '%sView%s', RTBIZ_TEXT_DOMAIN ), '<a href="' . esc_url( add_query_arg( array( self::$slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
+			$actions['view'] = sprintf( __( '%sView%s', 'rtbiz' ), '<a href="' . esc_url( add_query_arg( array( self::$slug => $term->slug ) ), admin_url( 'users.php' ) ) . '">', '</a>' );
 
 			return $actions;
 		}
@@ -253,9 +253,9 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 
 			unset( $columns['posts'], $columns['slug'] );
 
-			$columns['contacts'] = __( 'Staff', RTBIZ_TEXT_DOMAIN );
-			//			$columns['color']         = __( 'Color', RTBIZ_TEXT_DOMAIN );
-			$columns['email_address'] = __( 'Email Address', RTBIZ_TEXT_DOMAIN );
+			$columns['contacts'] = __( 'Staff', 'rtbiz' );
+			//			$columns['color']         = __( 'Color', 'rtbiz' );
+			$columns['email_address'] = __( 'Email Address', 'rtbiz' );
 
 			return $columns;
 		}

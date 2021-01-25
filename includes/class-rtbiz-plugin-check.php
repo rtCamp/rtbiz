@@ -55,12 +55,12 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 		public function rtbiz_install_plugin_ajax() {
 
 			if ( empty( $_POST['plugin_slug'] ) ) {
-				die( __( 'ERROR: No slug was passed to the AJAX callback.', RTBIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rtbiz' ) );
 			}
 			check_ajax_referer( 'rtbiz_install_plugin_' . $_POST['plugin_slug'] );
 
 			if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
-				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', RTBIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: You lack permissions to install and/or activate plugins.', 'rtbiz' ) );
 			}
 			$this->rtbiz_install_plugin( $_POST['plugin_slug'] );
 
@@ -77,7 +77,7 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 			) );
 
 			if ( is_wp_error( $api ) ) {
-				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', RTBIZ_TEXT_DOMAIN ), $api->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'rtbiz' ), $api->get_error_message() ) );
 			}
 
 			if ( ! class_exists( 'Plugin_Upgrader' ) ) {
@@ -98,18 +98,18 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 			if ( ! $install_result || is_wp_error( $install_result ) ) {
 				// $install_result can be false if the file system isn't writeable.
-				$error_message = __( 'Please ensure the file system is writeable', RTBIZ_TEXT_DOMAIN );
+				$error_message = __( 'Please ensure the file system is writeable', 'rtbiz' );
 
 				if ( is_wp_error( $install_result ) ) {
 					$error_message = $install_result->get_error_message();
 				}
 
-				die( sprintf( __( 'ERROR: Failed to install plugin: %s', RTBIZ_TEXT_DOMAIN ), $error_message ) );
+				die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'rtbiz' ), $error_message ) );
 			}
 
 			$activate_result = activate_plugin( $this->rtbiz_get_path_for_plugin( $plugin_slug ) );
 			if ( is_wp_error( $activate_result ) ) {
-				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RTBIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'rtbiz' ), $activate_result->get_error_message() ) );
 			}
 		}
 
@@ -122,12 +122,12 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 		function rtbiz_activate_plugin_ajax() {
 			if ( empty( $_POST['path'] ) ) {
-				die( __( 'ERROR: No slug was passed to the AJAX callback.', RTBIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: No slug was passed to the AJAX callback.', 'rtbiz' ) );
 			}
 			check_ajax_referer( 'rtbiz_activate_plugin_' . $_POST['path'] );
 
 			if ( ! current_user_can( 'activate_plugins' ) ) {
-				die( __( 'ERROR: You lack permissions to activate plugins.', RTBIZ_TEXT_DOMAIN ) );
+				die( __( 'ERROR: You lack permissions to activate plugins.', 'rtbiz' ) );
 			}
 
 			$this->rtbiz_activate_plugin( $_POST['path'] );
@@ -140,7 +140,7 @@ if ( ! class_exists( 'RtBiz_Plugin_Check' ) ) {
 
 			$activate_result = activate_plugin( $plugin_path );
 			if ( is_wp_error( $activate_result ) ) {
-				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', RTBIZ_TEXT_DOMAIN ), $activate_result->get_error_message() ) );
+				die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'rtbiz' ), $activate_result->get_error_message() ) );
 			}
 		}
 

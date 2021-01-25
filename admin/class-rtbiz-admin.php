@@ -122,7 +122,7 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 							$submenu[ Rtbiz_Dashboard::$page_slug ][ $new_index ] = $menu_item;
 
 							if ( Rtbiz_Dashboard::$page_slug == $item ) {
-								$submenu[ Rtbiz_Dashboard::$page_slug ][ $new_index ][0] = __( 'Dashboard', RTBIZ_TEXT_DOMAIN );
+								$submenu[ Rtbiz_Dashboard::$page_slug ][ $new_index ][0] = __( 'Dashboard', 'rtbiz' );
 							}
 
 							unset( $module_menu[ $p_key ] );
@@ -183,17 +183,17 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 		}
 
 		public function plugin_action_links( $links ) {
-			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Get Started', RTBIZ_TEXT_DOMAIN ) . '</a>';
-			$links['settings']    = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', RTBIZ_TEXT_DOMAIN ) . '</a>';
+			$links['get-started'] = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Get Started', 'rtbiz' ) . '</a>';
+			$links['settings']    = '<a href="' . admin_url( 'admin.php?page=' . Rtbiz_Dashboard::$page_slug ) . '">' . __( 'Settings', 'rtbiz' ) . '</a>';
 
 			return $links;
 		}
 
 		public function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
 			if ( RTBIZ_BASE_NAME == $plugin_file ) {
-				$plugin_meta[] = '<a href="' . 'http://docs.rtcamp.com/rtbiz/' . '">' . __( 'Documentation', RTBIZ_TEXT_DOMAIN ) . '</a>';
-				//$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', RTBIZ_TEXT_DOMAIN ) . '</a>';
-				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/premium-support/' . '">' . __( 'Support', RTBIZ_TEXT_DOMAIN ) . '</a>';
+				$plugin_meta[] = '<a href="' . 'http://docs.rtcamp.com/rtbiz/' . '">' . __( 'Documentation', 'rtbiz' ) . '</a>';
+				//$plugin_meta[] = '<a href="' . 'https://rtcamp.com/rtbiz/faq' . '">' . __( 'FAQ', 'rtbiz' ) . '</a>';
+				$plugin_meta[] = '<a href="' . 'https://rtcamp.com/premium-support/' . '">' . __( 'Support', 'rtbiz' ) . '</a>';
 			}
 
 			return $plugin_meta;

@@ -374,7 +374,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function wp_user_not_connected() {
 			?>
 			<div class="error">
-				<p><?php _e( 'There is no Wordpress User with primary email.', RTBIZ_TEXT_DOMAIN ); ?></p>
+				<p><?php _e( 'There is no Wordpress User with primary email.', 'rtbiz' ); ?></p>
 			</div>
 			<?php
 		}
@@ -382,7 +382,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function primary_email_empty() {
 			?>
 			<div class="error">
-				<p><?php _e( 'Primary email is necessary.', RTBIZ_TEXT_DOMAIN ); ?></p>
+				<p><?php _e( 'Primary email is necessary.', 'rtbiz' ); ?></p>
 			</div>
 			<?php
 		}
@@ -390,7 +390,7 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 		function primary_email_not_unique() {
 			?>
 			<div class="error">
-				<p><?php _e( 'Primary email is required to be unique.', RTBIZ_TEXT_DOMAIN ); ?></p>
+				<p><?php _e( 'Primary email is required to be unique.', 'rtbiz' ); ?></p>
 			</div>
 			<?php
 		}

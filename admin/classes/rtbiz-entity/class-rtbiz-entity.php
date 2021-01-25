@@ -342,16 +342,16 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 			$singular                     = $this->labels['singular_name'];
 			$messages[ $this->post_type ] = array(
 				0  => '', // Unused. Messages start at index 1.
-				1  => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
-				2  => __( 'Custom field updated.', RTBIZ_TEXT_DOMAIN ),
-				3  => __( 'Custom field deleted.', RTBIZ_TEXT_DOMAIN ),
-				4  => __( $singular . ' updated.', RTBIZ_TEXT_DOMAIN ),
+				1  => __( $singular . ' updated.', 'rtbiz' ),
+				2  => __( 'Custom field updated.', 'rtbiz' ),
+				3  => __( 'Custom field deleted.', 'rtbiz' ),
+				4  => __( $singular . ' updated.', 'rtbiz' ),
 				/* translators: %s: date and time of the revision */
-				5  => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', RTBIZ_TEXT_DOMAIN ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-				6  => __( $singular . ' published.', RTBIZ_TEXT_DOMAIN ),
-				7  => __( $singular . ' saved.', RTBIZ_TEXT_DOMAIN ),
-				8  => __( $singular . ' submitted.', RTBIZ_TEXT_DOMAIN ),
-				10 => __( $singular . ' draft updated.', RTBIZ_TEXT_DOMAIN ),
+				5  => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s', 'rtbiz' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6  => __( $singular . ' published.', 'rtbiz' ),
+				7  => __( $singular . ' saved.', 'rtbiz' ),
+				8  => __( $singular . ' submitted.', 'rtbiz' ),
+				10 => __( $singular . ' draft updated.', 'rtbiz' ),
 			);
 
 			return $messages;
@@ -373,7 +373,7 @@ if ( ! class_exists( 'Rtbiz_Entity' ) ) {
 		public function preprocess_comment_handler( $commentdata ) {
 			// Contact and company comments needed on from end in furture need to remove else condition.
 			if ( is_admin() ) {
-				if (  function_exists( 'get_current_screen' ) ){		
+				if (  function_exists( 'get_current_screen' ) ){
 				$screen = get_current_screen();
 					if ( ( isset( $screen->post_type ) && ( rtbiz_get_contact_post_type() != $screen->post_type && rtbiz_get_company_post_type() != $screen->post_type ) ) && $screen->id != Rtbiz_Dashboard::$page_slug ) {
 						$types = isset( $commentdata->query_vars['type__not_in'] ) ? $commentdata->query_vars['type__not_in'] : array();

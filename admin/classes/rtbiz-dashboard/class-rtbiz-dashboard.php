@@ -117,24 +117,24 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$contact_labels = rtbiz_get_contact_labels();
 			//$contact_group_labels = rtbiz_get_contact_group_labels();
 
-			add_meta_box( 'rtbiz-activity', __( $menu_label . ' Activity', RTBIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-activity', __( $menu_label . ' Activity', 'rtbiz' ), array(
 				$this,
 				'dashboard_site_activity',
 			), $this->screen_id, 'column1' );
 
-			add_meta_box( 'rtbiz-team-by-contacts', $contact_labels['name'] . ' ' . __( 'by Team', RTBIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-team-by-contacts', $contact_labels['name'] . ' ' . __( 'by Team', 'rtbiz' ), array(
 				$this,
 				'team_by_contacts',
 			), $this->screen_id, 'column2' );
 
-			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', RTBIZ_TEXT_DOMAIN ) . ' ' . $contact_group_labels['name'], array(
+			/*add_meta_box( 'rtbiz-contact-type-by-contacts', $contact_labels['name'] . ' ' . __( 'by', 'rtbiz' ) . ' ' . $contact_group_labels['name'], array(
 				$this,
 				'contact_type_wise_contacts'
 			), $this->screen_id, 'column3' );*/
 
 			//todo: product move into rtbiz
 			//			if ( isset( $settings['product_plugin'] ) && 'none' != $settings['product_plugin'] ) {
-			add_meta_box( 'rtbiz-product-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Products', RTBIZ_TEXT_DOMAIN ), array(
+			add_meta_box( 'rtbiz-product-wise-contacts', $contact_labels['name'] . ' ' . __( 'by Products', 'rtbiz' ), array(
 				$this,
 				'product_wise_contacts',
 			), $this->screen_id, 'column5' );
@@ -335,7 +335,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$taxonomy    = Rtbiz_Teams::$slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Team', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Team', 'rtbiz' ), __( 'Count', 'rtbiz' ) );
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
@@ -385,7 +385,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$taxonomy    = Rtbiz_Contact::$user_category_taxonomy;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Contacts type', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Contacts type', 'rtbiz' ), __( 'Count', 'rtbiz' ) );
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
@@ -429,7 +429,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$taxonomy    = Rt_Products::$product_slug;
 			$terms       = get_terms( $taxonomy );
 			$data_source = array();
-			$cols        = array( __( 'Products', RTBIZ_TEXT_DOMAIN ), __( 'Count', RTBIZ_TEXT_DOMAIN ) );
+			$cols        = array( __( 'Products', 'rtbiz' ), __( 'Count', 'rtbiz' ) );
 			$rows        = array();
 			$post_type   = rtbiz_get_contact_post_type();
 			$total       = 0;
@@ -651,7 +651,7 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 						rtbiz_updateWelcomePanel(this.checked ? 1 : 0);
 					});
 
-					$('#screen-options-wrap #adv-settings .metabox-prefs').append("<label for='rtbiz_welcome_panel-hide'><input type='checkbox' id='rtbiz_welcome_panel-hide' value='rtbiz-welcome-panel' <?php echo checked( (bool) $welcome_checked, true, false ); ?> /><?php _e( 'Welcome', RTBIZ_TEXT_DOMAIN ); ?></label>");
+					$('#screen-options-wrap #adv-settings .metabox-prefs').append("<label for='rtbiz_welcome_panel-hide'><input type='checkbox' id='rtbiz_welcome_panel-hide' value='rtbiz-welcome-panel' <?php echo checked( (bool) $welcome_checked, true, false ); ?> /><?php _e( 'Welcome', 'rtbiz' ); ?></label>");
 				});
 			</script> <?php
 		}
