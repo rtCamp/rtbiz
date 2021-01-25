@@ -12,8 +12,6 @@ $author_cap = rtbiz_get_access_role_cap( RTBIZ_TEXT_DOMAIN, 'author' );
 ?>
 <div class="wrap">
 
-	<?php screen_icon(); ?>
-
 	<h2><?php echo $menu_label . ' ' . __( 'Dashboard' ); ?></h2>
 
 	<?php
