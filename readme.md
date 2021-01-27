@@ -4,13 +4,13 @@
 ![Banner](assets/banner-1544x500.png)
 rtBiz - WordPress 4 Business!
 
-**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya)  
-**Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email+parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user+groups), [access control](https://wordpress.org/plugins/tags/access+control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)  
-**Requires at least:** 4.1  
-**Tested up to:** 4.5.1  
-**Stable tag:** 1.4.2  
-**License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
-**Donate Link:** http://rtcamp.com/donate  
+**Contributors:** [rtcamp](https://profiles.wordpress.org/rtcamp), [rahul286](https://profiles.wordpress.org/rahul286), [dipesh.kakadiya](https://profiles.wordpress.org/dipesh.kakadiya), [utkarshpatel](https://profiles.wordpress.org/utkarshpatel), [desaiuditd](https://profiles.wordpress.org/desaiuditd), [faishal](https://profiles.wordpress.org/faishal), [pareshradadiya](https://profiles.wordpress.org/pareshradadiya), [vaishu.agola27] (https://profiles.wordpress.org/vaishuagola27/), [pooja1210] (https://profiles.wordpress.org/pooja1210/), [milindmore22](https://profiles.wordpress.org/milindmore22)
+**Tags:** [contacts](https://wordpress.org/plugins/tags/contacts), [companies](https://wordpress.org/plugins/tags/companies), [people management](https://wordpress.org/plugins/tags/people management), [business](https://wordpress.org/plugins/tags/business), [email parsing](https://wordpress.org/plugins/tags/email+parsing), [attributes](https://wordpress.org/plugins/tags/attributes), [user groups](https://wordpress.org/plugins/tags/user+groups), [access control](https://wordpress.org/plugins/tags/access+control), [acl](https://wordpress.org/plugins/tags/acl), [wordpress](https://wordpress.org/plugins/tags/wordpress)
+**Requires at least:** 4.1
+**Tested up to:** 5.6
+**Stable tag:** 1.4.3
+**License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)
+**Donate Link:** http://rtcamp.com/donate
 
 ## Description ##
 
@@ -89,6 +89,11 @@ Please refer to the documentation.
 ![Departments](assets/screenshot-7.png)
 
 ## Changelog ##
+
+### 1.4.3 ###
+* Removed deprecated function screen_icon.
+* Compatibility testing with 5.6
+* Change Text Domain
 
 ### 1.4.2 ###
 * Fixed - JS issue with WordPress 4.5
@@ -306,7 +311,10 @@ Please refer to the documentation.
 
 ## Upgrade Notice ##
 
-None.
+### 1.4.3 ###
+* Removed deprecated function screen_icon.
+* Compatibility testing with 5.6
+* Change Text Domain
 
 ## Does this interest you?
 
