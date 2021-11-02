@@ -152,7 +152,7 @@ if ( ! class_exists( 'Rtbiz' ) ) {
 			 * core plugin.
 			 */
 			require_once RTBIZ_PATH . 'admin/helper/rtbiz-functions.php';
-			require_once RTBIZ_PATH . 'vendor/redux/ReduxCore/framework.php';
+			require_once RTBIZ_PATH . 'vendor/redux/redux-core/framework.php';
 
 			new RT_WP_Autoload( RTBIZ_PATH . 'includes/' );
 			new RT_WP_Autoload( RTBIZ_PATH . 'admin/' );
