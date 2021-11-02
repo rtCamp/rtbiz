@@ -1,50 +1,42 @@
-<?php
+<?php // phpcs:ignore Squiz.Commenting.FileComment.Missing
 /**
- * The Redux Framework Plugin
- *
- * A simple, truly extensible and fully responsive options framework
+ * Redux, a simple, truly extensible and fully responsive option framework
  * for WordPress themes and plugins. Developed with WordPress coding
  * standards and PHP best practices in mind.
  *
- * Plugin Name:     Redux Framework
- * Plugin URI:      http://wordpress.org/plugins/redux-framework
- * Github URI:      https://github.com/ReduxFramework/redux-framework
- * Description:     Redux is a simple, truly extensible options framework for WordPress themes and plugins.
- * Author:          Team Redux
- * Author URI:      http://reduxframework.com
- * Version:         3.5.8.1
- * Text Domain:     redux-framework
- * License:         GPL3+
- * License URI:     http://www.gnu.org/licenses/gpl-3.0.txt
- * Domain Path:     ReduxCore/languages
- * Provides:        ReduxFramework
+ * Plugin Name:         Redux
+ * Plugin URI:          http://wordpress.org/plugins/redux-framework
+ * GitHub URI:          reduxframework/redux-framework
+ * Description:         Build better sites in WordPress fast!
+ * Version:             4.3.1.1
+ * Requires at least:   4.0
+ * Requires PHP:        7.1
+ * Author:              Extendify
+ * Author URI:          https://extendify.com
+ * License:             GPLv3 or later
+ * License URI:         http://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:         redux-framework
+ * Provides:            ReduxFramework
  *
- * @package         ReduxFramework
- * @author          Dovy Paukstys <dovy@reduxframework.com>
- * @author          Kevin Provance <kevin@reduxframework.com>
- * @author          Daniel J Griffiths <ghost1227@reduxframework.com>
- * @license         GNU General Public License, version 3
- * @copyright       2012-2015 Redux Framework
+ * @package             ReduxFramework
+ * @author              Extendify
+ * @license             GNU General Public License, version 3
+ * @copyright           2012-2021 Redux.io
  */
 
-// Exit if accessed directly
-if( !defined( 'ABSPATH' ) ) {
-    die;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( ! defined( 'REDUX_PLUGIN_FILE' ) ) {
+	define( 'REDUX_PLUGIN_FILE', __FILE__ );
 }
 
-// Require the main plugin class
-require_once plugin_dir_path( __FILE__ ) . 'class.redux-plugin.php';
+// Require the main plugin class.
+require_once plugin_dir_path( __FILE__ ) . 'class-redux-framework-plugin.php';
 
 // Register hooks that are fired when the plugin is activated and deactivated, respectively.
-register_activation_hook( __FILE__, array( 'ReduxFrameworkPlugin', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'ReduxFrameworkPlugin', 'deactivate' ) );
+register_activation_hook( __FILE__, array( 'Redux_Framework_Plugin', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Redux_Framework_Plugin', 'deactivate' ) );
 
-// Get plugin instance
-//add_action( 'plugins_loaded', array( 'ReduxFrameworkPlugin', 'instance' ) );
-
-// The above line prevents ReduxFramework from instancing until all plugins have loaded.
-// While this does not matter for themes, any plugin using Redux will not load properly.
-// Waiting until all plugins have been loaded prevents the ReduxFramework class from
-// being created, and fails the !class_exists('ReduxFramework') check in the sample_config.php,
-// and thus prevents any plugin using Redux from loading their config file.
-ReduxFrameworkPlugin::instance();
+// Get plugin instance.
+Redux_Framework_Plugin::instance();
