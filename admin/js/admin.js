@@ -5,6 +5,9 @@
  */
 
 jQuery(document).ready(function ($) {
+
+	const { rtbiz_dashboard_screen, rtbiz_ajax_url_admin, rtbiz_menu_url } = rtbiz_data;
+
 	/**
 	 * WordPress Menu Hack for Teams Menu Page ( Taxonomy Page )
 	 */
