@@ -263,7 +263,7 @@ if ( ! class_exists( 'Rtbiz_Setting' ) ) {
 				// Show the panel pages on the admin bar
 				'global_variable'    => '',
 				// Set a different name for your global variable other than the opt_name
-				'dev_mode'           => false,
+				'dev_mode'           => Redux_Helpers::is_wp_debug() || Redux_Helpers::is_local_host(),
 				// Show the time the page took to load, etc
 				'customizer'         => false,
 				// Enable basic customizer support
