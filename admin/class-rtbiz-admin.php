@@ -338,6 +338,12 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 				'jquery-ui-widget',
 				'jquery-ui-position'
 			), '1.9.2', true );
+			
+			wp_enqueue_script( 'jquery-ui-progressbar', '', array(
+				'jquery-ui-widget',
+				'jquery-ui-position'
+			), '1.9.2', true );
+			
 			wp_enqueue_style( 'wp-jquery-ui-custom', RTBIZ_URL . 'admin/css/jquery-ui-1.9.2.custom.css' );
 			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . 'admin-js', RTBIZ_URL . 'admin/js/admin.js', array( 'jquery' ), RTBIZ_VERSION, true );
 			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . 'validation-js', RTBIZ_URL . 'admin/js/validation.js', array( 'jquery' ), RTBIZ_VERSION, true );
