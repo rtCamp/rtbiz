@@ -712,8 +712,8 @@ if ( ! class_exists( 'Rtbiz_Contact' ) ) {
 
 						$(this).prev().val('');
 
-						$(this).after("<button type='button' class='button delete-multiple'> - </button>");
-						$(this).after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
+						$(this).next().next().after("<button type='button' class='button delete-multiple'> - </button>");
+						$(this).next().next().after("<input type='text' name='" + name + "' value='" + tempVal + "' class='input-multiple' />");
 					});
 				});
 			</script>
