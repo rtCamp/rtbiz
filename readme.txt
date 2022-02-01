@@ -1,10 +1,10 @@
 === rtBiz ===
-Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, faishal, pareshradadiya, vaishu.agola27, pooja1210, milindmore22
+Contributors:      rtcamp, rahul286, dipesh.kakadiya, utkarshpatel, desaiuditd, faishal, pareshradadiya, vaishu.agola27, pooja1210, milindmore22,delowardev
 Donate Link:       http://rtcamp.com/donate
 Tags:              contacts, companies, people management, business, email parsing, attributes, user groups, access control, acl, wordpress
 Requires at least: 4.1
-Tested up to:      5.7
-Stable tag:        1.4.3
+Tested up to:      5.9
+Stable tag:        1.4.4
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Please refer to the documentation.
 7. Departments
 
 == Changelog ==
+
+= 1.4.4 =
+* Fixed PHP Warnings
+* Compatible with WordPress 5.9
 
 = 1.4.3 =
 * Removed deprecated function screen_icon.
