@@ -124,7 +124,6 @@
 
 p.rtbiz-form-group {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
       -ms-flex: 1 50%;
           flex: 1 50%;
   max-width: 50%;
@@ -137,12 +136,10 @@ p.rtbiz-form-group.rtbiz-form-checkbox label {
 
 .rtbiz-category-group {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: row wrap;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
 }
 
 p.rtbiz-form-group label {
@@ -161,5 +158,4 @@ p.rtbiz-form-group label {
 #rtbiz-additional-detail-meta-box div h3.rtbiz-category-title {
   padding-left: 0;
 }
-
 /*# sourceMappingURL=biz-admin.css.map */
