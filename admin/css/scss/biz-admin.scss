@@ -26,63 +26,9 @@
   margin-bottom: 10px;
 }
 
-#rtbiz-welcome-panel.welcome-panel {
-  background: #fff;
-  padding: 23px 10px;
-  border: 1px solid #c3c4c7;
-  overflow: hidden;
-
-  &::before {
-    background: none;
-  }
-
-  .welcome-panel-close {
-    color: #2271b1;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px 15px 10px 21px;
-    font-size: 13px;
-    line-height: 1.23076923;
-    text-decoration: none;
-
-    &::before {
-      top: auto;
-      background: none;
-      color: #bbb;
-      content: "\f153";
-      display: block !important;
-      font: normal 16px/1 "dashicons";
-      height: 20px;
-      text-align: center;
-      width: 20px;
-      -webkit-font-smoothing: antialiased !important;
-    }
-
-    &:hover::before {
-      color: #c00;
-    }
-  }
-
-  .welcome-panel-content {
-    display: block;
-    min-height: auto;
-
-    .about-description {
-      color: #646970;
-    }
-  }
-
-  .welcome-panel-column-container {
-    padding: 0;
-  }
-
+#rtbiz-welcome-panel {
   .welcome-panel-column {
     display: block;
-  }
-
-  .button.button-hero {
-    margin-top: 0;
   }
 }
 
