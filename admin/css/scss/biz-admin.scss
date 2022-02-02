@@ -3,7 +3,7 @@
   display: block;
   float: right;
   text-align: center;
-  color: #FFF;
+  color: #fff;
   background-color: #000;
   border-radius: 100%;
   padding: 0 5px;
@@ -26,29 +26,64 @@
   margin-bottom: 10px;
 }
 
-#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-  position: absolute;
-  left: -18px;
-  margin-top: -2px;
-  -webkit-transition: all .1s ease-in-out;
-  transition: all .1s ease-in-out;
-}
+#rtbiz-welcome-panel.welcome-panel {
+  background: #fff;
+  padding: 23px 10px;
+  border: 1px solid #c3c4c7;
+  overflow: hidden;
 
-#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-  background: none;
-  color: #bbb;
-  content: '\f153';
-  display: block !important;
-  font: normal 16px/1 'dashicons';
-  speak: none;
-  height: 20px;
-  text-align: center;
-  width: 20px;
-  -webkit-font-smoothing: antialiased !important;
-}
+  &::before {
+    background: none;
+  }
 
-#rtbiz-welcome-panel.welcome-panel .welcome-panel-close:hover:before {
-  color: #c00;
+  .welcome-panel-close {
+    color: #2271b1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 15px 10px 21px;
+    font-size: 13px;
+    line-height: 1.23076923;
+    text-decoration: none;
+
+    &::before {
+      top: auto;
+      background: none;
+      color: #bbb;
+      content: "\f153";
+      display: block !important;
+      font: normal 16px/1 "dashicons";
+      height: 20px;
+      text-align: center;
+      width: 20px;
+      -webkit-font-smoothing: antialiased !important;
+    }
+
+    &:hover::before {
+      color: #c00;
+    }
+  }
+
+  .welcome-panel-content {
+    display: block;
+    min-height: auto;
+
+    .about-description {
+      color: #646970;
+    }
+  }
+
+  .welcome-panel-column-container {
+    padding: 0;
+  }
+
+  .welcome-panel-column {
+    display: block;
+  }
+
+  .button.button-hero {
+    margin-top: 0;
+  }
 }
 
 .rtbiz-validation-error {
@@ -63,7 +98,8 @@
   color: green;
 }
 
-.contact-list img, .ac-assign-selected img {
+.contact-list img,
+.ac-assign-selected img {
   border-radius: 12px;
 }
 
@@ -71,8 +107,8 @@
 @media screen and (max-width: 600px) {
   /* Make the close icon larger for tappability. */
   #rtbiz-welcome-panel.welcome-panel .welcome-panel-close:before {
-	font-size: 20px;
-	margin: 0;
+    font-size: 20px;
+    margin: 0;
   }
 }
 
@@ -110,7 +146,8 @@
   color: green;
 }
 
-#rtbiz-contact-importer-bar, .contact-update {
+#rtbiz-contact-importer-bar,
+.contact-update {
   margin-top: 10px;
 }
 
@@ -147,7 +184,8 @@ p.rtbiz-form-group label {
   width: auto;
 }
 
-.rtbiz-form-group input, .rtbiz-form-group textarea {
+.rtbiz-form-group input,
+.rtbiz-form-group textarea {
   width: 80%;
 }
 
