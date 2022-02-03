@@ -1,4 +1,6 @@
 'use strict';
+const sass = require('node-sass');
+
 module.exports = function ( grunt ) {
 
 	// load all grunt tasks matching the `grunt-*` pattern
@@ -21,6 +23,7 @@ module.exports = function ( grunt ) {
 		sass: {
 			dist: {
 				options: {
+					implementation: sass,
 					style: 'expanded'
 				},
 				files: {
