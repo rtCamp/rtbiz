@@ -60,7 +60,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 
 			$this->post_types = $post_types;
 
-			$this->isSync = ( $this->is_woocommerce_active() ) ? true : ( $this->is_edd_active() ) ? true : false;
+			$this->isSync = ( $this->is_woocommerce_active() ) ? true : ( ( $this->is_edd_active() ) ? true : false );
 
 			$this->caps = $cap;
 
