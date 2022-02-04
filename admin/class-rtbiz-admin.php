@@ -316,22 +316,38 @@ if ( ! class_exists( 'Rtbiz_Admin' ) ) {
 
 			global $post;
 
+			$data = [
+				'rtbiz_ajax_url_admin' => admin_url( 'admin-ajax.php' )
+			];
+
 			// Taxonomy menu hack for rtBiz
 			if ( isset( $_REQUEST['taxonomy'] ) && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
 					rtbiz_get_contact_post_type(),
 					rtbiz_get_company_post_type()
 				) )
 			) {
-				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_dashboard_screen', Rtbiz_Dashboard::$page_slug );
-				wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_menu_url', admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] ) );
+				$data[ 'rtbiz_dashboard_screen' ] = Rtbiz_Dashboard::$page_slug;
+				$data[ 'rtbiz_menu_url' ]         = admin_url( 'edit-tags.php?taxonomy=' . $_REQUEST['taxonomy'] . '&post_type=' . $_REQUEST['post_type'] );
 			}
 
 			wp_enqueue_script( 'jquery-ui-autocomplete', '', array(
 				'jquery-ui-widget',
 				'jquery-ui-position'
 			), '1.9.2', true );
+			wp_enqueue_script( 'jquery-ui-datepicker', '', array(
+				'jquery-ui-widget',
+				'jquery-ui-position'
+			), '1.9.2', true );
+			
+			wp_enqueue_script( 'jquery-ui-progressbar', '', array(
+				'jquery-ui-widget',
+				'jquery-ui-position'
+			), '1.9.2', true );
+			
+			wp_enqueue_style( 'wp-jquery-ui-custom', RTBIZ_URL . 'admin/css/jquery-ui-1.9.2.custom.css' );
 			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . 'admin-js', RTBIZ_URL . 'admin/js/admin.js', array( 'jquery' ), RTBIZ_VERSION, true );
-			wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_ajax_url_admin', admin_url( 'admin-ajax.php' ) );
+			wp_enqueue_script( RTBIZ_TEXT_DOMAIN . 'validation-js', RTBIZ_URL . 'admin/js/validation.js', array( 'jquery' ), RTBIZ_VERSION, true );
+			wp_localize_script( RTBIZ_TEXT_DOMAIN . 'admin-js', 'rtbiz_data', $data );
 
 		}
 
