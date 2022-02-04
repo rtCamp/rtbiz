@@ -561,21 +561,23 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 			$company_labels = rtbiz_get_company_labels();
 			//$contact_group_labels = rtbiz_get_contact_group_labels(); ?>
 			<div class="welcome-panel-content">
-				<h3><?php _e( 'Welcome to ' . $welcome_label ); ?></h3>
+				<div class="welcome-panel-header">
+					<h2><?php _e( 'Welcome to ' . $welcome_label ); ?></h3>
 
-				<p class="about-description"><?php _e( 'We&#8217;ve assembled some links to get you started:' ); ?></p>
+					<p class="about-description"><?php _e( 'We&#8217;ve assembled some links to get you started:' ); ?></p>
+				</div>
 
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
 						<?php if ( current_user_can( $editor_cap ) ) : ?>
-							<h4><?php _e( 'Get Started' ); ?></h4>
+							<h3><?php _e( 'Get Started' ); ?></h3>
 							<a id="rtbiz-customize-biz" class="button button-primary button-hero"
-							   href="<?php echo admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ); ?>"><?php echo $welcome_label . ' ' . __( 'Settings' ); ?></a>
+							href="<?php echo admin_url( 'admin.php?page=' . Rtbiz_Setting::$page_slug ); ?>"><?php echo $welcome_label . ' ' . __( 'Settings' ); ?></a>
 						<?php endif; ?>
 						<?php do_action( 'rtbiz_welcome_panel_addon_link' ); ?>
 					</div>
 					<div class="welcome-panel-column">
-						<h4><?php _e( 'Next Steps' ); ?></h4>
+						<h3><?php _e( 'Next Steps' ); ?></h3>
 						<ul><?php
 							if ( current_user_can( $editor_cap ) ) {
 								$rtbiz_setting_url = admin_url( 'admin.php?page=rt-biz-settings' );
@@ -592,8 +594,8 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 						</ul>
 					</div>
 
-					<div class="welcome-panel-column welcome-panel-last">
-						<h4><?php _e( 'Quick Actions' ); ?></h4>
+					<div class="welcome-panel-column">
+						<h3><?php _e( 'Quick Actions' ); ?></h3>
 						<ul>
 							<?php if ( current_user_can( $editor_cap ) ) { ?>
 								<li><?php printf( '<a id="rtiz-add-contact" href="%s" class="welcome-icon welcome-admin-users">' . __( 'Add new' ) . ' ' . $contact_labels['singular_name'] . '</a>', admin_url( 'post-new.php?post_type=' . rtbiz_get_contact_post_type() ) ); ?></li>
@@ -608,7 +610,8 @@ if ( ! class_exists( 'Rtbiz_Dashboard' ) ) {
 						</ul>
 					</div>
 				</div>
-			</div> <?php
+			</div>
+			<?php
 		}
 
 		public function print_dashboard_js() {
