@@ -1,18 +1,28 @@
 {
 	"name": "Helpdesk",
 	"dependencies": {
-		"grunt-sass": "^3.1.0",
+		"autoprefixer": "^10.4.20",
+		"grunt-postcss": "^0.9.0",
 		"load-grunt-tasks": "~0.2.1",
-		"node-sass": "^7.0.1"
+		"postcss": "^8.5.3"
 	},
 	"devDependencies": {
-		"grunt": "^0.4.5",
-		"grunt-autoprefixer": "^3.0.0",
-		"grunt-browser-sync": "^2.1.3",
-		"grunt-contrib-cssmin": "^0.12.3",
-		"grunt-contrib-jshint": "^0.11.2",
-		"grunt-contrib-uglify": "^0.9.1",
-		"grunt-contrib-watch": "^0.6.1",
-		"load-grunt-tasks": "^3.2.0"
+		"grunt": "^1.6.1",
+		"grunt-contrib-cssmin": "^5.0.0",
+		"grunt-contrib-jshint": "^3.2.0",
+		"grunt-contrib-sass": "^2.0.0",
+		"grunt-contrib-uglify": "^5.2.2",
+		"grunt-contrib-watch": "^1.1.0",
+		"grunt-sass": "^4.0.0",
+		"grunt-shell": "^4.0.0",
+		"load-grunt-tasks": "^3.2.0",
+		"postcss-cli": "^11.0.0",
+		"sass": "^1.85.0"
+	},
+	"overrides": {
+		"localtunnel": "^2.0.2",
+		"browser-sync": "^3.0.2",
+		"send": "^0.19.1",
+		"serve-static": "^1.16.1"
 	}
 }
