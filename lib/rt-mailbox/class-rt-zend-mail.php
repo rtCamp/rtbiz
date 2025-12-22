@@ -639,9 +639,20 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 			$lastFlag  = array();
 			$message   = null;
 			//			global $threadPostId;
+			$email_counter = 0; // Track emails processed for NOOP
 
 			foreach ( $arrayMailIds as $UmailId ) {
 				try {
+					// Send NOOP every 10 emails to keep connection alive
+					if ( $email_counter > 0 && $email_counter % 10 == 0 ) {
+						try {
+							$storage->noop();
+						} catch ( Exception $e ) {
+							rt_log( 'NOOP failed: ' . $e->getMessage() . "\r\n" );
+						}
+					}
+					$email_counter++;
+
 					if ( is_array( $UmailId ) ) {
 						$tempUIDArray = $UmailId;
 						$UmailId      = $tempUIDArray['uid'];
@@ -682,8 +693,11 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 					if ( $lastMessageId ) {
 						if ( ! $this->insert_mail_message_id( $lastMessageId ) ) {
-							$this->update_last_mail_uid( $email, $UmailId );
-							continue;
+							rt_log( 'Warning: Message-ID already exists, allowing reprocessing for data recovery: ' . $lastMessageId . "\r\n" );
+							// Don't skip - let the helpdesk duplicate check handle it
+							// This prevents data loss if the email was saved but ticket creation failed
+							// $this->update_last_mail_uid( $email, $UmailId );
+							// continue;
 						}
 					}
 					if ( ! isset( $message->subject ) ) {
@@ -794,7 +808,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 							}
 						}
 						if ( $lastFlag ) {
-							$storage->protocol->store( array( Zend\Mail\Storage::FLAG_SEEN ), $mailId, null, '-', true );
+							$storage->protocol->store( array( Zend\Mail\Storage::FLAG_SEEN ), $mailId, null, '+', true );
 						}
 					}
 
