@@ -33,6 +33,10 @@ rtBiz - WordPress 4 Business!
 
 Same [GPL] (http://www.gnu.org/licenses/gpl-2.0.txt) that WordPress uses!
 
+**Build Commands**
+- npx grunt
+- npx grunt build
+
 **Coming soon:**
 
  * Export Library
