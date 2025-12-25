@@ -289,7 +289,7 @@ if ( ! class_exists( 'Rtbiz_Teams' ) ) {
 			return false;
 		}
 
-		function add_manage_acl_button( $taxonomy ) {
+		function add_manage_acl_button() {
 			global $pagenow;
 			if ( ! is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 				if ( 'edit-tags.php' == $pagenow && ! empty( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == self::$slug ) {
