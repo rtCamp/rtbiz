@@ -81,6 +81,11 @@ if ( ! class_exists( 'Rtbiz_Contact_Profile_Access' ) ) {
 					$profile_permissions     = $_REQUEST['rtbiz_profile_permissions'];
 					$old_profile_permissions = get_post_meta( $contact_id, 'rtbiz_profile_permissions', true );
 
+					// Ensure $old_profile_permissions is always an array
+					if ( ! is_array( $old_profile_permissions ) ) {
+						$old_profile_permissions = array();
+					}
+
 					//if helpdesk exist rtbiz & helpdesk permission are same and rtbiz acl is hidden
 					if ( is_plugin_active( 'rtbiz-helpdesk/rtbiz-helpdesk.php' ) ) {
 						$profile_permissions[ RTBIZ_TEXT_DOMAIN ]                   = $profile_permissions[ RTBIZ_HD_TEXT_DOMAIN ];

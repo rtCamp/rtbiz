@@ -57,8 +57,9 @@ class P2P_Directed_Connection_Type {
 		$qv = $this->get_final_qv( $qv, $which );
 		$query = $side->do_query( $qv );
 
-		if ( 'raw' == $output )
+		if ( 'raw' === $output ) {
 			return $query;
+		}
 
 		return $side->get_list( $query );
 	}
@@ -115,10 +116,12 @@ class P2P_Directed_Connection_Type {
 	 */
 	public function get_connected( $item, $extra_qv = array(), $output = 'raw' ) {
 		$args = array_merge( $extra_qv, array(
-			'connected_type' => $this->name,
+			'connected_type'     => $this->name,
 			'connected_direction' => $this->direction,
-			'connected_items' => $item
-		) );
+			'connected_items'     => $item,
+			'number'              => isset( $extra_qv['p2p:per_page'] ) ? $extra_qv['p2p:per_page'] : 100,
+			'offset'              => isset( $extra_qv['p2p:offset'] ) ? $extra_qv['p2p:offset'] : 0,
+		));
 
 		return $this->abstract_query( $args, 'opposite', $output );
 	}
