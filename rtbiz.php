@@ -129,3 +129,15 @@ function _rtbiz_running_older_php_version(){ ?>
 function _rtbiz_deactive_self(){
 	deactivate_plugins(plugin_basename(__FILE__));
 }
+
+
+// Display error if Redux Framework is not active.
+if ( ! is_plugin_active( 'redux-framework/redux-framework.php' ) ) {
+	add_action( 'admin_notices', function() {
+		$redux_framework = '<a href="https://wordpress.org/plugins/redux-framework/" target="_blank">' . esc_html__( 'Redux Framework', 'rtbiz' ) . '</a>';
+		?>
+		<div class="error rtbiz-php-older-version">
+			<p><strong><?php esc_html_e( 'rtBiz:', 'rtbiz' ); ?></strong> <?php printf( esc_html__('This plugin requires %s to be installed and activated. Please install and activate %s to use rtBiz.', 'rtbiz' ), wp_kses_post( $redux_framework ), wp_kses_post( $redux_framework ) ); ?></p>
+		</div> <?php
+	} );
+}
