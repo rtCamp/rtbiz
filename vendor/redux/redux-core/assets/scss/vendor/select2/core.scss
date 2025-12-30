@@ -1,3 +1,5 @@
+@import "dropdown";
+
 .select2-container {
     box-sizing: border-box;
 
@@ -9,8 +11,6 @@
     @import "single";
     @import "multiple";
 }
-
-@import "dropdown";
 
 .select2-close-mask {
     border: 0;
@@ -36,7 +36,6 @@
 .select2-hidden-accessible {
     border: 0 !important;
     clip: rect(0 0 0 0) !important;
-    -webkit-clip-path: inset(50%) !important;
     clip-path: inset(50%) !important;
     height: 1px !important;
     overflow: hidden !important;

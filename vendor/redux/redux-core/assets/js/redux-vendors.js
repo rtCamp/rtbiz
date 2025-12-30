@@ -53,14 +53,14 @@
 
 	function read( s, converter ) {
 		var value = config.raw ? s : parseCookieValue( s );
-		return $.isFunction( converter ) ? converter( value ) : value;
+		return 'function' === typeof converter ? converter( value ) : value;
 	}
 
 	var config = $.cookie = function( key, value, options ) {
 
 		// Write
 
-		if ( arguments.length > 1 && ! $.isFunction( value ) ) {
+		if ( arguments.length > 1 && 'function' !== typeof value ) {
 			options = $.extend( {}, config.defaults, options );
 
 			if ( typeof options.expires === 'number' ) {
@@ -132,8 +132,8 @@
 
 	$.fn.alpha = function( settings ) {
 
-		var defaultAlphaSettings = getCombinedSettingsAlphaNum( "alpha" );
-		var combinedSettings     = getCombinedSettingsAlphaNum( settings, defaultAlphaSettings );
+		var defaultAlphaSettings = getCombinedSettingsAlphaNum( 'alpha' );
+		var combinedSettings = getCombinedSettingsAlphaNum( settings, defaultAlphaSettings );
 
 		var $collection = this;
 
@@ -145,7 +145,7 @@
 	$.fn.numeric = function( settings ) {
 
 		var combinedSettings = getCombinedSettingsNum( settings );
-		var $collection      = this;
+		var $collection = this;
 
 		setupEventHandlers( $collection, trimNum, combinedSettings );
 
@@ -174,7 +174,7 @@
 		allowLatin: true, // a-z A-Z
 		allowOtherCharSets: true, // eg �, �, Arabic, Chinese etc
 		maxLength: NaN   // eg Max Length
-	}
+	};
 
 	var DEFAULT_SETTINGS_NUM = {
 		allowPlus: false, // Allow the + sign
@@ -186,38 +186,38 @@
 		maxPreDecimalPlaces: NaN,   // The max number digits before the decimal point
 		max: NaN,   // The max numeric value allowed
 		min: NaN    // The min numeric value allowed
-	}
+	};
 
 	// Some pre-defined groups of settings for convenience
 	var CONVENIENCE_SETTINGS_ALPHANUM = {
-		"alpha": {
+		'alpha': {
 			allowNumeric: false
-		}, "upper": {
+		}, 'upper': {
 			allowNumeric: false, allowUpper: true, allowLower: false, allowCaseless: true
-		}, "lower": {
+		}, 'lower': {
 			allowNumeric: false, allowUpper: false, allowLower: true, allowCaseless: true
 		}
 	};
 
 	// Some pre-defined groups of settings for convenience
 	var CONVENIENCE_SETTINGS_NUMERIC = {
-		"integer": {
+		'integer': {
 			allowPlus: false, allowMinus: true, allowThouSep: false, allowDecSep: false
-		}, "positiveInteger": {
+		}, 'positiveInteger': {
 			allowPlus: false, allowMinus: false, allowThouSep: false, allowDecSep: false
 		}
 	};
 
-	var BLACKLIST   = getBlacklistAscii() + getBlacklistNonAscii();
-	var THOU_SEP    = ",";
-	var DEC_SEP     = ".";
-	var DIGITS      = getDigitsMap();
+	var BLACKLIST = getBlacklistAscii() + getBlacklistNonAscii();
+	var THOU_SEP = ',';
+	var DEC_SEP = '.';
+	var DIGITS = getDigitsMap();
 	var LATIN_CHARS = getLatinCharsSet();
 
 	// Return the blacklisted special chars that are encodable using 7-bit ascii
 	function getBlacklistAscii() {
 		var blacklist = '!@#$%^&*()+=[]\\\';,/{}|":<>?~`.-_';
-		blacklist += " "; // 'Space' is on the blacklist but can be enabled using the 'allowSpace' config entry
+		blacklist += ' '; // 'Space' is on the blacklist but can be enabled using the 'allowSpace' config entry
 		return blacklist;
 	}
 
@@ -226,10 +226,10 @@
 	// Higher order chars must be escaped eg "\xAC"
 	// Not too worried about comments containing higher order characters for now (let's wait and see if it becomes a problem)
 	function getBlacklistNonAscii() {
-		var blacklist = "\xAC"     // �
-			+ "\u20AC"   // �
-			+ "\xA3"     // �
-			+ "\xA6"     // �
+		var blacklist = '\xAC'     // �
+			+ '\u20AC'   // �
+			+ '\xA3'     // �
+			+ '\xA6'     // �
 		;
 		return blacklist;
 	}
@@ -244,11 +244,12 @@
 
 			var $textbox = $( this );
 
-			$textbox.on( "keyup change paste", function( e ) {
+			$textbox.on( 'keyup change paste', function( e ) {
 
-				var pastedText = "";
+				var pastedText = '';
 
-				if ( e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData ) pastedText = e.originalEvent.clipboardData.getData( "text/plain" )
+				if ( e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData ) pastedText = e.originalEvent.clipboardData.getData(
+					'text/plain' );
 
 				// setTimeout is necessary for handling the 'paste' event
 				setTimeout( function() {
@@ -256,11 +257,11 @@
 				}, 0 );
 			} );
 
-			$textbox.on( "keypress", function( e ) {
+			$textbox.on( 'keypress', function( e ) {
 
 				// Determine which key is pressed.
 				// If it's a control key, then allow the event's default action to occur eg backspace, tab
-				var charCode = ! e.charCode ? e.which : e.charCode;
+				var charCode = !e.charCode ? e.which : e.charCode;
 				if ( isControlKey( charCode ) || e.ctrlKey || e.metaKey ) // cmd on MacOS
 					return;
 
@@ -268,8 +269,8 @@
 
 				// Determine if some text was selected / highlighted when the key was pressed
 				var selectionObject = $textbox.selection();
-				var start           = selectionObject.start;
-				var end             = selectionObject.end;
+				var start = selectionObject.start;
+				var end = selectionObject.end;
 
 				var textBeforeKeypress = $textbox.val();
 
@@ -284,7 +285,7 @@
 				// Unfortunately, it isn't enough to just check if the new char is valid because some chars
 				// are position sensitive eg the decimal point '.'' or the minus sign '-'' are only valid in certain positions.
 				var potentialTextAfterKeypress = textBeforeKeypress.substring( 0, start ) + newChar + textBeforeKeypress.substring( end );
-				var validatedText              = trimFunction( potentialTextAfterKeypress, settings );
+				var validatedText = trimFunction( potentialTextAfterKeypress, settings );
 
 				// If the keypress would cause the textbox to contain invalid characters, then cancel the keypress event
 				if ( validatedText != potentialTextAfterKeypress ) e.preventDefault();
@@ -297,20 +298,20 @@
 	// This catches the case where a user enters '-' or '.' without entering any digits
 	function numericField_Blur( inputBox, settings ) {
 		var fieldValueNumeric = parseFloat( $( inputBox ).val() );
-		var $inputBox         = $( inputBox );
+		var $inputBox = $( inputBox );
 
 		if ( isNaN( fieldValueNumeric ) ) {
-			$inputBox.val( "" );
+			$inputBox.val( '' );
 			return;
 		}
 
-		if ( isNumeric( settings.min ) && fieldValueNumeric < settings.min ) $inputBox.val( "" );
+		if ( isNumeric( settings.min ) && fieldValueNumeric < settings.min ) $inputBox.val( '' );
 
-		if ( isNumeric( settings.max ) && fieldValueNumeric > settings.max ) $inputBox.val( "" );
+		if ( isNumeric( settings.max ) && fieldValueNumeric > settings.max ) $inputBox.val( '' );
 	}
 
 	function isNumeric( value ) {
-		return ! isNaN( value );
+		return !isNaN( value );
 	}
 
 	function isControlKey( charCode ) {
@@ -331,7 +332,7 @@
 
 		var inputString = $textBox.val();
 
-		if ( inputString == "" && pastedText.length > 0 ) inputString = pastedText;
+		if ( inputString == '' && pastedText.length > 0 ) inputString = pastedText;
 
 		var outputString = trimFunction( inputString, settings );
 
@@ -346,20 +347,21 @@
 	}
 
 	function getCombinedSettingsAlphaNum( settings, defaultSettings ) {
-		if ( typeof defaultSettings == "undefined" ) defaultSettings = DEFAULT_SETTINGS_ALPHANUM;
+		if ( typeof defaultSettings == 'undefined' ) defaultSettings = DEFAULT_SETTINGS_ALPHANUM;
 		var userSettings, combinedSettings = {};
-		if ( typeof settings === "string" ) userSettings = CONVENIENCE_SETTINGS_ALPHANUM[settings]; else if ( typeof settings == "undefined" ) userSettings = {}; else userSettings = settings;
+		if ( typeof settings === 'string' ) userSettings = CONVENIENCE_SETTINGS_ALPHANUM[settings]; else if ( typeof settings == 'undefined' ) userSettings = {}; else userSettings = settings;
 
 		$.extend( combinedSettings, defaultSettings, userSettings );
 
-		if ( typeof combinedSettings.blacklist == 'undefined' ) combinedSettings.blacklistSet = getBlacklistSet( combinedSettings.allow, combinedSettings.disallow );
+		if ( typeof combinedSettings.blacklist == 'undefined' ) combinedSettings.blacklistSet = getBlacklistSet(
+			combinedSettings.allow, combinedSettings.disallow );
 
 		return combinedSettings;
 	}
 
 	function getCombinedSettingsNum( settings ) {
 		var userSettings, combinedSettings = {};
-		if ( typeof settings === "string" ) userSettings = CONVENIENCE_SETTINGS_NUMERIC[settings]; else if ( typeof settings == "undefined" ) userSettings = {}; else userSettings = settings;
+		if ( typeof settings === 'string' ) userSettings = CONVENIENCE_SETTINGS_NUMERIC[settings]; else if ( typeof settings == 'undefined' ) userSettings = {}; else userSettings = settings;
 
 		$.extend( combinedSettings, DEFAULT_SETTINGS_NUM, userSettings );
 
@@ -373,21 +375,21 @@
 
 		if ( settings.allow.indexOf( Char ) >= 0 ) return true;
 
-		if ( settings.allowSpace && (Char == " ") ) return true;
+		if ( settings.allowSpace && (Char == ' ') ) return true;
 
 		if ( settings.blacklistSet.contains( Char ) ) return false;
 
-		if ( ! settings.allowNumeric && DIGITS[Char] ) return false;
+		if ( !settings.allowNumeric && DIGITS[Char] ) return false;
 
-		if ( ! settings.allowUpper && isUpper( Char ) ) return false;
+		if ( !settings.allowUpper && isUpper( Char ) ) return false;
 
-		if ( ! settings.allowLower && isLower( Char ) ) return false;
+		if ( !settings.allowLower && isLower( Char ) ) return false;
 
-		if ( ! settings.allowCaseless && isCaseless( Char ) ) return false;
+		if ( !settings.allowCaseless && isCaseless( Char ) ) return false;
 
-		if ( ! settings.allowLatin && LATIN_CHARS.contains( Char ) ) return false;
+		if ( !settings.allowLatin && LATIN_CHARS.contains( Char ) ) return false;
 
-		if ( ! settings.allowOtherCharSets ) {
+		if ( !settings.allowOtherCharSets ) {
 			if ( DIGITS[Char] || LATIN_CHARS.contains( Char ) ) return true; else return false;
 		}
 
@@ -429,17 +431,17 @@
 	function countDigits( string ) {
 
 		// Error handling, nulls etc
-		string = string + "";
+		string = string + '';
 
 		// Count the digits
-		return string.replace( /[^0-9]/g, "" ).length;
+		return string.replace( /[^0-9]/g, '' ).length;
 	}
 
 	function isMaxDigitsReached( string, settings ) {
 
 		var maxDigits = settings.maxDigits;
 
-		if ( maxDigits == "" || isNaN( maxDigits ) ) return false; // In this case, there is no maximum
+		if ( maxDigits == '' || isNaN( maxDigits ) ) return false; // In this case, there is no maximum
 
 		var numDigits = countDigits( string );
 
@@ -452,14 +454,14 @@
 
 		var maxDecimalPlaces = settings.maxDecimalPlaces;
 
-		if ( maxDecimalPlaces == "" || isNaN( maxDecimalPlaces ) ) return false; // In this case, there is no maximum
+		if ( maxDecimalPlaces == '' || isNaN( maxDecimalPlaces ) ) return false; // In this case, there is no maximum
 
 		var indexOfDecimalPoint = string.indexOf( DEC_SEP );
 
-		if ( indexOfDecimalPoint == - 1 ) return false;
+		if ( indexOfDecimalPoint == -1 ) return false;
 
 		var decimalSubstring = string.substring( indexOfDecimalPoint );
-		var numDecimals      = countDigits( decimalSubstring );
+		var numDecimals = countDigits( decimalSubstring );
 
 		if ( numDecimals >= maxDecimalPlaces ) return true;
 
@@ -470,7 +472,7 @@
 
 		var maxPreDecimalPlaces = settings.maxPreDecimalPlaces;
 
-		if ( maxPreDecimalPlaces == "" || isNaN( maxPreDecimalPlaces ) ) return false; // In this case, there is no maximum
+		if ( maxPreDecimalPlaces == '' || isNaN( maxPreDecimalPlaces ) ) return false; // In this case, there is no maximum
 
 		var indexOfDecimalPoint = string.indexOf( DEC_SEP );
 
@@ -485,7 +487,7 @@
 
 	function isGreaterThanMax( numericString, settings ) {
 
-		if ( ! settings.max || settings.max < 0 ) return false;
+		if ( !settings.max || settings.max < 0 ) return false;
 
 		var outputNumber = parseFloat( numericString );
 		if ( outputNumber > settings.max ) return true;
@@ -495,7 +497,7 @@
 
 	function isLessThanMin( numericString, settings ) {
 
-		if ( ! settings.min || settings.min > 0 ) return false;
+		if ( !settings.min || settings.min > 0 ) return false;
 
 		var outputNumber = parseFloat( numericString );
 		if ( outputNumber < settings.min ) return true;
@@ -508,46 +510,46 @@
 	 ********************************/
 	function trimAlphaNum( inputString, settings ) {
 
-		if ( typeof inputString != "string" ) return inputString;
+		if ( typeof inputString != 'string' ) return inputString;
 
-		var inChars  = inputString.split( "" );
+		var inChars = inputString.split( '' );
 		var outChars = [];
-		var i        = 0;
+		var i = 0;
 		var Char;
 
-		for ( i = 0; i < inChars.length; i ++ ) {
-			Char                        = inChars[i];
-			var validatedStringFragment = outChars.join( "" );
+		for ( i = 0; i < inChars.length; i++ ) {
+			Char = inChars[i];
+			var validatedStringFragment = outChars.join( '' );
 			if ( alphanum_allowChar( validatedStringFragment, Char, settings ) ) outChars.push( Char );
 		}
 
-		return outChars.join( "" );
+		return outChars.join( '' );
 	}
 
 	function trimNum( inputString, settings ) {
-		if ( typeof inputString != "string" ) return inputString;
+		if ( typeof inputString != 'string' ) return inputString;
 
-		var inChars  = inputString.split( "" );
+		var inChars = inputString.split( '' );
 		var outChars = [];
-		var i        = 0;
+		var i = 0;
 		var Char;
 
-		for ( i = 0; i < inChars.length; i ++ ) {
-			Char                        = inChars[i];
-			var validatedStringFragment = outChars.join( "" );
+		for ( i = 0; i < inChars.length; i++ ) {
+			Char = inChars[i];
+			var validatedStringFragment = outChars.join( '' );
 			if ( numeric_allowChar( validatedStringFragment, Char, settings ) ) outChars.push( Char );
 		}
 
-		return outChars.join( "" );
+		return outChars.join( '' );
 	}
 
 	function removeUpperCase( inputString ) {
-		var charArray   = inputString.split( '' );
-		var i           = 0;
+		var charArray = inputString.split( '' );
+		var i = 0;
 		var outputArray = [];
 		var Char;
 
-		for ( i = 0; i < charArray.length; i ++ ) {
+		for ( i = 0; i < charArray.length; i++ ) {
 			Char = charArray[i];
 		}
 	}
@@ -576,7 +578,7 @@
 
 	function getBlacklistSet( allow, disallow ) {
 
-		var setOfBadChars  = new Set( BLACKLIST + disallow );
+		var setOfBadChars = new Set( BLACKLIST + disallow );
 		var setOfGoodChars = new Set( allow );
 
 		var blacklistSet = setOfBadChars.subtract( setOfGoodChars );
@@ -585,13 +587,13 @@
 	}
 
 	function getDigitsMap() {
-		var array = "0123456789".split( "" );
-		var map   = {};
-		var i     = 0;
+		var array = '0123456789'.split( '' );
+		var map = {};
+		var i = 0;
 		var digit;
 
-		for ( i = 0; i < array.length; i ++ ) {
-			digit      = array[i];
+		for ( i = 0; i < array.length; i++ ) {
+			digit = array[i];
 			map[digit] = true;
 		}
 
@@ -599,9 +601,9 @@
 	}
 
 	function getLatinCharsSet() {
-		var lower = "abcdefghijklmnopqrstuvwxyz";
+		var lower = 'abcdefghijklmnopqrstuvwxyz';
 		var upper = lower.toUpperCase();
-		var azAZ  = new Set( lower + upper );
+		var azAZ = new Set( lower + upper );
 
 		return azAZ;
 	}
@@ -620,7 +622,7 @@
 		// Check if this is the first occurrence of a THOU_SEP
 		if ( posOfFirstThouSep < 0 ) return true;
 
-		var posOfLastThouSep      = currentString.lastIndexOf( THOU_SEP );
+		var posOfLastThouSep = currentString.lastIndexOf( THOU_SEP );
 		var charsSinceLastThouSep = currentString.length - posOfLastThouSep - 1;
 
 		// Check if there has been 3 digits since the last THOU_SEP
@@ -638,7 +640,7 @@
 	// Implementation of a Set
 	////////////////////////////////////////////////////////////////////////////////////
 	function Set( elems ) {
-		if ( typeof elems == "string" ) this.map = stringToMap( elems ); else this.map = {};
+		if ( typeof elems == 'string' ) this.map = stringToMap( elems ); else this.map = {};
 	}
 
 	Set.prototype.add = function( set ) {
@@ -648,7 +650,7 @@
 		for ( var key in set.map ) newSet.map[key] = true;
 
 		return newSet;
-	}
+	};
 
 	Set.prototype.subtract = function( set ) {
 
@@ -657,11 +659,11 @@
 		for ( var key in set.map ) delete newSet.map[key];
 
 		return newSet;
-	}
+	};
 
 	Set.prototype.contains = function( key ) {
 		if ( this.map[key] ) return true; else return false;
-	}
+	};
 
 	Set.prototype.clone = function() {
 		var newSet = new Set();
@@ -669,18 +671,18 @@
 		for ( var key in this.map ) newSet.map[key] = true;
 
 		return newSet;
-	}
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////
 
 	function stringToMap( string ) {
-		var map   = {};
-		var array = string.split( "" );
-		var i     = 0;
+		var map = {};
+		var array = string.split( '' );
+		var i = 0;
 		var Char;
 
-		for ( i = 0; i < array.length; i ++ ) {
-			Char      = array[i];
+		for ( i = 0; i < array.length; i++ ) {
+			Char = array[i];
 			map[Char] = true;
 		}
 
@@ -707,8 +709,8 @@
 		if ( settings.decimalSeparator.length != 1 ) return;
 
 		THOU_SEP = settings.thousandsSeparator;
-		DEC_SEP  = settings.decimalSeparator;
-	}
+		DEC_SEP = settings.decimalSeparator;
+	};
 
 })( jQuery );
 
@@ -723,10 +725,10 @@
 	function caretTo( el, index ) {
 		if ( el.createTextRange ) {
 			var range = el.createTextRange();
-			range.move( "character", index );
+			range.move( 'character', index );
 			range.select();
 		} else if ( el.selectionStart != null ) {
-			el.focus();
+			el.trigger( 'focus' );
 			el.setSelectionRange( index, index );
 		}
 	};
@@ -736,10 +738,10 @@
 
 	// TODO: Get working with Opera
 	function caretPos( el ) {
-		if ( "selection" in document ) {
+		if ( 'selection' in document ) {
 			var range = el.createTextRange();
 			try {
-				range.setEndPoint( "EndToStart", document.selection.createRange() );
+				range.setEndPoint( 'EndToStart', document.selection.createRange() );
 			} catch ( e ) {
 				// Catch IE failure here, return 0 like
 				// other browsers
@@ -757,7 +759,7 @@
 
 	// Set caret to a particular index
 	$.fn.alphanum_caret = function( index, offset ) {
-		if ( typeof (index) === "undefined" ) {
+		if ( typeof (index) === 'undefined' ) {
 			return caretPos( this.get( 0 ) );
 		}
 
@@ -767,7 +769,7 @@
 
 				if ( offset === true ) {
 					i += index.length;
-				} else if ( typeof (offset) !== "undefined" ) {
+				} else if ( typeof (offset) !== 'undefined' ) {
 					i += offset;
 				}
 
@@ -788,179 +790,178 @@
  * https://github.com/jupiterjs/jquerymx/blob/master/dom/selection/selection.js
  ***********************************************************/
 (function( $ ) {
-	var convertType          = function( type ) {
-		    return type.replace( /([a-z])([a-z]+)/gi, function( all, first, next ) {
-			    return first + next.toLowerCase();
-		    } ).replace( /_/g, "" );
-	    }, reverse           = function( type ) {
-		    return type.replace( /^([a-z]+)_TO_([a-z]+)/i, function( all, first, last ) {
-			    return last + "_TO_" + first;
-		    } );
-	    }, getWindow         = function( element ) {
-		    return element ? element.ownerDocument.defaultView || element.ownerDocument.parentWindow : window;
-	    }, // A helper that uses range to abstract out getting the current start and endPos.
-	    getElementsSelection = function( el, win ) {
-		    var current                                                = $.Range.current( el ).clone(), entireElement = $.Range( el ).select( el );
+	var convertType = function( type ) {
+			return type.replace( /([a-z])([a-z]+)/gi, function( all, first, next ) {
+				return first + next.toLowerCase();
+			} ).replace( /_/g, '' );
+		}, reverse = function( type ) {
+			return type.replace( /^([a-z]+)_TO_([a-z]+)/i, function( all, first, last ) {
+				return last + '_TO_' + first;
+			} );
+		}, getWindow = function( element ) {
+			return element ? element.ownerDocument.defaultView || element.ownerDocument.parentWindow : window;
+		}, // A helper that uses range to abstract out getting the current start and endPos.
+		getElementsSelection = function( el, win ) {
+			var current = $.Range.current( el ).clone(), entireElement = $.Range( el ).select( el );
 
-		    if ( ! current.overlaps( entireElement ) ) {
-			    return null;
-		    }
-		    // we need to check if it starts before our element ...
-		    if ( current.compare( "START_TO_START", entireElement ) < 1 ) {
-			    var startPos = 0;
-			    // we should move current ...
-			    current.move( "START_TO_START", entireElement );
-		    } else {
-			    var fromElementToCurrent = entireElement.clone();
-			    fromElementToCurrent.move( "END_TO_START", current );
+			if ( !current.overlaps( entireElement ) ) {
+				return null;
+			}
+			// we need to check if it starts before our element ...
+			if ( current.compare( 'START_TO_START', entireElement ) < 1 ) {
+				var startPos = 0;
+				// we should move current ...
+				current.move( 'START_TO_START', entireElement );
+			} else {
+				var fromElementToCurrent = entireElement.clone();
+				fromElementToCurrent.move( 'END_TO_START', current );
 
-			    startPos = fromElementToCurrent.toString().length;
-		    }
+				startPos = fromElementToCurrent.toString().length;
+			}
 
-		    // now we need to make sure current isn't to the right of us ...
-		    var endPos;
+			// now we need to make sure current isn't to the right of us ...
+			var endPos;
 
-		    if ( current.compare( "END_TO_END", entireElement ) >= 0 ) {
-			    endPos = entireElement.toString().length;
-		    } else {
-			    endPos = startPos + current.toString().length;
-		    }
+			if ( current.compare( 'END_TO_END', entireElement ) >= 0 ) {
+				endPos = entireElement.toString().length;
+			} else {
+				endPos = startPos + current.toString().length;
+			}
 
-		    return {
-			    start: startPos, end: endPos
-		    };
-	    }, getSelection      = function( el ) {
-		    // use selectionStart if we can.
-		    var win = getWindow( el );
+			return {
+				start: startPos, end: endPos
+			};
+		}, getSelection = function( el ) {
+			// use selectionStart if we can.
+			var win = getWindow( el );
 
-		    if ( el.selectionStart !== undefined ) {
-			    if ( document.activeElement && document.activeElement !== el && el.selectionStart === el.selectionEnd && el.selectionStart === 0 ) {
-				    return {start: el.value.length, end: el.value.length};
-			    }
+			if ( el.selectionStart !== undefined ) {
+				if ( document.activeElement && document.activeElement !== el && el.selectionStart === el.selectionEnd && el.selectionStart === 0 ) {
+					return {start: el.value.length, end: el.value.length};
+				}
 
-			    return {start: el.selectionStart, end: el.selectionEnd};
-		    } else if ( win.getSelection ) {
-			    return getElementsSelection( el, win );
-		    } else {
-			    try {
-				    //try 2 different methods that work differently
-				    // one should only work for input elements, but sometimes doesn't
-				    // I don't know why this is, or what to detect
-				    if ( el.nodeName.toLowerCase() === 'input' ) {
-					    var real = getWindow( el ).document.selection.createRange(), r = el.createTextRange();
+				return {start: el.selectionStart, end: el.selectionEnd};
+			} else if ( win.getSelection ) {
+				return getElementsSelection( el, win );
+			} else {
+				try {
+					//try 2 different methods that work differently
+					// one should only work for input elements, but sometimes doesn't
+					// I don't know why this is, or what to detect
+					if ( el.nodeName.toLowerCase() === 'input' ) {
+						var real = getWindow( el ).document.selection.createRange(), r = el.createTextRange();
 
-					    r.setEndPoint( "EndToStart", real );
+						r.setEndPoint( 'EndToStart', real );
 
-					    var start = r.text.length;
+						var start = r.text.length;
 
-					    return {
-						    start: start, end: start + real.text.length
-					    };
-				    } else {
-					    var res = getElementsSelection( el, win );
-					    if ( ! res ) {
-						    return res;
-					    }
+						return {
+							start: start, end: start + real.text.length
+						};
+					} else {
+						var res = getElementsSelection( el, win );
+						if ( !res ) {
+							return res;
+						}
 
-					    // we have to clean up for ie's textareas
-					    var current                                 = $.Range.current().clone(), r2 = current.clone().collapse().range,
-					        r3                                      = current.clone().collapse( false ).range;
+						// we have to clean up for ie's textareas
+						var current = $.Range.current().clone(), r2 = current.clone().collapse().range,
+							r3 = current.clone().collapse( false ).range;
 
-					    r2.moveStart( 'character', - 1 );
-					    r3.moveStart( 'character', - 1 );
+						r2.moveStart( 'character', -1 );
+						r3.moveStart( 'character', -1 );
 
-					    // if we aren't at the start, but previous is empty, we are at start of newline
-					    if ( res.startPos !== 0 && r2.text === "" ) {
-						    res.startPos += 2;
-					    }
+						// if we aren't at the start, but previous is empty, we are at start of newline
+						if ( res.startPos !== 0 && r2.text === '' ) {
+							res.startPos += 2;
+						}
 
-					    // do a similar thing for the end of the textarea
-					    if ( res.endPos !== 0 && r3.text === "" ) {
-						    res.endPos += 2;
-					    }
+						// do a similar thing for the end of the textarea
+						if ( res.endPos !== 0 && r3.text === '' ) {
+							res.endPos += 2;
+						}
 
-					    return res;
-				    }
-			    } catch ( e ) {
-				    return {start: el.value.length, end: el.value.length};
-			    }
-		    }
-	    }, select            = function( el, start, end ) {
-		    var win = getWindow( el );
+						return res;
+					}
+				} catch ( e ) {
+					return {start: el.value.length, end: el.value.length};
+				}
+			}
+		}, select = function( el, start, end ) {
+			var win = getWindow( el );
 
-		    if ( el.setSelectionRange ) {
-			    if ( end === undefined ) {
-				    el.focus();
-				    el.setSelectionRange( start, start );
-			    } else {
-				    el.select();
-				    el.selectionStart = start;
-				    el.selectionEnd   = end;
-			    }
-		    } else if ( el.createTextRange ) {
-			    //el.focus();
-			    var r = el.createTextRange();
-			    r.moveStart( 'character', start );
-			    end = end || start;
-			    r.moveEnd( 'character', end - el.value.length );
+			if ( el.setSelectionRange ) {
+				if ( end === undefined ) {
+					el.trigger( 'focus' );
+					el.setSelectionRange( start, start );
+				} else {
+					el.select();
+					el.selectionStart = start;
+					el.selectionEnd = end;
+				}
+			} else if ( el.createTextRange ) {
+				var r = el.createTextRange();
+				r.moveStart( 'character', start );
+				end = end || start;
+				r.moveEnd( 'character', end - el.value.length );
 
-			    r.select();
-		    } else if ( win.getSelection ) {
-			    var doc                                                 = win.document, sel = win.getSelection(), range = doc.createRange(),
-			        ranges                                              = [start, end !== undefined ? end : start];
-			    getCharElement( [el], ranges );
-			    range.setStart( ranges[0].el, ranges[0].count );
-			    range.setEnd( ranges[1].el, ranges[1].count );
+				r.select();
+			} else if ( win.getSelection ) {
+				var doc = win.document, sel = win.getSelection(), range = doc.createRange(),
+					ranges = [start, end !== undefined ? end : start];
+				getCharElement( [el], ranges );
+				range.setStart( ranges[0].el, ranges[0].count );
+				range.setEnd( ranges[1].el, ranges[1].count );
 
-			    // removeAllRanges is suprisingly necessary for webkit ... BOOO!
-			    sel.removeAllRanges();
-			    sel.addRange( range );
+				// removeAllRanges is suprisingly necessary for webkit ... BOOO!
+				sel.removeAllRanges();
+				sel.addRange( range );
 
-		    } else if ( win.document.body.createTextRange ) { //IE's weirdness
-			    var range = document.body.createTextRange();
+			} else if ( win.document.body.createTextRange ) { //IE's weirdness
+				var range = document.body.createTextRange();
 
-			    range.moveToElementText( el );
-			    range.collapse();
-			    range.moveStart( 'character', start );
-			    range.moveEnd( 'character', end !== undefined ? end : start );
-			    range.select();
-		    }
-	    }, /*
+				range.moveToElementText( el );
+				range.collapse();
+				range.moveStart( 'character', start );
+				range.moveEnd( 'character', end !== undefined ? end : start );
+				range.select();
+			}
+		}, /*
      * If one of the range values is within start and len, replace the range
      * value with the element and its offset.
      */
-	    replaceWithLess      = function( start, len, range, el ) {
-		    if ( typeof range[0] === 'number' && range[0] < len ) {
-			    range[0] = {
-				    el: el, count: range[0] - start
-			    };
-		    }
-		    if ( typeof range[1] === 'number' && range[1] <= len ) {
-			    range[1] = {
-				    el: el, count: range[1] - start
-			    };
-		    }
-	    }, getCharElement    = function( elems, range, len ) {
-		    var elem, start;
+		replaceWithLess = function( start, len, range, el ) {
+			if ( typeof range[0] === 'number' && range[0] < len ) {
+				range[0] = {
+					el: el, count: range[0] - start
+				};
+			}
+			if ( typeof range[1] === 'number' && range[1] <= len ) {
+				range[1] = {
+					el: el, count: range[1] - start
+				};
+			}
+		}, getCharElement = function( elems, range, len ) {
+			var elem, start;
 
-		    len = len || 0;
+			len = len || 0;
 
-		    for ( var i = 0; elems[i]; i ++ ) {
-			    elem = elems[i];
-			    // Get the text from text nodes and CDATA nodes
-			    if ( elem.nodeType === 3 || elem.nodeType === 4 ) {
-				    start = len;
-				    len += elem.nodeValue.length;
-				    //check if len is now greater than what's in counts
-				    replaceWithLess( start, len, range, elem );
-				    // Traverse everything else, except comment nodes
-			    } else if ( elem.nodeType !== 8 ) {
-				    len = getCharElement( elem.childNodes, range, len );
-			    }
-		    }
+			for ( var i = 0; elems[i]; i++ ) {
+				elem = elems[i];
+				// Get the text from text nodes and CDATA nodes
+				if ( elem.nodeType === 3 || elem.nodeType === 4 ) {
+					start = len;
+					len += elem.nodeValue.length;
+					//check if len is now greater than what's in counts
+					replaceWithLess( start, len, range, elem );
+					// Traverse everything else, except comment nodes
+				} else if ( elem.nodeType !== 8 ) {
+					len = getCharElement( elem.childNodes, range, len );
+				}
+			}
 
-		    return len;
-	    };
+			return len;
+		};
 
 	$.fn.selection = function( start, end ) {
 		if ( start !== undefined ) {
@@ -979,13 +980,11 @@
 // jscs:disable
 // jshint ignore: start
 
-/*
- * serializeForm
- * https://github.com/danheberden/serializeForm
- *
- * Copyright (c) 2012 Dan Heberden
- * Licensed under the MIT, GPL licenses.
- */
+/*! jquery-serializeForm - v1.2.1 - 2013-11-06
+ * http://danheberden.com/
+ * Copyright (c) 2013 Dan Heberden
+ * Licensed MIT
+**/
 (function( $ ) {
 	$.fn.serializeForm = function() {
 
@@ -1011,9 +1010,10 @@
 
 			// Ensure that only elements with valid `name` properties will be serialized.
 			if ( named[0] ) {
-				for ( var i = 0; i < cap; i ++ ) {
+				for ( var i = 0; i < cap; i++ ) {
 					// move down the tree - create objects or array if necessary.
-					lookup = lookup[named[i]] = lookup[named[i]] || ((named[i + 1] === "" || named[i + 1] === '0') ? [] : {});
+					lookup = lookup[named[i]] = lookup[named[i]] ||
+						((named[i + 1] === '' || named[i + 1] === '0') ? [] : {});
 				}
 
 				// at the end, push or assign the value.
@@ -1038,6 +1038,422 @@
 		return data;
 	};
 }( jQuery ));
+
+/*!
+	SerializeJSON jQuery plugin.
+	https://github.com/marioizquierdo/jquery.serializeJSON
+	version 3.2.1 (Feb, 2021)
+
+	Copyright (c) 2012-2021 Mario Izquierdo
+	Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+	and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+*/
+(function( factory ) {
+	var jQuery;
+
+	/* global define, require, module */
+	if ( 'function' === typeof define && define.amd ) { // AMD. Register as an anonymous module.
+		define( ['jquery'], factory );
+	} else if ( 'object' === typeof exports ) { // Node/CommonJS.
+		jQuery         = require( 'jquery' );
+		module.exports = factory( jQuery );
+	} else { // Browser globals (zepto supported).
+		factory( window.jQuery || window.Zepto || window.$ ); // Zepto supported on browsers as well.
+	}
+
+}( function( $ ) {
+	'use strict';
+
+	var rCRLF           = /\r?\n/g;
+	var rsubmitterTypes = /^(?:submit|button|image|reset|file)$/i;
+	var rsubmittable    = /^(?:input|select|textarea|keygen)/i;
+	var rcheckableType  = /^(?:checkbox|radio)$/i;
+
+	$.fn.serializeJSON = function( options ) {
+		var f             = $.serializeJSON;
+		var _this         = this; // NOTE: the set of matched elements is most likely a form, but it could also be a group of inputs.
+		var opts          = f.setupOpts( options ); // Validate options and apply defaults.
+		var typeFunctions = $.extend( {}, opts.defaultTypes, opts.customTypes );
+
+		// Make a list with {name, value, el} for each input element.
+		var serializedArray = f.serializeArray( _this, opts );
+
+		// Convert the serializedArray into a serializedObject with nested keys.
+		var serializedObject = {};
+		$.each(
+			serializedArray,
+			function( _i, obj ) {
+				var nameSansType = obj.name;
+				var type         = $( obj.el ).attr( 'data-value-type' );
+				var p;
+				var typedValue;
+				var keys;
+
+				if ( ! type && ! opts.disableColonTypes ) { // Try getting the type from the input name.
+					p            = f.splitType( obj.name ); // "foo:string" => ["foo", "string"].
+					nameSansType = p[0];
+					type         = p[1];
+				}
+				if ( 'skip' === type ) {
+					return; // Ignore fields with type skip.
+				}
+				if ( ! type ) {
+					type = opts.defaultType; // "string" by default
+				}
+
+				typedValue = f.applyTypeFunc( obj.name, obj.value, type, obj.el, typeFunctions ); // Parse type as string, number, etc.
+
+				if ( ! typedValue && f.shouldSkipFalsy( obj.name, nameSansType, type, obj.el, opts ) ) {
+					return; // Ignore falsy inputs if specified in the options.
+				}
+
+				keys = f.splitInputNameIntoKeysArray( nameSansType );
+				f.deepSet( serializedObject, keys, typedValue, opts );
+			}
+		);
+
+		return serializedObject;
+	};
+
+	// Use $.serializeJSON as namespace for the auxiliary functions
+	// and to define defaults.
+	$.serializeJSON = {
+		defaultOptions: {}, // Reassign to override option defaults for all serializeJSON calls.
+
+		defaultBaseOptions: { // Do not modify, use defaultOptions instead.
+			checkboxUncheckedValue: undefined, // To include that value for unchecked checkboxes (instead of ignoring them).
+			useIntKeysAsArrayIndex: false, // Tip: name="foo[2]" value="v" => {foo: [null, null, "v"]}, instead of {foo: ["2": "v"]}.
+
+			skipFalsyValuesForTypes: [], // Skip serialization of falsy values for listed value types.
+			skipFalsyValuesForFields: [], // Skip serialization of falsy values for listed field names.
+
+			disableColonTypes: false, // Do not interpret ":type" suffix as a type.
+			customTypes: {}, // Extends defaultTypes.
+			defaultTypes: {
+				'string': function( str ) {
+					return String( str );
+				},
+				'number': function( str ) {
+					return Number( str );
+				},
+				'boolean': function( str ) {
+					var falses = ['false', 'null', 'undefined', '', '0'];
+					return -1 === falses.indexOf( str );
+				},
+				'null': function( str ) {
+					var falses = ['false', 'null', 'undefined', '', '0'];
+					return -1 === falses.indexOf( str ) ? str : null;
+				},
+				'array': function( str ) {
+					return JSON.parse( str );
+				},
+				'object': function( str ) {
+					return JSON.parse( str );
+				},
+				'skip': null // Skip is a special type used to ignore fields.
+			},
+			defaultType: 'string'
+		},
+
+		// Validate and set defaults.
+		setupOpts: function( options ) {
+			var f;
+			var validOpts;
+			var opt;
+
+			if ( null == options ) {
+				options = {};
+			}
+
+			f = $.serializeJSON;
+
+			// Validate.
+			validOpts = [
+				'checkboxUncheckedValue',
+				'useIntKeysAsArrayIndex',
+
+				'skipFalsyValuesForTypes',
+				'skipFalsyValuesForFields',
+
+				'disableColonTypes',
+				'customTypes',
+				'defaultTypes',
+				'defaultType'
+			];
+			for ( opt in options ) {
+				if ( validOpts.indexOf( opt ) === -1 ) {
+					throw new Error( 'serializeJSON ERROR: invalid option \'' + opt + '\'. Please use one of ' + validOpts.join( ', ' ) );
+				}
+			}
+
+			// Helper to get options or defaults.
+			return $.extend( {}, f.defaultBaseOptions, f.defaultOptions, options );
+		},
+
+		// Just like jQuery's serializeArray method, returns an array of objects with name and value.
+		// but also includes the dom element (el) and is handles unchecked checkboxes if the option or data attribute are provided.
+		serializeArray: function( _this, opts ) {
+			var f;
+			var elements;
+
+			if ( null == opts ) {
+				opts = {};
+			}
+
+			f = $.serializeJSON;
+
+			return _this.map(
+				function() {
+					elements = $.prop( this, 'elements' ); // Handle propHook "elements" to filter or add form elements.
+					return elements ? $.makeArray( elements ) : this;
+
+				}
+			).filter(
+				function() {
+					var $el  = $( this );
+					var type = this.type;
+
+					// Filter with the standard W3C rules for successful controls: http://www.w3.org/TR/html401/interact/forms.html#h-17.13.2.
+					return this.name && // Must contain a name attribute.
+						! $el.is( ':disabled' ) && // Must not be disable (use .is(":disabled") so that fieldset[disabled] works).
+						rsubmittable.test( this.nodeName ) && ! rsubmitterTypes.test( type ) && // only serialize submittable fields (and not buttons).
+						(this.checked || ! rcheckableType.test( type ) || f.getCheckboxUncheckedValue( $el, opts ) != null); // skip unchecked checkboxes (unless using opts).
+
+				}
+			).map(
+				function( _i, el ) {
+					var $el  = $( this );
+					var val  = $el.val();
+					var type = this.type; // "input", "select", "textarea", "checkbox", etc.
+
+					if ( null == val ) {
+						return null;
+					}
+
+					if ( rcheckableType.test( type ) && ! this.checked ) {
+						val = f.getCheckboxUncheckedValue( $el, opts );
+					}
+
+					if ( isArray( val ) ) {
+						return $.map(
+							val,
+							function( val ) {
+								return {name: el.name, value: val.replace( rCRLF, '\r\n' ), el: el};
+							}
+						);
+					}
+
+					return {name: el.name, value: val.replace( rCRLF, '\r\n' ), el: el};
+
+				}
+			).get();
+		},
+
+		getCheckboxUncheckedValue: function( $el, opts ) {
+			var val = $el.attr( 'data-unchecked-value' );
+			if ( null == val ) {
+				val = opts.checkboxUncheckedValue;
+			}
+			return val;
+		},
+
+		// Parse value with type function.
+		applyTypeFunc: function( name, strVal, type, el, typeFunctions ) {
+			var typeFunc = typeFunctions[type];
+			if ( ! typeFunc ) { // quick feedback to user if there is a typo or missconfiguration.
+				throw new Error(
+					'serializeJSON ERROR: Invalid type ' + type + ' found in input name \'' + name + '\', please use one of ' + objectKeys( typeFunctions )
+					.join( ', ' )
+				);
+			}
+			return typeFunc( strVal, el );
+		},
+
+		// Splits a field name into the name and the type. Examples:
+		// "foo"           =>  ["foo", ""].
+		// "foo:boolean"   =>  ["foo", "boolean"].
+		// "foo[bar]:null" =>  ["foo[bar]", "null"].
+		splitType: function( name ) {
+			var parts = name.split( ':' );
+			var t;
+
+			if ( parts.length > 1 ) {
+				t = parts.pop();
+				return [parts.join( ':' ), t];
+			} else {
+				return [name, ''];
+			}
+		},
+
+		// Check if this input should be skipped when it has a falsy value,
+		// depending on the options to skip values by name or type, and the data-skip-falsy attribute.
+		shouldSkipFalsy: function( name, nameSansType, type, el, opts ) {
+			var skipFromDataAttr = $( el ).attr( 'data-skip-falsy' );
+			var optForFields;
+			var optForTypes;
+
+			if ( skipFromDataAttr != null ) {
+				return skipFromDataAttr !== 'false'; // any value is true, except the string "false".
+			}
+
+			optForFields = opts.skipFalsyValuesForFields;
+			if ( optForFields && (optForFields.indexOf( nameSansType ) !== -1 || optForFields.indexOf( name ) !== -1) ) {
+				return true;
+			}
+
+			optForTypes = opts.skipFalsyValuesForTypes;
+			return ! ! ( optForTypes && optForTypes.indexOf( type ) !== -1 );
+		},
+
+		// Split the input name in programmatically readable keys.
+		// Examples:
+		// "foo"              => ["foo"]
+		// "[foo]"            => ["foo"]
+		// "foo[inn][bar]"    => ["foo", "inn", "bar"]
+		// "foo[inn[bar]]"    => ["foo", "inn", "bar"]
+		// "foo[inn][arr][0]" => ["foo", "inn", "arr", "0"]
+		// "arr[][val]"       => ["arr", "", "val"].
+		splitInputNameIntoKeysArray: function( nameWithNoType ) {
+			var keys = nameWithNoType.split( '[' ); // split string into array.
+
+			keys = $.map(
+				keys,
+				function( key ) {
+					return key.replace( /\]/g, '' );
+				}
+			); // Remove closing brackets.
+			if ( keys[0] === '' ) {
+				keys.shift();
+			} // Ensure no opening bracket ("[foo][inn]" should be same as "foo[inn]")
+			return keys;
+		},
+
+		// Set a value in an object or array, using multiple keys to set in a nested object or array.
+		// This is the main function of the script, that allows serializeJSON to use nested keys.
+		// Examples:
+		//
+		// deepSet(obj, ["foo"], v)               // obj["foo"] = v
+		// deepSet(obj, ["foo", "inn"], v)        // obj["foo"]["inn"] = v // Create the inner obj["foo"] object, if needed
+		// deepSet(obj, ["foo", "inn", "123"], v) // obj["foo"]["arr"]["123"] = v //
+		//
+		// deepSet(obj, ["0"], v)                                   // obj["0"] = v
+		// deepSet(arr, ["0"], v, {useIntKeysAsArrayIndex: true})   // arr[0] = v
+		// deepSet(arr, [""], v)                                    // arr.push(v)
+		// deepSet(obj, ["arr", ""], v)                             // obj["arr"].push(v)
+		//
+		// arr = [];
+		// deepSet(arr, ["", v]          // arr => [v]
+		// deepSet(arr, ["", "foo"], v)  // arr => [v, {foo: v}]
+		// deepSet(arr, ["", "bar"], v)  // arr => [v, {foo: v, bar: v}]
+		// deepSet(arr, ["", "bar"], v)  // arr => [v, {foo: v, bar: v}, {bar: v}].
+		deepSet: function( o, keys, value, opts ) {
+			if ( null == opts ) {
+				opts = {};
+			}
+			var f = $.serializeJSON;
+			if ( isUndefined( o ) ) {
+				throw new Error( 'ArgumentError: param \'o\' expected to be an object or array, found undefined' );
+			}
+			if ( ! keys || 0 === keys.length ) {
+				throw new Error( 'ArgumentError: param \'keys\' expected to be an array with least one element' );
+			}
+
+			var key = keys[0];
+
+			// Only one key, then it's not a deepSet, just assign the value in the object or add it to the array.
+			if ( 1 === keys.length ) {
+				if ( key === '' ) { // Push values into an array (o must be an array).
+					o.push( value );
+				} else {
+					o[key] = value; // Keys can be object keys (strings) or array indexes (numbers).
+				}
+				return;
+			}
+
+			var nextKey  = keys[1]; // Nested key.
+			var tailKeys = keys.slice( 1 ); // List of all other nested keys (nextKey is first).
+
+			if ( key === '' ) { // Push nested objects into an array (o must be an array).
+				var lastIdx = o.length - 1;
+				var lastVal = o[lastIdx];
+
+				// if the last value is an object or array, and the new key is not set yet.
+				if ( isObject( lastVal ) && isUndefined( f.deepGet( lastVal, tailKeys ) ) ) {
+					key = lastIdx; // then set the new value as a new attribute of the same object.
+				} else {
+					key = lastIdx + 1; // otherwise, add a new element in the array.
+				}
+			}
+
+			if ( nextKey === '' ) { // "" is used to push values into the nested array "array[]".
+				if ( isUndefined( o[key] ) || ! isArray( o[key] ) ) {
+					o[key] = []; // define (or override) as array to push values.
+				}
+			} else {
+				if ( opts.useIntKeysAsArrayIndex && isValidArrayIndex( nextKey ) ) { // if 1, 2, 3 ... then use an array, where nextKey is the index.
+					if ( isUndefined( o[key] ) || ! isArray( o[key] ) ) {
+						o[key] = []; // Define (or override) as array, to insert values using int keys as array indexes.
+					}
+				} else { // nextKey is going to be the nested object's attribute.
+					if ( isUndefined( o[key] ) || ! isObject( o[key] ) ) {
+						o[key] = {}; // Define (or override) as object, to set nested properties.
+					}
+				}
+			}
+
+			// Recursively set the inner object.
+			f.deepSet( o[key], tailKeys, value, opts );
+		},
+
+		deepGet: function( o, keys ) {
+			var f = $.serializeJSON;
+			var tailKeys;
+
+			if ( isUndefined( o ) || isUndefined( keys ) || keys.length === 0 || ( ! isObject( o ) && ! isArray( o ) ) ) {
+				return o;
+			}
+			var key = keys[0];
+			if ( '' === key ) { // "" means next array index (used by deepSet)
+				return undefined;
+			}
+			if ( 1 === keys.length ) {
+				return o[key];
+			}
+
+			tailKeys = keys.slice( 1 );
+			return f.deepGet( o[key], tailKeys );
+		}
+	};
+
+	// Polyfill Object.keys to get option keys in IE<9.
+	var objectKeys = function( obj ) {
+		if ( Object.keys ) {
+			return Object.keys( obj );
+		} else {
+			var key, keys = [];
+			for ( key in obj ) {
+				keys.push( key );
+			}
+			return keys;
+		}
+	};
+
+	var isObject = function( obj ) {
+		return obj === Object( obj );
+	}; // true for Objects and Arrays.
+
+	var isUndefined = function( obj ) {
+		return obj === void 0;
+	}; // safe check for undefined values.
+
+	var isValidArrayIndex = function( val ) {
+		return /^[0-9]+$/.test( String( val ) );
+	}; // 1,2,3,4 ... are valid array indexes.
+
+	var isArray = Array.isArray || function( obj ) {
+		return '[object Array]' === Object.prototype.toString.call( obj );
+	};
+} ) );
 
 // jscs:disable
 // jshint ignore: start
@@ -1110,7 +1526,7 @@
 
 				// Set focus action (highlight)
 				if (options.highlight && elementType !== 'DIV')
-					jQuery(elem).focus(function() { this.select(); });
+					jQuery(elem).on( 'focus', function() { this.trigger( 'select' ); });
 
 				// Key watcher / clear and reset the timer
 				var startWatch = function(evt) {

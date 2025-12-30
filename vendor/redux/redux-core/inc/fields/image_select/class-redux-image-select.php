@@ -165,6 +165,7 @@ if ( ! class_exists( 'Redux_Image_Select', false ) ) {
 					if ( ! empty( $this->field['tiles'] ) && true === $this->field['tiles'] ) {
 						echo '<span class="tiles ' . esc_attr( $v['class'] ) . '" style="background-image: url(' . esc_url( $v['img'] ) . ');" rel="' . esc_url( $v['img'] ) . '"">&nbsp;</span>';
 					} else {
+						// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- No image/icon to enqueue.
 						echo '<img src="' . esc_url( $v['img'] ) . '" title="' . esc_attr( $v['alt'] ) . '" alt="' . esc_attr( $v['alt'] ) . '" class="' . esc_attr( $v['class'] ) . '" style="' . esc_attr( $style ) . '"' . esc_attr( $presets ) . esc_attr( $merge ) . ' />';
 					}
 
@@ -175,7 +176,7 @@ if ( ! class_exists( 'Redux_Image_Select', false ) ) {
 					echo '</label>';
 					echo '</li>';
 
-					$x ++;
+					++$x;
 				}
 
 				echo '</ul>';
@@ -194,7 +195,7 @@ if ( ! class_exists( 'Redux_Image_Select', false ) ) {
 		public function enqueue() {
 
 			wp_enqueue_script(
-				'redux-field-image-select-js',
+				'redux-field-image-select',
 				Redux_Core::$url . 'inc/fields/image_select/redux-image-select' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js' ),
 				$this->timestamp,
@@ -203,7 +204,7 @@ if ( ! class_exists( 'Redux_Image_Select', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-image-select-css',
+					'redux-field-image-select',
 					Redux_Core::$url . 'inc/fields/image_select/redux-image-select.css',
 					array(),
 					$this->timestamp

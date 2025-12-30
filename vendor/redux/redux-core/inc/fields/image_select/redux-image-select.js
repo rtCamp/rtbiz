@@ -1,18 +1,18 @@
 /* global redux, redux_change, jQuery */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	redux.field_objects              = redux.field_objects || {};
 	redux.field_objects.image_select = redux.field_objects.image_select || {};
 
-	redux.field_objects.image_select.init = function( selector ) {
+	redux.field_objects.image_select.init = function ( selector ) {
 		selector = $.redux.getSelector( selector, 'image_select' );
 
 		$( selector ).each(
-			function() {
-				var el     = $( this );
-				var parent = el;
+			function () {
+				const el   = $( this );
+				let parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -31,13 +31,13 @@
 				// On label click, change the input and class.
 				el.find( '.redux-image-select label img, .redux-image-select label .tiles' ).on(
 					'click',
-					function( e ) {
-						var presets;
-						var data;
-						var merge;
-						var importCodeValue;
+					function ( e ) {
+						let presets;
+						let data;
+						let merge;
+						let importCodeValue;
 
-						var id = $( this ).closest( 'label' ).attr( 'for' );
+						const id = $( this ).closest( 'label' ).attr( 'for' );
 
 						$( this ).parents( 'fieldset:first' ).find( '.redux-image-select-selected' )
 						.removeClass( 'redux-image-select-selected' ).find( 'input[type="radio"]' ).prop( 'checked', false );
@@ -52,14 +52,14 @@
 							merge   = presets.data( 'merge' );
 
 							if ( undefined !== merge && null !== merge ) {
-								if ( 'string' === $.type( merge ) ) {
+								if ( 'string' === typeof( merge ) ) {
 									merge = merge.split( '|' );
 								}
 
 								$.each(
 									data,
-									function( index ) {
-										if ( 'object' === $.type( redux.optName.options[index] ) && (
+									function ( index ) {
+										if ( 'object' === typeof( redux.optName.options[index] ) && (
 											true === merge || -1 !== $.inArray( index, merge ) )
 										) {
 											data[index] = $.extend( redux.optName.options[index], data[index] );
@@ -83,9 +83,9 @@
 								}
 
 								if ( 0 !== $( '#publishing-action #publish' ).length ) {
-									$( '#publish' ).click();
+									$( '#publish' ).trigger( 'click' );
 								} else {
-									$( '#redux-import' ).click();
+									$( '#redux-import' ).trigger( 'click' );
 								}
 							}
 
@@ -102,7 +102,7 @@
 				el.find( '.tiles' ).qtip(
 					{
 						content: {
-							text: function() {
+							text: function () {
 								return '<img src="' + $( this ).attr( 'rel' ) + '" style="max-width:150px;" alt=" />';
 							}
 						}, style: 'qtip-tipsy', position: {

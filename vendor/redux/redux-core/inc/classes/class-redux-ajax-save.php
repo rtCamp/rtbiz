@@ -5,6 +5,7 @@
  * @class Redux_Core
  * @version 4.0.0
  * @package Redux Framework/Classes
+ * @noinspection PhpConditionCheckedByNextConditionInspection
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,21 +21,25 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 		 * Redux_AJAX_Save constructor.
 		 * array_merge_recursive_distinct
 		 *
-		 * @param object $parent ReduxFrameword object.
+		 * @param object $redux ReduxFramework object.
 		 */
-		public function __construct( $parent ) {
-			parent::__construct( $parent );
+		public function __construct( $redux ) {
+			parent::__construct( $redux );
 
 			add_action( 'wp_ajax_' . $this->args['opt_name'] . '_ajax_save', array( $this, 'save' ) );
 		}
 
 		/**
 		 * AJAX callback to save the option panel values.
+		 *
+		 * @throws ReflectionException Exception.
 		 */
 		public function save() {
+			$redux = null;
+
 			$core = $this->core();
 
-			if ( ! isset( $_REQUEST['nonce'] ) || ( isset( $_REQUEST['nonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'redux_ajax_nonce' . $this->args['opt_name'] ) ) ) {
+			if ( ! isset( $_REQUEST['nonce'] ) || ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'redux_ajax_nonce' . $this->args['opt_name'] ) ) ) {
 				echo wp_json_encode(
 					array(
 						'status' => esc_html__( 'Invalid security credential.  Please reload the page and try again.', 'redux-framework' ),
@@ -67,8 +72,8 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 
 					if ( ! empty( $values ) ) {
 						try {
-							if ( isset( $redux->validation_ran ) ) {
-								unset( $redux->validation_ran );
+							if ( true === Redux_Core::$validation_ran ) {
+								Redux_Core::$validation_ran = false;
 							}
 
 							$redux->options_class->set( $redux->options_class->validate_options( $values ) );
@@ -76,7 +81,7 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 							$do_reload = false;
 							if ( isset( $core->required_class->reload_fields ) && ! empty( $core->required_class->reload_fields ) ) {
 								if ( ! empty( $core->transients['changed_values'] ) ) {
-									foreach ( $core->required_class->reload_fields as $idx => $val ) {
+									foreach ( $core->required_class->reload_fields as $val ) {
 										if ( array_key_exists( $val, $core->transients['changed_values'] ) ) {
 											$do_reload = true;
 										}
@@ -118,8 +123,8 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 			}
 
 			if ( isset( $core->transients['run_compiler'] ) && $core->transients['run_compiler'] ) {
-				$core->no_output = true;
-				$temp            = $core->args['output_variables_prefix'];
+				Redux_Core::$no_output = true;
+				$temp                  = $core->args['output_variables_prefix'];
 
 				// Allow the override of variable's prefix for use by SCSS or LESS.
 				if ( isset( $core->args['compiler_output_variables_prefix'] ) ) {
@@ -137,8 +142,10 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 					/**
 					 * Action 'redux/options/{opt_name}/compiler'
 					 *
-					 * @param array  options
-					 * @param string CSS that get sent to the compiler hook
+					 * @param array  $options Global options.
+					 * @param string $css CSS that get sent to the compiler hook.
+					 * @param array  $changed_values Changed option values.
+					 * @param array  $output_variables Output variables.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -147,8 +154,7 @@ if ( ! class_exists( 'Redux_AJAX_Save', false ) ) {
 					/**
 					 * Action 'redux/options/{opt_name}/compiler/advanced'
 					 *
-					 * @param array  options
-					 * @param string CSS that get sent to the compiler hook, which sends the full Redux object
+					 * @param object $redux ReduxFramework object.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName

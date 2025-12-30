@@ -1,24 +1,20 @@
 /* global redux */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initFields = function() {
+	$.redux.initFields = function () {
 		$( '.redux-group-tab:visible' ).find( '.redux-field-init:visible' ).each(
-			function() {
-				var tr;
-				var th;
+			function () {
+				let tr;
+				let th;
 
-				var type = $( this ).attr( 'data-type' );
+				const type = $( this ).attr( 'data-type' );
 
 				if ( 'undefined' !== typeof redux.field_objects && redux.field_objects[type] && redux.field_objects[type] ) {
 					redux.field_objects[type].init();
-				}
-
-				if ( 'undefined' !== typeof redux.field_objects.pro && ! $.isEmptyObject( redux.field_objects.pro[type] ) && redux.field_objects.pro[type] ) {
-					redux.field_objects.pro[type].init();
 				}
 
 				if ( ! redux.customizer && $( this ).hasClass( 'redux_remove_th' ) ) {

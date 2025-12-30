@@ -134,13 +134,14 @@ if ( ! class_exists( 'Redux_Sortable', false ) ) {
 
 					$class .= ' checkbox_sortable';
 					$name   = '';
+
+					echo '<div class="checkbox-container">';
 					echo '<input
 							type="hidden"
 							name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[' . esc_attr( $k ) . ']"
 							id="' . esc_attr( $this->field['id'] . '-' . $k ) . '-hidden"
 							value="' . esc_attr( $value_display ) . '" />';
 
-					echo '<div class="checkbox-container">';
 				} else {
 					$value_display = $this->value[ $k ] ?? '';
 					$nicename      = $this->field['options'][ $k ];
@@ -169,9 +170,7 @@ if ( ! class_exists( 'Redux_Sortable', false ) ) {
 				if ( 'checkbox' === $this->field['mode'] ) {
 					echo '<i class="dashicons dashicons-visibility visibility"></i>';
 
-					if ( 'checkbox' === $this->field['mode'] ) {
-						echo '<label for="' . esc_attr( $this->field['id'] . '[' . $k ) . ']"><strong>' . esc_html( $options[ $k ] ) . '</strong></label>';
-					}
+					echo '<strong>' . esc_html( $options[ $k ] ) . '</strong>';
 				}
 
 				if ( 'checkbox' === $this->field['mode'] ) {
@@ -190,7 +189,7 @@ if ( ! class_exists( 'Redux_Sortable', false ) ) {
 		public function enqueue() {
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-sortable-css',
+					'redux-field-sortable',
 					Redux_Core::$url . 'inc/fields/sortable/redux-sortable.css',
 					array(),
 					$this->timestamp
@@ -198,7 +197,7 @@ if ( ! class_exists( 'Redux_Sortable', false ) ) {
 			}
 
 			wp_enqueue_script(
-				'redux-field-sortable-js',
+				'redux-field-sortable',
 				Redux_Core::$url . 'inc/fields/sortable/redux-sortable' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js', 'jquery-ui-sortable' ),
 				$this->timestamp,

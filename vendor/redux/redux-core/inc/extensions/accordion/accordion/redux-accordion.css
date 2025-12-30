@@ -1,0 +1,52 @@
+.redux-main .redux-accordion-field {
+	overflow: hidden;
+	cursor: pointer;
+	margin-top: 10px;
+}
+.redux-main .redux-accordion-field:first-child {
+	margin-top: 0;
+}
+.redux-main .redux-accordion-field .redux-accordion-info {
+	border: 1px solid #dfdfdf;
+	padding: 10px 15px;
+	height: auto;
+	min-height: 20px;
+	overflow: hidden;
+	word-wrap: break-word;
+	background: #FAFAFA;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+.redux-main .redux-accordion-field .redux-accordion-info:hover {
+	border-color: #999;
+}
+.redux-main .redux-accordion-field .redux-accordion-info .el {
+	color: #000;
+	float: right;
+	margin-top: -23px;
+	margin-right: 10px;
+	-webkit-transition: all 0.5s;
+	transition: all 0.5s;
+}
+.redux-main .redux-accordion-field .redux-accordion-info .el.subtitled {
+	margin-top: -33px;
+}
+.redux-main .redux-accordion-field h3 {
+	margin: 0;
+	border-bottom: 0;
+}
+.redux-main .redux-accordion-field .redux-accordion-desc {
+	margin: -5px 0 10px;
+}
+
+.redux-accordion-wrap {
+	border: 1px solid #e5e5e5;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	border-top: none;
+	padding: 0 15px;
+	background: #fff;
+}
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHV4LWFjY29yZGlvbi5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNJO0NBQ0k7Q0FDQTtDQUNBOztBQUVBO0NBQ0k7O0FBR0o7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7O0FBRUE7Q0FDSTs7QUFHSjtDQUNJO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7O0FBQ0E7Q0FDSTs7QUFLWjtDQUNJO0NBQ0E7O0FBR0o7Q0FDSTs7O0FBS1o7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0EiLCJmaWxlIjoicmVkdXgtYWNjb3JkaW9uLmNzcyJ9 */
+
+/*# sourceMappingURL=redux-accordion.css.map */

@@ -1,17 +1,18 @@
 /* global redux, tinyMCE, ajaxurl */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.ajax_save = function( button ) {
-		var $data;
-		var $nonce;
+	$.redux.ajax_save = function ( button ) {
+		let $data;
+		let $nonce;
 
-		var overlay           = $( document.getElementById( 'redux_ajax_overlay' ) );
-		var $notification_bar = $( document.getElementById( 'redux_notification_bar' ) );
-		var $parent           = $( button ).parents( '.redux-wrap-div' ).find( 'form' ).first();
+		const overlay           = $( document.getElementById( 'redux_ajax_overlay' ) );
+		const $notification_bar = $( document.getElementById( 'redux_notification_bar' ) );
+		const $parent           = $( button ).parents( '.redux-wrap-div' ).find( 'form' ).first();
 
 		overlay.fadeIn();
 
@@ -24,7 +25,7 @@
 		$( '.redux-save-warn' ).slideUp();
 		$( '.redux_ajax_save_error' ).slideUp(
 			'medium',
-			function() {
+			function () {
 				$( this ).remove();
 			}
 		);
@@ -33,8 +34,8 @@
 		if ( redux.optName.hasOwnProperty( 'editor' ) ) {
 			$.each(
 				redux.optName.editor,
-				function( $key ) {
-					var editor;
+				function ( $key ) {
+					let editor;
 
 					if ( 'undefined' !== typeof ( tinyMCE ) ) {
 						editor = tinyMCE.get( $key );
@@ -51,8 +52,8 @@
 
 		// Add values for checked and unchecked checkboxes fields.
 		$parent.find( 'input[type=checkbox]' ).each(
-			function() {
-				var chkVal;
+			function () {
+				let chkVal;
 
 				if ( 'undefined' !== typeof $( this ).attr( 'name' ) ) {
 					chkVal = $( this ).is( ':checked' ) ? $( this ).val() : '0';
@@ -78,8 +79,10 @@
 					'opt_name': redux.optName.args.opt_name,
 					data:       $data
 				},
-				error: function( response ) {
-					$( '.redux-action_bar input' ).prop( 'disabled', false );
+				error: function ( response ) {
+					let input = $( '.redux-action_bar input' );
+
+					input.prop( 'disabled', false );
 
 					if ( true === redux.optName.args.dev_mode ) {
 						console.log( response.responseText );
@@ -91,11 +94,11 @@
 						redux.optName.args.ajax_save = false;
 
 						$( button ).trigger( 'click' );
-						$( '.redux-action_bar input' ).prop( 'disabled', true );
+						input.prop( 'disabled', true );
 					}
 				},
-				success: function( response ) {
-					var $save_notice;
+				success: function ( response ) {
+					let $save_notice;
 
 					if ( response.action && 'reload' === response.action ) {
 						location.reload( true );
@@ -145,9 +148,9 @@
 function colorValidate( field ) {
 	'use strict';
 
-	var value = jQuery( field ).val();
+	const value = jQuery( field ).val();
+	const hex   = colorNameToHex( value );
 
-	var hex = colorNameToHex( value );
 	if ( hex !== value.replace( '#', '' ) ) {
 		return hex;
 	}
@@ -158,9 +161,9 @@ function colorValidate( field ) {
 function colorNameToHex( colour ) {
 	'use strict';
 
-	var tcolour = colour.replace( /^\s\s*/, '' ).replace( /\s\s*$/, '' ).replace( '#', '' );
+	const tcolour = colour.replace( /^\s+/, '' ).replace( /\s+$/, '' ).replace( '#', '' );
 
-	var colours = {
+	const colours = {
 		'aliceblue': '#f0f8ff',
 		'antiquewhite': '#faebd7',
 		'aqua': '#00ffff',
@@ -311,15 +314,15 @@ function colorNameToHex( colour ) {
 	return colour;
 }
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.expandOptions = function( parent ) {
-		var trigger = parent.find( '.expand_options' );
-		var width   = parent.find( '.redux-sidebar' ).width() - 1;
-		var id      = $( '.redux-group-menu .active a' ).data( 'rel' ) + '_section_group';
+	$.redux.expandOptions = function ( parent ) {
+		const trigger = parent.find( '.expand_options' );
+		const width   = parent.find( '.redux-sidebar' ).width() - 1;
+		const id      = $( '.redux-group-menu .active a' ).data( 'rel' ) + '_section_group';
 
 		if ( trigger.hasClass( 'expanded' ) ) {
 			trigger.removeClass( 'expanded' );
@@ -333,13 +336,13 @@ function colorNameToHex( colour ) {
 			parent.find( '.redux-main' ).stop().animate(
 				{ 'margin-left': width },
 				500,
-				function() {
+				function () {
 					parent.find( '.redux-main' ).attr( 'style', '' );
 				}
 			);
 
 			parent.find( '.redux-group-tab' ).each(
-				function() {
+				function () {
 					if ( $( this ).attr( 'id' ) !== id ) {
 						$( this ).fadeOut( 'fast' );
 					}
@@ -363,7 +366,7 @@ function colorNameToHex( colour ) {
 
 			parent.find( '.redux-group-tab' ).fadeIn(
 				'medium',
-				function() {
+				function () {
 					$.redux.initFields();
 				}
 			);
@@ -373,135 +376,134 @@ function colorNameToHex( colour ) {
 	};
 })( jQuery );
 
-/* global redux, redux_change, jQuery, pagenow, ajaxurl */
+/* global redux, redux_change, jQuery */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initEvents = function( el ) {
-		var stickyHeight;
-		var search  = window.location.search;
-		var curPage = pagenow;
-		var dialog;
-		var messageDialog;
+	$.redux.initEvents = function ( el ) {
+		let stickyHeight;
 
-		if ( 'string' === typeof search && 'string' === typeof curPage && true === redux.optName.args.dev_mode ) {
-			search  = search.replace( '?page=', '' );
-			curPage = curPage.replace( 'toplevel_page_', '' );
+		el.find( '.redux-presets-bar' ).on(
+			'click',
+			function () {
+				window.onbeforeunload = null;
+			}
+		);
 
-			if ( search === curPage ) {
-				document.addEventListener(
-					'keydown',
-					function( event ) {
-						if ( event.ctrlKey && event.shiftKey && 'H' === event.key ) {
-							dialog.dialog( 'open' );
+		if ( true === redux.optName.args.search ) {
+			const url          = window.location.href;
+			const wordAfterUrl = url.split( '/' ).pop();
+
+			if ( 'profile.php' === wordAfterUrl || 0 === wordAfterUrl.indexOf( 'edit-tags.php' ) ) {
+				return false;
+			}
+
+			if ( 0 === $( '#customize-controls' ).length ) {
+				$( '.redux-container' ).each(
+					function ( ) {
+						if ( ! $( this ).hasClass( 'redux-no-sections' ) ) {
+							$( this ).find( '.redux-main' ).prepend( '<input class="redux_field_search" id="redux_field_search" type="text" placeholder="' + redux.optName.search + '"/>' );
 						}
 					}
 				);
 
-				messageDialog = $( '#redux-dialog-message' ).dialog(
+				$( '.redux_field_search' ).on(
+					'keypress',
+					function ( evt ) {
+
+						// Determine where our character code is coming from within the event.
+						const charCode = evt.charCode || evt.keyCode;
+
+						if ( 13 === charCode ) { // Enter key's keycode.
+							return false;
+						}
+					}
+				).typeWatch(
 					{
-						classes: {
-							'ui-dialog': 'redux-message-dialog',
-							'ui-dialog-buttonpane': 'redux-message-dialog-buttonpane',
-							'ui-dialog-title': 'redux-message-dialog-title',
-							'ui-dialog-content': 'redux-message-dialog-content'
-						},
-						modal: true,
-						autoOpen: false,
-						resizable: false,
-						height: 'auto',
-						width: 400,
-						buttons: {
-							Ok: function() {
-								$( this ).dialog( 'close' );
+						callback: function ( searchString ) {
+							let searchArray;
+							let parent;
+							let expanded_options;
+
+							searchString = searchString.toLowerCase();
+
+							searchArray = searchString.split( ' ' );
+							parent      = $( this ).parents( '.redux-container:first' );
+
+							expanded_options = parent.find( '.expand_options' );
+
+							if ( '' !== searchString ) {
+								if ( ! expanded_options.hasClass( 'expanded' ) ) {
+									expanded_options.trigger( 'click' );
+									parent.find( '.redux-main' ).addClass( 'redux-search' );
+								}
+							} else {
+								if ( expanded_options.hasClass( 'expanded' ) ) {
+									expanded_options.trigger( 'click' );
+									parent.find( '.redux-main' ).removeClass( 'redux-search' );
+								}
+								parent.find( '.redux-section-field, .redux-info-field, .redux-notice-field, .redux-container-group, .redux-section-desc, .redux-group-tab h3' ).show();
 							}
-						}
-					}
-				);
 
-				dialog = $( '#redux-dialog-confirm' ).dialog(
-					{
-						modal: true,
-						classes: {
-							'ui-dialog': 'redux-support-dialog'
-						},
-						autoOpen: false,
-						resizable: false,
-						height: 'auto',
-						width: 400,
-						buttons: {
-							Submit: function() {
-								var buttonPane  = $( '.redux-message-dialog-buttonpane' );
-								var dialogTitle = $( '.redux-message-dialog-title' );
-								var content     = $( '.redux-message-dialog-content .redux-message-p' );
+							parent.find( '.redux-field-container' ).each(
+								function () {
+									if ( '' !== searchString ) {
+										$( this ).parents( 'tr:first' ).hide();
+									} else {
+										$( this ).parents( 'tr:first' ).show();
+									}
+								}
+							);
 
-								$.ajax(
-									{ type: 'post',
-										dataType: 'json',
-										url: ajaxurl,
-										data: {
-											action:     'redux_submit_support_data',
-											nonce:      $( '#redux-dialog-confirm' ).data( 'nonce' )
-										},
-										beforeSend: function() {
-											buttonPane.css( { 'display': 'none' } );
-											$( '#redux-dialog-message .spinner' ).css( { 'visibility': 'visible' } );
+							parent.find( '.form-table tr' ).filter(
+								function () {
+									let isMatch = true, text = $( this ).find( '.redux_field_th' ).text().toLowerCase();
 
-											messageDialog.dialog( 'open' );
-										},
-										error: function( response ) {
-											buttonPane.css( { 'display': 'block' } );
-											dialogTitle.text( 'Error' );
+									if ( ! text || '' === text ) {
+										return false;
+									}
 
-											console.log( response );
-										},
-										success: function( response ) {
-											buttonPane.css( { 'display': 'block' } );
-
-											if ( response.status && 'success' === response.status ) {
-												dialogTitle.text( 'Information Sent' );
-												content.html( 'Your support data has been transmitted.  The reference number for this transmission is: <strong>' + response.data + '</strong>' );
-											} else {
-												dialogTitle.text( 'Error' );
-												content.text( response.data );
+									$.each(
+										searchArray,
+										function ( i, searchStr ) {
+											if ( -1 === text.indexOf( searchStr ) ) {
+												isMatch = false;
 											}
 										}
-									}
-								);
+									);
 
-								$( this ).dialog( 'close' );
-							},
-							Cancel: function() {
-								$( this ).dialog( 'close' );
-							}
-						}
+									if ( isMatch ) {
+										$( this ).show();
+									}
+
+									return isMatch;
+								}
+							).show();
+						},
+						wait: 400,
+						highlight: false,
+						captureLength: 0
 					}
 				);
 			}
 		}
 
-		el.find( '.redux-presets-bar' ).on(
-			'click',
-			function() {
-				window.onbeforeunload = null;
-			}
-		);
-
 		// Customizer save hook.
 		el.find( '#customize-save-button-wrapper #save' ).on(
 			'click',
-			function() {
+			function () {
 
 			}
 		);
 
 		el.find( '#toplevel_page_' + redux.optName.args.slug + ' .wp-submenu a, #wp-admin-bar-' + redux.optName.args.slug + ' a.ab-item' ).on(
 			'click',
-			function( e ) {
-				var url;
+			function ( e ) {
+				let url;
 
 				if ( ( el.find( '#toplevel_page_' + redux.optName.args.slug ).hasClass( 'wp-menu-open' ) ||
 					$( this ).hasClass( 'ab-item' ) ) &&
@@ -526,7 +528,7 @@ function colorNameToHex( colour ) {
 		// Save button clicked.
 		el.find( '.redux-action_bar input, #redux-import-action input' ).on(
 			'click',
-			function( e ) {
+			function ( e ) {
 				if ( $( this ).attr( 'name' ) === redux.optName.args.opt_name + '[defaults]' ) {
 
 					// Defaults button clicked.
@@ -558,10 +560,9 @@ function colorNameToHex( colour ) {
 
 		$( '.expand_options' ).on(
 			'click',
-			function( e ) {
-				var tab;
-
-				var container = el;
+			function ( e ) {
+				let tab;
+				const container = el;
 
 				e.preventDefault();
 
@@ -572,7 +573,7 @@ function colorNameToHex( colour ) {
 
 					el.find( '#' + tab + '_section_group' ).fadeIn(
 						200,
-						function() {
+						function () {
 							if ( 0 !== el.find( '#redux-footer' ).length ) {
 								$.redux.stickyInfo(); // Race condition fix.
 							}
@@ -595,7 +596,7 @@ function colorNameToHex( colour ) {
 		$( document.body ).on(
 			'change',
 			'.redux-field input, .redux-field textarea, .redux-field select',
-			function() {
+			function () {
 				if ( $( '.redux-container-typography select' ).hasClass( 'ignore-change' ) ) {
 					return;
 				}
@@ -616,14 +617,14 @@ function colorNameToHex( colour ) {
 		if ( 0 !== el.find( '#redux-footer' ).length ) {
 			$( window ).on(
 				'scroll',
-				function() {
+				function () {
 					$.redux.stickyInfo();
 				}
 			);
 
 			$( window ).on(
 				'resize',
-				function() {
+				function () {
 					$.redux.stickyInfo();
 				}
 			);
@@ -635,25 +636,21 @@ function colorNameToHex( colour ) {
 
 /* global redux */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initFields = function() {
+	$.redux.initFields = function () {
 		$( '.redux-group-tab:visible' ).find( '.redux-field-init:visible' ).each(
-			function() {
-				var tr;
-				var th;
+			function () {
+				let tr;
+				let th;
 
-				var type = $( this ).attr( 'data-type' );
+				const type = $( this ).attr( 'data-type' );
 
 				if ( 'undefined' !== typeof redux.field_objects && redux.field_objects[type] && redux.field_objects[type] ) {
 					redux.field_objects[type].init();
-				}
-
-				if ( 'undefined' !== typeof redux.field_objects.pro && ! $.isEmptyObject( redux.field_objects.pro[type] ) && redux.field_objects.pro[type] ) {
-					redux.field_objects.pro[type].init();
 				}
 
 				if ( ! redux.customizer && $( this ).hasClass( 'redux_remove_th' ) ) {
@@ -675,21 +672,23 @@ function colorNameToHex( colour ) {
 })( jQuery );
 
 /* global redux, document */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
 	$( document ).ready(
-		function() {
-			var opt_name;
-			var tempArr = [];
+		function () {
+			let opt_name;
+			let tempArr = [];
+			let container;
 
-			$.fn.isOnScreen = function() {
-				var win;
-				var viewport;
-				var bounds;
+			$.fn.isOnScreen = function () {
+				let win;
+				let viewport;
+				let bounds;
 
 				if ( ! window ) {
 					return;
@@ -718,8 +717,10 @@ function colorNameToHex( colour ) {
 				$( '.wp-full-overlay-sidebar' ).addClass( 'redux-container' );
 			}
 
-			$( '.redux-container' ).each(
-				function() {
+			container = $( '.redux-container' );
+
+			container.each(
+				function () {
 					opt_name = $.redux.getOptName( this );
 
 					if ( $.inArray( opt_name, tempArr ) === -1 ) {
@@ -730,9 +731,9 @@ function colorNameToHex( colour ) {
 				}
 			);
 
-			$( '.redux-container' ).on(
+			container.on(
 				'click',
-				function() {
+				function () {
 					opt_name = $.redux.getOptName( this );
 				}
 			);
@@ -752,12 +753,12 @@ function colorNameToHex( colour ) {
 		}
 	);
 
-	$.redux.flyoutSubmenu = function() {
+	$.redux.flyoutSubmenu = function () {
 
 		// Close flyouts when a new menu item is activated.
 		$( '.redux-group-tab-link-li a' ).on(
 			'click',
-			function() {
+			function () {
 				if ( true === redux.optName.args.flyout_submenus ) {
 					$( '.redux-group-tab-link-li' ).removeClass( 'redux-section-hover' );
 				}
@@ -768,10 +769,10 @@ function colorNameToHex( colour ) {
 
 			// Submenus flyout when a main menu item is hovered.
 			$( '.redux-group-tab-link-li.hasSubSections' ).each(
-				function() {
+				function () {
 					$( this ).on(
 						'mouseenter',
-						function() {
+						function () {
 							if ( ! $( this ).hasClass( 'active' ) && ! $( this ).hasClass( 'activeChild' ) ) {
 								$( this ).addClass( 'redux-section-hover' );
 							}
@@ -780,7 +781,7 @@ function colorNameToHex( colour ) {
 
 					$( this ).on(
 						'mouseleave',
-						function() {
+						function () {
 							$( this ).removeClass( 'redux-section-hover' );
 						}
 					);
@@ -789,9 +790,9 @@ function colorNameToHex( colour ) {
 		}
 	};
 
-	$.redux.disableSections = function() {
+	$.redux.disableSections = function () {
 		$( '.redux-group-tab' ).each(
-			function() {
+			function () {
 				if ( $( this ).hasClass( 'disabled' ) ) {
 					$( this ).find( 'input, select, textarea' ).attr( 'name', '' );
 				}
@@ -799,29 +800,26 @@ function colorNameToHex( colour ) {
 		);
 	};
 
-	$.redux.disableFields = function() {
-		$( 'label[for="redux_disable_field"]' ).each(
-			function() {
+	$.redux.disableFields = function () {
+		$( 'tr.redux_disable_field' ).each(
+			function () {
 				$( this ).parents( 'tr' ).find( 'fieldset:first' ).find( 'input, select, textarea' ).attr( 'name', '' );
 			}
 		);
 	};
 
-	$.redux.hideFields = function() {
-		$( 'label[for="redux_hide_field"]' ).each(
-			function() {
-				var tr = $( this ).parent().parent();
-
-				$( tr ).addClass( 'hidden' );
+	$.redux.hideFields = function () {
+		$( 'tr.redux_hide_field' ).each(
+			function () {
+				$( this ).addClass( 'hidden' );
 			}
 		);
 	};
 
-	$.redux.getOptName = function( el ) {
-		var metabox;
-		var li;
-		var optName;
-		var item = $( el );
+	$.redux.getOptName = function ( el ) {
+		let metabox;
+		let optName;
+		let item = $( el );
 
 		if ( redux.customizer ) {
 			optName = item.find( '.redux-customizer-opt-name' ).data( 'opt-name' );
@@ -829,7 +827,7 @@ function colorNameToHex( colour ) {
 			optName = $( el ).parents( '.redux-wrap-div' ).data( 'opt-name' );
 		}
 
-		// Compatibility for metaboxes
+		// Compatibility for metaboxes.
 		if ( undefined === optName ) {
 			metabox = $( el ).parents( '.postbox' );
 			if ( 0 === metabox.length ) {
@@ -866,7 +864,7 @@ function colorNameToHex( colour ) {
 		return optName;
 	};
 
-	$.redux.getSelector = function( selector, fieldType ) {
+	$.redux.getSelector = function ( selector, fieldType ) {
 		if ( ! selector ) {
 			selector = '.redux-container-' + fieldType + ':visible';
 			if ( redux.customizer ) {
@@ -881,20 +879,20 @@ function colorNameToHex( colour ) {
 
 /* global redux */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.sanitize = function() {
+	$.redux.sanitize = function () {
 		if ( redux.optName.sanitize && redux.optName.sanitize.sanitize ) {
 			$.each(
 				redux.optName.sanitize.sanitize,
-				function( sectionID, sectionArray ) {
+				function ( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.sanitize,
-						function( key, value ) {
+						function ( key, value ) {
 							$.redux.fixInput( key, value );
 						}
 					);
@@ -903,19 +901,19 @@ function colorNameToHex( colour ) {
 		}
 	};
 
-	$.redux.fixInput = function( key, value ) {
-		var val;
-		var input;
-		var inputVal;
-		var ul;
-		var li;
+	$.redux.fixInput = function ( key, value ) {
+		let val;
+		let input;
+		let inputVal;
+		let ul;
+		let li;
 
 		if ( 'multi_text' === value.type ) {
 			ul = $( '#' + value.id + '-ul' );
 			li = $( ul.find( 'li' ) );
 
 			li.each(
-				function() {
+				function () {
 					input    = $( this ).find( 'input' );
 					inputVal = input.val();
 
@@ -945,20 +943,25 @@ function colorNameToHex( colour ) {
 		}
 	};
 
-	$.redux.notices = function() {
+	$.redux.notices = function () {
 		if ( redux.optName.errors && redux.optName.errors.errors ) {
 			$.each(
 				redux.optName.errors.errors,
-				function( sectionID, sectionArray ) {
+				function ( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.errors,
-						function( key, value ) {
-							$( '#' + redux.optName.args.opt_name + '-' + value.id ).addClass( 'redux-field-error' );
-							if ( 0 === $( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-error' ).length ) {
-								$( '#' + redux.optName.args.opt_name + '-' + value.id ).append( '<div class="redux-th-error">' + value.msg + '</div>' );
+						function ( key, value ) {
+							const fieldset = $( '#' + redux.optName.args.opt_name + '-' + value.id );
+
+							if ( '' !== value.msg ) {
+								fieldset.addClass( 'redux-field-error' );
+							}
+
+							if ( 0 === fieldset.parent().find( '.redux-th-error' ).length ) {
+								fieldset.append( '<div class="redux-th-error">' + value.msg + '</div>' );
 							} else {
-								$( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-error' ).html( value.msg ).css( 'display', 'block' );
+								fieldset.parent().find( '.redux-th-error' ).html( value.msg ).css( 'display', 'block' );
 							}
 
 							$.redux.fixInput( key, value );
@@ -968,10 +971,9 @@ function colorNameToHex( colour ) {
 			);
 
 			$( '.redux-container' ).each(
-				function() {
-					var totalErrors;
-
-					var container = $( this );
+				function () {
+					let totalErrors;
+					const container = $( this );
 
 					// Ajax cleanup.
 					container.find( '.redux-menu-error' ).remove();
@@ -982,11 +984,12 @@ function colorNameToHex( colour ) {
 						container.find( '.redux-field-errors span' ).text( totalErrors );
 						container.find( '.redux-field-errors' ).slideDown();
 						container.find( '.redux-group-tab' ).each(
-							function() {
-								var sectionID;
-								var subParent;
+							function () {
+								let sectionID;
+								let subParent;
 
-								var total = $( this ).find( '.redux-field-error' ).length;
+								const total = $( this ).find( '.redux-field-error' ).length;
+
 								if ( total > 0 ) {
 									sectionID = $( this ).attr( 'id' ).split( '_' );
 
@@ -1010,17 +1013,21 @@ function colorNameToHex( colour ) {
 		if ( redux.optName.warnings && redux.optName.warnings.warnings ) {
 			$.each(
 				redux.optName.warnings.warnings,
-				function( sectionID, sectionArray ) {
+				function ( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.warnings,
-						function( key, value ) {
-							$( '#' + redux.optName.args.opt_name + '-' + value.id ).addClass( 'redux-field-warning' );
+						function ( key, value ) {
+							const fieldset = $( '#' + redux.optName.args.opt_name + '-' + value.id );
 
-							if ( 0 === $( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-warning' ).length ) {
-								$( '#' + redux.optName.args.opt_name + '-' + value.id ).append( '<div class="redux-th-warning">' + value.msg + '</div>' );
+							if ( '' !== value.msg ) {
+								fieldset.addClass( 'redux-field-warning' );
+							}
+
+							if ( 0 === fieldset.parent().find( '.redux-th-warning' ).length ) {
+								fieldset.append( '<div class="redux-th-warning">' + value.msg + '</div>' );
 							} else {
-								$( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-warning' ).html( value.msg ).css( 'display', 'block' );
+								fieldset.parent().find( '.redux-th-warning' ).html( value.msg ).css( 'display', 'block' );
 							}
 
 							$.redux.fixInput( key, value );
@@ -1030,13 +1037,13 @@ function colorNameToHex( colour ) {
 			);
 
 			$( '.redux-container' ).each(
-				function() {
-					var sectionID;
-					var subParent;
-					var total;
-					var totalWarnings;
+				function () {
+					let sectionID;
+					let subParent;
+					let total;
+					let totalWarnings;
 
-					var container = $( this );
+					const container = $( this );
 
 					// Ajax cleanup.
 					container.find( '.redux-menu-warning' ).remove();
@@ -1047,7 +1054,7 @@ function colorNameToHex( colour ) {
 						container.find( '.redux-field-warnings span' ).text( totalWarnings );
 						container.find( '.redux-field-warnings' ).slideDown();
 						container.find( '.redux-group-tab' ).each(
-							function() {
+							function () {
 								total = $( this ).find( '.redux-field-warning' ).length;
 
 								if ( total > 0 ) {
@@ -1073,46 +1080,47 @@ function colorNameToHex( colour ) {
 })( jQuery );
 
 /* global redux */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initQtip = function() {
-		var classes;
+	$.redux.initQtip = function () {
+		let classes;
 
 		// Shadow.
-		var shadow    = '';
-		var tipShadow = redux.optName.args.hints.tip_style.shadow;
+		let shadow      = '';
+		const tipShadow = redux.optName.args.hints.tip_style.shadow;
 
 		// Color.
-		var color    = '';
-		var tipColor = redux.optName.args.hints.tip_style.color;
+		let color      = '';
+		const tipColor = redux.optName.args.hints.tip_style.color;
 
 		// Rounded.
-		var rounded    = '';
-		var tipRounded = redux.optName.args.hints.tip_style.rounded;
+		let rounded      = '';
+		const tipRounded = redux.optName.args.hints.tip_style.rounded;
 
 		// Tip style.
-		var style    = '';
-		var tipStyle = redux.optName.args.hints.tip_style.style;
+		let style      = '';
+		const tipStyle = redux.optName.args.hints.tip_style.style;
 
 		// Get position data.
-		var myPos = redux.optName.args.hints.tip_position.my;
-		var atPos = redux.optName.args.hints.tip_position.at;
+		let myPos = redux.optName.args.hints.tip_position.my;
+		let atPos = redux.optName.args.hints.tip_position.at;
 
 		// Tooltip trigger action.
-		var showEvent = redux.optName.args.hints.tip_effect.show.event;
-		var hideEvent = redux.optName.args.hints.tip_effect.hide.event;
+		const showEvent = redux.optName.args.hints.tip_effect.show.event;
+		const hideEvent = redux.optName.args.hints.tip_effect.hide.event;
 
 		// Tip show effect.
-		var tipShowEffect   = redux.optName.args.hints.tip_effect.show.effect;
-		var tipShowDuration = redux.optName.args.hints.tip_effect.show.duration;
+		const tipShowEffect   = redux.optName.args.hints.tip_effect.show.effect;
+		const tipShowDuration = redux.optName.args.hints.tip_effect.show.duration;
 
 		// Tip hide effect.
-		var tipHideEffect   = redux.optName.args.hints.tip_effect.hide.effect;
-		var tipHideDuration = redux.optName.args.hints.tip_effect.hide.duration;
+		const tipHideEffect   = redux.optName.args.hints.tip_effect.hide.effect;
+		const tipHideDuration = redux.optName.args.hints.tip_effect.hide.duration;
 
 		if ( $().qtip ) {
 			if ( true === tipShadow ) {
@@ -1139,19 +1147,19 @@ function colorNameToHex( colour ) {
 			atPos = $.redux.verifyPos( atPos.toLowerCase(), false );
 
 			$( 'div.redux-dev-qtip' ).each(
-				function() {
+				function () {
 					$( this ).qtip(
 						{
 							content: {
 								text: $( this ).attr( 'qtip-content' ),
 								title: $( this ).attr( 'qtip-title' )
 							}, show: {
-								effect: function() {
+								effect: function () {
 									$( this ).slideDown( 500 );
 								},
 								event: 'mouseover'
 							}, hide: {
-								effect: function() {
+								effect: function () {
 									$( this ).slideUp( 500 );
 								},
 								event: 'mouseleave'
@@ -1167,14 +1175,14 @@ function colorNameToHex( colour ) {
 			);
 
 			$( 'div.redux-hint-qtip' ).each(
-				function() {
+				function () {
 					$( this ).qtip(
 						{
 							content: {
 								text: $( this ).attr( 'qtip-content' ),
 								title: $( this ).attr( 'qtip-title' )
 							}, show: {
-								effect: function() {
+								effect: function () {
 									switch ( tipShowEffect ) {
 										case 'slide':
 											$( this ).slideDown( tipShowDuration );
@@ -1189,7 +1197,7 @@ function colorNameToHex( colour ) {
 								},
 								event: showEvent
 							}, hide: {
-								effect: function() {
+								effect: function () {
 									switch ( tipHideEffect ) {
 										case 'slide':
 											$( this ).slideUp( tipHideDuration );
@@ -1215,7 +1223,7 @@ function colorNameToHex( colour ) {
 			);
 
 			$( 'input[qtip-content]' ).each(
-				function() {
+				function () {
 					$( this ).qtip(
 						{
 							content: {
@@ -1236,10 +1244,10 @@ function colorNameToHex( colour ) {
 		}
 	};
 
-	$.redux.verifyPos = function( s, b ) {
-		var split;
-		var paramOne;
-		var paramTwo;
+	$.redux.verifyPos = function ( s, b ) {
+		let split;
+		let paramOne;
+		let paramTwo;
 
 		// Trim off spaces.
 		s = s.replace( /^\s+|\s+$/gm, '' );
@@ -1276,14 +1284,15 @@ function colorNameToHex( colour ) {
 
 /* jshint unused:false */
 /* global redux */
+// noinspection JSUnresolvedReference
 
-var confirmOnPageExit = function( e ) {
+const confirmOnPageExit = function ( e ) {
 
 	// Return; // ONLY FOR DEBUGGING.
 	// If we haven't been passed the event get the window.event.
 	'use strict';
 
-	var message;
+	let message;
 
 	e = e || window.event;
 
@@ -1303,27 +1312,21 @@ var confirmOnPageExit = function( e ) {
 function redux_change( variable ) {
 	'use strict';
 
-	(function( $ ) {
-		var rContainer;
-		var opt_name;
-		var parentID;
-		var id;
-		var th;
-		var subParent;
-		var errorCount;
-		var errorsLeft;
-		var warningCount;
-		var warningsLeft;
+	(function ( $ ) {
+		let rContainer;
+		let parentID;
+		let id;
+		let th;
+		let li;
+		let subParent;
+		let errorCount;
+		let errorsLeft;
+		let warningCount;
+		let warningsLeft;
 
 		variable = $( variable );
 
 		rContainer = $( variable ).parents( '.redux-container:first' );
-
-		if ( redux.customizer ) {
-			opt_name = $( '.redux-customizer-opt-name' ).data( 'opt-name' );
-		} else {
-			opt_name = $.redux.getOptName( rContainer );
-		}
 
 		$( 'body' ).trigger( 'check_dependencies', variable );
 
@@ -1339,18 +1342,19 @@ function redux_change( variable ) {
 		id = id[0];
 
 		th        = rContainer.find( '.redux-group-tab-link-a[data-key="' + id + '"]' ).parents( '.redux-group-tab-link-li:first' );
-		subParent = $( '#' + parentID + '_li' ).parents( '.hasSubSections:first' );
+		li        = $( '#' + parentID + '_li' );
+		subParent = li.parents( '.hasSubSections:first' );
 
 		if ( $( variable ).parents( 'fieldset.redux-field:first' ).hasClass( 'redux-field-error' ) ) {
 			$( variable ).parents( 'fieldset.redux-field:first' ).removeClass( 'redux-field-error' );
-			$( variable ).parent().find( '.redux-th-error' ).slideUp();
+			$( variable ).parents().find( '.redux-th-error' ).slideUp();
 
 			errorCount = ( parseInt( rContainer.find( '.redux-field-errors span' ).text(), 0 ) - 1 );
 
 			if ( errorCount <= 0 ) {
 				$( '#' + parentID + '_li .redux-menu-error' ).fadeOut( 'fast' ).remove();
 				$( '#' + parentID + '_li .redux-group-tab-link-a' ).removeClass( 'hasError' );
-				$( '#' + parentID + '_li' ).parents( '.inside:first' ).find( '.redux-field-errors' ).slideUp();
+				li.parents( '.inside:first' ).find( '.redux-field-errors' ).slideUp();
 				$( variable ).parents( '.redux-container:first' ).find( '.redux-field-errors' ).slideUp();
 				$( '#redux_metaboxes_errors' ).slideUp();
 			} else {
@@ -1359,7 +1363,7 @@ function redux_change( variable ) {
 				if ( errorsLeft <= 0 ) {
 					th.find( '.redux-menu-error:first' ).fadeOut().remove();
 				} else {
-					th.find( '.redux-menu-error:first' ).text( errorsLeft );
+					th.find( 'li .redux-menu-error:first' ).text( errorsLeft );
 				}
 
 				rContainer.find( '.redux-field-errors span' ).text( errorCount );
@@ -1381,7 +1385,7 @@ function redux_change( variable ) {
 			if ( warningCount <= 0 ) {
 				$( '#' + parentID + '_li .redux-menu-warning' ).fadeOut( 'fast' ).remove();
 				$( '#' + parentID + '_li .redux-group-tab-link-a' ).removeClass( 'hasWarning' );
-				$( '#' + parentID + '_li' ).parents( '.inside:first' ).find( '.redux-field-warnings' ).slideUp();
+				li.parents( '.inside:first' ).find( '.redux-field-warnings' ).slideUp();
 				$( variable ).parents( '.redux-container:first' ).find( '.redux-field-warnings' ).slideUp();
 				$( '#redux_metaboxes_warnings' ).slideUp();
 			} else {
@@ -1395,7 +1399,7 @@ function redux_change( variable ) {
 					th.find( '.redux-menu-warning:first' ).text( warningsLeft );
 				}
 
-				rContainer.find( '.redux-field-warning span' ).text( warningCount );
+				rContainer.find( 'li .redux-field-warning span' ).text( warningCount );
 			}
 
 			if ( 0 !== subParent.length ) {
@@ -1422,9 +1426,9 @@ function redux_change( variable ) {
 function redux_hook( object, functionName, callback, before ) {
 	'use strict';
 
-	(function( originalFunction ) {
-		object[functionName] = function() {
-			var returnValue;
+	(function ( originalFunction ) {
+		object[functionName] = function () {
+			let returnValue;
 
 			if ( true === before ) {
 				callback.apply( this, [returnValue, originalFunction, arguments] );
@@ -1442,13 +1446,14 @@ function redux_hook( object, functionName, callback, before ) {
 }
 
 /* global redux */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+( function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.makeBoolStr = function( val ) {
+	$.redux.makeBoolStr = function ( val ) {
 		if ( 'false' === val || false === val || '0' === val || 0 === val || null === val || '' === val ) {
 			return 'false';
 		} else if ( 'true' === val || true === val || '1' === val || 1 === val ) {
@@ -1458,20 +1463,24 @@ function redux_hook( object, functionName, callback, before ) {
 		}
 	};
 
-	$.redux.checkRequired = function( el ) {
+	$.redux.checkRequired = function ( el ) {
+		let body;
+
 		$.redux.required();
 
-		$( 'body' ).on(
+		body = $( 'body' );
+
+		body.on(
 			'change',
 			'.redux-main select, .redux-main radio, .redux-main input[type=checkbox], .redux-main input[type=hidden]',
-			function() {
+			function () {
 				$.redux.check_dependencies( this );
 			}
 		);
 
-		$( 'body' ).on(
+		body.on(
 			'check_dependencies',
-			function( e, variable ) {
+			function ( e, variable ) {
 				e = null;
 				$.redux.check_dependencies( variable );
 			}
@@ -1484,26 +1493,40 @@ function redux_hook( object, functionName, callback, before ) {
 		el.find( '.redux-container td > fieldset:empty,td > div:empty' ).parent().parent().hide();
 	};
 
-	$.redux.required = function() {
+	$.redux.required = function () {
 
 		// Hide the fold elements on load.
 		// It's better to do this by PHP but there is no filter in tr tag , so is not possible
-		// we going to move each attributes we may need for folding to tr tag.
+		// we're going to move each attributes we may need for folding to tr tag.
 		$.each(
 			redux.opt_names,
-			function( x ) {
+			function ( x ) {
 				$.each(
 					window['redux_' + redux.opt_names[x].replace( /\-/g, '_' )].folds,
-					function( i, v ) {
-						var div;
-						var rawTable;
+					function ( i, v ) {
+						let div;
+						let rawTable;
+						let inTabbed   = false;
+						const fieldset = $( '#' + redux.opt_names[x] + '-' + i );
 
-						var fieldset = $( '#' + redux.opt_names[x] + '-' + i );
+						if ( fieldset.find( '*' ).hasClass( 'in-tabbed' ) ) {
+							inTabbed = true;
+						}
 
-						fieldset.parents( 'tr:first, li:first' ).addClass( 'fold' );
+						if ( true === inTabbed ) {
+							fieldset.addClass( 'fold' );
+							fieldset.parents( '.redux-tab-field' ).addClass( 'fold' );
+						} else {
+							fieldset.parents( 'tr:first, li:first' ).addClass( 'fold' );
+						}
 
 						if ( 'hide' === v ) {
-							fieldset.parents( 'tr:first, li:first' ).addClass( 'hide' );
+							if ( true === inTabbed ) {
+								fieldset.addClass( 'hide' );
+								fieldset.parents( '.redux-tab-field' ).addClass( 'hide' );
+							} else {
+								fieldset.parents( 'tr:first, li:first' ).addClass( 'hide' );
+							}
 
 							if ( fieldset.hasClass( 'redux-container-section' ) ) {
 								div = $( '#section-' + i );
@@ -1512,6 +1535,13 @@ function redux_hook( object, functionName, callback, before ) {
 									$( '#section-table-' + i ).hide().addClass( 'hide' );
 									div.hide().addClass( 'hide' );
 								}
+							}
+
+							if ( fieldset.hasClass( 'redux-container-content' ) ) {
+								$( '#heading-' + i ).hide().addClass( 'hide' );
+								$( '#subheading-' + i ).hide().addClass( 'hide' );
+								$( '#content-' + i ).hide().addClass( 'hide' );
+								$( '#submessage-' + i ).hide().addClass( 'hide' );
 							}
 
 							if ( fieldset.hasClass( 'redux-container-info' ) ) {
@@ -1533,28 +1563,37 @@ function redux_hook( object, functionName, callback, before ) {
 		);
 	};
 
-	$.redux.getContainerValue = function( id ) {
-		var value = $( '#' + redux.optName.args.opt_name + '-' + id ).serializeForm();
+	$.redux.getContainerValue = function ( id ) {
+		let theId;
+		let value;
+
+		theId = $( '#' + redux.optName.args.opt_name + '-' + id );
+		value = theId.serializeForm();
 
 		if ( null !== value && 'object' === typeof value && value.hasOwnProperty( redux.optName.args.opt_name ) ) {
 			value = value[redux.optName.args.opt_name][id];
 		}
 
-		if ( $( '#' + redux.optName.args.opt_name + '-' + id ).hasClass( 'redux-container-media' ) ) {
+		if ( theId.hasClass( 'redux-container-media' ) ) {
 			value = value.url;
 		}
 
 		return value;
 	};
 
-	$.redux.check_dependencies = function( variable ) {
-		var current;
-		var id;
-		var container;
-		var isHidden;
+	$.redux.check_dependencies = function ( variable ) {
+		let current;
+		let id;
+		let container;
+		let isHidden;
+		let inTabbed = false;
 
 		if ( null === redux.optName.required ) {
 			return;
+		}
+
+		if ( $( variable ).hasClass( 'in-tabbed' ) ) {
+			inTabbed = true;
 		}
 
 		current = $( variable );
@@ -1565,27 +1604,41 @@ function redux_hook( object, functionName, callback, before ) {
 		}
 
 		container = current.parents( '.redux-field-container:first' );
-		isHidden  = container.parents( 'tr:first' ).hasClass( 'hide' );
 
-		if ( ! container.parents( 'tr:first' ).length ) {
-			isHidden = container.parents( '.customize-control:first' ).hasClass( 'hide' );
+		if ( true === inTabbed ) {
+			isHidden = container.hasClass( 'hide' );
+		} else {
+			isHidden = container.parents( 'tr:first' ).hasClass( 'hide' );
+
+			if ( ! container.parents( 'tr:first' ).length ) {
+				isHidden = container.parents( '.customize-control:first' ).hasClass( 'hide' );
+			}
 		}
 
 		$.each(
 			redux.optName.required[id],
-			function( child ) {
-				var div;
-				var rawTable;
-				var tr;
+			function ( child ) {
+				let div;
+				let rawTable;
+				let tr;
+				let tabbed = false;
 
-				var current       = $( this );
-				var show          = false;
-				var childFieldset = $( '#' + redux.optName.args.opt_name + '-' + child );
+				const current       = $( this );
+				let show            = false;
+				const childFieldset = $( '#' + redux.optName.args.opt_name + '-' + child );
 
-				tr = childFieldset.parents( 'tr:first' );
+				if ( childFieldset.find( '*' ).hasClass( 'in-tabbed' ) ) {
+					tabbed = true;
+				}
 
-				if ( 0 === tr.length ) {
-					tr = childFieldset.parents( 'li:first' );
+				if ( true === tabbed ) {
+					tr = childFieldset;
+				} else {
+					tr = childFieldset.parents( 'tr:first' );
+
+					if ( 0 === tr.length ) {
+						tr = childFieldset.parents( 'li:first' );
+					}
 				}
 
 				if ( ! isHidden ) {
@@ -1604,6 +1657,13 @@ function redux_hook( object, functionName, callback, before ) {
 						}
 					}
 
+					if ( childFieldset.hasClass( 'redux-container-content' ) ) {
+						$( '#heading-' + child ).hide().removeClass( 'hide' ).css( 'display', '' );
+						$( '#subheading-' + child ).hide().removeClass( 'hide' ).css( 'display', '' );
+						$( '#content-' + child ).hide().removeClass( 'hide' ).css( 'display', '' );
+						$( '#submessage-' + child ).hide().removeClass( 'hide' ).css( 'display', '' );
+					}
+
 					if ( childFieldset.hasClass( 'redux-container-info' ) ) {
 						$( '#info-' + child ).fadeIn( 300 ).removeClass( 'hide' );
 					}
@@ -1619,8 +1679,13 @@ function redux_hook( object, functionName, callback, before ) {
 
 					tr.fadeIn(
 						300,
-						function() {
+						function () {
 							$( this ).removeClass( 'hide' );
+
+							if ( true === tabbed ) {
+								$( this ).parents( '.redux-tab-field' ).removeClass( 'hide' ).css( { display:'' } );
+							}
+
 							if ( redux.optName.required.hasOwnProperty( child ) ) {
 								$.redux.check_dependencies( $( '#' + redux.optName.args.opt_name + '-' + child ).children().first() );
 							}
@@ -1629,14 +1694,19 @@ function redux_hook( object, functionName, callback, before ) {
 						}
 					);
 
-					if ( childFieldset.hasClass( 'redux-container-section' ) || childFieldset.hasClass( 'redux-container-info' ) ) {
+					if ( childFieldset.hasClass( 'redux-container-section' ) || childFieldset.hasClass( 'redux-container-info' ) || childFieldset.hasClass( 'redux-container-content' ) ) {
 						tr.css( { display: 'none' } );
 					}
 				} else if ( false === show ) {
 					tr.fadeOut(
 						100,
-						function() {
+						function () {
 							$( this ).addClass( 'hide' );
+
+							if ( true === tabbed ) {
+								$( this ).parents( '.redux-tab-field' ).addClass( 'hide' );
+							}
+
 							if ( redux.optName.required.hasOwnProperty( child ) ) {
 								$.redux.required_recursive_hide( child );
 							}
@@ -1649,22 +1719,34 @@ function redux_hook( object, functionName, callback, before ) {
 		);
 	};
 
-	$.redux.required_recursive_hide = function( id ) {
-		var div;
-		var rawTable;
-		var toFade;
+	$.redux.required_recursive_hide = function ( id ) {
+		let div;
+		let rawTable;
+		let toFade;
+		let theId;
+		let inTabbed = false;
 
-		toFade = $( '#' + redux.optName.args.opt_name + '-' + id ).parents( 'tr:first' );
-		if ( 0 === toFade ) {
-			toFade = $( '#' + redux.optName.args.opt_name + '-' + id ).parents( 'li:first' );
+		theId = $( '#' + redux.optName.args.opt_name + '-' + id );
+
+		if ( theId.find( '*' ).hasClass( 'in-tabbed' ) ) {
+			inTabbed = true;
+		}
+
+		if ( true === inTabbed ) {
+			toFade = theId.parents( '.redux-tab-field:first' );
+		} else {
+			toFade = theId.parents( 'tr:first' );
+			if ( 0 === toFade ) {
+				toFade = theId.parents( 'li:first' );
+			}
 		}
 
 		toFade.fadeOut(
 			50,
-			function() {
+			function () {
 				$( this ).addClass( 'hide' );
 
-				if ( $( '#' + redux.optName.args.opt_name + '-' + id ).hasClass( 'redux-container-section' ) ) {
+				if ( theId.hasClass( 'redux-container-section' ) ) {
 					div = $( '#section-' + id );
 
 					if ( div.hasClass( 'redux-section-indent-start' ) ) {
@@ -1673,15 +1755,22 @@ function redux_hook( object, functionName, callback, before ) {
 					}
 				}
 
-				if ( $( '#' + redux.optName.args.opt_name + '-' + id ).hasClass( 'redux-container-info' ) ) {
+				if ( theId.hasClass( 'redux-container-content' ) ) {
+					$( '#heading-' + id ).hide().addClass( 'hide' );
+					$( '#subheading-' + id ).hide().addClass( 'hide' );
+					$( '#content-' + id ).hide().addClass( 'hide' );
+					$( '#submessage-' + id ).hide().addClass( 'hide' );
+				}
+
+				if ( theId.hasClass( 'redux-container-info' ) ) {
 					$( '#info-' + id ).fadeOut( 50 ).addClass( 'hide' );
 				}
 
-				if ( $( '#' + redux.optName.args.opt_name + '-' + id ).hasClass( 'redux-container-divide' ) ) {
+				if ( theId.hasClass( 'redux-container-divide' ) ) {
 					$( '#divide-' + id ).fadeOut( 50 ).addClass( 'hide' );
 				}
 
-				if ( $( '#' + redux.optName.args.opt_name + '-' + id ).hasClass( 'redux-container-raw' ) ) {
+				if ( theId.hasClass( 'redux-container-raw' ) ) {
 					rawTable = $( '#' + redux.optName.args.opt_name + '-' + id ).parents().find( 'table#' + redux.optName.args.opt_name + '-' + id );
 					rawTable.fadeOut( 50 ).addClass( 'hide' );
 				}
@@ -1689,7 +1778,7 @@ function redux_hook( object, functionName, callback, before ) {
 				if ( redux.optName.required.hasOwnProperty( id ) ) {
 					$.each(
 						redux.optName.required[id],
-						function( child ) {
+						function ( child ) {
 							$.redux.required_recursive_hide( child );
 						}
 					);
@@ -1698,20 +1787,23 @@ function redux_hook( object, functionName, callback, before ) {
 		);
 	};
 
-	$.redux.check_parents_dependencies = function( id ) {
-		var show = '';
+	$.redux.check_parents_dependencies = function ( id ) {
+		let show = '';
 
 		if ( redux.optName.required_child.hasOwnProperty( id ) ) {
 			$.each(
 				redux.optName.required_child[id],
-				function( i, parentData ) {
-					var parentValue;
+				function ( i, parentData ) {
+					let parentValue;
+					let parent;
+
+					parent = $( '#' + redux.optName.args.opt_name + '-' + parentData.parent );
 
 					i = null;
 
-					if ( $( '#' + redux.optName.args.opt_name + '-' + parentData.parent ).parents( 'tr:first' ).hasClass( 'hide' ) ) {
+					if ( parent.parents( 'tr:first' ).hasClass( 'hide' ) ) {
 						show = false;
-					} else if ( $( '#' + redux.optName.args.opt_name + '-' + parentData.parent ).parents( 'li:first' ).hasClass( 'hide' ) ) {
+					} else if ( parent.parents( 'li:first' ).hasClass( 'hide' ) ) {
 						show = false;
 					} else {
 						if ( false !== show ) {
@@ -1729,15 +1821,15 @@ function redux_hook( object, functionName, callback, before ) {
 		return show;
 	};
 
-	$.redux.check_dependencies_visibility = function( parentValue, data ) {
-		var show       = false;
-		var checkValue = data.checkValue;
-		var operation  = data.operation;
-		var arr;
+	$.redux.check_dependencies_visibility = function ( parentValue, data ) {
+		let show        = false;
+		let checkValue  = data.checkValue;
+		const operation = data.operation;
+		let arr;
 
 		if ( $.isPlainObject( parentValue ) ) {
 			parentValue = Object.keys( parentValue ).map(
-				function( key ) {
+				function ( key ) {
 					return [key, parentValue[key]];
 				}
 			);
@@ -1746,14 +1838,14 @@ function redux_hook( object, functionName, callback, before ) {
 		switch ( operation ) {
 			case '=':
 			case 'equals':
-				if ( $.isArray( parentValue ) ) {
+				if ( Array.isArray( parentValue ) ) {
 					$( parentValue[0] ).each(
-						function( idx, val ) {
+						function ( idx, val ) {
 							idx = null;
 
-							if ( $.isArray( checkValue ) ) {
+							if ( Array.isArray( checkValue ) ) {
 								$( checkValue ).each(
-									function( i, v ) {
+									function ( i, v ) {
 										i = null;
 										if ( $.redux.makeBoolStr( val ) === $.redux.makeBoolStr( v ) ) {
 											show = true;
@@ -1772,9 +1864,9 @@ function redux_hook( object, functionName, callback, before ) {
 						}
 					);
 				} else {
-					if ( $.isArray( checkValue ) ) {
+					if ( Array.isArray( checkValue ) ) {
 						$( checkValue ).each(
-							function( i, v ) {
+							function ( i, v ) {
 								i = null;
 
 								if ( $.redux.makeBoolStr( parentValue ) === $.redux.makeBoolStr( v ) ) {
@@ -1792,14 +1884,14 @@ function redux_hook( object, functionName, callback, before ) {
 
 			case '!=':
 			case 'not':
-				if ( $.isArray( parentValue ) ) {
+				if ( Array.isArray( parentValue ) ) {
 					$( parentValue[0] ).each(
-						function( idx, val ) {
+						function ( idx, val ) {
 							idx = null;
 
-							if ( $.isArray( checkValue ) ) {
+							if ( Array.isArray( checkValue ) ) {
 								$( checkValue ).each(
-									function( i, v ) {
+									function ( i, v ) {
 										i = null;
 
 										if ( $.redux.makeBoolStr( val ) !== $.redux.makeBoolStr( v ) ) {
@@ -1819,9 +1911,9 @@ function redux_hook( object, functionName, callback, before ) {
 						}
 					);
 				} else {
-					if ( $.isArray( checkValue ) ) {
+					if ( Array.isArray( checkValue ) ) {
 						$( checkValue ).each(
-							function( i, v ) {
+							function ( i, v ) {
 								i = null;
 
 								if ( $.redux.makeBoolStr( parentValue ) !== $.redux.makeBoolStr( v ) ) {
@@ -1872,7 +1964,7 @@ function redux_hook( object, functionName, callback, before ) {
 			case 'contains':
 				if ( $.isPlainObject( parentValue ) ) {
 					parentValue = Object.keys( parentValue ).map(
-						function( key ) {
+						function ( key ) {
 							return [key, parentValue[key]];
 						}
 					);
@@ -1880,25 +1972,25 @@ function redux_hook( object, functionName, callback, before ) {
 
 				if ( $.isPlainObject( checkValue ) ) {
 					checkValue = Object.keys( checkValue ).map(
-						function( key ) {
+						function ( key ) {
 							return [key, checkValue[key]];
 						}
 					);
 				}
 
-				if ( $.isArray( checkValue ) ) {
+				if ( Array.isArray( checkValue ) ) {
 					$( checkValue ).each(
-						function( idx, val ) {
-							var breakMe = false;
-							var toFind  = val[0];
-							var findVal = val[1];
+						function ( idx, val ) {
+							let breakMe   = false;
+							const toFind  = val[0];
+							const findVal = val[1];
 
 							idx = null;
 
 							$( parentValue ).each(
-								function( i, v ) {
-									var toMatch  = v[0];
-									var matchVal = v[1];
+								function ( i, v ) {
+									const toMatch  = v[0];
+									const matchVal = v[1];
 
 									i = null;
 
@@ -1929,7 +2021,7 @@ function redux_hook( object, functionName, callback, before ) {
 			case 'not_contain':
 				if ( $.isPlainObject( parentValue ) ) {
 					arr = Object.keys( parentValue ).map(
-						function( key ) {
+						function ( key ) {
 							return parentValue[key];
 						}
 					);
@@ -1939,7 +2031,7 @@ function redux_hook( object, functionName, callback, before ) {
 
 				if ( $.isPlainObject( checkValue ) ) {
 					arr = Object.keys( checkValue ).map(
-						function( key ) {
+						function ( key ) {
 							return checkValue[key];
 						}
 					);
@@ -1947,9 +2039,9 @@ function redux_hook( object, functionName, callback, before ) {
 					checkValue = arr;
 				}
 
-				if ( $.isArray( checkValue ) ) {
+				if ( Array.isArray( checkValue ) ) {
 					$( checkValue ).each(
-						function( idx, val ) {
+						function ( idx, val ) {
 							idx = null;
 
 							if ( parentValue.toString().indexOf( val ) === - 1 ) {
@@ -1997,66 +2089,70 @@ function redux_hook( object, functionName, callback, before ) {
 	};
 })( jQuery );
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.stickyInfo = function() {
-		var stickyWidth = $( '.redux-main' ).innerWidth() - 20;
-		var $width      = $( '#redux-sticky' ).offset().left;
+	$.redux.stickyInfo = function () {
+		const sticky      = $( '#redux-sticky' );
+		const infoBar     = $( '#info_bar' );
+		const reduxFooter = $( '#redux-footer' );
+		const stickyWidth = $( '.redux-main' ).innerWidth() - 20;
+		const $width      = sticky.offset().left;
 
 		$( '.redux-save-warn' ).css( 'left', $width + 'px' );
 
-		if ( ! $( '#info_bar' ).isOnScreen() && ! $( '#redux-footer-sticky' ).isOnScreen() ) {
-			$( '#redux-footer' ).css(
+		if ( ! infoBar.isOnScreen() && ! $( '#redux-footer-sticky' ).isOnScreen() ) {
+			reduxFooter.css(
 				{ position: 'fixed', bottom: '0', width: stickyWidth, right: 21 }
 			);
 
-			$( '#redux-footer' ).addClass( 'sticky-footer-fixed' );
+			reduxFooter.addClass( 'sticky-footer-fixed' );
 			$( '#redux-sticky-padder' ).show();
 		} else {
-			$( '#redux-footer' ).css(
+			reduxFooter.css(
 				{ background: '#eee', position: 'inherit', bottom: 'inherit', width: 'inherit' }
 			);
 
 			$( '#redux-sticky-padder' ).hide();
-			$( '#redux-footer' ).removeClass( 'sticky-footer-fixed' );
+			reduxFooter.removeClass( 'sticky-footer-fixed' );
 		}
-		if ( ! $( '#info_bar' ).isOnScreen() ) {
-			$( '#redux-sticky' ).addClass( 'sticky-save-warn' );
+		if ( ! infoBar.isOnScreen() ) {
+			sticky.addClass( 'sticky-save-warn' );
 		} else {
-			$( '#redux-sticky' ).removeClass( 'sticky-save-warn' );
+			sticky.removeClass( 'sticky-save-warn' );
 		}
 	};
 })( jQuery );
 
 /* global redux */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.tabCheck = function() {
-		var link;
-		var tab;
-		var sTab;
-		var cookieName;
-		var opt_name;
+	$.redux.tabCheck = function () {
+		let link;
+		let tab;
+		let sTab;
+		let cookieName;
+		let opt_name;
 
 		$( '.redux-group-tab-link-a' ).on(
 			'click',
-			function() {
-				var elements;
-				var index;
-				var el;
-				var relid;
-				var oldid;
-				var cookieName;
-				var boxIndex;
-				var parentID;
-				var newParent;
+			function () {
+				let elements;
+				let index;
+				let el;
+				let relid;
+				let oldid;
+				let cookieName;
+				let boxIndex;
+				let parentID;
+				let newParent;
 
 				link = $( this );
 
@@ -2067,9 +2163,9 @@ function redux_hook( object, functionName, callback, before ) {
 					link = elements.slice( index + 1, index + 2 );
 				}
 
-				el    = link.parents( '.redux-container:first' );
-				relid = link.data( 'rel' ); // The group ID of interest.
-				oldid = el.find( '.redux-group-tab-link-li.active:first .redux-group-tab-link-a' ).data( 'rel' );
+				el       = link.parents( '.redux-container:first' );
+				relid    = link.data( 'rel' ); // The group ID of interest.
+				oldid    = el.find( '.redux-group-tab-link-li.active:first .redux-group-tab-link-a' ).data( 'rel' );
 				opt_name = $.redux.getOptName( el );
 
 				if ( oldid === relid ) {
@@ -2111,8 +2207,8 @@ function redux_hook( object, functionName, callback, before ) {
 				el.find( '#toplevel_page_' + redux.optName.args.slug + ' .wp-submenu li.current' ).removeClass( 'current' );
 
 				el.find( '#toplevel_page_' + redux.optName.args.slug + ' .wp-submenu a' ).each(
-					function() {
-						var url = $( this ).attr( 'href' ).split( '&tab=' );
+					function () {
+						const url = $( this ).attr( 'href' ).split( '&tab=' );
 
 						if ( url[1] === relid || url[1] === parentID ) {
 							$( this ).addClass( 'current' );
@@ -2134,7 +2230,7 @@ function redux_hook( object, functionName, callback, before ) {
 					el.find( '#' + relid + '_section_group_li' ).removeClass( 'activeChild' ).addClass( 'active' );
 				} else {
 					setTimeout(
-						function() {
+						function () {
 							el.find( '#' + relid + '_section_group_li' ).addClass( 'active' ).removeClass( 'activeChild' ).find( 'ul.subsection' ).slideDown();
 						},
 						1
@@ -2143,7 +2239,7 @@ function redux_hook( object, functionName, callback, before ) {
 					if ( el.find( '#' + oldid + '_section_group_li' ).find( 'ul.subsection' ).length ) {
 						el.find( '#' + oldid + '_section_group_li' ).find( 'ul.subsection' ).slideUp(
 							'fast',
-							function() {
+							function () {
 								el.find( '#' + oldid + '_section_group_li' ).removeClass( 'active' ).removeClass( 'activeChild' );
 							}
 						);
@@ -2167,7 +2263,7 @@ function redux_hook( object, functionName, callback, before ) {
 						if ( ! el.find( '#' + oldid + '_section_group_li' ).parents( '#' + relid + '_section_group_li' ).length ) {
 							el.find( '#' + oldid + '_section_group_li' ).parents( 'ul.subsection' ).slideUp(
 								'fast',
-								function() {
+								function () {
 									el.find( '#' + oldid + '_section_group_li' ).removeClass( 'active' );
 									el.find( '#' + oldid + '_section_group_li' ).parents( '.redux-group-tab-link-li' ).removeClass( 'active' ).removeClass( 'activeChild' );
 									el.find( '#' + relid + '_section_group_li' ).parents( '.redux-group-tab-link-li' ).addClass( 'activeChild' ).find( 'ul.subsection' ).slideDown();
@@ -2182,7 +2278,7 @@ function redux_hook( object, functionName, callback, before ) {
 
 						if ( el.find( '#' + relid + '_section_group_li' ).parents( '.redux-group-tab-link-li' ).length ) {
 							setTimeout(
-								function() {
+								function () {
 									el.find( '#' + relid + '_section_group_li' ).parents( '.redux-group-tab-link-li' ).addClass( 'activeChild' ).find( 'ul.subsection' ).slideDown();
 								},
 								50
@@ -2198,7 +2294,7 @@ function redux_hook( object, functionName, callback, before ) {
 
 				el.find( '#' + relid + '_section_group' ).fadeIn(
 					200,
-					function() {
+					function () {
 						if ( 0 !== el.find( '#redux-footer' ).length ) {
 							$.redux.stickyInfo(); // Race condition fix.
 						}
@@ -2255,8 +2351,8 @@ function redux_hook( object, functionName, callback, before ) {
 		}
 
 		$( '.redux-container' ).each(
-			function() {
-				var boxIndex;
+			function () {
+				let boxIndex;
 
 				if ( ! $( this ).parents( '.postbox-container:first' ).length ) {
 					opt_name = $( '.redux-ajax-security' ).data( 'opt-name' );

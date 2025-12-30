@@ -1,11 +1,11 @@
 /*global redux, jsonView */
 
-(function( $ ) {
+(function ( $ ) {
 	redux.field_objects                = redux.field_objects || {};
 	redux.field_objects.options_object = redux.field_objects.options_object || {};
 
-	redux.field_objects.options_object.init = function( selector ) {
-		var parent;
+	redux.field_objects.options_object.init = function ( selector ) {
+		let parent;
 
 		selector = $.redux.getSelector( selector, 'options_object' );
 
@@ -23,9 +23,9 @@
 
 		$( '#consolePrintObject' ).on(
 			'click',
-			function( e ) {
+			function ( e ) {
 				e.preventDefault();
-				console.log( $.parseJSON( $( '#redux-object-json' ).html() ) );
+				console.log( JSON.parse( $( '#redux-object-json' ).html() ) );
 			}
 		);
 

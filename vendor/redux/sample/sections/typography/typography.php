@@ -1,11 +1,12 @@
 <?php
 /**
  * Redux Framework typography config.
- * For full documentation, please visit: http://devs.redux.io/
+ * For full documentation, please visit: https://devs.redux.io/
  *
  * @package Redux Framework
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -39,7 +40,7 @@ Redux::set_section(
 				// Use if you want to hook in your own CSS compiler.
 				'compiler'    => true,
 
-				// Select a backup non-google font in addition to a google font.
+				// Select a backup non-google font in addition to a Google font.
 				'font-backup' => true,
 
 				// Enable all Google Font style/weight variations to be added to the page.
@@ -55,7 +56,7 @@ Redux::set_section(
 					'font-size'   => '33px',
 					'line-height' => '40px',
 				),
-				'output'      => array( 'h2.site-description, h2.entry-title, .site-description' ),
+				'output'      => array( 'h2.site-description, h2.entry-title, .site-description, h2.wp-block-post-title' ),
 				// Disable google fonts.
 				// 'google'      => false,.
 
@@ -106,8 +107,9 @@ Redux::set_section(
 					'margin-top'    => '20px',
 					'margin-bottom' => '20px',
 				),
-				'output'            => array( '.site-title' ),
+				'output'            => array( '.site-title, .wp-block-site-title' ),
 			),
 		),
 	)
 );
+// phpcs:enable

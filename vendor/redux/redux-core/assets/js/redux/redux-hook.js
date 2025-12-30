@@ -3,9 +3,9 @@
 function redux_hook( object, functionName, callback, before ) {
 	'use strict';
 
-	(function( originalFunction ) {
-		object[functionName] = function() {
-			var returnValue;
+	(function ( originalFunction ) {
+		object[functionName] = function () {
+			let returnValue;
 
 			if ( true === before ) {
 				callback.apply( this, [returnValue, originalFunction, arguments] );

@@ -1,11 +1,12 @@
 <?php
 /**
  * Redux Framework multi text config.
- * For full documentation, please visit: http://devs.redux.io/
+ * For full documentation, please visit: https://devs.redux.io/
  *
  * @package Redux Framework
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -21,8 +22,9 @@ Redux::set_section(
 				'type'     => 'multi_text',
 				'title'    => esc_html__( 'Multi Text Option', 'your-textdomain-here' ),
 				'subtitle' => esc_html__( 'Field subtitle', 'your-textdomain-here' ),
-				'desc'     => esc_html__( 'Field Decription', 'your-textdomain-here' ),
+				'desc'     => esc_html__( 'Field Description', 'your-textdomain-here' ),
 			),
 		),
 	)
 );
+// phpcs:enable
