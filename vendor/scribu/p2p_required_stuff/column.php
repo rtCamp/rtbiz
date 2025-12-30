@@ -33,13 +33,20 @@ abstract class P2P_Column {
 	protected abstract function get_items();
 
 	protected function prepare_items() {
-		$items = $this->get_items();
+		$per_page      = 100; // Set the number of items per page
+		$current_page  = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$offset        = ( $current_page - 1 ) * $per_page;
+
+		// Fetch items with pagination
+		$items = $this->get_items( $offset, $per_page );
 
 		$extra_qv = array(
-			'p2p:per_page' => -1,
-			'p2p:context' => 'admin_column'
+			'p2p:per_page'      => $per_page,
+			'p2p:offset'        => $offset,
+			'p2p:context'       => 'admin_column',
 		);
 
+		// Fetch connected items in chunks
 		$connected = $this->ctype->get_connected( $items, $extra_qv, 'abstract' );
 
 		$this->connected = scb_list_group_by( $connected->items, '_p2p_get_other_id' );
@@ -62,7 +69,7 @@ abstract class P2P_Column {
 		if ( $this->column_id != $column )
 			return;
 
-		if ( !isset( $this->connected[ $item_id ] ) )
+		if ( ! isset( $this->connected[ $item_id ] ) )
 			return;
 
 		$out = '<ul>';

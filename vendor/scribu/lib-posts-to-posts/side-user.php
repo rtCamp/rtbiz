@@ -57,7 +57,11 @@ class P2P_Side_User extends P2P_Side {
 	}
 
 	function do_query( $args ) {
-		return new WP_User_Query( $args );
+		  // Limit number of users fetched in each query
+		  $args['number'] = isset( $args['number'] ) ? $args['number'] : 100;
+		  $args['paged'] = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+
+		  return new WP_User_Query( $args );
 	}
 
 	function capture_query( $args ) {
