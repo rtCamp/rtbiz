@@ -1,6 +1,27 @@
 @import "color-picker";
 @import "media";
 
+.redux-warning-primary{
+    color: #fff !important;
+    border-color: #dc3545 !important;
+    background: #dc3545 !important;
+
+    &:hover,
+    &:focus{
+        border-color: #bd2130 !important;
+        background: #bd2130 !important;
+    }
+
+    &:focus{
+        box-shadow: 0 0 0 1px #fff, 0 0 0 3px #bd2130 !important;
+    }
+
+    &:active{
+        border-color: #bd2130 !important;
+        background: #bd2130 !important;
+    }
+}
+
 .spinner {
     visibility: hidden;
     display: block;
@@ -15,6 +36,10 @@
 }
 
 .redux-container {
+    #redux-intro-text {
+        padding-left:20px;
+    }
+
     .redux-container-button_set,
     .redux-container-palette {
         .ui-icon {
@@ -35,7 +60,7 @@
 
     .redux_field_th {
         font-weight: 600;
-        padding: 20px 10px 20px 0px;
+        padding: 20px 10px 20px 0;
         display: block;
         span {
             &:first-child {
@@ -52,13 +77,8 @@
 
     background-color: #fff; /* Old browsers */
     background-repeat: repeat-x; /* Repeat the gradient */
-    background-image: -moz-linear-gradient(top, #fff 0%, #f2f2f2 100%); /* FF3.6+ */
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #f2f2f2)); /* Chrome,Safari4+ */
-    background-image: -webkit-linear-gradient(top, #fff 0%, #f2f2f2 100%); /* Chrome 10+,Safari 5.1+ */
-    background-image: -ms-linear-gradient(top, #fff 0%, #f2f2f2 100%); /* IE10+ */
-    background-image: -o-linear-gradient(top, #fff 0%, #f2f2f2 100%); /* Opera 11.10+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fff", endColorstr="#f2f2f2", GradientType=0); /* IE6-9 */
-    background-image: -linear-gradient(top, #fff 0%, #f2f2f2 100%); /* W3C */
+    background-image: linear-gradient(to bottom, #fff 0%, #f2f2f2 100%); /* W3C */
     border: 1px solid #dedede;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
@@ -269,32 +289,20 @@
         float: right;
         .spinner {
             float: left;
-            margin-top: 4px;
+            margin-top: 7px;
+            margin-left: 10px;
+            right: 5px;
+            position: relative;
         }
-    }
 
-    .redux-ajax-loading {
-        display: none;
-        background: #a00 url(data:image/gif;base64,R0lGODlhEAAQAPUAAIiIiIqKio2NjZSUlJqamp6enqKioqSkpK+vr7i4uL+/v8PDw8XFxcnJyc/Pz9HR0dTU1NjY2Nzc3OLi4ubm5unp6ezs7PPz88vLy83NzdDQ0NXV1d3d3eHh4bu7u8zMzOvr6+3t7ZiYmNbW1sDAwMTExNra2s7OztPT09vb2+Xl5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/i1NYWRlIGJ5IEtyYXNpbWlyYSBOZWpjaGV2YSAod3d3LmxvYWRpbmZvLm5ldCkAIfkEAAoA/wAsAAAAABAAEAAABXDgJY6XZZEoOTnOlI5WdUFNA5UnSR3FJNUSieFAIUUEgcdl4noEBBGSZaHIiSqKhTX2GhVFiQGjuxgkSoYAoosAGE6RhKQrUURHlS+pItMVCHMjEgQ9JBJISg+JT3ciFg4NFkcCNw0OViiDgF0oTC8hACH5BAAKAP8ALAAAAAAQABAAAAVx4CWOZGle1qJYp2hV1xYE29V1JXUYHWUcnQgGwyFFBAENiqUZ1kapFamTyeBcsNOLMkoMGC3GIIEyBBAtRMDAiiSKp04iQqpwc9kRpUCAizgEBVciEQNJFxpKGgECdFAYYBsCAjUMGS0XgAODmDacIyEAIfkEAAoA/wAsAAAAABAAEAAABnbAi3BILBovIMUidBSGQJdNIKBBMomUg6FDMRgoHcOBQowIqNaLJiCIEEMLxdWpnIfITRAHnxgwjiEfDR8UIQYBCEcgDYwdUR6ORxEfG3MgeFiFRB0FBBxEHAQFkUJmaBofamxuRB9/GwICGxeMTRehnrabpERBACH5BAAKAP8ALAAAAAAQABAAAAZ9wItwSCwaL5aFwnIUWiqXUSAwulSYRMrB0KEYDJSO4UAhRgQBDZLpCAgixOSSWFEssEho81IWJgYMTQwDCUgGAQhNCAEGTCMJHU0dCXBDFX1DFhwdeHwFIhxmGBihQxEDaRcOGhYao1WZGIFnAiMUDg6YRR0ioE57Fx2RRkEAIfkEAAoA/wAsAAAAABAAEAAABXLgJY5kaV7WolinaLGQEEBXxZLUUUyUYVATw4FCisg0NZYmIIiQUosKqaJY3FDS1oUoSgwYrcUggTIAEC1EwMCKJCatSYI2qnBx2dGkQOCQOAQFdxdGARoVGhCITE4kGBgWEI8QFgwYWhGTWiMWERFXIyEAIfkEAAoA/wAsAAAAABAAEAAABn/Ai3BILBovloXCchRaKpdRIDC6VJhEysHQoRgMlI7hQCFGBAENkukICCLE5JJYUSywSGjzUhYmBgxNDAMJSAYBCE0IAAZMEQkdTRwKVUMcHHhCFXpDERgYcJYEBZFDI58aFhoOFxpuoUIUGhoUZwJVGA6ZaxccBAQce0QdpUVBACH5BAAKAP8ALAAAAAAQABAAAAZ8wItwSCwaLyEFKXQUhioXSCAAuVSYRMrB0KEYDJSO4UAhmgQBDZKpCQhMxFBJgRVWlFkOtElhUj4NH3VEJQMJFx0NintFCAEGISEQH3BHHR5VThVlRRSMQh0FBBxEHAQFnEJnaRcfHxdtb0WKIWcCVSUNTYgEo7tEHR1HQQAh+QQACgD/ACwAAAAAEAAQAAAGdcCLcEgsGi8hhSJ0FHY6l1EgMLqAmEROo5HqGAwqL5g42qKsoAsqIEgRVacTdAhSLLBI1bWpwiYGDE0MAwlIBgEITQgBBkwjCRxNHQlVdCpGekUqBQSRQxwEBZdDKQIBZ3FqbG5EDYEjpikhW3hFoJ1NRU9HQQA7) no-repeat;
-        width: 16px;
-        height: 16px;
-        margin: 3px 4px 0;
-        float: right;
-    }
+        #redux-defaults-top,
+        #redux-defaults-bottom {
+            margin-left:2px;
+        }
 
-    #redux-intro-text {
-        background: #f3f3f3;
-        border-bottom: 1px solid #dedede;
-        -moz-box-shadow: inset 0 1px 0 #fcfcfc;
-        -webkit-box-shadow: inset 0 1px 0 #fcfcfc;
-        box-shadow: inset 0 1px 0 #fcfcfc;
-        padding: 3px;
-        padding: 10px 10px;
-
-        p {
-            margin: 0;
-            font-family: "Lucida Grande", Sans-serif;
-            color: #888;
+        #redux-defaults-section-top,
+        #redux-defaults-section-bottom {
+            margin-left:2px;
         }
     }
 
@@ -358,7 +366,7 @@
 
             &::before {
                 color: #fff;
-                font-family: Elusive-Icons;
+                font-family: Elusive-Icons, serif;
                 content: "";
                 font-size: 38px;
                 position: absolute;
@@ -379,7 +387,6 @@
             padding-right: 10px !important;
             -webkit-touch-callout: none; /* iOS Safari */
             -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
             -moz-user-select: none; /* Old versions of Firefox */
             -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
@@ -393,9 +400,8 @@
             right: 0;
             bottom: 0;
             -moz-opacity: 0.1;
-            -khtml-opacity: 0.1;
             opacity: 0.1;
-            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=10);
+            //filter: progid:DXImageTransform.Microsoft.Alpha(opacity=10);
             filter: alpha(opacity=10);
             background: #000;
             z-index: 200;
@@ -453,7 +459,7 @@
             line-height: 19px;
 
             &.large-text {
-                width: 100%;
+                width: 95%;
             }
         }
 
@@ -529,7 +535,7 @@
 
         .form-table {
             clear: none !important;
-            margin-top: 0px !important;
+            margin-top: 0 !important;
 
             tr:first-child th,
             tr:first-child td {
@@ -617,7 +623,7 @@
         pre {
             white-space: pre-wrap; /* css-3 */
             white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: pre-wrap; /* Opera 4-6 */
             white-space: -o-pre-wrap; /* Opera 7 */
             word-wrap: break-word; /* Internet Explorer 5.5+ */
         }
@@ -650,10 +656,7 @@
                     -o-transition: 0.1s ease-in-out;
                     transition: 0.1s ease-in-out;
 
-                    -webkit-transform: rotate(270deg);
-                    -moz-transform: rotate(270deg);
                     -ms-transform: rotate(270deg);
-                    -o-transform: rotate(270deg);
                     transform: rotate(270deg);
                 }
             }
@@ -697,7 +700,6 @@
             a {
                 display: block;
                 padding: 10px 4px 10px 14px;
-                background: #e0e0e0;
                 background: transparent;
                 border-width: 1px 0;
                 border-style: solid;
@@ -967,7 +969,7 @@
     .form-table > tbody > tr {
         display: block;
         width: 100% !important;
-        padding: 0px !important;
+        padding: 0 !important;
     }
 
     .form-table > tbody > tr > th,
@@ -1062,10 +1064,7 @@ pre {
 
     #redux-sticky {
         min-height: 32px;
-        margin-left: -20px;
-        margin-right: -20px;
-        margin-top: -10px;
-        margin-bottom: 8px;
+        margin: -10px -20px 8px;
 
         #info_bar {
             height: 32px;
@@ -1076,8 +1075,8 @@ pre {
     }
 
     .redux_field_search {
-        top: 50px;
-        right: 5px;
+        top: 8px;
+        right: 290px;
     }
 
     #redux-footer-sticky {
@@ -1155,9 +1154,8 @@ pre {
                     a {
                         width: auto;
                         border-top: 0 !important;
-                        padding: 7px;
                         color: #fff;
-                        padding-left: 15px;
+                        padding: 7px 7px 7px 15px;
                         -webkit-transition: all 0.2s;
                         -moz-transition: all 0.2s;
                         -ms-transition: all 0.2s;
@@ -1254,8 +1252,8 @@ div.redux-star-holder {
 div.redux-star {
     height: 100%;
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     background-color: transparent;
     letter-spacing: 1ex;
     border: none;
@@ -1263,11 +1261,9 @@ div.redux-star {
     img {
         width: 19px;
         height: 19px;
-        border-left: 1px solid #f1f1f1;
-        border-right: 1px solid #f1f1f1;
         display: block;
         position: absolute;
-        right: 0px;
+        right: 0;
         border: none;
         text-decoration: none;
     }
@@ -1481,4 +1477,61 @@ div.redux-star {
             border-right: 1px solid #eee;
         }
     }
+}
+
+// Search
+.redux_field_search {
+    position: absolute;
+    width: 250px !important;
+    right: 20px;
+    padding: 4px 7px;
+    top:6px;
+}
+
+.redux-has-sections {
+    .redux_field_search {
+        right: 10px;
+    }
+}
+.redux-main.redux-search {
+    .redux-section-field,
+    .redux-info-field,
+    .redux-notice-field,
+    .redux-container-group,
+    .redux-container-raw,
+    .redux-section-desc,
+    .redux-group-tab h3,
+    .hr,
+    .redux-field-info,
+    tr {
+        display: none;
+    }
+
+    #import_export_default_section_group,
+    #dev_mode_default_section_group {
+        display:none !important;
+    }
+
+    .redux-group-tab {
+        margin-bottom: 0;
+
+        .form-table-section-indented {
+            margin-left: 0 !important;
+            width: 100%;
+
+            .redux-group-tab {
+                .form-table-section tr:first-of-type th:first-of-type {
+                    padding: inherit !important;
+                }
+
+                h3 {
+                    margin-top: inherit !important;
+                }
+            }
+        }
+    }
+}
+
+.redux-metabox .redux-has-sections .redux_field_search {
+    top:8px
 }

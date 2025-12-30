@@ -1,26 +1,26 @@
-/*
-	Field Box Shadow (box_shadow)
-	Author:  Kevin Provnace (kprovance)
+/**
+ * Field Box Shadow (box_shadow)
+ *
+ * Author: Kevin Provance (kprovance)
  */
 
 /* global jQuery, document, redux, redux_change */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	redux.field_objects            = redux.field_objects || {};
 	redux.field_objects.box_shadow = redux.field_objects.box_shadow || {};
 
-	redux.field_objects.box_shadow.init = function( selector ) {
+	redux.field_objects.box_shadow.init = function ( selector ) {
 		if ( ! selector ) {
 			selector = $( document ).find( '.redux-group-tab:visible' ).find( '.redux-container-box_shadow:visible' );
 		}
 
 		$( selector ).each(
-			function() {
-				var el     = $( this );
-				var parent = el;
-				var parent_el;
+			function () {
+				const el   = $( this );
+				let parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -36,29 +36,27 @@
 					return;
 				}
 
-				parent_el = el;
-
 				redux.field_objects.box_shadow.colorPicker( el );
 				redux.field_objects.box_shadow.sliderInit( el );
 
 				el.find( '.checkbox' ).on(
 					'click',
-					function() {
-						var val    = 0;
-						var col    = $( this ).parents( '.col-2' );
-						var slider = col.find( '.redux-box-shadow-slider' );
-						var color  = col.find( '.wp-picker-container' );
-						var label  = $( this ).parent( 'label' );
+					function () {
+						let val      = 0;
+						const col    = $( this ).parents( '.col-2' );
+						const slider = col.find( '.redux-box-shadow-slider' );
+						const color  = col.find( '.wp-picker-container' );
+						const label  = $( this ).parent( 'label' );
 
 						if ( $( this ).is( ':checked' ) ) {
 							val = $( this ).parent().find( '.checkbox-check' ).attr( 'data-val' );
 							color.removeClass( 'disabled' );
 							slider.attr( 'disabled', false );
-							label.removeClass( 'pro-disabled' );
+							label.removeClass( 'shadow-disabled' );
 						} else {
 							color.addClass( 'disabled' );
 							slider.attr( 'disabled', true );
-							label.addClass( 'pro-disabled' );
+							label.addClass( 'shadow-disabled' );
 						}
 
 						$( this ).parent().find( '.checkbox-check' ).val( val );
@@ -70,15 +68,15 @@
 		);
 	};
 
-	redux.field_objects.box_shadow.colorPicker = function( el ) {
-		var colorPicker = el.find( '.redux-color-init' ).wpColorPicker(
+	redux.field_objects.box_shadow.colorPicker = function ( el ) {
+		const colorPicker = el.find( '.redux-color-init' ).wpColorPicker(
 			{
-				change: function( e, ui ) {
+				change: function ( e, ui ) {
 					$( this ).val( ui.color.toString() );
 
 					redux.field_objects.box_shadow.changeValue( $( this ), true );
 				},
-				clear: function( e, ui ) {
+				clear: function ( e, ui ) {
 					$( this ).val( ui.color.toString() );
 
 					redux.field_objects.box_shadow.changeValue( $( this ).parent().find( '.redux-color-init' ), true );
@@ -86,35 +84,35 @@
 			}
 		);
 
-		var id = el.data( 'id' );
+		const id = el.data( 'id' );
 
 		colorPicker.each(
-			function() {
-				var column    = $( this ).parents( '.col-2' );
-				var shadow    = column.data( 'shadow' );
-				var label     = column.find( 'label[for="' + id + '-' + shadow + '-shadow"]' );
-				var container = column.find( '.wp-picker-container' );
+			function () {
+				const column    = $( this ).parents( '.col-2' );
+				const shadow    = column.data( 'shadow' );
+				const label     = column.find( 'label[for="' + id + '-' + shadow + '-shadow"]' );
+				const container = column.find( '.wp-picker-container' );
 
-				if ( label.hasClass( 'pro-disabled' ) ) {
+				if ( label.hasClass( 'shadow-disabled' ) ) {
 					container.addClass( 'disabled' );
 				}
 			}
 		);
 	};
 
-	redux.field_objects.box_shadow.sliderInit = function( el ) {
+	redux.field_objects.box_shadow.sliderInit = function ( el ) {
 		el.find( '.redux-box-shadow-slider' ).each(
-			function() {
-				var mainID = $( this ).data( 'id' );
-				var minVal = $( this ).data( 'min' );
-				var maxVal = $( this ).data( 'max' );
-				var step   = $( this ).data( 'step' );
-				var def    = $( this ).data( 'default' );
-				var label  = $( this ).data( 'label' );
-				var rtl    = Boolean( $( this ).data( 'rtl' ) );
-				var range  = [minVal, maxVal];
+			function () {
+				const mainID = $( this ).data( 'id' );
+				const minVal = $( this ).data( 'min' );
+				const maxVal = $( this ).data( 'max' );
+				const step   = $( this ).data( 'step' );
+				const def    = $( this ).data( 'default' );
+				const label  = $( this ).data( 'label' );
+				const rtl    = Boolean( $( this ).data( 'rtl' ) );
+				const range  = [minVal, maxVal];
 
-				var slider = $( this ).reduxNoUiSlider(
+				const slider = $( this ).reduxNoUiSlider(
 					{
 						range: range,
 						start: def,
@@ -126,13 +124,13 @@
 						serialization: {
 							resolution: step
 						},
-						slide: function() {
-							var val = slider.val();
+						slide: function () {
+							const val = slider.val();
 
 							$( this ).next( '#redux-slider-value-' + mainID ).attr( 'value', val );
 
-							$( this ).prev( 'label' ).html(
-								label + ':  <strong>' + val + 'px</strong>'
+							$( this ).prev( 'strong' ).html(
+								val + 'px'
 							);
 
 							redux.field_objects.box_shadow.changeValue( $( this ), true );
@@ -143,26 +141,26 @@
 		);
 	};
 
-	redux.field_objects.box_shadow.changeValue = function( el, update ) {
-		var parent    = el.parents( '.redux-container-box_shadow' );
-		var container = parent.find( '.box-shadow-controls' );
-		var inset     = container.find( '.shadow-inset' );
-		var drop      = container.find( '.shadow-drop' );
+	redux.field_objects.box_shadow.changeValue = function ( el, update ) {
+		const parent    = el.parents( '.redux-container-box_shadow' );
+		const container = parent.find( '.box-shadow-controls' );
+		const inset     = container.find( '.shadow-inset' );
+		const drop      = container.find( '.shadow-drop' );
 
-		var mainID  = parent.data( 'id' );
-		var preview = parent.find( '#shadow-result' );
-		var css     = '';
+		const mainID  = parent.data( 'id' );
+		const preview = parent.find( '#shadow-result' );
+		let css       = '';
 
-		var insetColor;
-		var insetH;
-		var insetV;
-		var insetB;
-		var insetS;
-		var dropColor;
-		var dropH;
-		var dropV;
-		var dropB;
-		var dropS;
+		let insetColor;
+		let insetH;
+		let insetV;
+		let insetB;
+		let insetS;
+		let dropColor;
+		let dropH;
+		let dropV;
+		let dropB;
+		let dropS;
 
 		if ( inset.length > 0 ) {
 			if ( inset.find( '.checkbox' ).is( ':checked' ) ) {

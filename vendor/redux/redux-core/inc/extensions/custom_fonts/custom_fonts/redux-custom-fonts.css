@@ -1,0 +1,69 @@
+.redux-container-custom_font table tr td {
+	padding: 10px 9px !important;
+}
+.redux-container-custom_font table.widefat {
+	border-left: 1px solid #dfdfdf;
+	border-right: 1px solid #dfdfdf;
+	border-top: 1px solid #dfdfdf;
+}
+.redux-container-custom_font .upload_button_div {
+	margin: 10px 0;
+	float: right;
+}
+.redux-container-custom_font .spinner {
+	margin-top: 0;
+}
+.redux-container-custom_font .fontDelete {
+	float: right;
+}
+.redux-container-custom_font .action-row {
+	text-align: right;
+	padding-right: 5px;
+	line-height: 20px;
+}
+.redux-container-custom_font .plugins .active td,
+.redux-container-custom_font .plugins .active th {
+	background-color: #FAFAFA;
+}
+.redux-container-custom_font .font-error {
+	margin: 5px 0 15px;
+	border-left: 4px solid #dd3d36;
+	background: #fff;
+	-webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+	padding: 1px 12px;
+	outline: 0;
+}
+.redux-container-custom_font .font-error p {
+	margin: 0.5em 0;
+	padding: 2px;
+}
+.redux-container-custom_font .conversion-types {
+	border: solid #e7e7e7 1px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	margin-bottom: 10px;
+	opacity: 1;
+}
+.redux-container-custom_font .conversion-types .checkbox {
+	margin-left: 20px !important;
+}
+.redux-container-custom_font .conversion-types.is-disabled {
+	cursor: not-allowed;
+	opacity: 0.7;
+}
+.redux-container-custom_font .conversion-types.is-disabled .checkbox,
+.redux-container-custom_font .conversion-types.is-disabled label {
+	cursor: not-allowed;
+}
+.redux-container-custom_font .font-pieces {
+	margin-right: 1px;
+}
+
+.fontActionWorking {
+	background: green !important;
+}
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHV4LWN1c3RvbS1mb250cy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVRO0NBQ0k7O0FBR0o7Q0FDSTtDQUNBO0NBQ0E7O0FBSVI7Q0FDSTtDQUNBOztBQUdKO0NBQ0k7O0FBR0o7Q0FDSTs7QUFHSjtDQUNJO0NBQ0E7Q0FDQTs7QUFLSTtBQUFBO0NBRUk7O0FBS1o7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTs7QUFDQTtDQUNJO0NBQ0E7O0FBSVI7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7O0FBRUE7Q0FDSTs7QUFHSjtDQUNJO0NBQ0E7O0FBRUE7QUFBQTtDQUVJOztBQUtaO0NBQ0k7OztBQUlSO0NBQ0kiLCJmaWxlIjoicmVkdXgtY3VzdG9tLWZvbnRzLmNzcyJ9 */
+
+/*# sourceMappingURL=redux-custom-fonts.css.map */

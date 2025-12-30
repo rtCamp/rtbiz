@@ -18,31 +18,27 @@ if ( ! class_exists( 'Redux_I18n', false ) ) {
 		/**
 		 * Redux_I18n constructor.
 		 *
-		 * @param object $parent ReduxFramework pointer.
-		 * @param string $file Translation file.
+		 * @param object $redux ReduxFramework pointer.
 		 */
-		public function __construct( $parent, string $file ) {
-			parent::__construct( $parent );
+		public function __construct( $redux ) {
+			parent::__construct( $redux );
 
-			$this->load( $file );
+			add_action( 'init', array( $this, 'load' ) );
 		}
 
 		/**
 		 * Load translations.
-		 *
-		 * @param string $file Path to translation files.
 		 */
-		private function load( string $file ) {
+		public function load() {
 			$domain = 'redux-framework';
+
+			unload_textdomain( $domain );
 
 			$core = $this->core();
 
 			/**
 			 * Locale for text domain
 			 * filter 'redux/textdomain/basepath/{opt_name}'
-			 *
-			 * @param string     The locale of the blog or from the 'locale' hook
-			 * @param string     'redux-framework'  text domain
 			 */
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			$locale = apply_filters( 'redux/locale', get_locale(), 'redux-framework' );
@@ -51,12 +47,12 @@ if ( ! class_exists( 'Redux_I18n', false ) ) {
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			$basepath = apply_filters( "redux/textdomain/basepath/{$core->args['opt_name']}", Redux_Core::$dir );
 
-			$loaded = load_textdomain( $domain, Redux_Core::$dir . 'languages/' . $mofile );
+			$loaded = load_textdomain( $domain, $basepath . 'languages/' . $mofile );
 
 			if ( ! $loaded ) {
 				$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
 
-				$loaded = load_textdomain( $domain, $mofile );
+				load_textdomain( $domain, $mofile );
 			}
 		}
 	}

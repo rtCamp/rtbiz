@@ -1,11 +1,12 @@
 <?php
 /**
  * Redux Framework color config.
- * For full documentation, please visit: http://devs.redux.io/
+ * For full documentation, please visit: https://devs.redux.io/
  *
  * @package Redux Framework
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -20,24 +21,29 @@ Redux::set_section(
 				'id'          => 'opt-color-title',
 				'type'        => 'color',
 				'output'      => array(
-					'color' => '.site-title',
+					'color'     => '.site-title, .wp-block-site-title a',
+					'important' => true,
 				),
 				'title'       => esc_html__( 'Site Title Color', 'your-textdomain-here' ),
 				'subtitle'    => esc_html__( 'Pick a title color for the theme (default: #000).', 'your-textdomain-here' ),
 				'default'     => '#000000',
-				'color_alpha' => true,
+				// 'color_alpha' => true,
+				'transparent' => false,
+				'validate'    => 'color',
 			),
 			array(
-				'id'       => 'opt-color-footer',
-				'type'     => 'color',
-				'title'    => esc_html__( 'Footer Background Color', 'your-textdomain-here' ),
-				'subtitle' => esc_html__( 'Pick a background color for the footer (default: #dd9933).', 'your-textdomain-here' ),
-				'default'  => '#dd9933',
-				'validate' => 'color',
-				'output'   => array(
-					'background-color' => '.footer, #site-footer, .site-footer',
+				'id'          => 'opt-color-footer',
+				'type'        => 'color',
+				'title'       => esc_html__( 'Footer Background Color', 'your-textdomain-here' ),
+				'subtitle'    => esc_html__( 'Pick a background color for the footer (default: #dd9933).', 'your-textdomain-here' ),
+				'default'     => '#dd9933',
+				'transparent' => false,
+				'validate'    => 'color',
+				'output'      => array(
+					'background-color' => '.footer, #site-footer, .site-footer, footer',
 				),
 			),
 		),
 	)
 );
+// phpcs:enable

@@ -23,21 +23,21 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 		 *
 		 * @var string The capability users should have to view the page
 		 */
-		public $minimum_capability = 'manage_options';
+		public string $minimum_capability = 'manage_options';
 
 		/**
 		 * Display version.
 		 *
 		 * @var string
 		 */
-		public $display_version = '';
+		public string $display_version = '';
 
 		/**
 		 * Is loaded.
 		 *
 		 * @var bool
 		 */
-		public $redux_loaded = false;
+		public bool $redux_loaded = false;
 
 		/**
 		 * Get things started
@@ -47,15 +47,6 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 		public function __construct() {
 			// Load the welcome page even if a Redux panel isn't running.
 			add_action( 'init', array( $this, 'init' ), 999 );
-			add_action( 'admin_init', array( $this, 'register_options' ) );
-		}
-
-		/**
-		 * Register template option.
-		 */
-		public function register_options() {
-			register_setting( 'redux_templates', 'use_redux_templates' );
-			register_setting( 'redux_templates', 'use_extendify_templates' );
 		}
 
 		/**
@@ -111,14 +102,6 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 
 			// About Page.
 			$page( esc_html__( 'What is Redux Framework?', 'redux-framework' ), esc_html__( 'Redux', 'redux-framework' ), $this->minimum_capability, 'redux-framework', array( $this, 'about_screen' ) );
-
-			// Templates Page.
-			$page( esc_html__( 'Templates', 'redux-framework' ), esc_html__( 'Templates', 'redux-framework' ), $this->minimum_capability, 'redux-templates', array( $this, 'templates' ) );
-
-			remove_submenu_page( 'options-general.php', 'redux-templates' );
-
-			// phpcs:ignore WordPress.NamingConventions.ValidHookName
-			do_action( 'redux/pro/welcome/admin/menu', $page, $this );
 		}
 
 		/**
@@ -130,39 +113,14 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 		 */
 		public function admin_head() {
 			?>
-
-			<script
-				id="redux-qtip-js"
-				src='<?php echo esc_url( Redux_Core::$url ); ?>assets/js/vendor/qtip/qtip.js'>
-			</script>
-
-			<script
-				id="redux-welcome-admin-js"
-				src='<?php echo esc_url( Redux_Core::$url ); ?>inc/welcome/js/redux-welcome-admin.js'>
-			</script>
-
-			<?php
-			if ( isset( $_GET['page'] ) && 'redux-support' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
-				?>
-				<script
-					id="jquery-easing"
-					src='<?php echo esc_url( Redux_Core::$url ); ?>inc/welcome/js/jquery.easing.min.js'>
-				</script>
-			<?php } ?>
-
-			<link
-				rel='stylesheet' id='redux-qtip-css' <?php // phpcs:ignore WordPress.WP.EnqueuedResources ?>
-				href='<?php echo esc_url( Redux_Core::$url ); ?>assets/css/vendor/qtip.css'
-				type='text/css' media='all'/>
-
 			<link
 				rel='stylesheet' id='elusive-icons' <?php // phpcs:ignore WordPress.WP.EnqueuedResources ?>
 				href='<?php echo esc_url( Redux_Core::$url ); ?>assets/css/vendor/elusive-icons.css'
 				type='text/css' media='all'/>
 
 			<link
-				rel='stylesheet' id='redux-welcome-css' <?php // phpcs:ignore WordPress.WP.EnqueuedResources ?>
-				href='<?php echo esc_url( Redux_Core::$url ); ?>inc/welcome/css/redux-welcome.css'
+				rel='stylesheet' id='redux-welcome' <?php // phpcs:ignore WordPress.WP.EnqueuedResources ?>
+				href='<?php echo esc_url( Redux_Core::$url ); ?>inc/welcome/css/redux-welcome.min.css'
 				type='text/css' media='all'/>
 
 			<style>
@@ -172,19 +130,6 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 
 				.about-wrap .redux-badge {
 				<?php echo is_rtl() ? 'left' : 'right'; ?>: 0;
-				}
-
-				.about-wrap .feature-rest div {
-					padding- <?php echo is_rtl() ? 'left' : 'right'; ?>: 100px;
-				}
-
-				.about-wrap .feature-rest div.last-feature {
-					padding- <?php echo is_rtl() ? 'right' : 'left'; ?>: 100px;
-					padding- <?php echo is_rtl() ? 'left' : 'right'; ?>: 0;
-				}
-
-				.about-wrap .feature-rest div.icon:before {
-					margin: <?php echo is_rtl() ? '0 -100px 0 0' : '0 0 0 -100px'; ?>;
 				}
 			</style>
 			<?php
@@ -199,25 +144,14 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 		 */
 		public function tabs() {
 			$selected = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'redux-framework'; // phpcs:ignore WordPress.Security.NonceVerification
-			$nonce    = wp_create_nonce( 'redux-support-hash' );
 
 			?>
-			<input type="hidden" id="redux_support_nonce" value="<?php echo esc_attr( $nonce ); ?>"/>
 			<h2 class="nav-tab-wrapper">
 				<a
 					class="nav-tab <?php echo( 'redux-framework' === $selected ? 'nav-tab-active' : '' ); ?>"
 					href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-framework' ), 'options-general.php' ) ) ); ?>">
 					<?php esc_attr_e( 'What is Redux?', 'redux-framework' ); ?>
 				</a>
-				<a
-					class="nav-tab <?php echo( 'redux-templates' === $selected ? 'nav-tab-active' : '' ); ?>"
-					href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'redux-templates' ), 'options-general.php' ) ) ); ?>">
-					<?php esc_attr_e( 'Templates', 'redux-framework' ); ?>
-				</a>
-
-				<?php // phpcs:ignore WordPress.NamingConventions.ValidHookName ?>
-				<?php do_action( 'redux/pro/welcome/admin/tab', $selected ); ?>
-
 			</h2>
 			<?php
 		}
@@ -237,26 +171,12 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 		}
 
 		/**
-		 * Render Templates Screen
-		 *
-		 * @access public
-		 * @since  4.2
-		 * @return void
-		 */
-		public function templates() {
-			// Stupid hack for WordPress alerts and warnings.
-			echo '<div class="wrap" style="height:0;overflow:hidden;"><h2></h2></div>';
-
-			require_once 'views/templates.php';
-		}
-
-		/**
 		 * Action.
 		 */
 		public function actions() {
 			?>
 			<p class="redux-actions">
-				<a href="http://devs.redux.io/" class="docs button button-primary">Docs</a>
+				<a href="https://devs.redux.io/" class="docs button button-primary">Docs</a>
 				<a
 					href="https://wordpress.org/support/view/plugin-reviews/redux-framework?filter=5#postform"
 					class="review-us button button-primary"
@@ -268,6 +188,7 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 					data-text="Supercharge your WordPress experience with Redux.io, the world's most powerful and widely used WordPress interface builder."
 					data-via="ReduxFramework" data-size="large" data-hashtags="Redux">Tweet</a>
 				<?php
+
 				$options = Redux_Helpers::get_plugin_options();
 				$nonce   = wp_create_nonce( 'redux_framework_demo' );
 
@@ -294,8 +215,10 @@ if ( ! class_exists( 'Redux_Welcome', false ) ) {
 				?>
 				<script>
 					!function( d, s, id ) {
-						var js, fjs = d.getElementsByTagName( s )[0],
-							p = /^http:/.test( d.location ) ? 'http' : 'https';
+						let js;
+						const fjs = d.getElementsByTagName( s )[0],
+
+						p = /^http:/.test( d.location ) ? 'http' : 'https';
 						if ( !d.getElementById( id ) ) {
 							js = d.createElement( s );
 							js.id = id;

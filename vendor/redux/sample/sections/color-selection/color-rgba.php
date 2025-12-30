@@ -1,11 +1,12 @@
 <?php
 /**
  * Redux Framework color RGBA config.
- * For full documentation, please visit: http://devs.redux.io/
+ * For full documentation, please visit: https://devs.redux.io/
  *
  * @package Redux Framework
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -23,10 +24,14 @@ Redux::set_section(
 				'subtitle' => esc_html__( 'Gives you the RGBA color.', 'your-textdomain-here' ),
 				'default'  => array(
 					'color' => '#7e33dd',
-					'alpha' => '.8',
+					'alpha' => .8,
 				),
-				'output'   => array( 'color' => '.posted-on' ),
+				'output'   => array(
+					'color'     => '.posted-on, .wp-block-post-date a',
+					'important' => true,
+				),
 			),
 		),
 	)
 );
+// phpcs:enable

@@ -33,7 +33,7 @@ if ( ! class_exists( 'Redux_Checkbox', false ) ) {
 					$this->field['args'] = array();
 				}
 
-				$this->field['options'] = $this->parent->get_wordpress_data( $this->field['data'], $this->field['args'], $this->value );
+				$this->field['options'] = $this->parent->wordpress_data->get( $this->field['data'], $this->field['args'], $this->parent->args['opt_name'], $this->value );
 				if ( empty( $this->field['options'] ) ) {
 					return;
 				}
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Redux_Checkbox', false ) ) {
 					$id      = $ident_1 . '_' . $ident_2;
 
 					echo '<label for="' . esc_attr( $id ) . '">';
-					echo '<input type="hidden" class="checkbox-check" data-val="1" name="' . esc_attr( $this->field['name'] . '[' . $k . ']' . $this->field['name_suffix'] ) . '" value="' . esc_attr( $this->value[ $k ] ) . '"/>';
+					echo '<input type="hidden" class="checkbox-check" data-val="1" name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] . '[' . $k . ']' ) . '" value="' . esc_attr( $this->value[ $k ] ) . '"/>';
 					echo '<input type="checkbox" class="checkbox ' . esc_attr( $this->field['class'] ) . '" id="' . esc_attr( $id ) . '" value="1" ' . checked( $this->value[ $k ], '1', false ) . '/>';
 					echo ' ' . esc_attr( $v ) . '</label>';
 					echo '</li>';
@@ -125,7 +125,7 @@ if ( ! class_exists( 'Redux_Checkbox', false ) ) {
 		public function enqueue() {
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-checkbox-css',
+					'redux-field-checkbox',
 					Redux_Core::$url . 'inc/fields/checkbox/redux-checkbox.css',
 					array(),
 					$this->timestamp
@@ -133,7 +133,7 @@ if ( ! class_exists( 'Redux_Checkbox', false ) ) {
 			}
 
 			wp_enqueue_script(
-				'redux-field-checkbox-js',
+				'redux-field-checkbox',
 				Redux_Core::$url . 'inc/fields/checkbox/redux-checkbox' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js' ),
 				$this->timestamp,

@@ -1,20 +1,19 @@
 <?php
 /**
  * Redux Framework raw config.
- * For full documentation, please visit: http://devs.redux.io/
+ * For full documentation, please visit: https://devs.redux.io/
  *
  * @package Redux Framework
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 $sample_html = '';
 if ( file_exists( $dir . 'info-html.html' ) ) {
-	global $wp_filesystem;
-
 	$fs = Redux_Filesystem::get_instance();
 
-	$sample_html = $wp_filesystem->get_contents( $dir . 'info-html.html' );
+	$sample_html = $fs->get_contents( $dir . 'info-html.html' );
 }
 
 Redux::set_section(
@@ -45,3 +44,4 @@ Redux::set_section(
 		),
 	)
 );
+// phpcs:enable

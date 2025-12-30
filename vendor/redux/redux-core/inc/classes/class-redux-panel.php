@@ -5,6 +5,7 @@
  * @class Redux_Panel
  * @version 3.0.0
  * @package Redux Framework/Classes
+ * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +18,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 	class Redux_Panel {
 
 		/**
-		 * ReduxFramwrok object pointer.
+		 * ReduxFramework object pointer.
 		 *
 		 * @var object
 		 */
@@ -40,10 +41,10 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 		/**
 		 * Sets the path from the arg or via filter. Also calls the panel template function.
 		 *
-		 * @param object $parent ReduxFramework pointer.
+		 * @param object $redux ReduxFramework pointer.
 		 */
-		public function __construct( $parent ) {
-			$this->parent        = $parent;
+		public function __construct( $redux ) {
+			$this->parent        = $redux;
 			$this->template_path = Redux_Core::$dir . 'templates/panel/';
 			$this->original_path = Redux_Core::$dir . 'templates/panel/';
 
@@ -101,17 +102,6 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 				$this->parent->args['class'] = ' redux-rtl';
 			}
 
-			echo '<div id="redux-dialog-confirm" title="' . esc_html__( 'Submit Support Information?', 'redux-framework' ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'redux_sumbit_support' ) ) . '">';
-			// translators: %s = WP Site Health Screen URL.
-			echo '<p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>' . sprintf( esc_html__( 'Redux will send the debug information found on the %s and your Redux config to our secure server.  Are you ready to proceed?', 'redux-framework' ), '<a href="' . esc_url( admin_url( 'site-health.php?tab=debug' ) ) . '" target="_blank">' . esc_html__( 'WordPress Site Health screen', 'redux-framework' ) . '</a>' ) . '</p>';
-			echo '</div>';
-
-			echo '<div id="redux-dialog-message" title="Working...">';
-			echo '<p class="redux-message-p">';
-			echo '<span class="spinner" style="float:left; margin:0 7px 50px 0;" ></span>Transmitting data...';
-			echo '</p>';
-			echo '</div>';
-
 			$this->get_template( 'container.tpl.php' );
 
 			/**
@@ -159,7 +149,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 					/**
 					 * Filter 'redux-imported-text-{opt_name}'
 					 *
-					 * @param string  translated "settings imported" text
+					 * @param string $text Translated "settings imported" text.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -180,7 +170,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 					/**
 					 * Filter 'redux-defaults-text-{opt_name}'
 					 *
-					 * @param string  translated "settings imported" text
+					 * @param string $text Translated "settings imported" text.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -201,7 +191,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 					/**
 					 * Filter 'redux-defaults-section-text-{opt_name}'
 					 *
-					 * @param string  translated "settings imported" text
+					 * @param string $text Translated "settings imported" text.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -222,7 +212,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 					/**
 					 * Filter 'redux-saved-text-{opt_name}'
 					 *
-					 * @param string translated "settings saved" text
+					 * @param string $text Translated "settings saved" text.
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -249,7 +239,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 			/**
 			 * Filter 'redux-changed-text-{opt_name}'
 			 *
-			 * @param string translated "settings have changed" text
+			 * @param string $text Translated "settings have changed" text.
 			 */
 
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -288,7 +278,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 		}
 
 		/**
-		 * Used to intitialize the settings fields for this panel. Required for saving and redirect.
+		 * Used to initialize the settings fields for this panel. Required for saving and redirect.
 		 */
 		private function init_settings_fields() {
 			// Must run or the page won't redirect properly.
@@ -326,9 +316,9 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 
 				add_filter( 'deprecated_file_trigger_error', array( $this, 'tick_file_deprecate_warning' ) );
 
-				$file = str_replace( '-', '_', $file );
+				$file = str_replace( '_', '-', $file );
 
-				_deprecated_file( esc_html( $file ), '4.0', esc_html( $old_file ), 'Please replace this outdated template with the current one from the Redux core.' );
+				_deprecated_file( esc_html( $old_file ), '4.0', esc_html( $file ), 'Please replace this outdated template with the current one from the Redux core.' );
 
 				if ( file_exists( $this->template_path . $file ) ) {
 					$path = $this->template_path . $file;
@@ -346,7 +336,19 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			do_action( "redux/{$this->parent->args['opt_name']}/panel/template/" . $file . '/after' );
 
-			require $path;
+			if ( file_exists( $path ) ) {
+				if ( is_readable( $path ) ) {
+					require $path;
+				} else {
+					// translators: %1$s: template path.
+					echo '<div class="error"><p>' . sprintf( esc_html__( 'Redux Panel Template %1$s cannot be read. Please check the permissions for this file.', 'redux-framework' ), '<code>' . esc_html( $path ) . '</code>' ) . '</p></div>';
+				}
+			} elseif ( file_exists( Redux_Core::$dir . 'templates/panel/' . $file ) ) {
+					require Redux_Core::$dir . 'templates/panel/' . $file;
+			} else {
+				// translators: %1$s: template path.
+				echo '<div class="error"><p>' . sprintf( esc_html__( 'Redux Panel Template %1$s does not exist. Please reinstall Redux to replace this file.', 'redux-framework' ), '<code>' . esc_html( $path ) . '</code>' ) . '</p></div>';
+			}
 		}
 
 		/**
@@ -360,7 +362,7 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 			$files  = scandir( $template_path );
 			$result = array();
 			if ( $files ) {
-				foreach ( $files as $key => $value ) {
+				foreach ( $files as $value ) {
 					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
 						if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
 							$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
@@ -398,11 +400,11 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 					$core_version      = Redux_Helpers::get_template_version( $this->original_path . $file );
 					$developer_version = Redux_Helpers::get_template_version( $developer_theme_file );
 
-					if ( $core_version && $developer_version && version_compare( $developer_version, $core_version, '<' ) && isset( $this->parent->args['dev_mode'] ) && ! empty( $this->parent->args['dev_mode'] ) ) {
+					if ( $core_version && $developer_version && version_compare( $developer_version, $core_version, '<' ) ) {
 						?>
-						<div id="message" class="error redux-message">
+						<div id="message" class="error redux-message" style="display:block!important">
 							<p>
-								<strong><?php esc_html_e( 'Your panel has bundled copies of Redux Framework template files that are outdated!', 'redux-framework' ); ?></strong>&nbsp;&nbsp;<?php esc_html_e( 'Please update them now as functionality issues could arise.', 'redux-framework' ); ?>
+								<strong><?php esc_html_e( 'Your panel has bundled copies of Redux Framework template files that are outdated!', 'redux-framework' ); ?></strong>&nbsp;&nbsp;<?php esc_html_e( 'Please ask the author of this theme to update them as functionality issues could arise.', 'redux-framework' ); ?>
 							</p>
 						</div>
 						<?php
@@ -427,5 +429,3 @@ if ( ! class_exists( 'Redux_Panel', false ) ) {
 if ( ! class_exists( 'reduxCorePanel' ) ) {
 	class_alias( 'Redux_Panel', 'reduxCorePanel' );
 }
-
-

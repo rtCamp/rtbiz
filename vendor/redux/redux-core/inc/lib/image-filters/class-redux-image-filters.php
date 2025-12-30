@@ -40,10 +40,10 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 				'invert',
 			);
 
-			// Make array of in use filters.
+			// Make an array of in use filters.
 			$in_use_filters = array();
 
-			foreach ( $filter_arr as $key => $filter ) {
+			foreach ( $filter_arr as $filter ) {
 				if ( $field['filter'][ $filter ] ) {
 					$in_use_filters[] = $filter;
 				}
@@ -54,7 +54,7 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 			$output .= '<div class="redux-' . $mode . '-filter-container" data-filters="' . $filters . '">';
 			$output .= '<div class="container-label">' . esc_html__( 'Filters', 'redux-framework' ) . '</div>';
 
-			foreach ( $in_use_filters as $key => $filter ) {
+			foreach ( $in_use_filters as $filter ) {
 				$step = 1;
 				$unit = self::get_filter_unit( $filter );
 
@@ -76,13 +76,13 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 					$max = 360;
 				}
 
-				$disabled = 'pro-disabled';
+				$disabled = 'filters-disabled';
 				if ( $value['filter'][ $filter ]['checked'] ) {
 					$disabled = '';
 				}
 
 				$output .= '<div class="filter filter-' . $filter . '">';
-				$output .= '<label for="' . esc_attr( $parent->args['opt_name'] . '-' . $field['id'] ) . '-' . $filter . '" class="' . $disabled . '">';
+				$output .= '<label for="' . esc_attr( $field['id'] ) . '-' . $filter . '" class="' . $disabled . '">';
 				$output .= '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '-' . $filter . '" class="checkbox" value="1"' . checked( $value['filter'][ $filter ]['checked'], '1', false ) . '/>';
 				$output .= '<input type="hidden" data-val="1" value="' . esc_attr( $value['filter'][ $filter ]['checked'] ) . '" class="checkbox-check" name="' . esc_attr( $field['name'] . $field['name_suffix'] ) . '[filter][' . $filter . '][checked]"/>';
 				$output .= ucfirst( $filter ) . ': ';
@@ -144,25 +144,24 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 		}
 
 		/**
-		 * Enqueue suport files.
+		 * Enqueue support files.
 		 *
-		 * @param array $field           Option field.
-		 * @param bool  $filters_enabled Filtered enabled bit.
+		 * @param bool $filters_enabled Filtered enabled bit.
 		 */
-		public static function enqueue( array $field, bool $filters_enabled ) {
+		public static function enqueue( bool $filters_enabled ) {
 			$min = Redux_Functions::is_min();
 
 			if ( $filters_enabled ) {
-				if ( ! wp_style_is( 'redux-nouislider-css' ) ) {
+				if ( ! wp_style_is( 'redux-nouislider' ) ) {
 					wp_enqueue_style(
-						'redux-nouislider-css',
+						'redux-nouislider',
 						Redux_Core::$url . 'assets/css/vendor/nouislider/redux.jquery.nouislider.css',
 						array(),
 						'5.0.0'
 					);
 
 					wp_enqueue_script(
-						'redux-nouislider-js',
+						'redux-nouislider',
 						Redux_Core::$url . 'assets/js/vendor/nouislider/redux.jquery.nouislider' . $min . '.js',
 						array( 'jquery' ),
 						'5.0.0',
@@ -171,7 +170,7 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 				}
 
 				wp_enqueue_script(
-					'redux-image-filters-js',
+					'redux-image-filters',
 					Redux_Core::$url . 'inc/lib/image-filters/image-filters' . $min . '.js',
 					array( 'jquery' ),
 					Redux_Core::$version,
@@ -179,7 +178,7 @@ if ( ! class_exists( 'Redux_Image_Filters' ) ) {
 				);
 
 				wp_enqueue_style(
-					'redux-image-filters-css',
+					'redux-image-filters',
 					Redux_Core::$url . 'inc/lib/image-filters/image-filters.css',
 					array(),
 					Redux_Core::$version

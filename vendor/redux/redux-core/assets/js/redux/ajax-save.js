@@ -1,17 +1,18 @@
 /* global redux, tinyMCE, ajaxurl */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.ajax_save = function( button ) {
-		var $data;
-		var $nonce;
+	$.redux.ajax_save = function ( button ) {
+		let $data;
+		let $nonce;
 
-		var overlay           = $( document.getElementById( 'redux_ajax_overlay' ) );
-		var $notification_bar = $( document.getElementById( 'redux_notification_bar' ) );
-		var $parent           = $( button ).parents( '.redux-wrap-div' ).find( 'form' ).first();
+		const overlay           = $( document.getElementById( 'redux_ajax_overlay' ) );
+		const $notification_bar = $( document.getElementById( 'redux_notification_bar' ) );
+		const $parent           = $( button ).parents( '.redux-wrap-div' ).find( 'form' ).first();
 
 		overlay.fadeIn();
 
@@ -24,7 +25,7 @@
 		$( '.redux-save-warn' ).slideUp();
 		$( '.redux_ajax_save_error' ).slideUp(
 			'medium',
-			function() {
+			function () {
 				$( this ).remove();
 			}
 		);
@@ -33,8 +34,8 @@
 		if ( redux.optName.hasOwnProperty( 'editor' ) ) {
 			$.each(
 				redux.optName.editor,
-				function( $key ) {
-					var editor;
+				function ( $key ) {
+					let editor;
 
 					if ( 'undefined' !== typeof ( tinyMCE ) ) {
 						editor = tinyMCE.get( $key );
@@ -51,8 +52,8 @@
 
 		// Add values for checked and unchecked checkboxes fields.
 		$parent.find( 'input[type=checkbox]' ).each(
-			function() {
-				var chkVal;
+			function () {
+				let chkVal;
 
 				if ( 'undefined' !== typeof $( this ).attr( 'name' ) ) {
 					chkVal = $( this ).is( ':checked' ) ? $( this ).val() : '0';
@@ -78,8 +79,10 @@
 					'opt_name': redux.optName.args.opt_name,
 					data:       $data
 				},
-				error: function( response ) {
-					$( '.redux-action_bar input' ).prop( 'disabled', false );
+				error: function ( response ) {
+					let input = $( '.redux-action_bar input' );
+
+					input.prop( 'disabled', false );
 
 					if ( true === redux.optName.args.dev_mode ) {
 						console.log( response.responseText );
@@ -91,11 +94,11 @@
 						redux.optName.args.ajax_save = false;
 
 						$( button ).trigger( 'click' );
-						$( '.redux-action_bar input' ).prop( 'disabled', true );
+						input.prop( 'disabled', true );
 					}
 				},
-				success: function( response ) {
-					var $save_notice;
+				success: function ( response ) {
+					let $save_notice;
 
 					if ( response.action && 'reload' === response.action ) {
 						location.reload( true );

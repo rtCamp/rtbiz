@@ -38,23 +38,42 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 	public $opt_name = '';
 
 	/**
+	 * Section array.
+	 *
+	 * @var array|mixed
+	 */
+	public $section = array();
+
+	/**
+	 * Section array.
+	 *
+	 * @var string
+	 */
+	public string $wp_ver;
+
+	/**
 	 * Constructor.
 	 * Any supplied $args override class property defaults.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param WP_Customize_Manager $manager Customizer bootstrap instance.
-	 * @param string               $id      An specific ID for the panel.
+	 * @param string               $id      A specific ID for the panel.
 	 * @param array                $args    Panel arguments.
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
+		global $wp_version;
+
 		parent::__construct( $manager, $id, $args );
+
+		$version      = explode( '-', $wp_version );
+		$this->wp_ver = $version[0];
 
 		// Redux addition.
 		if ( isset( $args['section'] ) ) {
 			$this->section     = $args['section'];
-			$this->description = isset( $this->section['desc'] ) ? $this->section['desc'] : '';
-			$this->opt_name    = isset( $args['opt_name'] ) ? $args['opt_name'] : '';
+			$this->description = $this->section['desc'] ?? '';
+			$this->opt_name    = $args['opt_name'] ?? '';
 		}
 	}
 
@@ -65,9 +84,7 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 	 * @access protected
 	 */
 	protected function render() {
-		global $wp_version;
-		$version = explode( '-', $wp_version );
-		if ( version_compare( $version[0], '4.3', '<' ) ) {
+		if ( version_compare( $this->wp_ver, '4.3', '<' ) ) {
 			$this->render_fallback();
 		}
 	}
@@ -77,9 +94,14 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 	 */
 	protected function render_fallback() {
 		$classes = 'accordion-section redux-main redux-panel control-section control-panel control-panel-' . esc_attr( $this->type );
+
 		?>
-		<li id="accordion-panel-<?php echo esc_attr( $this->id ); ?>" class="<?php echo esc_attr( $classes ); ?>">
+		<li id="accordion-panel-<?php echo esc_attr( $this->id ); ?>" class="<?php echo esc_attr( $classes ); ?>"
+			data-width="<?php echo isset( $this->section['customizer_width'] ) ? esc_attr( $this->section['customizer_width'] ) : ''; ?>">
 			<h3 class="accordion-section-title" tabindex="0">
+				<?php if ( isset( $this->section['icon'] ) && ! empty( $this->section['icon'] ) ) : ?>
+					<i class="<?php echo esc_attr( $this->section['icon'] ); ?>"></i>
+				<?php endif; ?>
 				<?php
 				echo wp_kses(
 					$this->title,
@@ -123,7 +145,7 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 			<div class="accordion-section-title" tabindex="0">
 				<span class="preview-notice">
 					<?php /* translators: %s is the site/panel title in the Customizer */ ?>
-					<?php echo sprintf( esc_html__( 'You are customizing', 'redux-framework' ) . ' %s', '<strong class="panel-title">' . esc_html( $this->title ) . '</strong>' ); ?>
+					<?php printf( esc_html__( 'You are customizing', 'redux-framework' ) . ' %s', '<strong class="panel-title">' . esc_html( $this->title ) . '</strong>' ); ?>
 				</span>
 			</div>
 			<?php if ( ! empty( $this->description ) ) { ?>
@@ -140,8 +162,26 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 	 *
 	 * @return array
 	 */
-	public function json() {
-		$array             = parent::json();
+	public function json(): array {
+		$array = wp_array_slice_assoc(
+			parent::json(),
+			array(
+				'id',
+				'title',
+				'description',
+				'priority',
+				'type',
+			)
+		);
+
+		$array['content']        = $this->get_content();
+		$array['active']         = $this->active();
+		$array['instanceNumber'] = $this->instance_number;
+
+		// BEGIN Redux Additions.
+		$array['width'] = $this->section['customizer_width'] ?? '';
+		$array['icon']  = ( isset( $this->section['icon'] ) && ! empty( $this->section['icon'] ) ) ? $this->section['icon'] : 'hide';
+
 		$array['opt_name'] = $this->opt_name;
 		return $array;
 	}
@@ -160,18 +200,20 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 			class="panel-meta customize-info redux-customizer-opt-name redux-panel accordion-section <# if ( ! data.description ) { #> cannot-expand<# } #>"
 			data-opt-name="{{{ data.opt_name }}}">
 			<button class="customize-panel-back" tabindex="-1">
-				<span class="screen-reader-text"><?php esc_attr_e( 'Back', 'redux-framework' ); ?></span></button>
+				<span class="screen-reader-text"><?php esc_attr_e( 'Back', 'redux-framework' ); ?></span>
+			</button>
 			<div class="accordion-section-title">
 				<span class="preview-notice">
 					<?php /* translators: %s is the site/panel title in the Customizer */ ?>
-					<?php echo sprintf( esc_html__( 'You are customizing', 'redux-framework' ) . ' %s', '<strong class="panel-title">{{ data.title }}</strong>' ); ?>
+					<?php printf( esc_html__( 'You are customizing', 'redux-framework' ) . ' %s', '<strong class="panel-title">{{ data.title }}</strong>' ); ?>
 				</span>
 				<# if ( data.description ) { #>
 				<button
 					class="customize-help-toggle dashicons dashicons-editor-help"
 					tabindex="0"
 					aria-expanded="false">
-					<span class="screen-reader-text"><?php esc_attr_e( 'Help', 'redux-framework' ); ?></span></button>
+					<span class="screen-reader-text"><?php esc_attr_e( 'Help', 'redux-framework' ); ?></span>
+				</button>
 				<# } #>
 			</div>
 			<# if ( data.description ) { #>
@@ -179,6 +221,35 @@ class Redux_Customizer_Panel extends WP_Customize_Panel {
 				{{{ data.description }}}
 			</div>
 			<# } #>
+		</li>
+		<?php
+	}
+
+	/**
+	 * An Underscore (JS) template for rendering this panel's container.
+	 * Class variables for this panel class are available in the `data` JS object;
+	 * export custom variables by overriding {@see WP_Customize_Panel::json()}.
+	 *
+	 * @see   WP_Customize_Panel::print_template()
+	 * @since 4.3.0
+	 */
+	protected function render_template() {
+		?>
+		<li id="accordion-panel-{{ data.id }}"
+			class="accordion-section redux-panel control-section control-panel control-panel-{{ data.type }}"
+			data-width="{{ data.width }}">
+			<h3 class="accordion-section-title">
+				<?php if ( version_compare( $this->wp_ver, '6.7', '<' ) ) { ?>
+					<# if ( data.icon ) { #><i class="{{ data.icon }} legacy"></i> <# } #>{{ data.title }}
+					<span class="accordion-trigger screen-reader-text"><?php echo esc_html__( 'Press return or enter to open this panel', 'redux-framework' ); ?></span>
+				<?php } else { ?>
+					<# if ( data.icon ) { #><i class="{{ data.icon }}"></i> <# } #>
+					<button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="{{ data.id }}-content">
+						{{ data.title }}
+					</button>
+				<?php } ?>
+			</h3>
+			<ul class="accordion-sub-container control-panel-content"></ul>
 		</li>
 		<?php
 	}

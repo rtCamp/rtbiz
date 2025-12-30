@@ -1,132 +1,131 @@
-/* global redux, redux_change, jQuery, pagenow, ajaxurl */
+/* global redux, redux_change, jQuery */
+// noinspection JSUnresolvedReference
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initEvents = function( el ) {
-		var stickyHeight;
-		var search  = window.location.search;
-		var curPage = pagenow;
-		var dialog;
-		var messageDialog;
+	$.redux.initEvents = function ( el ) {
+		let stickyHeight;
 
-		if ( 'string' === typeof search && 'string' === typeof curPage && true === redux.optName.args.dev_mode ) {
-			search  = search.replace( '?page=', '' );
-			curPage = curPage.replace( 'toplevel_page_', '' );
+		el.find( '.redux-presets-bar' ).on(
+			'click',
+			function () {
+				window.onbeforeunload = null;
+			}
+		);
 
-			if ( search === curPage ) {
-				document.addEventListener(
-					'keydown',
-					function( event ) {
-						if ( event.ctrlKey && event.shiftKey && 'H' === event.key ) {
-							dialog.dialog( 'open' );
+		if ( true === redux.optName.args.search ) {
+			const url          = window.location.href;
+			const wordAfterUrl = url.split( '/' ).pop();
+
+			if ( 'profile.php' === wordAfterUrl || 0 === wordAfterUrl.indexOf( 'edit-tags.php' ) ) {
+				return false;
+			}
+
+			if ( 0 === $( '#customize-controls' ).length ) {
+				$( '.redux-container' ).each(
+					function ( ) {
+						if ( ! $( this ).hasClass( 'redux-no-sections' ) ) {
+							$( this ).find( '.redux-main' ).prepend( '<input class="redux_field_search" id="redux_field_search" type="text" placeholder="' + redux.optName.search + '"/>' );
 						}
 					}
 				);
 
-				messageDialog = $( '#redux-dialog-message' ).dialog(
+				$( '.redux_field_search' ).on(
+					'keypress',
+					function ( evt ) {
+
+						// Determine where our character code is coming from within the event.
+						const charCode = evt.charCode || evt.keyCode;
+
+						if ( 13 === charCode ) { // Enter key's keycode.
+							return false;
+						}
+					}
+				).typeWatch(
 					{
-						classes: {
-							'ui-dialog': 'redux-message-dialog',
-							'ui-dialog-buttonpane': 'redux-message-dialog-buttonpane',
-							'ui-dialog-title': 'redux-message-dialog-title',
-							'ui-dialog-content': 'redux-message-dialog-content'
-						},
-						modal: true,
-						autoOpen: false,
-						resizable: false,
-						height: 'auto',
-						width: 400,
-						buttons: {
-							Ok: function() {
-								$( this ).dialog( 'close' );
+						callback: function ( searchString ) {
+							let searchArray;
+							let parent;
+							let expanded_options;
+
+							searchString = searchString.toLowerCase();
+
+							searchArray = searchString.split( ' ' );
+							parent      = $( this ).parents( '.redux-container:first' );
+
+							expanded_options = parent.find( '.expand_options' );
+
+							if ( '' !== searchString ) {
+								if ( ! expanded_options.hasClass( 'expanded' ) ) {
+									expanded_options.trigger( 'click' );
+									parent.find( '.redux-main' ).addClass( 'redux-search' );
+								}
+							} else {
+								if ( expanded_options.hasClass( 'expanded' ) ) {
+									expanded_options.trigger( 'click' );
+									parent.find( '.redux-main' ).removeClass( 'redux-search' );
+								}
+								parent.find( '.redux-section-field, .redux-info-field, .redux-notice-field, .redux-container-group, .redux-section-desc, .redux-group-tab h3' ).show();
 							}
-						}
-					}
-				);
 
-				dialog = $( '#redux-dialog-confirm' ).dialog(
-					{
-						modal: true,
-						classes: {
-							'ui-dialog': 'redux-support-dialog'
-						},
-						autoOpen: false,
-						resizable: false,
-						height: 'auto',
-						width: 400,
-						buttons: {
-							Submit: function() {
-								var buttonPane  = $( '.redux-message-dialog-buttonpane' );
-								var dialogTitle = $( '.redux-message-dialog-title' );
-								var content     = $( '.redux-message-dialog-content .redux-message-p' );
+							parent.find( '.redux-field-container' ).each(
+								function () {
+									if ( '' !== searchString ) {
+										$( this ).parents( 'tr:first' ).hide();
+									} else {
+										$( this ).parents( 'tr:first' ).show();
+									}
+								}
+							);
 
-								$.ajax(
-									{ type: 'post',
-										dataType: 'json',
-										url: ajaxurl,
-										data: {
-											action:     'redux_submit_support_data',
-											nonce:      $( '#redux-dialog-confirm' ).data( 'nonce' )
-										},
-										beforeSend: function() {
-											buttonPane.css( { 'display': 'none' } );
-											$( '#redux-dialog-message .spinner' ).css( { 'visibility': 'visible' } );
+							parent.find( '.form-table tr' ).filter(
+								function () {
+									let isMatch = true, text = $( this ).find( '.redux_field_th' ).text().toLowerCase();
 
-											messageDialog.dialog( 'open' );
-										},
-										error: function( response ) {
-											buttonPane.css( { 'display': 'block' } );
-											dialogTitle.text( 'Error' );
+									if ( ! text || '' === text ) {
+										return false;
+									}
 
-											console.log( response );
-										},
-										success: function( response ) {
-											buttonPane.css( { 'display': 'block' } );
-
-											if ( response.status && 'success' === response.status ) {
-												dialogTitle.text( 'Information Sent' );
-												content.html( 'Your support data has been transmitted.  The reference number for this transmission is: <strong>' + response.data + '</strong>' );
-											} else {
-												dialogTitle.text( 'Error' );
-												content.text( response.data );
+									$.each(
+										searchArray,
+										function ( i, searchStr ) {
+											if ( -1 === text.indexOf( searchStr ) ) {
+												isMatch = false;
 											}
 										}
-									}
-								);
+									);
 
-								$( this ).dialog( 'close' );
-							},
-							Cancel: function() {
-								$( this ).dialog( 'close' );
-							}
-						}
+									if ( isMatch ) {
+										$( this ).show();
+									}
+
+									return isMatch;
+								}
+							).show();
+						},
+						wait: 400,
+						highlight: false,
+						captureLength: 0
 					}
 				);
 			}
 		}
 
-		el.find( '.redux-presets-bar' ).on(
-			'click',
-			function() {
-				window.onbeforeunload = null;
-			}
-		);
-
 		// Customizer save hook.
 		el.find( '#customize-save-button-wrapper #save' ).on(
 			'click',
-			function() {
+			function () {
 
 			}
 		);
 
 		el.find( '#toplevel_page_' + redux.optName.args.slug + ' .wp-submenu a, #wp-admin-bar-' + redux.optName.args.slug + ' a.ab-item' ).on(
 			'click',
-			function( e ) {
-				var url;
+			function ( e ) {
+				let url;
 
 				if ( ( el.find( '#toplevel_page_' + redux.optName.args.slug ).hasClass( 'wp-menu-open' ) ||
 					$( this ).hasClass( 'ab-item' ) ) &&
@@ -151,7 +150,7 @@
 		// Save button clicked.
 		el.find( '.redux-action_bar input, #redux-import-action input' ).on(
 			'click',
-			function( e ) {
+			function ( e ) {
 				if ( $( this ).attr( 'name' ) === redux.optName.args.opt_name + '[defaults]' ) {
 
 					// Defaults button clicked.
@@ -183,10 +182,9 @@
 
 		$( '.expand_options' ).on(
 			'click',
-			function( e ) {
-				var tab;
-
-				var container = el;
+			function ( e ) {
+				let tab;
+				const container = el;
 
 				e.preventDefault();
 
@@ -197,7 +195,7 @@
 
 					el.find( '#' + tab + '_section_group' ).fadeIn(
 						200,
-						function() {
+						function () {
 							if ( 0 !== el.find( '#redux-footer' ).length ) {
 								$.redux.stickyInfo(); // Race condition fix.
 							}
@@ -220,7 +218,7 @@
 		$( document.body ).on(
 			'change',
 			'.redux-field input, .redux-field textarea, .redux-field select',
-			function() {
+			function () {
 				if ( $( '.redux-container-typography select' ).hasClass( 'ignore-change' ) ) {
 					return;
 				}
@@ -241,14 +239,14 @@
 		if ( 0 !== el.find( '#redux-footer' ).length ) {
 			$( window ).on(
 				'scroll',
-				function() {
+				function () {
 					$.redux.stickyInfo();
 				}
 			);
 
 			$( window ).on(
 				'resize',
-				function() {
+				function () {
 					$.redux.stickyInfo();
 				}
 			);

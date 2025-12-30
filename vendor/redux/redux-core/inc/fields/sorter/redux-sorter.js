@@ -6,7 +6,7 @@
  * Version 1.4.2
  */
 
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
 	var scrollDir = '';
@@ -14,13 +14,13 @@
 	redux.field_objects        = redux.field_objects || {};
 	redux.field_objects.sorter = redux.field_objects.sorter || {};
 
-	redux.field_objects.sorter.init = function( selector ) {
+	redux.field_objects.sorter.init = function ( selector ) {
 		selector = $.redux.getSelector( selector, 'sorter' );
 
 		$( selector ).each(
-			function() {
-				var el     = $( this );
-				var parent = el;
+			function () {
+				const el   = $( this );
+				let parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -38,8 +38,9 @@
 
 				/**    Sorter (Layout Manager) */
 				el.find( '.redux-sorter' ).each(
-					function() {
-						var id = $( this ).attr( 'id' );
+					function () {
+						const id         = $( this ).attr( 'id' );
+						const inRepeater = $( this ).hasClass( 'in-repeater' );
 
 						el.find( '#' + id ).find( 'ul' ).sortable(
 							{
@@ -48,7 +49,7 @@
 								connectWith: '.sortlist_' + id,
 								opacity: 0.8,
 								scroll: false,
-								out: function( event, ui ) {
+								out: function ( event, ui ) {
 									event = null;
 
 									if ( ! ui.helper ) {
@@ -63,22 +64,29 @@
 
 									redux.field_objects.sorter.scrolling( $( this ).parents( '.redux-field-container:first' ) );
 								},
-								over: function() {
+								over: function () {
 									scrollDir = '';
 								},
-								deactivate: function() {
+								deactivate: function () {
 									scrollDir = '';
 								},
-								stop: function( event, ui ) {
-									var sorter;
-									var id;
+								stop: function ( event, ui ) {
+									let sorter;
+									let id;
+									let index;
 
 									event = null;
 
-									sorter = redux.optName.sorter[$( this ).attr( 'data-id' )];
+									if ( inRepeater ) {
+										index = $( this ).attr( 'data-repeater-id' );
+									} else {
+										index = $( this ).attr( 'data-id' );
+									}
+
+									sorter = redux.optName.sorter[index];
 									id     = $( this ).find( 'h3' ).text();
 
-									if ( sorter.limits && id && sorter.limits[id] ) {
+									if ( undefined !== sorter.limits && sorter.limits && id && sorter.limits[id] ) {
 										if ( $( this ).children( 'li' ).length >= sorter.limits[id] ) {
 											$( this ).addClass( 'filled' );
 											if ( $( this ).children( 'li' ).length > sorter.limits[id] ) {
@@ -89,16 +97,23 @@
 										}
 									}
 								},
-								update: function( event, ui ) {
-									var sorter;
-									var id;
+								update: function ( event, ui ) {
+									let sorter;
+									let id;
+									let index;
 
 									event = null;
 
-									sorter = redux.optName.sorter[$( this ).attr( 'data-id' )];
+									if ( inRepeater ) {
+										index = $( this ).attr( 'data-repeater-id' );
+									} else {
+										index = $( this ).attr( 'data-id' );
+									}
+
+									sorter = redux.optName.sorter[index];
 									id     = $( this ).find( 'h3' ).text();
 
-									if ( sorter.limits && id && sorter.limits[id] ) {
+									if ( undefined !== sorter.limits && sorter.limits && id && sorter.limits[id] ) {
 										if ( $( this ).children( 'li' ).length >= sorter.limits[id] ) {
 											$( this ).addClass( 'filled' );
 											if ( $( this ).children( 'li' ).length > sorter.limits[id] ) {
@@ -110,17 +125,28 @@
 									}
 
 									$( this ).find( '.position' ).each(
-										function() {
-											var optionID;
+										function () {
+											let optionID;
+											let suffix;
 
-											var listID   = $( this ).parent().attr( 'data-id' );
-											var parentID = $( this ).parent().parent().attr( 'data-group-id' );
+											const listID   = $( this ).parent().attr( 'data-id' );
+											const parentID = $( this ).parent().parent().attr( 'data-group-id' );
 
 											redux_change( $( this ) );
 
-											optionID = $( this ).parent().parent().parent().attr( 'id' );
+											suffix = $( this ).parent().parent().attr( 'data-suffix' );
 
-											$( this ).prop( 'name', redux.optName.args.opt_name + '[' + optionID + '][' + parentID + '][' + listID + ']' );
+											if ( inRepeater ) {
+												optionID = $( this ).parent().parent().attr( 'data-repeater-id' );
+											} else {
+												optionID = $( this ).parent().parent().attr( 'data-id' );
+											}
+
+											if (undefined === redux.customizer ) {
+												$( this ).prop( 'name', redux.optName.args.opt_name + '[' + optionID + ']' + suffix + '[' + parentID + '][' + listID + ']' );
+											} else {
+												$( this ).prop( 'name', optionID + suffix + '[' + parentID + '][' + listID + ']' );
+											}
 										}
 									);
 								}
@@ -134,8 +160,8 @@
 		);
 	};
 
-	redux.field_objects.sorter.scrolling = function( selector ) {
-		var scrollable;
+	redux.field_objects.sorter.scrolling = function ( selector ) {
+		let scrollable;
 
 		if ( undefined === selector ) {
 			return;

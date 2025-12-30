@@ -1,11 +1,12 @@
 <?php
 /**
- * Redux Pro Box Shadow Sample config.
- * For full documentation, please visit: http:https://devs.redux.io/
+ * Redux Box Shadow Sample config.
+ * For full documentation, please visit: https://devs.redux.io
  *
- * @package Redux Pro
+ * @package Redux
  */
 
+// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -13,17 +14,13 @@ Redux::set_section(
 	array(
 		'title'      => esc_html__( 'Box Shadow', 'your-textdomain-here' ),
 		'id'         => 'design-box-shadow',
-		// phpcs:ignore
-		// 'desc'       => esc_html__( 'For full documentation on this field, visit: ', 'your-textdomain-here' ) . '<a href="https://devs.redux.io/core-fields/box-shadow.html" target="_blank">https://devs.redux.io/core-fields/box_shadow.html</a>',
+		'desc'       => esc_html__( 'For full documentation on this field, visit: ', 'your-textdomain-here' ) . '<a href="https://devs.redux.io/core-fields/box-shadow.html" target="_blank">https://devs.redux.io/core-fields/box_shadow.html</a>',
 		'subsection' => true,
 		'fields'     => array(
 			array(
 				'id'          => 'opt-box_shadow',
 				'type'        => 'box_shadow',
-				'output'      => array( '.site-header' ),
-				'color_alpha' => array(
-					'inset-shadow' => true,
-				),
+				'output'      => array( '.site-header, header' ),
 				'media_query' => array(
 					'output'   => true,
 					'compiler' => true,
@@ -45,3 +42,4 @@ Redux::set_section(
 		),
 	)
 );
+// phpcs:enable

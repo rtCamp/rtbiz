@@ -1,0 +1,230 @@
+ul#redux-social-profiles-selector-list li.sortable-placeholder {
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	border: 1px dashed gray;
+	margin: 0;
+	padding: 0;
+	display: inline;
+	float: left;
+}
+ul#redux-social-profiles-list li {
+	line-height: 40px;
+	height: 100px;
+	display: block;
+	clear: left;
+	padding-bottom: 10px;
+}
+
+.redux-icon-preview {
+	float: left;
+	display: block;
+	font-size: 30px;
+	cursor: move;
+	margin-right: 10px;
+}
+
+.redux-social-item-container {
+	background-color: white;
+	height: 100%;
+	border: #D8D8D8 1px solid;
+}
+
+#redux-social-profiles-information {
+	padding-bottom: 10px;
+}
+
+.redux-social-profiles-item-enabled {
+	float: right !important;
+	padding-right: 10px;
+	margin-top: -40px;
+}
+
+.redux-social-profiles-selector-container {
+	display: inline-block;
+	padding-left: 10px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+}
+
+li.redux-social-profiles-item-enable {
+	display: block;
+	float: left;
+	font-size: 30px;
+	cursor: pointer;
+	width: 35px;
+	height: 35px;
+	padding: 0 5px 5px;
+	text-align: center;
+	border: 1px solid transparent;
+}
+li.redux-social-profiles-item-enable.enabled {
+	color: #555;
+	border-color: #D8D8D8;
+	background-color: #e0e0e0;
+}
+li.redux-social-profiles-item-enable:hover {
+	background-color: #e5e5e5;
+	color: #777;
+	border-color: #D8D8D8;
+}
+
+.redux-social-profiles-item-name {
+	width: auto;
+	font-size: 150% !important;
+}
+.redux-social-profiles-item-name .redux-text-name-label {
+	font-size: 150% !important;
+}
+
+.redux-icon-preview,
+.redux-social-profiles-item-enable-item-name,
+.redux-social-profiles-item-enabled,
+.redux-social-profiles-text-color,
+.redux-social-profiles-background-color,
+.redux-social-profiles-link-url,
+.redux-social-profiles-item-order,
+.redux-social-profiles-item-reset {
+	display: block;
+	float: left;
+	margin-left: 10px;
+	line-height: 40px;
+}
+
+.rdx-icon-preview input,
+.rdx-social-profiles-item-name input,
+.rdx-social-profiles-item-enabled input,
+.rdx-social-profiles-text-color div,
+.rdx-social-profiles-background-color div,
+.rdx-social-profiles-link-url input,
+.rdx-social-profiles-item-order input {
+	/*    margin-left: 5px;*/
+}
+
+.redux-social-profiles-text-color .redux-text-color-label {
+	top: -30px;
+	left: auto;
+	width: 0;
+}
+
+.redux-social-profiles-background-color {
+	padding-left: 9px !important;
+}
+.redux-social-profiles-background-color .redux-background-color-label {
+	top: -30px;
+	left: auto;
+	width: 0;
+}
+
+.redux-social-profiles-item-order {
+	display: none;
+}
+.redux-social-profiles-item-order input {
+	width: 30px;
+}
+
+.redux-social-profiles-item-reset {
+	float: right;
+	padding-right: 10px;
+	margin-top: 15px;
+}
+.redux-social-profiles-item-reset .button {
+	margin-top: 5px;
+}
+
+.redux-social-profiles-link-url {
+	clear: left !important;
+	margin-top: -10px;
+}
+.redux-social-profiles-link-url .redux-text-url-label {
+	margin-bottom: 3px !important;
+}
+.redux-social-profiles-link-url input {
+	width: 100%;
+	top: 30px;
+	left: 0;
+	position: absolute;
+}
+
+.redux-social-item-container label {
+	display: block;
+	position: relative;
+	font-size: 12px !important;
+	text-align: left;
+	color: #999999;
+	margin: 4px 0 2px 0 !important;
+	cursor: default;
+}
+.redux-social-item-container .input_wrapper {
+	display: block;
+	position: relative;
+	padding: 0;
+	width: 54%;
+	max-width: 54%;
+	min-width: 70px;
+	float: left;
+	clear: none;
+	height: 57px;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	vertical-align: baseline;
+}
+.redux-social-item-container .input_wrapper.no-color-pickers {
+	width: 80%;
+	max-width: 80%;
+}
+.redux-social-item-container .picker_wrapper {
+	top: 17px;
+	display: block;
+	position: relative;
+	margin: 0 4px 0 5px;
+	padding: 0 0 0 10px;
+	clear: none;
+	height: 57px;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	vertical-align: baseline;
+}
+
+.wp-customizer .redux-container ul #redux-social-profiles-selector-list li {
+	margin-left: 5px;
+}
+.wp-customizer .redux-container ul #redux-social-profiles-selector-list li .fa {
+	margin-top: 5px;
+}
+.wp-customizer .redux-container ul #redux-social-profiles-list li {
+	height: 165px;
+}
+.wp-customizer .redux-container ul #redux-social-profiles-list li .redux-social-item-container .picker_wrapper {
+	top: 25px;
+}
+.wp-customizer .redux-container ul #redux-social-profiles-list li .redux-full-spectrum {
+	top: -40px;
+	position: relative;
+}
+
+@media screen and (max-width: 782px) {
+	ul#redux-social-profiles-list li {
+		height: 110px;
+	}
+	.redux-social-item-container .picker_wrapper {
+		top: 20px !important;
+	}
+	.redux-social-profiles-link-url .redux-text-url-label {
+		margin-bottom: -16px !important;
+	}
+}
+@media screen and (max-width: 628px) {
+	ul#redux-social-profiles-list li {
+		height: 170px;
+	}
+	.redux-social-profiles-text-color {
+		clear: both !important;
+	}
+	.redux-social-item-container .picker_wrapper {
+		top: 30px;
+	}
+}
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHV4LXNvY2lhbC1wcm9maWxlcy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUdZO0NBQ0k7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTs7QUFNUjtDQUNJO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7OztBQUtaO0NBQ0k7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTs7O0FBR0o7Q0FDSTtDQUNBO0NBQ0E7OztBQUdKO0NBQ0k7OztBQUdKO0NBQ0k7Q0FDQTtDQUNBOzs7QUFHSjtDQUNJO0NBQ0E7Q0FDQTtDQUNBOzs7QUFJQTtDQUNJO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTs7QUFDQTtDQUNJO0NBQ0E7Q0FDQTs7QUFFSjtDQUNJO0NBQ0E7Q0FDQTs7O0FBS1o7Q0FDSTtDQUNBOztBQUVBO0NBQ0k7OztBQUlSO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7Q0FRSTtDQUNBO0NBQ0E7Q0FDQTs7O0FBR0o7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFPSTs7O0FBSUE7Q0FDSTtDQUNBO0NBQ0E7OztBQUlSO0NBQ0k7O0FBRUE7Q0FDSTtDQUNBO0NBQ0E7OztBQUlSO0NBQ0k7O0FBRUE7Q0FDSTs7O0FBSVI7Q0FDSTtDQUNBO0NBQ0E7O0FBRUE7Q0FDSTs7O0FBSVI7Q0FDSTtDQUNBOztBQUVBO0NBQ0k7O0FBRUo7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTs7O0FBS0o7Q0FDSTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTs7QUFHSjtDQUNJO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7O0FBRUE7Q0FDSTtDQUNBOztBQUlSO0NBQ0k7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBOzs7QUFRUTtDQUNJOztBQUVBO0NBQ0k7O0FBTVI7Q0FDSTs7QUFHSTtDQUNJOztBQUlSO0NBQ0k7Q0FDQTs7O0FBU3hCO0NBR1k7RUFDSTs7Q0FNUjtFQUNJOztDQUtKO0VBQ0k7OztBQUtaO0NBR1k7RUFDSTs7Q0FLWjtFQUNJOztDQUlBO0VBQ0kiLCJmaWxlIjoicmVkdXgtc29jaWFsLXByb2ZpbGVzLmNzcyJ9 */
+
+/*# sourceMappingURL=redux-social-profiles.css.map */
