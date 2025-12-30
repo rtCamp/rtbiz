@@ -23,6 +23,7 @@
  * License URI:       https://rtcamp.com/
  * Text Domain:       rtbiz
  * Domain Path:       /languages
+ * Requires Plugins: redux-framework
  */
 
 // If this file is called directly, abort.
