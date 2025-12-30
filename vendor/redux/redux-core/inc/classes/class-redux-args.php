@@ -3,7 +3,6 @@
  * Redux Framework Args Class
  *
  * @package     Redux_Framework/Classes
- * @noinspection PhpConditionCheckedByNextConditionInspection
  */
 
 // Exit if accessed directly.
@@ -26,39 +25,39 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 		/**
 		 * ReduxFramework object.
 		 *
-		 * @var ReduxFramework|null
+		 * @var null
 		 */
-		private ?ReduxFramework $parent;
+		private $parent;
 
 		/**
 		 * Switch to omit social icons if dev_mode is set to true and Redux defaults are used.
 		 *
 		 * @var bool
 		 */
-		public bool $omit_icons = false;
+		public $omit_icons = false;
 
 		/**
 		 * Switch to omit support menu items if dev_mode is set to true and redux defaults are used.
 		 *
 		 * @var bool
 		 */
-		public bool $omit_items = false;
+		public $omit_items = false;
 
 		/**
 		 * Flag to force dev_mod to true if in localhost or WP_DEBUG is set to true.
 		 *
 		 * @var bool
 		 */
-		public bool $dev_mode_forced = false;
+		public $dev_mode_forced = false;
 
 		/**
 		 * Redux_Args constructor.
 		 *
-		 * @param ReduxFramework $redux ReduxFramework object.
-		 * @param array          $args  Global arguments array.
+		 * @param     object $parent ReduxFramework object.
+		 * @param     array  $args Global arguments array.
 		 */
-		public function __construct( ReduxFramework $redux, array $args ) {
-			$this->parent = $redux;
+		public function __construct( $parent, array $args ) {
+			$this->parent = $parent;
 
 			$default = array(
 				'opt_name'                         => '',
@@ -158,14 +157,13 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 				'allow_tracking'                   => true,
 				'admin_theme'                      => 'wp',
 				'elusive_frontend'                 => false,
-				'fontawesome_frontend'             => false,
-				'flyout_submenus'                  => true,
+				'pro'                              => array(),
 				'font_display'                     => 'swap', // block|swap|fallback|optional.
 				'load_on_cron'                     => false,
-				'search'                           => false,
-				'widget_area'                      => false,
-				'custom_fonts'                     => true,
 			);
+
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName
+			$default = apply_filters( 'redux/pro/args/defaults', $default );
 
 			$args = Redux_Functions::parse_args( $args, $default );
 
@@ -191,7 +189,7 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 		}
 
 		/**
-		 * Builds and sanitizes a global args array.
+		 * Builds and sanitizes global args array.
 		 *
 		 * @param     array $args Global args.
 		 *
@@ -207,6 +205,9 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 			if ( ! function_exists( 'wp_rand' ) ) {
 				require_once ABSPATH . '/wp-includes/pluggable.php';
 			}
+
+			$this->parent->core_instance = chr( 64 + wp_rand( 1, 26 ) ) . time() . '_' . wp_rand( 0, 1000000 );
+			$this->parent->core_thread   = chr( 64 + wp_rand( 1, 26 ) ) . time() . '_' . wp_rand( 0, 1000000 );
 
 			if ( $args['opt_name'] === $this->parent->old_opt_name ) {
 				$this->parent->old_opt_name = null;
@@ -264,9 +265,9 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 
 				$footer_text = sprintf(
 				/* translators: 1: Redux, 2: Link to plugin review */
-					__( 'Enjoyed %1$s? Please leave us a %2$s. We really appreciate your support!', 'redux-framework' ),
+					__( 'Enjoyed %1$s? Please leave us a %2$s rating. We really appreciate your support!', 'redux-framework' ),
 					'<strong>' . __( 'Redux', 'redux-framework' ) . '</strong>',
-					'<a href="https://wordpress.org/support/plugin/redux-framework/reviews/#new-post" target="_blank">' . __( 'review', 'redux-framework' ) . '</a>'
+					'<a href="https://wordpress.org/support/plugin/redux-framework/reviews/?filter=5/#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 				);
 				$args['footer_credit'] = '<span id="footer-thankyou">' . $footer_text . '</span>';
 			}
@@ -279,7 +280,7 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 				$args['page_title'] = esc_html__( 'Options', 'redux-framework' );
 			}
 
-			// Auto creates the page_slug appropriately.
+			// Auto create the page_slug appropriately.
 			if ( empty( $args['page_slug'] ) ) {
 				if ( ! empty( $args['display_name'] ) ) {
 					$args['page_slug'] = sanitize_html_class( $args['display_name'] );
@@ -334,10 +335,14 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 		private function change_demo_defaults( array $args ) {
 			if ( $args['dev_mode'] || true === Redux_Helpers::is_local_host() ) {
 				if ( ! empty( $args['admin_bar_links'] ) ) {
-					foreach ( $args['admin_bar_links'] as $arr ) {
+					foreach ( $args['admin_bar_links'] as $idx => $arr ) {
 						if ( is_array( $arr ) && ! empty( $arr ) ) {
-							foreach ( $arr as $y ) {
+							foreach ( $arr as $x => $y ) {
 								if ( strpos( Redux_Core::strtolower( $y ), 'redux' ) !== false ) {
+									$msg = '<strong>' . esc_html__( 'Redux Framework Notice', 'redux-framework' ) . ' </strong>' .
+										esc_html__( 'There are references to the Redux Framework support site in your config\'s ', 'redux-framework' ) .
+										'<code>admin_bar_links</code> ' . esc_html__( 'argument.  This is sample data.  Please change or remove this data before shipping your product.', 'redux-framework' );
+
 									$this->omit_items = true;
 									break;
 								}
@@ -347,10 +352,14 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 				}
 
 				if ( ! empty( $args['share_icons'] ) ) {
-					foreach ( $args['share_icons'] as $arr ) {
+					foreach ( $args['share_icons'] as $idx => $arr ) {
 						if ( is_array( $arr ) && ! empty( $arr ) ) {
-							foreach ( $arr as $y ) {
+							foreach ( $arr as $x => $y ) {
 								if ( strpos( Redux_Core::strtolower( $y ), 'redux' ) !== false ) {
+									$msg = '<strong>' . esc_html__( 'Redux Framework Notice:', 'redux-framework' ) . '</strong>' .
+										esc_html__( 'There are references to the Redux Framework support site in your config\'s', 'redux-framework' ) .
+										' <code>share_icons</code> ' . esc_html__( 'argument.  This is sample data.  Please change or remove this data before shipping your product.', 'redux-framework' );
+
 									$this->omit_icons = true;
 								}
 							}
@@ -366,7 +375,6 @@ if ( ! class_exists( 'Redux_Args', false ) ) {
 		 * @param array $args Global args.
 		 *
 		 * @return array
-		 * @noinspection PhpStrictComparisonWithOperandsOfDifferentTypesInspection
 		 */
 		private function default_cleanup( array $args ): array {
 

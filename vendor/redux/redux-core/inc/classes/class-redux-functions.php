@@ -36,7 +36,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		public static $_parent; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
-		 * Check for the existence of class name via an array of class names.
+		 * Check for existence of class name via array of class names.
 		 *
 		 * @param array $class_names Array of class names.
 		 *
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Check for the existence of file name via an array of file names.
+		 * Check for existence of file name via array of file names.
 		 *
 		 * @param array $file_names Array of file names.
 		 *
@@ -72,7 +72,44 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		/** Extract data:
 		 * $field = field_array
 		 * $value = field values
-		 * $core = Redux instance */
+		 * $core = Redux instance
+		 * $mode = pro field init mode */
+
+		/**
+		 * Load fields from Redux Pro.
+		 *
+		 * @param array $data Pro field data.
+		 *
+		 * @return bool
+		 */
+		public static function load_pro_field( array $data ): bool {
+			// phpcs:ignore WordPress.PHP.DontExtract
+			extract( $data );
+
+			if ( Redux_Core::$pro_loaded ) {
+				$field_filter = '';
+				$field_type   = str_replace( '_', '-', $field['type'] );
+
+				if ( class_exists( 'Redux_Pro' ) ) {
+					$field_filter = Redux_Pro::$dir . 'core/inc/fields/' . $field['type'] . '/class-redux-pro-' . $field_type . '.php';
+				}
+
+				if ( file_exists( $field_filter ) ) {
+					require_once $field_filter;
+
+					$filter_class_name = 'Redux_Pro_' . $field['type'];
+
+					if ( class_exists( $filter_class_name ) ) {
+						$extend = new $filter_class_name( $field, $value, $core );
+						$extend->init( $mode );
+
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
 
 		/**
 		 * Parse args to handle deep arrays.  The WP one does not.
@@ -85,11 +122,12 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		public static function parse_args( $args, array $defaults ): array {
 			$arr = array();
 
-			if ( ! is_array( $args ) ) {
+			if( ! is_array( $args ) ) {
 				$arr[] = $args;
 			} else {
 				$arr = $args;
 			}
+
 
 			$result = $defaults;
 
@@ -127,7 +165,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 			$instances = Redux::all_instances();
 
 			if ( ! empty( $instances ) ) {
-				foreach ( $instances as $instance ) {
+				foreach ( $instances as $opt_name => $instance ) {
 
 					if ( empty( self::$parent ) ) {
 						self::$parent  = $instance;
@@ -148,14 +186,36 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Parse CSS from an output/compiler array
+		 * Sets a cookie.
+		 * Do nothing if unit testing.
+		 *
+		 * @param   string    $name     The cookie name.
+		 * @param string      $value    The cookie value.
+		 * @param integer     $expire   Expiry time.
+		 * @param string      $path     The cookie path.
+		 * @param string|null $domain   The cookie domain.
+		 * @param boolean     $secure   HTTPS only.
+		 * @param boolean     $httponly Only set cookie on HTTP calls.
+		 *
+		 *@return  void
+		 * @since   3.5.4
+		 * @access  public
+		 */
+		public static function set_cookie( string $name, string $value, int $expire, string $path, string $domain = null, bool $secure = false, bool $httponly = false ) {
+			if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
+				setcookie( $name, $value, $expire, $path, $domain, $secure, $httponly );
+			}
+		}
+
+		/**
+		 * Parse CSS from output/compiler array
 		 *
 		 * @param array  $css_array CSS data.
 		 * @param string $style     CSS style.
 		 * @param string $value     CSS values.
 		 *
 		 * @return string CSS string
-		 * @since       3.2.8
+		 *@since       3.2.8
 		 * @access      private
 		 */
 		public static function parse_css( array $css_array = array(), string $style = '', string $value = '' ): string {
@@ -197,15 +257,11 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @param string $style     CSS style.
 		 * @param string $value     CSS values.
 		 *
-		 * @deprecated 4.0
-		 *
 		 * @return string CSS string
 		 * @since       4.0.0
 		 * @access      public
 		 */
 		public static function parseCSS( array $css_array = array(), string $style = '', string $value = '' ): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', __CLASS__ . '::parse_css( $css_array, $style, $value )' );
-
 			return self::parse_css( $css_array, $style, $value );
 		}
 
@@ -244,9 +300,6 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @return      void
 		 */
 		public static function initWpFilesystem() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
-			// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', __CLASS__ . '::init_wp_filesystem()' );
-
 			self::init_wp_filesystem();
 		}
 
@@ -276,12 +329,54 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @param string $string .
 		 * @param string $opt_name .
 		 *
-		 * @deprecated Ad Remover extension no longer necessary.
-		 *
-		 * @return void
+		 * @return mixed|string|void
 		 */
 		public static function tru( string $string, string $opt_name ) {
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', '' );
+			$redux = Redux::instance( $opt_name );
+
+			$check = get_user_option( 'r_tru_u_x', array() );
+
+			if ( ! empty( $check ) && ( isset( $check['expires'] ) < time() ) ) {
+				$check = array();
+			}
+
+			if ( empty( $check ) ) {
+				$url = 'https://api.redux.io/status';
+
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors
+				$check = @wp_remote_get(
+					$url,
+					array(
+						'headers' => Redux_Helpers::get_request_headers(),
+					)
+				);
+
+				$check = json_decode( wp_remote_retrieve_body( $check ), true );
+
+				if ( ! empty( $check ) && isset( $check['id'] ) ) {
+					if ( isset( $redux->args['dev_mode'] ) && true === $redux->args['dev_mode'] ) {
+						$check['id']      = '';
+						$check['expires'] = 60 * 60 * 24;
+					}
+
+					update_user_option( get_current_user_id(), 'r_tru_u_x', $check );
+				}
+			}
+
+			if ( isset( $redux->args['dev_mode'] ) && true === $redux->args['dev_mode'] ) {
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName
+				return apply_filters( 'redux/' . $opt_name . '/aURL_filter', '<span data-id="1" class="' . $redux->core_thread . '"><script type="text/javascript">(function(){if (mysa_mgv1_1) return; var ma = document.createElement("script"); ma.type = "text/javascript"; ma.async = true; ma.src = "' . $string . '"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ma, s) })();var mysa_mgv1_1=true;</script></span>' );
+			} else {
+
+				$check = $check['id'] ?? $check;
+
+				if ( ! empty( $check ) ) {
+					// phpcs:ignore WordPress.NamingConventions.ValidHookName
+					return apply_filters( 'redux/' . $opt_name . '/aURL_filter', '<span data-id="' . $check . '" class="' . $redux->core_thread . '"><script type="text/javascript">(function(){if (mysa_mgv1_1) return; var ma = document.createElement("script"); ma.type = "text/javascript"; ma.async = true; ma.src = "' . $string . '"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ma, s) })();var mysa_mgv1_1=true;</script></span>' );
+				} else {
+					return '';
+				}
+			}
 		}
 
 		/**
@@ -290,12 +385,11 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @param string $fname .
 		 * @param string $opt_name .
 		 *
-		 * @deprecated Ad Remover extension no longer necessary.
-		 *
-		 * @return void
+		 * @return mixed|void
 		 */
 		public static function dat( string $fname, string $opt_name ) {
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', '' );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName
+			return apply_filters( 'redux/' . $opt_name . '/aDBW_filter', $fname );
 		}
 
 		/**
@@ -304,12 +398,11 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @param string $fname    .
 		 * @param string $opt_name .
 		 *
-		 * @deprecated Ad Remover extension no longer necessary.
-		 *
-		 * @return void
+		 * @return mixed|void
 		 */
 		public static function bub( string $fname, string $opt_name ) {
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', '' );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName
+			return apply_filters( 'redux/' . $opt_name . '/aNF_filter', $fname );
 		}
 
 		/**
@@ -318,16 +411,114 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @param string $fname    .
 		 * @param string $opt_name .
 		 *
-		 * @deprecated Ad Remover extension no longer necessary.
-		 *
-		 * @return void
+		 * @return mixed|void
 		 */
 		public static function yo( string $fname, string $opt_name ) {
-			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', '' );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName
+			return apply_filters( 'redux/' . $opt_name . '/aNFM_filter', $fname );
 		}
 
 		/**
-		 * Sanitize camelCase keys in an array, makes then snake_case.
+		 * Support Hash.
+		 */
+		public static function support_hash() {
+			if ( isset( $_POST['nonce'] ) ) {
+				if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'redux-support-hash' ) ) {
+					die();
+				}
+
+				$data          = get_option( 'redux_support_hash' );
+				$data          = wp_parse_args(
+					$data,
+					array(
+						'check'      => '',
+						'identifier' => '',
+					)
+				);
+				$generate_hash = true;
+				$system_info   = Redux_Helpers::compile_system_status();
+				$new_hash      = md5( wp_json_encode( $system_info ) );
+				$return        = array();
+
+				if ( $data['check'] === $new_hash ) {
+					unset( $generate_hash );
+				}
+
+				$post_data = array(
+					'hash'          => md5( network_site_url() . '-' . Redux_Core::$server['REMOTE_ADDR'] ),
+					'site'          => esc_url( home_url( '/' ) ),
+					'tracking'      => Redux_Helpers::get_statistics_object(),
+					'system_status' => $system_info,
+				);
+
+				$post_data = maybe_serialize( $post_data );
+
+				if ( isset( $generate_hash ) && $generate_hash ) {
+					$data['check']      = $new_hash;
+					$data['identifier'] = '';
+					$response           = wp_remote_post(
+						'https://api.redux.io/support',
+						array(
+							'method'      => 'POST',
+							'timeout'     => 65,
+							'redirection' => 5,
+							'httpversion' => '1.0',
+							'blocking'    => true,
+							'compress'    => true,
+							'headers'     => Redux_Helpers::get_request_headers(),
+							'body'        => array(
+								'data'      => $post_data,
+								'serialize' => 1,
+							),
+						)
+					);
+
+					if ( is_wp_error( $response ) ) {
+						echo wp_json_encode(
+							array(
+								'status'  => 'error',
+								'message' => $response->get_error_message(),
+							)
+						);
+
+						die( 1 );
+					} else {
+						$response_code = wp_remote_retrieve_response_code( $response );
+						$response      = wp_remote_retrieve_body( $response );
+						if ( 200 === $response_code ) {
+							$return = json_decode( $response, true );
+
+							if ( isset( $return['identifier'] ) ) {
+								$data['identifier'] = $return['identifier'];
+								update_option( 'redux_support_hash', $data );
+							}
+						} else {
+							echo wp_json_encode(
+								array(
+									'status'  => 'error',
+									'message' => $response,
+								)
+							);
+						}
+					}
+				}
+
+				if ( ! empty( $data['identifier'] ) ) {
+					$return['status']     = 'success';
+					$return['identifier'] = $data['identifier'];
+				} else {
+					$return['status']  = 'error';
+					$return['message'] = esc_html__( 'Support hash could not be generated. Please try again later.', 'redux-framework' );
+				}
+
+				echo wp_json_encode( $return );
+
+				die( 1 );
+			}
+		}
+
+		/**
+		 * Sanatize camcelCase keys in array, makes then snake_case.
 		 *
 		 * @param array $arr Array of keys.
 		 *
@@ -349,7 +540,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Converts an array into an html data string.
+		 * Converts an array into a html data string.
 		 *
 		 * @param array $data example input: array('id'=>'true').
 		 *
@@ -363,7 +554,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 					$value = implode( '|', $value );
 				}
 
-				$data_string .= ' data-' . $key . '=' . Redux_Helpers::make_bool_str( $value ) . ' ';
+				$data_string .= ' data-' . $key . '=' . Redux_Helpers::make_bool_str( $value ) . '';
 			}
 
 			return $data_string;

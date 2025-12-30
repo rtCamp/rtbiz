@@ -1,45 +1,44 @@
 /* global redux */
-// noinspection JSUnresolvedReference
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.initQtip = function () {
-		let classes;
+	$.redux.initQtip = function() {
+		var classes;
 
 		// Shadow.
-		let shadow      = '';
-		const tipShadow = redux.optName.args.hints.tip_style.shadow;
+		var shadow    = '';
+		var tipShadow = redux.optName.args.hints.tip_style.shadow;
 
 		// Color.
-		let color      = '';
-		const tipColor = redux.optName.args.hints.tip_style.color;
+		var color    = '';
+		var tipColor = redux.optName.args.hints.tip_style.color;
 
 		// Rounded.
-		let rounded      = '';
-		const tipRounded = redux.optName.args.hints.tip_style.rounded;
+		var rounded    = '';
+		var tipRounded = redux.optName.args.hints.tip_style.rounded;
 
 		// Tip style.
-		let style      = '';
-		const tipStyle = redux.optName.args.hints.tip_style.style;
+		var style    = '';
+		var tipStyle = redux.optName.args.hints.tip_style.style;
 
 		// Get position data.
-		let myPos = redux.optName.args.hints.tip_position.my;
-		let atPos = redux.optName.args.hints.tip_position.at;
+		var myPos = redux.optName.args.hints.tip_position.my;
+		var atPos = redux.optName.args.hints.tip_position.at;
 
 		// Tooltip trigger action.
-		const showEvent = redux.optName.args.hints.tip_effect.show.event;
-		const hideEvent = redux.optName.args.hints.tip_effect.hide.event;
+		var showEvent = redux.optName.args.hints.tip_effect.show.event;
+		var hideEvent = redux.optName.args.hints.tip_effect.hide.event;
 
 		// Tip show effect.
-		const tipShowEffect   = redux.optName.args.hints.tip_effect.show.effect;
-		const tipShowDuration = redux.optName.args.hints.tip_effect.show.duration;
+		var tipShowEffect   = redux.optName.args.hints.tip_effect.show.effect;
+		var tipShowDuration = redux.optName.args.hints.tip_effect.show.duration;
 
 		// Tip hide effect.
-		const tipHideEffect   = redux.optName.args.hints.tip_effect.hide.effect;
-		const tipHideDuration = redux.optName.args.hints.tip_effect.hide.duration;
+		var tipHideEffect   = redux.optName.args.hints.tip_effect.hide.effect;
+		var tipHideDuration = redux.optName.args.hints.tip_effect.hide.duration;
 
 		if ( $().qtip ) {
 			if ( true === tipShadow ) {
@@ -66,19 +65,19 @@
 			atPos = $.redux.verifyPos( atPos.toLowerCase(), false );
 
 			$( 'div.redux-dev-qtip' ).each(
-				function () {
+				function() {
 					$( this ).qtip(
 						{
 							content: {
 								text: $( this ).attr( 'qtip-content' ),
 								title: $( this ).attr( 'qtip-title' )
 							}, show: {
-								effect: function () {
+								effect: function() {
 									$( this ).slideDown( 500 );
 								},
 								event: 'mouseover'
 							}, hide: {
-								effect: function () {
+								effect: function() {
 									$( this ).slideUp( 500 );
 								},
 								event: 'mouseleave'
@@ -94,14 +93,14 @@
 			);
 
 			$( 'div.redux-hint-qtip' ).each(
-				function () {
+				function() {
 					$( this ).qtip(
 						{
 							content: {
 								text: $( this ).attr( 'qtip-content' ),
 								title: $( this ).attr( 'qtip-title' )
 							}, show: {
-								effect: function () {
+								effect: function() {
 									switch ( tipShowEffect ) {
 										case 'slide':
 											$( this ).slideDown( tipShowDuration );
@@ -116,7 +115,7 @@
 								},
 								event: showEvent
 							}, hide: {
-								effect: function () {
+								effect: function() {
 									switch ( tipHideEffect ) {
 										case 'slide':
 											$( this ).slideUp( tipHideDuration );
@@ -142,7 +141,7 @@
 			);
 
 			$( 'input[qtip-content]' ).each(
-				function () {
+				function() {
 					$( this ).qtip(
 						{
 							content: {
@@ -163,10 +162,10 @@
 		}
 	};
 
-	$.redux.verifyPos = function ( s, b ) {
-		let split;
-		let paramOne;
-		let paramTwo;
+	$.redux.verifyPos = function( s, b ) {
+		var split;
+		var paramOne;
+		var paramTwo;
 
 		// Trim off spaces.
 		s = s.replace( /^\s+|\s+$/gm, '' );

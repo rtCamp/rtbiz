@@ -32,13 +32,10 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 		public function validate( array $plugin_options, array $options, array $sections ): array {
 			$core = $this->core();
 
-			if (null === $core) {
-				return $plugin_options;
-			}
-
 			foreach ( $sections as $k => $section ) {
 				if ( isset( $section['fields'] ) ) {
 					foreach ( $section['fields'] as $fkey => $field ) {
+
 						if ( is_array( $field ) ) {
 							$field['section_id'] = $k;
 						}
@@ -89,13 +86,13 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 								}
 
 								// Check for empty id value.
-								if ( ! isset( $field['id'] ) || ! isset( $plugin_options[ $field['id'] ] ) || ( '' === $plugin_options[ $field['id'] ] ) ) {
+								if ( ! isset( $field['id'] ) || ! isset( $plugin_options[ $field['id'] ] ) || ( isset( $plugin_options[ $field['id'] ] ) && '' === $plugin_options[ $field['id'] ] ) ) {
 
 									// If we are looking for an empty value, in the case of 'not_empty'
 									// then we need to keep processing.
 									if ( ! $is_not_empty ) {
 
-										// Empty id and not checking for 'not_empty'.  Bail out...
+										// Empty id and not checking for 'not_empty.  Bail out...
 										if ( ! isset( $field['validate_callback'] ) ) {
 											continue;
 										}
@@ -116,7 +113,7 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 									continue;
 								}
 
-								// Shim out old color rgba validators.
+								// Shim out old colorgrba validators.
 								if ( 'color_rgba' === $val || 'colorrgba' === $val ) {
 									$val = 'color';
 								}
@@ -124,13 +121,15 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 								$validate = 'Redux_Validation_' . $val;
 
 								if ( ! class_exists( $validate ) ) {
-									$file = str_replace( '_', '-', $val );
 
 									/**
 									 * Filter 'redux/validate/{opt_name}/class/{field.validate}'
 									 *
-									 * @param string $validate   validation class file path
+									 * @param        string                validation class file path
+									 * @param string $class_file validation class file path
 									 */
+
+									$file = str_replace( '_', '-', $val );
 
 									// phpcs:ignore WordPress.NamingConventions.ValidHookName
 									$class_file = apply_filters( "redux/validate/{$core->args['opt_name']}/class/$val", Redux_Core::$dir . "inc/validation/$val/class-redux-validation-$file.php", $validate );
@@ -172,15 +171,15 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 												unset( $plugin_options[ $field['id'] ][ $key ] );
 											}
 
-											if ( ! empty( $validation->error ) ) {
+											if ( isset( $validation->error ) ) {
 												$core->errors[] = $validation->error;
 											}
 
-											if ( ! empty( $validation->warning ) ) {
+											if ( isset( $validation->warning ) ) {
 												$core->warnings[] = $validation->warning;
 											}
 
-											if ( ! empty( $validation->sanitize ) ) {
+											if ( isset( $validation->sanitize ) ) {
 												$core->sanitize[] = $validation->sanitize;
 											}
 										}
@@ -198,15 +197,15 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 										$validation                     = new $validate( $core, $field, $pofi, $options[ $field['id'] ] );
 										$plugin_options[ $field['id'] ] = $validation->value;
 
-										if ( ! empty( $validation->error ) ) {
+										if ( isset( $validation->error ) ) {
 											$core->errors[] = $validation->error;
 										}
 
-										if ( ! empty( $validation->warning ) ) {
+										if ( isset( $validation->warning ) ) {
 											$core->warnings[] = $validation->warning;
 										}
 
-										if ( ! empty( $validation->sanitize ) ) {
+										if ( isset( $validation->sanitize ) ) {
 											$core->sanitize[] = $validation->sanitize;
 										}
 									}
@@ -223,22 +222,20 @@ if ( ! class_exists( 'Redux_Validation', false ) ) {
 							$plugin_option = $plugin_options[ $field['id'] ] ?? null;
 							$option        = $options[ $field['id'] ] ?? null;
 
-							if ( null !== $plugin_option ) {
-								$callbackvalues = call_user_func( $callback, $field, $plugin_option, $option );
+							$callbackvalues = call_user_func( $callback, $field, $plugin_option, $option );
 
-								$plugin_options[ $field['id'] ] = $callbackvalues['value'];
+							$plugin_options[ $field['id'] ] = $callbackvalues['value'];
 
-								if ( isset( $callbackvalues['error'] ) ) {
-									$core->errors[] = $callbackvalues['error'];
-								}
+							if ( isset( $callbackvalues['error'] ) ) {
+								$core->errors[] = $callbackvalues['error'];
+							}
 
-								if ( isset( $callbackvalues['warning'] ) ) {
-									$core->warnings[] = $callbackvalues['warning'];
-								}
+							if ( isset( $callbackvalues['warning'] ) ) {
+								$core->warnings[] = $callbackvalues['warning'];
+							}
 
-								if ( isset( $callbackvalues['sanitize'] ) ) {
-									$core->sanitize[] = $callbackvalues['sanitize'];
-								}
+							if ( isset( $callbackvalues['sanitize'] ) ) {
+								$core->sanitize[] = $callbackvalues['sanitize'];
 							}
 						}
 					}

@@ -5,8 +5,6 @@
  * @package     ReduxFramework/Fields
  * @author      Dovy Paukstys & Kevin Provance (kprovance)
  * @version     4.0.0
- *
- * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -44,7 +42,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 		public function render() {
 			$sortable = ( isset( $this->field['sortable'] ) && true === (bool) $this->field['sortable'] ) ? ' select2-sortable' : '';
 
-			if ( ! empty( $sortable ) ) { // Dummy proofing :P.
+			if ( ! empty( $sortable ) ) { // Dummy proofing  :P.
 				$this->field['multi'] = true;
 			}
 
@@ -54,7 +52,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 				}
 
 				if ( 'elusive-icons' === $this->field['data'] || 'elusive-icon' === $this->field['data'] || 'elusive' === $this->field['data'] ) {
-					$icons_file = Redux_Core::$dir . 'lib/elusive-icons.php';
+					$icons_file = Redux_Core::$dir . 'inc/fields/select/elusive-icons.php';
 
 					/**
 					 * Filter 'redux-font-icons-file}'
@@ -79,7 +77,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 					}
 				}
 
-				// The First one obtained with AJAX.
+				// First one get with AJAX.
 				$ajax = false;
 				if ( isset( $this->field['ajax'] ) && $this->field['ajax'] ) {
 					$ajax = true;
@@ -169,7 +167,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 						echo '<optgroup label="' . esc_attr( $k ) . '">';
 
 						foreach ( $v as $opt => $val ) {
-							$this->make_option( (string) $opt, $val );
+							$this->make_option( (string) $opt, $val, $k );
 						}
 
 						echo '</optgroup>';
@@ -191,8 +189,9 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 		 *
 		 * @param string $id         HTML ID.
 		 * @param mixed  $value      Value array.
+		 * @param string $group_name Group name.
 		 */
-		private function make_option( string $id, $value ) {
+		private function make_option( string $id, $value, string $group_name = '' ) {
 			if ( is_array( $this->value ) ) {
 				$selected = ( in_array( $id, $this->value, true ) ) ? ' selected="selected"' : '';
 			} else {
@@ -200,17 +199,6 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 			}
 
 			echo '<option value="' . esc_attr( $id ) . '" ' . esc_html( $selected ) . '>' . esc_attr( $value ) . '</option>';
-		}
-
-		/**
-		 * Do enqueue for each field instance.
-		 *
-		 * @return void
-		 */
-		public function always_enqueue() {
-			if ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) {
-				wp_enqueue_script( 'jquery-ui-sortable' );
-			}
 		}
 
 		/**
@@ -222,8 +210,12 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 		public function enqueue() {
 			wp_enqueue_style( 'select2-css' );
 
+			if ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) {
+				wp_enqueue_script( 'jquery-ui-sortable' );
+			}
+
 			wp_enqueue_script(
-				'redux-field-select',
+				'redux-field-select-js',
 				Redux_Core::$url . 'inc/fields/select/redux-select' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'select2-js', 'redux-js' ),
 				$this->timestamp,
@@ -232,7 +224,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-select',
+					'redux-field-select-css',
 					Redux_Core::$url . 'inc/fields/select/redux-select.css',
 					array(),
 					$this->timestamp

@@ -26,13 +26,13 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 		/**
 		 * Redux_WordPress_Data constructor.
 		 *
-		 * @param mixed $redux ReduxFramework pointer or opt_name.
+		 * @param mixed $parent ReduxFramework pointer or opt_name.
 		 */
-		public function __construct( $redux = null ) {
-			if ( is_string( $redux ) ) {
-				$this->opt_name = $redux;
+		public function __construct( $parent = null ) {
+			if ( is_string( $parent ) ) {
+				$this->opt_name = $parent;
 			} else {
-				parent::__construct( $redux );
+				parent::__construct( $parent );
 			}
 		}
 
@@ -48,9 +48,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 		 * @return array|mixed|string
 		 */
 		public function get( $type, $args = array(), string $opt_name = '', $current_value = '', bool $ajax = false ) {
-			if ( '' === $opt_name ) {
-				$opt_name = $this->opt_name;
-			}
+			$opt_name = $this->opt_name;
 
 			// We don't want to run this, it's not a string value. Send it back!
 			if ( is_array( $type ) ) {
@@ -98,7 +96,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 
 			// If ajax is enabled AND $current_data is empty, set a dummy value for the init.
 			if ( $ajax && ! wp_doing_ajax() ) {
-				// Dummy is necessary otherwise empty.
+				// Dummy is needed otherwise empty.
 				if ( empty( $current_data ) ) {
 					$current_data = array(
 						'dummy' => '',
@@ -116,7 +114,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 				$data = $this->wp_data[ $type . $args_key ];
 			} else {
 				/**
-				 * Use data from WordPress to populate an option array.
+				 * Use data from WordPress to populate options array.
 				 * */
 				$data = $this->get_data( $type, $args, $current_value );
 			}
@@ -148,7 +146,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 		 * @param string|bool    $id_key        Key on object/array that represents the ID.
 		 * @param string|bool    $name_key      Key on object/array that represents the name/text.
 		 * @param bool           $add_key       If true, the display key will appear in the text.
-		 * @param string|bool    $secondary_key If a data type, you'd rather display a different ID as the display key.
+		 * @param string|bool    $secondary_key If a data type you'd rather display a different ID as the display key.
 		 *
 		 * @return array
 		 */
@@ -167,7 +165,6 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 							$key = $k;
 						}
 					}
-
 					if ( empty( $name_key ) ) {
 						$value = $v;
 					} else {
@@ -179,9 +176,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 							$value = $v;
 						}
 					}
-
 					$display_key = $key;
-
 					if ( is_object( $v ) && isset( $v->$secondary_key ) ) {
 						$display_key = $v->$secondary_key;
 					} elseif ( ! is_object( $v ) && isset( $v[ $secondary_key ] ) ) {
@@ -254,7 +249,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 
 			$secondary_key = 'slug';
 			if ( isset( $args['secondary_key'] ) ) {
-				$secondary_key = $args['secondary_key'];
+				$display_key = $args['secondary_key'];
 				unset( $args['secondary_key'] );
 			}
 
@@ -303,8 +298,13 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 
 				case 'sites':
 				case 'site':
-					$sites = get_sites();
-
+					// WP > 4.6.
+					if ( function_exists( 'get_sites' ) && class_exists( 'WP_Site_Query' ) ) {
+						$sites = get_sites();
+						// WP < 4.6.
+					} elseif ( function_exists( 'wp_get_sites' ) ) {
+						$sites = wp_get_sites(); // phpcs:ignore WordPress.WP.DeprecatedFunctions
+					}
 					if ( isset( $sites ) ) {
 						$results = array();
 						foreach ( $sites as $site ) {
@@ -398,16 +398,18 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
-					$font_icons = apply_filters_deprecated( 'redux/font-icons', array( $data ), '4.3', 'redux/$opt_name/field/font/icons' );
+					$font_icons = apply_filters( 'redux/font-icons', $data );
 
 					/**
 					 * Filter 'redux/{opt_name}/field/font/icons'
 					 *
 					 * @param array $font_icons array of elusive icon classes
+					 *
+					 * @deprecated
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
-					$data = apply_filters( "redux/$opt_name/field/font/icons", $font_icons );
+					$font_icons = apply_filters( "redux/$opt_name/field/font/icons", $font_icons );
 
 					break;
 
@@ -459,7 +461,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 				case 'capability_group':
 					global $wp_roles;
 
-					foreach ( $wp_roles->roles as $role ) {
+					foreach ( $wp_roles->roles as $k => $role ) {
 						$caps = array();
 						foreach ( $role['capabilities'] as $key => $cap ) {
 							$caps[ $key ] = ucwords( str_replace( '_', ' ', $key ) );
@@ -471,10 +473,9 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 					break;
 
 				case 'callback':
-					if ( ! empty( $args ) && is_callable( $args ) ) {
+					if ( ! empty( $args ) ) {
 						$data = call_user_func( $args, $current_value );
 					}
-
 					break;
 			}
 
@@ -483,7 +484,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 
 
 		/**
-		 * Router for translation based on the given post-type.
+		 * Router for translation based on the given post type.
 		 *
 		 * @param string       $type          Type of data request.
 		 * @param mixed|array  $current_value Current value stored in DB.
@@ -540,12 +541,10 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 			if ( function_exists( 'icl_object_id' ) ) {
 				if ( has_filter( 'wpml_object_id' ) ) {
 					if ( Redux_Helpers::is_integer( $value ) ) {
-						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Third party hook. Cannot change.
 						$value = apply_filters( 'wpml_object_id', $value, $post_type, true );
 					} elseif ( is_array( $value ) ) {
 						$value = array_map(
 							function ( $val ) use ( $post_type ) {
-								// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Third party hook. Cannot change.
 								return apply_filters( 'wpml_object_id', $val, $post_type, true );
 							},
 							$value
@@ -565,7 +564,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 		 * @return array
 		 */
 		private function get_current_data_args( string $type, $args, $current_value ): array {
-			// In this section, we set the default arguments for each data type.
+			// In this section we set the default arguments for each data type.
 			switch ( $type ) {
 				case 'categories':
 				case 'category':
@@ -609,7 +608,7 @@ if ( ! class_exists( 'Redux_WordPress_Data', false ) ) {
 		 * @return array|string
 		 */
 		private function get_arg_defaults( string $type, $args = array() ) {
-			// In this section, we set the default arguments for each data type.
+			// In this section we set the default arguments for each data type.
 			switch ( $type ) {
 				case 'categories':
 				case 'category':

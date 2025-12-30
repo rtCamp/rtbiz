@@ -2,7 +2,7 @@
 /**
  * Silence is golden.
  *
- * @package Redux
+ * @package Redux Pro
  */
 
 echo null;

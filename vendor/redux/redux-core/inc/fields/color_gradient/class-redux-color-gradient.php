@@ -20,7 +20,7 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 	class Redux_Color_Gradient extends Redux_Field {
 
 		/**
-		 * Filters enabled flag.
+		 * Fileters enabled flag.
 		 *
 		 * @var bool
 		 */
@@ -29,14 +29,12 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 		/**
 		 * Redux_Field constructor.
 		 *
-		 * @param array  $field  Field array.
-		 * @param string $value  Field values.
-		 * @param null   $redux  ReduxFramework object pointer.
-		 *
-		 * @throws ReflectionException Reflection.
+		 * @param array  $field Field array.
+		 * @param string $value Field values.
+		 * @param null   $parent ReduxFramework object pointer.
 		 */
-		public function __construct( $field = array(), $value = null, $redux = null ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
-			parent::__construct( $field, $value, $redux );
+		public function __construct( $field = array(), $value = null, $parent = null ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
+			parent::__construct( $field, $value, $parent );
 		}
 
 		/**
@@ -61,6 +59,7 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 				'preview'        => false,
 				'preview_height' => '150px',
 				'transparent'    => true,
+				'alpha'          => false,
 				'gradient-type'  => false,
 				'gradient-reach' => false,
 				'gradient-angle' => false,
@@ -99,7 +98,7 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 				'to',
 			);
 
-			foreach ( $mode_arr as $mode ) {
+			foreach ( $mode_arr as $idx => $mode ) {
 				$uc_mode = ucfirst( $mode );
 
 				echo '<div class="colorGradient ' . esc_html( $mode ) . 'Label">';
@@ -112,6 +111,11 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 				echo 'class="color-picker redux-color redux-color-init ' . esc_attr( $this->field['class'] ) . '"';
 				echo 'type="text"';
 				echo 'data-default-color="' . esc_attr( $this->field['default'][ $mode ] ) . '"';
+
+				$data = array(
+					'field' => $this->field,
+					'value' => $this->value,
+				);
 
 				// Escaping done in function.
 				// phpcs:ignore WordPress.Security.EscapeOutput
@@ -146,21 +150,6 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 		}
 
 		/**
-		 * Do enqueue for each field instance.
-		 *
-		 * @return void
-		 */
-		public function always_enqueue() {
-			Redux_Gradient_Filters::enqueue( $this->field, $this->filters_enabled );
-
-			if ( isset( $this->field['color_alpha'] ) && ( $this->field['color_alpha'] || ( $this->field['color_alpha']['from'] || $this->field['color_alpha']['to'] ) ) ) {
-				if ( ! wp_script_is( 'redux-wp-color-picker-alpha' ) ) {
-					wp_enqueue_script( 'redux-wp-color-picker-alpha' );
-				}
-			}
-		}
-
-		/**
 		 * Enqueue Function.
 		 * If this field requires any scripts, or CSS define this function and register/enqueue the scripts/css
 		 *
@@ -171,19 +160,27 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 		public function enqueue() {
 			wp_enqueue_style( 'wp-color-picker' );
 
-			$min = Redux_Functions::isMin();
-
 			wp_enqueue_script(
-				'redux-field-color-gradient',
-				Redux_Core::$url . 'inc/fields/color_gradient/redux-color-gradient' . $min . '.js',
+				'redux-field-color-gradient-js',
+				Redux_Core::$url . 'inc/fields/color_gradient/redux-color-gradient' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'wp-color-picker', 'redux-js' ),
 				$this->timestamp,
 				true
 			);
 
+			$min = Redux_Functions::isMin();
+
+			Redux_Gradient_Filters::enqueue( $this->field, $this->filters_enabled );
+
+			if ( isset( $this->field['color_alpha'] ) && ( $this->field['color_alpha'] || ( $this->field['color_alpha']['from'] || $this->field['color_alpha']['to'] ) ) ) {
+				if ( ! wp_script_is( 'redux-wp-color-picker-alpha-js' ) ) {
+					wp_enqueue_script( 'redux-wp-color-picker-alpha-js' );
+				}
+			}
+
 			if ( $this->filters_enabled ) {
 				wp_enqueue_script(
-					'redux-field-color-gradient',
+					'redux-field-color-gradient-js',
 					Redux_Core::$url . 'inc/fields/color_gradient/redux-color-gradient' . $min . '.js',
 					array( 'jquery', 'wp-color-picker' ),
 					Redux_Core::$version,
@@ -192,10 +189,10 @@ if ( ! class_exists( 'Redux_Color_Gradient', false ) ) {
 			}
 
 			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_style( 'redux-color-picker' );
+				wp_enqueue_style( 'redux-color-picker-css' );
 
 				wp_enqueue_style(
-					'redux-field-color_gradient',
+					'redux-field-color_gradient-css',
 					Redux_Core::$url . 'inc/fields/color_gradient/redux-color-gradient.css',
 					array(),
 					$this->timestamp

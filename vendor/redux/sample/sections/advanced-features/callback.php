@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework callback config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -36,10 +35,9 @@ if ( ! function_exists( 'redux_my_custom_field' ) ) {
 	 * @param array $field Field array.
 	 * @param mixed $value Set value.
 	 */
-	function redux_my_custom_field( array $field, $value ) {
+	function redux_my_custom_field( $field, $value ) {
 		print_r( $field ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 		echo '<br/>';
 		print_r( $value ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 	}
 }
-// phpcs:enable

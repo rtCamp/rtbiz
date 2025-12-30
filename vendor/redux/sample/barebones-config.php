@@ -1,12 +1,11 @@
 <?php
 /**
  * ReduxFramework Barebones Sample Config File
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disabled
 if ( ! class_exists( 'Redux' ) ) {
 	return null;
 }
@@ -45,7 +44,7 @@ $args = array(
 	'menu_title'                => esc_html__( 'Sample Options', 'your-textdomain-here' ),
 	'page_title'                => esc_html__( 'Sample Options', 'your-textdomain-here' ),
 
-	// Disable this in case you want to create your own Google fonts loader.
+	// Disable this in case you want to create your own google fonts loader.
 	'disable_google_fonts_link' => false,
 
 	// Show the panel pages on the admin bar.
@@ -54,7 +53,7 @@ $args = array(
 	// Choose an icon for the admin bar menu.
 	'admin_bar_icon'            => 'dashicons-portfolio',
 
-	// Choose a priority for the admin bar menu.
+	// Choose an priority for the admin bar menu.
 	'admin_bar_priority'        => 50,
 
 	// Set a different name for your global variable other than the opt_name.
@@ -69,7 +68,7 @@ $args = array(
 	// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
 	'page_priority'             => null,
 
-	// For a full list of options, visit: @link https://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters.
+	// For a full list of options, visit: @link http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters.
 	'page_parent'               => 'themes.php',
 
 	// Permissions needed to access the options panel.
@@ -99,7 +98,7 @@ $args = array(
 	// Shows the Import/Export panel when not used as a field.
 	'show_import_export'        => true,
 
-	// CAREFUL: These options are for advanced use only.
+	// CAREFUL -> These options are for advanced use only.
 	'transient_time'            => 60 * MINUTE_IN_SECONDS,
 
 	// Global shut-off for dynamic CSS output by the framework. Will also disable google fonts output.
@@ -108,18 +107,19 @@ $args = array(
 	// Allows dynamic CSS to be generated for customizer and google fonts, but stops the dynamic CSS from going to the head.
 	'output_tag'                => true,
 
-	// FUTURE → Not in use yet, but reserved or partially implemented.
-	// Use at your own risk.
-	// Possible: options, theme_mods, theme_mods_expanded, transient. Not fully functional, warning!
+	// FUTURE -> Not in use yet, but reserved or partially implemented. Use at your own risk.
+	// possible: options, theme_mods, theme_mods_expanded, transient. Not fully functional, warning!
 	'database'                  => '',
 
+	// If you prefer not to use the CDN for Select2, Ace Editor, and others, you may download the Redux Vendor Support plugin yourself and run locally or embed it in your code.
+	'use_cdn'                   => true,
 	'compiler'                  => true,
 
 	// Enable or disable flyout menus when hovering over a menu with submenus.
 	'flyout_submenus'           => true,
 
 	// Mode to display fonts (auto|block|swap|fallback|optional)
-	// See: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display .
+	// See: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display
 	'font_display'              => 'swap',
 
 	// HINTS.
@@ -153,7 +153,7 @@ $args = array(
 	),
 );
 
-// ADMIN BAR LINKS → Set up custom links in the admin bar menu as external items.
+// ADMIN BAR LINKS -> Setup custom links in the admin bar menu as external items.
 $args['admin_bar_links'][] = array(
 	'id'    => 'redux-docs',
 	'href'  => '//devs.redux.io/',
@@ -172,10 +172,10 @@ $args['admin_bar_links'][] = array(
 	'title' => esc_html__( 'Extensions', 'your-textdomain-here' ),
 );
 
-// SOCIAL ICONS → Set up custom links in the footer for quick links in your panel footer icons.
+// SOCIAL ICONS -> Setup custom links in the footer for quick links in your panel footer icons.
 $args['share_icons'][] = array(
 	'url'   => '//github.com/ReduxFramework/ReduxFramework',
-	'title' => esc_html__( 'Visit us on GitHub', 'your-textdomain-here' ),
+	'title' => 'Visit us on GitHub',
 	'icon'  => 'el el-github',
 );
 $args['share_icons'][] = array(
@@ -190,18 +190,17 @@ $args['share_icons'][] = array(
 );
 $args['share_icons'][] = array(
 	'url'   => '//www.linkedin.com/company/redux-framework',
-	'title' => esc_html__( 'Find us on LinkedIn', 'your-textdomain-here' ),
+	'title' => esc_html__( 'FInd us on LinkedIn', 'your-textdomain-here' ),
 	'icon'  => 'el el-linkedin',
 );
 
-// Panel Intro text → before the form.
-if ( false !== $args['global_variable'] ) {
+// Panel Intro text -> before the form.
+if ( ! isset( $args['global_variable'] ) || false !== $args['global_variable'] ) {
 	if ( ! empty( $args['global_variable'] ) ) {
 		$v = $args['global_variable'];
 	} else {
 		$v = str_replace( '-', '_', $args['opt_name'] );
 	}
-
 	$args['intro_text'] = '<p>' . sprintf( __( 'Did you know that Redux sets a global variable for you? To access any of your saved options from within your code you can use your global variable: $s', 'your-textdomain-here' ) . '</p>', '<strong>' . $v . '</strong>' );
 } else {
 	$args['intro_text'] = '<p>' . esc_html__( 'This text is displayed above the options panel. It isn\'t required, but more info is always better! The intro_text field accepts all HTML.', 'your-textdomain-here' ) . '</p>';
@@ -275,7 +274,7 @@ $section = array(
 			'desc'     => esc_html__( 'Example description.', 'your-textdomain-here' ),
 			'subtitle' => esc_html__( 'Example subtitle.', 'your-textdomain-here' ),
 			'hint'     => array(
-				'content' => wp_kses( __( 'This is a <strong>hint</strong> tool-tip for the text field.<br/><br/>Add any HTML-based text you like here.', 'your-textdomain-here' ), $kses_exceptions ),
+				'content' => wp_kses( __( 'This is a <strong>hint</strong> tool-tip for the text field.<br/><br/>Add any HTML based text you like here.', 'your-textdomain-here' ), $kses_exceptions ),
 			),
 		),
 	),
@@ -333,4 +332,3 @@ Redux::set_section( $opt_name, $section );
 /*
  * <--- END SECTIONS
  */
-// phpcs:enable

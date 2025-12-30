@@ -40,12 +40,12 @@ if ( ! class_exists( 'Redux_Raw', false ) ) {
 			}
 
 			if ( isset( $this->field['content_path'] ) && ! empty( $this->field['content_path'] ) && file_exists( $this->field['content_path'] ) ) {
-				$this->field['content'] = Redux_Core::$filesystem->execute( 'get_contents', $this->field['content_path'] );
+				$this->field['content'] = $this->parent->filesystem->execute( 'get_contents', $this->field['content_path'] );
 			}
 
 			if ( ! empty( $this->field['content'] ) && isset( $this->field['content'] ) ) {
 				if ( isset( $this->field['markdown'] ) && true === $this->field['markdown'] && ! empty( $this->field['content'] ) ) {
-					require_once __DIR__ . '/parsedown.php';
+					require_once dirname( __FILE__ ) . '/parsedown.php';
 					$parsedown = new Redux_Parsedown();
 
 					echo( $parsedown->text( $this->field['content'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput

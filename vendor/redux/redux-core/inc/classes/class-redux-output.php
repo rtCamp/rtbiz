@@ -5,7 +5,6 @@
  * @class   Redux_Output
  * @version 3.0.0
  * @package Redux Framework/Classes
- * @noinspection PhpConditionCheckedByNextConditionInspection
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,10 +19,10 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		/**
 		 * Redux_Output constructor.
 		 *
-		 * @param object $redux ReduxFramework pointer.
+		 * @param object $parent ReduxFramework pointer.
 		 */
-		public function __construct( $redux ) {
-			parent::__construct( $redux );
+		public function __construct( $parent ) {
+			parent::__construct( $parent );
 
 			// Output dynamic CSS.
 			// Frontend: Maybe enqueue dynamic CSS and Google fonts.
@@ -52,10 +51,9 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		/**
 		 * Enqueue CSS and Google fonts for front end
 		 *
-		 * @return void
-		 * @throws ReflectionException Exception.
-		 * @since  1.0.0
-		 * @access public
+		 * @return      void
+		 * @since       1.0.0
+		 * @access      public
 		 */
 		public function enqueue() {
 			$core = $this->core();
@@ -81,6 +79,13 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 									$field['compiler'] = '';
 								}
 
+								/**
+								 * Field class file
+								 * filter 'redux/{opt_name}/field/class/{field.type}
+								 *
+								 * @param string        field class file
+								 * @param array $field field config data
+								 */
 								$field_type = str_replace( '_', '-', $field['type'] );
 								$core_path  = Redux_Core::$dir . "inc/fields/{$field['type']}/class-redux-$field_type.php";
 
@@ -88,20 +93,26 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 									$core_path = Redux_Core::$dir . "inc/fields/{$field['type']}/field_{$field['type']}.php";
 								}
 
-								$filter_path = $core_path;
+								if ( Redux_Core::$pro_loaded ) {
+									$pro_path = '';
 
-								/**
-								 * Field class file
-								 * filter 'redux/{opt_name}/field/class/{field.type}'
-								 *
-								 * @param string $file field class file.
-								 * @param array $field field config data
-								 */
+									if ( class_exists( 'Redux_Pro' ) ) {
+										$pro_path = Redux_Pro::$dir . "core/inc/fields/{$field['type']}/class-redux-$field_type.php";
+									}
+
+									if ( file_exists( $pro_path ) ) {
+										$filter_path = $pro_path;
+									} else {
+										$filter_path = $core_path;
+									}
+								} else {
+									$filter_path = $core_path;
+								}
 
 								// phpcs:ignore WordPress.NamingConventions.ValidHookName
 								$class_file = apply_filters( "redux/{$core->args['opt_name']}/field/class/{$field['type']}", $filter_path, $field );
 
-								if ( $class_file && file_exists( $class_file ) ) {
+								if ( $class_file && file_exists( $class_file ) && ( ! class_exists( $field_class ) ) ) {
 									require_once $class_file;
 
 									$field_class = Redux_Functions::class_exists_ex( $field_classes );
@@ -111,6 +122,14 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 							$field['default'] = $field['default'] ?? '';
 							$value            = $core->options[ $field['id'] ] ?? $field['default'];
 							$style_data       = '';
+							$data             = array(
+								'field' => $field,
+								'value' => $value,
+								'core'  => $core,
+								'mode'  => 'output',
+							);
+
+							Redux_Functions::load_pro_field( $data );
 
 							if ( empty( $field_class ) ) {
 								continue;
@@ -127,14 +146,14 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 									$field['output'] = array( $field['output'] );
 								}
 
-								if ( ( ( isset( $field['output'] ) && ! empty( $field['output'] ) ) || ( isset( $field['compiler'] ) && ! empty( $field['compiler'] ) ) || ( isset( $field['media_query'] ) && ! empty( $field['media_query'] ) ) || 'typography' === $field['type'] || 'icon_select' === $field['type'] || 'social_profiles' === $field['type'] ) ) {
+								if ( ( ( isset( $field['output'] ) && ! empty( $field['output'] ) ) || ( isset( $field['compiler'] ) && ! empty( $field['compiler'] ) ) || isset( $field['media_query'] ) && ! empty( $field['media_query'] ) || 'typography' === $field['type'] || 'icon_select' === $field['type'] ) ) {
 									if ( method_exists( $field_class, 'css_style' ) ) {
 										$style_data = $field_object->css_style( $field_object->value );
 									}
 								}
 
 								if ( null !== $style_data ) {
-									if ( ( ( isset( $field['output'] ) && ! empty( $field['output'] ) ) || ( isset( $field['compiler'] ) && ! empty( $field['compiler'] ) ) || 'typography' === $field['type'] || 'icon_select' === $field['type'] || 'social_profiles' === $field['type'] ) ) {
+									if ( ( ( isset( $field['output'] ) && ! empty( $field['output'] ) ) || ( isset( $field['compiler'] ) && ! empty( $field['compiler'] ) ) || 'typography' === $field['type'] || 'icon_select' === $field['type'] ) ) {
 										$field_object->output( $style_data );
 									}
 
@@ -165,22 +184,19 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 			}
 
 			// For use like in the customizer. Stops the output, but passes the CSS in the variable for the compiler.
-			if ( true === Redux_Core::$no_output ) {
+			if ( isset( $core->no_output ) ) {
 				return;
 			}
 
-			if ( ! empty( Redux_Core::$typography ) && filter_var( $core->args['output'], FILTER_VALIDATE_BOOLEAN ) ) {
+			if ( ! empty( $core->typography ) && filter_var( $core->args['output'], FILTER_VALIDATE_BOOLEAN ) ) {
 				$version = ! empty( $core->transients['last_save'] ) ? $core->transients['last_save'] : '';
 				if ( ! class_exists( 'Redux_Typography' ) ) {
 					require_once Redux_Core::$dir . '/inc/fields/typography/class-redux-typography.php';
 				}
-
 				$typography = new Redux_Typography( null, null, $core );
 
-				$core->args['disable_google_fonts_link'] = ( ! isset( $core->args['disable_google_fonts_link'] ) ? false : $core->args['disable_google_fonts_link'] );
-
 				if ( ! $core->args['disable_google_fonts_link'] ) {
-					$url = $typography->make_google_web_font_link( Redux_Core::$typography );
+					$url = $typography->make_google_web_font_link( $core->typography );
 					wp_enqueue_style( 'redux-google-fonts-' . $core->args['opt_name'], $url, array(), $version );
 					add_filter( 'style_loader_tag', array( $this, 'add_style_attributes' ), 10, 4 );
 					add_filter( 'wp_resource_hints', array( $this, 'google_fonts_preconnect' ), 10, 2 );
@@ -189,7 +205,7 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		}
 
 		/**
-		 * Add a Google Fonts preconnect link.
+		 * Add Google Fonts preconnect link.
 		 *
 		 * @param array  $urls              HTML to be added.
 		 * @param string $relationship_type Handle name.
@@ -215,13 +231,14 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		 *
 		 * @param string $html   HTML to be added.
 		 * @param string $handle Handle name.
-		 * @param string $href   HREF URL of a script.
+		 * @param string $href   HREF URL of script.
+		 * @param string $media  Media type.
 		 *
 		 * @return      string
 		 * @since       4.1.15
 		 * @access      public
 		 */
-		public function add_style_attributes( string $html = '', string $handle = '', string $href = '' ): string {
+		public function add_style_attributes( string $html = '', string $handle = '', string $href = '', string $media = '' ): string {
 			if ( Redux_Functions_Ex::string_starts_with( $handle, 'redux-google-fonts-' ) ) {
 				// Revamp thanks to Harry: https://csswizardry.com/2020/05/the-fastest-google-fonts/.
 				$href      = str_replace( array( '|', ' ' ), array( '%7C', '%20' ), urldecode( $href ) );
@@ -237,18 +254,18 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		/**
 		 * Function to output output_variables to the dynamic output.
 		 *
-		 * @param ReduxFramework $core       ReduxFramework core pointer.
-		 * @param array          $section    Section containing this field.
-		 * @param array          $field      Field object.
-		 * @param array|string   $value      Current value of field.
-		 * @param string|null    $style_data CSS output string to append to the root output variable.
+		 * @param object       $core       ReduxFramework core pointer.
+		 * @param array        $section    Section containing this field.
+		 * @param array        $field      Field object.
+		 * @param array|string $value      Current value of field.
+		 * @param string|null  $style_data CSS output string to append to the root output variable.
 		 *
 		 * @return      void
 		 * @since       4.0.3
 		 * @access      public
 		 */
-		private function output_variables( ReduxFramework $core, array $section = array(), array $field = array(), $value = array(), ?string $style_data = '' ) {
-			// Let's allow section overrides, please.
+		private function output_variables( $core, array $section = array(), array $field = array(), $value = array(), ?string $style_data = '' ) {
+			// Let's allow section overrides please.
 			if ( isset( $section['output_variables'] ) && ! isset( $field['output_variables'] ) ) {
 				$field['output_variables'] = $section['output_variables'];
 			}
@@ -291,7 +308,7 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		}
 
 		/**
-		 * Output dynamic CSS at the bottom of HEAD
+		 * Output dynamic CSS at bottom of HEAD
 		 *
 		 * @return      void
 		 * @since       3.2.8
@@ -304,7 +321,7 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 				return;
 			}
 
-			if ( true === Redux_Core::$no_output ) {
+			if ( isset( $core->no_output ) ) {
 				return;
 			}
 
@@ -329,19 +346,19 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 		 * Can Output CSS
 		 * Check if a field meets its requirements before outputting to CSS
 		 *
-		 * @param ReduxFramework $core  ReduxFramework core pointer.
-		 * @param array          $field Field array.
+		 * @param object $core  ReduxFramework core pointer.
+		 * @param array  $field Field array.
 		 *
 		 * @return bool
 		 */
-		private function can_output_css( ReduxFramework $core, array $field ): ?bool {
+		private function can_output_css( $core, array $field ): ?bool {
 			$return = true;
 
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			$field = apply_filters( "redux/field/{$core->args['opt_name']}/_can_output_css", $field );
 
 			if ( isset( $field['force_output'] ) && true === $field['force_output'] ) {
-				return true;
+				return $return;
 			}
 
 			if ( ! empty( $field['required'] ) ) {
@@ -369,5 +386,7 @@ if ( ! class_exists( 'Redux_Output', false ) ) {
 
 			return $return;
 		}
+
 	}
+
 }

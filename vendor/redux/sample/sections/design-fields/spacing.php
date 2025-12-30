@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework spacing config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -20,7 +19,7 @@ Redux::set_section(
 			array(
 				'id'            => 'opt-spacing',
 				'type'          => 'spacing',
-				'output'        => array( '.site-header, header' ),
+				'output'        => array( '.site-header' ),
 
 				// absolute, padding, margin, defaults to padding.
 				'mode'          => 'margin',
@@ -73,4 +72,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

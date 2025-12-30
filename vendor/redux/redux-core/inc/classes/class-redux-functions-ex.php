@@ -29,41 +29,6 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		public static $args;
 
 		/**
-		 * Enqueue Font Awesome.
-		 *
-		 * @return void
-		 */
-		public static function enqueue_font_awesome() {
-			wp_enqueue_style(
-				'font-awesome',
-				Redux_Core::$url . 'assets/font-awesome/css/all' . Redux_Functions::is_min() . '.css',
-				array(),
-				'6.5.2'
-			);
-
-			wp_enqueue_style(
-				'font-awesome-4-shims',
-				Redux_Core::$url . 'assets/font-awesome/css/v4-shims' . Redux_Functions::is_min() . '.css',
-				array(),
-				'6.5.2'
-			);
-		}
-
-		/**
-		 * Enqueue Elusive Font.
-		 *
-		 * @return void
-		 */
-		public static function enqueue_elusive_font() {
-			wp_enqueue_style(
-				'redux-elusive-icon',
-				Redux_Core::$url . 'assets/css/vendor/elusive-icons' . Redux_Functions::is_min() . '.css',
-				array(),
-				'2.0.0'
-			);
-		}
-
-		/**
 		 * Output alpha data tag for Iris alpha color picker, if enabled.
 		 *
 		 * @param array $data Data array.
@@ -71,8 +36,6 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		 * @return string
 		 */
 		public static function output_alpha_data( array $data ): string {
-			$index = null;
-
 			extract( $data ); // phpcs:ignore WordPress.PHP.DontExtract
 
 			$value = false;
@@ -91,22 +54,22 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		/**
 		 * Parses the string into variables without the max_input_vars limitation.
 		 *
-		 * @param string $str String of data.
+		 * @param     string $string String of data.
 		 *
 		 * @return  array|false $result
 		 * @since   3.5.7.11
 		 * @author  harunbasic
 		 * @access  private
 		 */
-		public static function parse_str( string $str ) {
-			if ( '' === $str ) {
+		public static function parse_str( string $string ) {
+			if ( '' === $string ) {
 				return false;
 			}
 
 			$result = array();
-			$pairs  = explode( '&', $str );
+			$pairs  = explode( '&', $string );
 
-			foreach ( $pairs as $pair ) {
+			foreach ( $pairs as $key => $pair ) {
 				// use the original parse_str() on each element.
 				parse_str( $pair, $params );
 
@@ -126,11 +89,12 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		 * Merge arrays without converting values with duplicate keys to arrays as array_merge_recursive does.
 		 * As seen here http://php.net/manual/en/function.array-merge-recursive.php#92195
 		 *
-		 * @param array $array1 array one.
-		 * @param array $array2 array two.
+		 * @since   3.5.7.11
+		 *
+		 * @param     array $array1 array one.
+		 * @param     array $array2 array two.
 		 *
 		 * @return  array $merged
-		 * @since   3.5.7.11
 		 * @author  harunbasic
 		 * @access  private
 		 */
@@ -221,7 +185,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		 * Callback for wp_head hook to add meta tag.
 		 */
 		public static function meta_tag() {
-			echo '<meta name="generator" content="Redux ' . esc_html( Redux_Core::$version ) . '" />';
+			echo '<meta name="framework" content="Redux ' . esc_html( Redux_Core::$version ) . '" />';
 		}
 
 		/**
@@ -235,7 +199,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 			$protocol = ! empty( $_SERVER['HTTPS'] ) && 'off' !== $_SERVER['HTTPS'] || ( ! empty( $_SERVER['SERVER_PORT'] ) && 443 === $_SERVER['SERVER_PORT'] ) ? 'https://' : 'http://';
 
-			if ( ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				$new_protocol = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) ) . '://'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				if ( 'http://' === $protocol && $new_protocol !== $protocol && false === strpos( $url, $new_protocol ) ) {
 					$url = str_replace( $protocol, $new_protocol, $url );
@@ -249,14 +213,14 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		 * Check s.
 		 *
 		 * @access public
+		 * @since 4.0.0
 		 * @return bool
-		 * @since  4.0.0
 		 */
 		public static function s(): bool {
 			if ( ! get_option( 'redux_p' . 'ro_lic' . 'ense_key', false ) ) { // phpcs:ignore Generic.Strings.UnnecessaryStringConcat.Found
 				$s = get_option( 'redux_p' . 'ro_l' . 'icense_status', false ); // phpcs:ignore Generic.Strings.UnnecessaryStringConcat.Found
 
-				if ( in_array( $s, array( 'valid', 'site_inactive' ), true ) ) {
+				if ( false !== $s && in_array( $s, array( 'valid', 'site_inactive' ), true ) ) {
 					return true;
 				}
 			}
@@ -284,7 +248,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		}
 
 		/**
-		 * Is Redux embedded inside a plugin?
+		 * Is Redux embedded inside a plugin.
 		 *
 		 * @param string $file File to check.
 		 *
@@ -315,7 +279,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		}
 
 		/**
-		 * Is Redux embedded in a theme?
+		 * Is Redux embedded in a theme.
 		 *
 		 * @param string $file File to check.
 		 *
@@ -337,7 +301,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 			$theme_paths = array_unique( $theme_paths );
 			$file_path   = self::wp_normalize_path( $file );
 
-			$filename = explode( DIRECTORY_SEPARATOR, $file );
+			$filename = explode( '\\', $file );
 
 			end( $filename );
 
@@ -375,6 +339,7 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 						$parent_slug_end = explode( '/', $theme_paths_end );
 						$parent_slug_end = end( $parent_slug_end );
 
+						$data['parent_slug'] = $theme_paths_end;
 						$data['parent_slug'] = $parent_slug_end;
 					}
 
@@ -386,14 +351,71 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		}
 
 		/**
+		 * Used to fix 3.x and 4 compatibility for extensions
+		 *
+		 * @param object $parent         The extension parent object.
+		 * @param string $path           - Path of the file.
+		 * @param string $ext_class      - Extension class name.
+		 * @param string $new_class_name - New dynamic class name.
+		 * @param string $name           extension name.
+		 *
+		 * @return object - Extended field class.
+		 */
+		public static function extension_compatibility( $parent, string $path, string $ext_class, string $new_class_name, string $name ) {
+			if ( empty( $new_class_name ) ) {
+				return;
+			}
+			$upload_dir = ReduxFramework::$_upload_dir . '/extension_compatibility/';
+			if ( ! file_exists( $upload_dir . $ext_class . '.php' ) ) {
+				if ( ! is_dir( $upload_dir ) ) {
+					$parent->filesystem->mkdir( $upload_dir );
+					$parent->filesystem->put_contents( $upload_dir . 'index.php', '<?php // Silence is golden.' );
+				}
+				if ( ! class_exists( $ext_class ) ) {
+					require_once $path;
+				}
+				if ( ! file_exists( $upload_dir . $new_class_name . '.php' ) ) {
+					$class_file = '<?php' . PHP_EOL . PHP_EOL .
+						'class {{ext_class}} extends Redux_Extension_Abstract {' . PHP_EOL .
+						'    private $c;' . PHP_EOL .
+						'    public function __construct( $parent, $path, $ext_class ) {' . PHP_EOL .
+						'        $this->c = $parent->extensions[\'' . $name . '\'];' . PHP_EOL .
+						'        // Add all the params of the Abstract to this instance.' . PHP_EOL .
+						'        foreach( get_object_vars( $this->c ) as $key => $value ) {' . PHP_EOL .
+						'            $this->$key = $value;' . PHP_EOL .
+						'        }' . PHP_EOL .
+						'        parent::__construct( $parent, $path );' . PHP_EOL .
+						'    }' . PHP_EOL .
+						'    // fake "extends Redux_Extension_Abstract\" using magic function' . PHP_EOL .
+						'    public function __call( $method, $args ) {' . PHP_EOL .
+						'        return call_user_func_array( array( $this->c, $method ), $args );' . PHP_EOL .
+						'    }' . PHP_EOL .
+						'}' . PHP_EOL;
+					$template   = str_replace( '{{ext_class}}', $new_class_name, $class_file );
+					$parent->filesystem->put_contents( $upload_dir . $new_class_name . '.php', $template );
+				}
+				if ( file_exists( $upload_dir . $new_class_name . '.php' ) ) {
+					if ( ! class_exists( $new_class_name ) ) {
+						require_once $upload_dir . $new_class_name . '.php';
+					}
+					if ( class_exists( $new_class_name ) ) {
+						return new $new_class_name( $parent, $path, $ext_class );
+					}
+				}
+			}
+		}
+
+		/**
 		 * Used to merge two deep arrays.
 		 *
-		 * @param array $a First array to deeply merge.
-		 * @param array $b Second array to deeply merge.
+		 * @param array $a First array to deep merge.
+		 * @param array $b Second array to deep merge.
 		 *
 		 * @return    array - Deep merge of the two arrays.
 		 */
 		public static function nested_wp_parse_args( array &$a, array $b ): array {
+			$a      = $a;
+			$b      = $b;
 			$result = $b;
 
 			foreach ( $a as $k => &$v ) {
@@ -415,6 +437,40 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 			$key .= defined( 'SECURE_AUTH_KEY' ) ? SECURE_AUTH_KEY : '';
 
 			return $key;
+		}
+
+		/**
+		 * Check if Redux is activated.
+		 *
+		 * @access public
+		 * @since 4.0.0
+		 */
+		public static function activated(): bool {
+			if ( Redux_Core::$insights->tracking_allowed() ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Set Redux to activate.
+		 *
+		 * @access public
+		 * @since 4.0.0
+		 */
+		public static function set_activated() {
+			Redux_Core::$insights->optin();
+		}
+
+		/**
+		 * Set Redux to deactivate.
+		 *
+		 * @access public
+		 * @since 4.0.0
+		 */
+		public static function set_deactivated() {
+			Redux_Core::$insights->optout();
 		}
 
 		/**
@@ -447,7 +503,6 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 		 */
 		public static function string_starts_with( string $haystack, string $needle ): bool {
 			$length = strlen( $needle );
-
 			return substr( $haystack, 0, $length ) === $needle;
 		}
 
@@ -466,23 +521,89 @@ if ( ! class_exists( 'Redux_Functions_Ex', false ) ) {
 				return true;
 			}
 
-			return substr( $haystack, - $length ) === $needle;
+			return substr( $haystack, -$length ) === $needle;
 		}
 
 		/**
-		 * Is plugin active.
+		 * Get the url where the Admin Columns website is hosted
 		 *
-		 * @param string $name Plugin name.
+		 * @param string $path Path to add to url.
 		 *
-		 * @return bool
+		 * @return string
 		 */
-		public static function is_plugin_active( string $name ): bool {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- active_plugins is a WP hook.
-			if ( in_array( $name . '/' . $name . '.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
-				return true;
+		private static function get_site_url( string $path = '' ): string {
+			$url = 'https://redux.io';
+
+			if ( ! empty( $path ) ) {
+				$url .= '/' . trim( $path, '/' ) . '/';
 			}
 
-			return false;
+			return $url;
+		}
+
+		/**
+		 * Url with utm tags
+		 *
+		 * @param string      $path         Path on site.
+		 * @param string      $utm_medium   Medium var.
+		 * @param string|null $utm_content  Content var.
+		 * @param bool        $utm_campaign Campaign var.
+		 *
+		 * @return string
+		 */
+		public static function get_site_utm_url( string $path, string $utm_medium, string $utm_content = null, bool $utm_campaign = false ): string {
+			$url = self::get_site_url( $path );
+
+			if ( ! $utm_campaign ) {
+				$utm_campaign = 'plugin-installation';
+			}
+
+			$args = array(
+				// Referrer: plugin.
+				'utm_source'   => 'plugin-installation',
+
+				// Specific promotions or sales.
+				'utm_campaign' => $utm_campaign,
+
+				// Marketing medium: banner, documentation or email.
+				'utm_medium'   => $utm_medium,
+
+				// Used for differentiation of medium.
+				'utm_content'  => $utm_content,
+			);
+
+			$args = array_map( 'sanitize_key', array_filter( $args ) );
+
+			return add_query_arg( $args, $url );
+		}
+
+		/**
+		 * Conversion.
+		 */
+		public static function pro_to_ext() {
+
+			// If they are a pro user, convert their key to use with Extendify.
+			$redux_pro_key = get_option( 'redux_pro_license_key' );
+
+			if ( $redux_pro_key && ! get_user_option( 'extendifysdk_redux_key_moved' ) ) {
+				try {
+					$extendify_user_state = get_user_meta( get_current_user_id(), 'extendifysdk_user_data' );
+
+					if ( ! isset( $extendify_user_state[0] ) ) {
+						$extendify_user_state[0] = '{}';
+					}
+
+					$extendify_user_data                    = json_decode( $extendify_user_state[0], true );
+					$extendify_user_data['state']['apiKey'] = $redux_pro_key;
+
+					update_user_meta( get_current_user_id(), 'extendifysdk_user_data', wp_json_encode( $extendify_user_data ) );
+				} catch ( Exception $e ) {
+					// Just have it fail gracefully.
+				}
+				// Run this regardless. If the try/catch failed, better not to keep trying as something else is wrong.
+				// In that case we can expect them to come to support, and we can give them a fresh key.
+				update_user_option( get_current_user_id(), 'extendifysdk_redux_key_moved', true );
+			}
 		}
 	}
 }

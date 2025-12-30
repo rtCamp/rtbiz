@@ -16,13 +16,6 @@ if ( ! class_exists( 'Redux_Customizer_Control', false ) ) {
 	class Redux_Customizer_Control extends WP_Customize_Control {
 
 		/**
-		 * Redux ID.
-		 *
-		 * @var string
-		 */
-		public string $redux_id = '';
-
-		/**
 		 * Field render.
 		 */
 		public function render() {
@@ -51,7 +44,7 @@ if ( ! class_exists( 'Redux_Customizer_Control', false ) ) {
 						data-id="<?php echo esc_attr( $this->id ); ?>"
 						data-key="<?php echo esc_attr( str_replace( $opt_name . '-', '', $this->redux_id ) ); ?>"
 						class="redux-customizer-input"
-						id="customizer_control_id_<?php echo esc_attr( $this->redux_id ); ?>" <?php echo $this->get_link(); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						id="customizer_control_id_<?php echo esc_attr( $this->redux_id ); ?>" <?php echo esc_url( $this->link() ); ?>
 						value=""/>
 				<?php } ?>
 				<?php $this->render_content(); ?>
@@ -60,11 +53,11 @@ if ( ! class_exists( 'Redux_Customizer_Control', false ) ) {
 		}
 
 		/**
-		 * Render content hook.
+		 * Redner content hook.
 		 */
 		public function render_content() {
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
-			do_action( 'redux/customizer/control/render/' . $this->redux_id, $this );
+			do_action( 'redux/advanced_customizer/control/render/' . $this->redux_id, $this );
 		}
 
 		/**

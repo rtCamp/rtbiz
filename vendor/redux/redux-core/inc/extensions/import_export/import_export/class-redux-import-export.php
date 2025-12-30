@@ -19,24 +19,18 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 	 */
 	class Redux_Import_Export extends Redux_Field {
 
-		/**
-		 * Is field.
-		 *
-		 * @var bool
-		 */
-		public $is_field;
 
 		/**
 		 * Redux_Import_Export constructor.
 		 *
 		 * @param array  $field  Field array.
 		 * @param string $value  Value array.
-		 * @param object $redux ReduxFramework object.
+		 * @param object $parent ReduxFramework object.
 		 *
 		 * @throws ReflectionException .
 		 */
-		public function __construct( $field, $value, $redux ) {
-			parent::__construct( $field, $value, $redux );
+		public function __construct( $field, $value, $parent ) {
+			parent::__construct( $field, $value, $parent );
 
 			$this->is_field = $this->parent->extensions['import_export']->is_field;
 		}
@@ -68,7 +62,7 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 		public function render() {
 			$secret = wp_create_nonce( 'redux_io_' . $this->parent->args['opt_name'] );
 
-			// No errors, please.
+			// No errors please.
 			$defaults = array(
 				'full_width' => true,
 				'overflow'   => 'inherit',
@@ -76,6 +70,9 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 
 			$this->field = wp_parse_args( $this->field, $defaults );
 
+			$do_close = false;
+
+			$id = $this->parent->args['opt_name'] . '-' . $this->field['id'];
 			?>
 			<h4><?php esc_html_e( 'Import Options', 'redux-framework' ); ?></h4>
 			<p>
@@ -98,7 +95,7 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 					<?php // phpcs:ignore WordPress.NamingConventions.ValidHookName ?>
 					<?php echo esc_html( apply_filters( 'redux-import-file-description', esc_html__( 'Paste your clipboard data here.', 'redux-framework' ) ) ); ?>
 				</p>
-				<label for="import-code-value"></label><textarea
+				<textarea
 					id="import-code-value"
 					name="<?php echo esc_attr( $this->parent->args['opt_name'] ); ?>[import_code]"
 					class="large-text no-update" rows="3"></textarea>
@@ -140,7 +137,7 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 				</a>
 			</p>
 			<p></p>
-			<label for="redux-export-code"></label><textarea class="large-text no-update" id="redux-export-code" rows="1"></textarea>
+			<textarea class="large-text no-update" id="redux-export-code" rows="1"></textarea>
 			<?php
 		}
 
@@ -154,7 +151,7 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 		 */
 		public function enqueue() {
 			wp_enqueue_script(
-				'redux-extension-import-export',
+				'redux-extension-import-export-js',
 				$this->url . 'redux-import-export' . Redux_Functions::is_min() . '.js',
 				array(
 					'jquery',
@@ -165,21 +162,19 @@ if ( ! class_exists( 'Redux_Import_Export', false ) ) {
 			);
 
 			wp_localize_script(
-				'redux-extension-import-export',
+				'redux-extension-import-export-js',
 				'ImportExport',
 				array(
 					'unchanged_values' => esc_html__( 'Your panel has unchanged values, would you like to save them now?', 'redux-framework' ),
 				)
 			);
 
-			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_style(
-					'redux-import-export',
-					$this->url . 'redux-import-export.css',
-					array(),
-					Redux_Extension_Import_Export::$version
-				);
-			}
+			wp_enqueue_style(
+				'redux-import-export',
+				$this->url . 'redux-import-export.css',
+				array(),
+				Redux_Extension_Import_Export::$version
+			);
 		}
 	}
 }

@@ -5,8 +5,6 @@
  * @class Redux_Core
  * @version 4.0.0
  * @package Redux Framework
- *
- * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -27,7 +25,7 @@ if ( ! class_exists( 'Redux_Extension_Options_Object', false ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '4.0.0';
+		public static $version = '4.0';
 
 		/**
 		 * Set the name of the field.  Ideally, this will also be your extension's name.
@@ -35,30 +33,30 @@ if ( ! class_exists( 'Redux_Extension_Options_Object', false ) ) {
 		 *
 		 * @var string
 		 */
-		private string $field_name = 'options_object';
+		private $field_name = 'options_object';
 
 		/**
 		 * Is field bit.
 		 *
 		 * @var bool
 		 */
-		public bool $is_field = false;
+		public $is_field = false;
 
 		/**
-		 * Class Constructor. Defines the args for the extensions class
+		 * Class Constructor. Defines the args for the extions class
 		 *
 		 * @since       1.0.0
 		 * @access      public
 		 *
-		 * @param       object $redux Redux object.
+		 * @param       array $parent Redux object.
 		 *
 		 * @return      void
 		 */
-		public function __construct( $redux ) {
-			parent::__construct( $redux, __FILE__ );
+		public function __construct( $parent ) {
+			parent::__construct( $parent, __FILE__ );
 
 			$this->add_field( $this->field_name );
-			$this->is_field = Redux_Helpers::is_field_in_use( $redux, $this->field_name );
+			$this->is_field = Redux_Helpers::is_field_in_use( $parent, $this->field_name );
 
 			if ( ! $this->is_field && $this->parent->args['dev_mode'] && $this->parent->args['show_options_object'] ) {
 				$this->add_section();
@@ -66,7 +64,7 @@ if ( ! class_exists( 'Redux_Extension_Options_Object', false ) ) {
 		}
 
 		/**
-		 * Add section to panel.
+		 * Add sectio to panel.
 		 */
 		public function add_section() {
 			$this->parent->sections[] = array(
@@ -85,8 +83,8 @@ if ( ! class_exists( 'Redux_Extension_Options_Object', false ) ) {
 			);
 		}
 	}
-}
 
-if ( ! class_exists( 'ReduxFramework_Extension_options_object' ) ) {
-	class_alias( 'Redux_Extension_Options_Object', 'ReduxFramework_Extension_options_object' );
+	if ( ! class_exists( 'ReduxFramework_Extension_options_object' ) ) {
+		class_alias( 'Redux_Extension_Options_Object', 'ReduxFramework_Extension_options_object' );
+	}
 }

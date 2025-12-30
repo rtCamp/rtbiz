@@ -24,19 +24,10 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 		public $reload_fields = array();
 
 		/**
-		 * Redux_Required Constructor.
-		 *
-		 * @param object $parent ReduxFramework object.
-		 */
-		public function __construct( $parent = null ) {
-			parent::__construct( $parent );
-		}
-
-		/**
 		 * Checks dependencies between objects based on the $field['required'] array
 		 * If the array is set it needs to have exactly 3 entries.
-		 * The first entry describes which field should be monitored by the current field. e.g.: "content"
-		 * The second entry describes the comparison parameter. eg: "equals, not, is_larger, is_smaller, contains"
+		 * The first entry describes which field should be monitored by the current field. eg: "content"
+		 * The second entry describes the comparison parameter. eg: "equals, not, is_larger, is_smaller ,contains"
 		 * The third entry describes the value that we are comparing against.
 		 * Example: if the required array is set to array('content','equals','Hello World'); then the current
 		 * field will only be displayed if the field with id "content" has exactly the value "Hello World"
@@ -51,12 +42,12 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 			}
 
 			if ( ! empty( $field['required'] ) ) {
-				if ( ! isset( Redux_Core::$required_child[ $field['id'] ] ) ) {
-					Redux_Core::$required_child[ $field['id'] ] = array();
+				if ( ! isset( $core->required_child[ $field['id'] ] ) ) {
+					$core->required_child[ $field['id'] ] = array();
 				}
 
-				if ( ! isset( Redux_Core::$required[ $field['id'] ] ) ) {
-					Redux_Core::$required[ $field['id'] ] = array();
+				if ( ! isset( $core->required[ $field['id'] ] ) ) {
+					$core->required[ $field['id'] ] = array();
 				}
 
 				if ( is_array( $field['required'][0] ) ) {
@@ -68,10 +59,10 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 							$data['operation']  = $value[1];
 							$data['checkValue'] = $value[2];
 
-							Redux_Core::$required[ $data['parent'] ][ $field['id'] ][] = $data;
+							$core->required[ $data['parent'] ][ $field['id'] ][] = $data;
 
-							if ( ! in_array( $data['parent'], Redux_Core::$required_child[ $field['id'] ], true ) ) {
-								Redux_Core::$required_child[ $field['id'] ][] = $data;
+							if ( ! in_array( $data['parent'], $core->required_child[ $field['id'] ], true ) ) {
+								$core->required_child[ $field['id'] ][] = $data;
 							}
 
 							$this->check_required_dependencies( $core, $field, $data );
@@ -83,10 +74,10 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 					$data['operation']  = $field['required'][1];
 					$data['checkValue'] = $field['required'][2];
 
-					Redux_Core::$required[ $data['parent'] ][ $field['id'] ][] = $data;
+					$core->required[ $data['parent'] ][ $field['id'] ][] = $data;
 
-					if ( false === array_search( $data['parent'], array_column( Redux_Core::$required_child[ $field['id'] ], 'parent' ), true ) ) {
-						Redux_Core::$required_child[ $field['id'] ][] = $data;
+					if ( ! in_array( $data['parent'], $core->required_child[ $field['id'] ], true ) ) {
+						$core->required_child[ $field['id'] ][] = $data;
 					}
 
 					$this->check_required_dependencies( $core, $field, $data );
@@ -95,29 +86,27 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 		}
 
 		/**
-		 * Check field for required deps.
+		 * Check field for require deps.
 		 *
 		 * @param object $core  ReduxFramework core pointer.
 		 * @param array  $field Field array.
 		 * @param array  $data  Required data.
 		 */
 		private function check_required_dependencies( $core, array $field, array $data ) {
-			// The Required field must not be hidden. Otherwise, hide this one by default.
-			if ( ! in_array( $data['parent'], Redux_Core::$fields_hidden, true ) && ( ! isset( Redux_Core::$folds[ $field['id'] ] ) || 'hide' !== Redux_Core::$folds[ $field['id'] ] ) ) {
+			// required field must not be hidden. Otherwise, hide this one by default.
+			if ( ! in_array( $data['parent'], $core->fields_hidden, true ) && ( ! isset( $core->folds[ $field['id'] ] ) || 'hide' !== $core->folds[ $field['id'] ] ) ) {
 				if ( isset( $core->options[ $data['parent'] ] ) ) {
 					$return = $this->compare_value_dependencies( $core->options[ $data['parent'] ], $data['checkValue'], $data['operation'] );
-				} elseif ( isset( $core->options_defaults[ $data['parent'] ] ) ) {
-					$return = $this->compare_value_dependencies( $core->options_defaults[ $data['parent'] ], $data['checkValue'], $data['operation'] );
 				}
 			}
 
-			if ( ( isset( $return ) && $return ) && ( ! isset( Redux_Core::$folds[ $field['id'] ] ) || 'hide' !== Redux_Core::$folds[ $field['id'] ] ) ) {
-				Redux_Core::$folds[ $field['id'] ] = 'show';
+			if ( ( isset( $return ) && $return ) && ( ! isset( $core->folds[ $field['id'] ] ) || 'hide' !== $core->folds[ $field['id'] ] ) ) {
+				$core->folds[ $field['id'] ] = 'show';
 			} else {
-				Redux_Core::$folds[ $field['id'] ] = 'hide';
+				$core->folds[ $field['id'] ] = 'hide';
 
-				if ( ! in_array( $field['id'], Redux_Core::$fields_hidden, true ) ) {
-					Redux_Core::$fields_hidden[] = $field['id'];
+				if ( ! in_array( $field['id'], $core->fields_hidden, true ) ) {
+					$core->fields_hidden[] = $field['id'];
 				}
 			}
 		}
@@ -133,15 +122,16 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 		 */
 		public function compare_value_dependencies( $parent_value, $check_value, string $operation ): bool {
 			$return = false;
+
 			switch ( $operation ) {
 				case '=':
 				case 'equals':
 					$data['operation'] = '=';
 
 					if ( is_array( $parent_value ) ) {
-						foreach ( $parent_value as $val ) {
+						foreach ( $parent_value as $idx => $val ) {
 							if ( is_array( $check_value ) ) {
-								foreach ( $check_value as $v ) {
+								foreach ( $check_value as $i => $v ) {
 									if ( Redux_Helpers::make_bool_str( $val ) === Redux_Helpers::make_bool_str( $v ) ) {
 										$return = true;
 									}
@@ -154,7 +144,7 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 						}
 					} else {
 						if ( is_array( $check_value ) ) {
-							foreach ( $check_value as $v ) {
+							foreach ( $check_value as $i => $v ) {
 								if ( Redux_Helpers::make_bool_str( $parent_value ) === Redux_Helpers::make_bool_str( $v ) ) {
 									$return = true;
 								}
@@ -171,9 +161,9 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 				case 'not':
 					$data['operation'] = '!==';
 					if ( is_array( $parent_value ) ) {
-						foreach ( $parent_value as $val ) {
+						foreach ( $parent_value as $idx => $val ) {
 							if ( is_array( $check_value ) ) {
-								foreach ( $check_value as $v ) {
+								foreach ( $check_value as $i => $v ) {
 									if ( Redux_Helpers::make_bool_str( $val ) !== Redux_Helpers::make_bool_str( $v ) ) {
 										$return = true;
 									}
@@ -186,7 +176,7 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 						}
 					} else {
 						if ( is_array( $check_value ) ) {
-							foreach ( $check_value as $v ) {
+							foreach ( $check_value as $i => $v ) {
 								if ( Redux_Helpers::make_bool_str( $parent_value ) !== Redux_Helpers::make_bool_str( $v ) ) {
 									$return = true;
 								}
@@ -237,13 +227,15 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 					}
 
 					if ( is_array( $check_value ) ) {
-						foreach ( $check_value as $opt ) {
+						foreach ( $check_value as $idx => $opt ) {
 							if ( strpos( $parent_value, (string) $opt ) !== false ) {
 								$return = true;
 							}
 						}
-					} elseif ( strpos( $parent_value, (string) $check_value ) !== false ) {
-						$return = true;
+					} else {
+						if ( strpos( $parent_value, (string) $check_value ) !== false ) {
+							$return = true;
+						}
 					}
 
 					break;
@@ -254,13 +246,15 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 					}
 
 					if ( is_array( $check_value ) ) {
-						foreach ( $check_value as $opt ) {
+						foreach ( $check_value as $idx => $opt ) {
 							if ( strpos( $parent_value, (string) $opt ) === false ) {
 								$return = true;
 							}
 						}
-					} elseif ( strpos( $parent_value, (string) $check_value ) === false ) {
-						$return = true;
+					} else {
+						if ( strpos( $parent_value, (string) $check_value ) === false ) {
+							$return = true;
+						}
 					}
 
 					break;
@@ -277,7 +271,7 @@ if ( ! class_exists( 'Redux_Required', false ) ) {
 				case 'is_empty':
 				case 'empty':
 				case '!isset':
-					if ( empty( $parent_value ) ) {
+					if ( empty( $parent_value ) || '' === $parent_value ) {
 						$return = true;
 					}
 					break;

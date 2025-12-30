@@ -5,7 +5,7 @@
  *
  * @author        Redux Framework
  * @package       ReduxFramework/Templates
- * @version:      4.4.2
+ * @version:      4.0.0
  */
 
 ?>
@@ -28,6 +28,7 @@
 			}
 			?>
 		</div>
+		<div class="redux-ajax-loading" alt="<?php esc_attr_e( 'Working...', 'redux-framework' ); ?>">&nbsp;</div>
 		<div class="clear"></div>
 	</div>
 

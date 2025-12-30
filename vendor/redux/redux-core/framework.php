@@ -2,7 +2,7 @@
 /**
  * Redux Framework is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License or
+ * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
  * Redux Framework is distributed in the hope that it will be useful,
@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with Redux Framework. If not, see <https://www.gnu.org/licenses/>.
+ * along with Redux Framework. If not, see <http://www.gnu.org/licenses/>.
  *
  * The addition of the noinspection tags is because there are devs writing their
  * in-house extensions improperly, and we have to compensate for that.
@@ -22,19 +22,15 @@
  *
  * @noinspection PhpMissingParamTypeInspection
  * @noinspection PhpMissingReturnTypeInspection
- * @noinspection PhpUnhandledExceptionInspection
- * @noinspection PhpDeprecationInspection
- * @noinspection PhpUnused
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-require_once __DIR__ . '/class-redux-core.php';
+require_once dirname( __FILE__ ) . '/class-redux-core.php';
 
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Variable is inside a prefixed class.
-Redux_Core::$version    = '4.5.9.2';
-Redux_Core::$redux_path = __DIR__;
+Redux_Core::$version    = '4.3.1.1';
+Redux_Core::$redux_path = dirname( __FILE__ );
 Redux_Core::instance();
 
 // Don't duplicate me!
@@ -50,65 +46,55 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		/**
 		 * ReduxFramework instance storage.
 		 *
-		 * @var null|ReduxFramework
+		 * @var null
 		 * @access public
 		 */
-		public static ?ReduxFramework $instance;
+		public static $instance = null;
 
 		/**
 		 * Redux current version.
 		 *
 		 * @var string
 		 * @access public
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public static string $_version = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_version = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Absolute directory of the Redux instance.
 		 *
 		 * @var string
 		 * @access public
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public static string $_dir = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_dir = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Full URL of the Redux instance.
 		 *
 		 * @var string
 		 * @access public
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public static string $_url = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_url = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Current WordPress upload directory.
 		 *
 		 * @var string
 		 * @access public
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public static string $_upload_dir = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_upload_dir = ''; // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Current WordPress upload URL
 		 *
 		 * @var string
 		 * @access public
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public static string $_upload_url; // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_upload_url; // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Init
 		 *
-		 * Backward compatibility for previous versions of Redux.
+		 * Backward compatibility for previous version of Redux.
 		 */
 		public static function init() {
 
@@ -125,258 +111,263 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		/**
 		 * Array of field arrays.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $fields = array();
-
-		/**
-		 * Array of field sections.
-		 *
-		 * @var null|array
-		 */
-		public ?array $field_sections = array();
-
-		/**
-		 * Array of field types.
-		 *
-		 * @var null|array
-		 */
-		public ?array $field_types = array();
-
-		/**
-		 * Array of field heads.
-		 *
-		 * @var null|array
-		 */
-		public ?array $field_head = array();
+		public $fields = array();
 
 		/**
 		 * Array of extensions by type used in the panel.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $extensions = array();
+		public $extensions = array();
 
 		/**
 		 * Array of sections and fields arrays.
 		 *
-		 * @var null|array
+		 * @var array|mixed|void
 		 */
-		public ?array $sections = array();
+		public $sections = array();
 
 		/**
 		 * Array of generated errors from the panel for localization.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $errors = array();
+		public $errors = array();
 
 		/**
 		 * Array of generated warnings from the panel for localization.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $warnings = array();
+		public $warnings = array();
 
 		/**
 		 * Array of generated sanitize notices from the panel for localization.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $sanitize = array();
+		public $sanitize = array();
 
 		/**
 		 * Array of current option values.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $options = array();
+		public $options = array();
 
 		/**
 		 * Array of option defaults.
 		 *
-		 * @var null|array
+		 * @var null
 		 */
-		public ?array $options_defaults = null;
+		public $options_defaults = null;
 
 		/**
 		 * Array of fields set to trigger the compiler hook.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $compiler_fields = array();
+		public $compiler_fields = array();
+
+		/**
+		 * Field folding information for localization.
+		 *
+		 * @var array
+		 */
+		public $required = array();
+
+		/**
+		 * Field child folding information for localization.
+		 *
+		 * @var array
+		 */
+		public $required_child = array();
+
+		/**
+		 * Array of fonts used by the panel for localization.
+		 *
+		 * @var array
+		 */
+		public $fonts = array();
+
+		/**
+		 * Array of fields to be folded.
+		 *
+		 * @var array
+		 */
+		public $folds = array();
 
 		/**
 		 * Array of fields with CSS output selectors.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $output = array();
+		public $output = array();
 
 		/**
-		 * Autogenerated CSS appended to the header (snake case maintained for backward compatibility).
+		 * Autogenerated CSS appended to the header (snake case mantained for backward compatibility).
 		 *
-		 * @var null|string
+		 * @var string
 		 */
-		public ?string $outputCSS = ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+		public $outputCSS = ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 
 		/**
 		 * Autogenerated variables appended to dynamic output.
 		 *
-		 * @var null|array
+		 * @var array
 		 */
-		public ?array $output_variables = array();
+		public $output_variables = array();
 
 		/**
 		 * CSS sent to the compiler hook (snake case maintained for backward compatibility).
 		 *
-		 * @var null|string
+		 * @var string
 		 */
-		public ?string $compilerCSS = ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+		public $compilerCSS = ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+
+		/**
+		 * Array of fields that didn't pass the fold dependency test and are hidden.
+		 *
+		 * @var array
+		 */
+		public $fields_hidden = array();
+
+		/**
+		 * Array of fields to use as pointers in extensions.
+		 *
+		 * @var array
+		 */
+		public $field_sections = array();
+
+		/**
+		 * Values to generate google font CSS.
+		 *
+		 * @var string
+		 */
+		public $typography = array();
 
 		/**
 		 * Array of global arguments.
 		 *
-		 * @var array|null
+		 * @var array|mixed
 		 */
-		public ?array $args = array();
+		public $args = array();
 
 		/**
 		 * Used in customizer hooks.
 		 *
-		 * @var null|string
+		 * @var string
 		 */
-		public ?string $old_opt_name = '';
+		public $old_opt_name = '';
+
+		/**
+		 * File system object usedfor I/O file operations.  DOnr the WordPress way.
+		 *
+		 * @var null|object
+		 */
+		public $filesystem = null;
+
+		/**
+		 * Array of various font groups used within the typography field.
+		 *
+		 * @var array
+		 */
+		public $font_groups = array();
 
 		/**
 		 * Pointer to the Redux_Options_Default class.
 		 *
 		 * @var null|Redux_Options_Defaults
 		 */
-		public ?Redux_Options_Defaults $options_defaults_class = null;
+		public $options_defaults_class = null;
 
 		/**
 		 * Pointer to the Redux_Options class.
 		 *
-		 * @var null|Redux_Options_Constructor
+		 * @var null|Redux_Options
 		 */
-		public ?Redux_Options_Constructor $options_class = null;
+		public $options_class = null;
 
 		/**
 		 * Pointer to the Redux_Required class
 		 *
 		 * @var null|Redux_Required
 		 */
-		public ?Redux_Required $required_class = null;
+		public $required_class = null;
 
 		/**
 		 * Pointer to the Redux_Output class.
 		 *
 		 * @var null|Redux_Output
 		 */
-		public ?Redux_Output $output_class = null;
+		public $output_class = null;
 
 		/**
 		 * Pointer to the Redux_Page_Render class.
 		 *
 		 * @var null|Redux_Page_Render
 		 */
-		public ?Redux_Page_Render $render_class = null;
+		public $render_class = null;
 
 		/**
 		 * Pointer to the Redux_Enqueue class.
 		 *
 		 * @var null|Redux_Enqueue
 		 */
-		public ?Redux_Enqueue $enqueue_class = null;
+		public $enqueue_class = null;
 
 		/**
 		 * Pointer to the Redux_Transients class.
 		 *
 		 * @var null|Redux_Transients
 		 */
-		public ?Redux_Transients $transient_class = null;
+		public $transient_class = null;
 
 		/**
 		 * Pointer to the Redux_wordPress_Data class.
 		 *
 		 * @var null|Redux_WordPress_Data
 		 */
-		public ?Redux_WordPress_Data $wordpress_data = null;
+		public $wordpress_data = null;
 
 		/**
-		 * Pointer to the Redux_Validation class.
+		 * Poiner to the Redux_Validation class.
 		 *
 		 * @var null|Redux_Validation
 		 */
-		public ?Redux_Validation $validate_class = null;
+		public $validate_class = null;
 
 		/**
-		 * Pointer to the Redux_Sanitize class.
+		 * Poiner to the Redux_Sanitize class.
 		 *
-		 * @var null|Redux_Sanitize
+		 * @var null|Redux_Validation
 		 */
-		public ?Redux_Sanitize $sanitize_class = null;
+		public $sanitize_class = null;
 
 		/**
 		 * Pointer to the Redux_Args class.
 		 *
 		 * @var null|Redux_Args
 		 */
-		public ?Redux_Args $args_class = null;
+		public $args_class = null;
 
 		/**
 		 * Array of active transients used by Redux.
 		 *
-		 * @var null|mixed
+		 * @var araray
 		 */
 		public $transients = array();
 
 		/**
-		 * Array of localized repeater data.
-		 *
-		 * @var null|array
-		 */
-		public ?array $repeater_data = array();
-
-		/**
-		 * Array of localized data.
-		 *
-		 * @var null|array
-		 */
-		public ?array $localize_data = array();
-
-		/**
-		 * Array of checked transients used by Redux.
-		 *
-		 * @var null|mixed
-		 */
-		public $transients_check = array();
-
-		/**
-		 * Never save to DB flag for metaboxes.
-		 *
-		 * @var bool
-		 */
-		public bool $never_save_to_db;
-
-		/**
-		 * File system object used for I/O file operations.  Done the WordPress way.
-		 *
-		 * @var null|object
-		 *
-		 * @deprecated 4.5.1
-		 */
-		public ?object $filesystem;
-
-		/**
 		 * Deprecated shim for v3 templates.
 		 *
-		 * @var null|array
+		 * @var array
 		 *
 		 * @deprecated 4.0.0
 		 */
-		public ?array $hidden_perm_sections = array();
+		public $hidden_perm_sections = array();
 
 		/**
 		 * Deprecated shim for v3 as plugin check.
@@ -385,7 +376,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 *
 		 * @deprecated 4.0.0
 		 */
-		public static bool $_as_plugin = false;  // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_as_plugin = false;  // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Deprecated shim for v3 as plugin check.
@@ -394,7 +385,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 *
 		 * @deprecated 4.0.0
 		 */
-		public static bool $_is_plugin = false;  // phpcs:ignore PSR2.Classes.PropertyDeclaration
+		public static $_is_plugin = false;  // phpcs:ignore PSR2.Classes.PropertyDeclaration
 
 		/**
 		 * Cloning is forbidden.
@@ -406,7 +397,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		}
 
 		/**
-		 * Un-serializing instances of this class are forbidden.
+		 * Unserializing instances of this class is forbidden.
 		 *
 		 * @since 4.0.0
 		 */
@@ -415,26 +406,12 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		}
 
 		/**
-		 * Add a deprecating notice for all the old themes that still use this method..
-		 *
-		 * @param object $filesystem Filesystem object.
-		 *
-		 * @since 4.0.0
-		 */
-		private function deprecated_filesystem( $filesystem ) {
-			// _deprecated_function( esc_html__( 'The global variable "$filesystem" of the ReduxFramework object', 'redux-framework' ), '4.5.1', 'Redux_Core::$filesystem' );
-
-			return $filesystem;
-		}
-
-		/**
 		 * Class Constructor. Defines the args for the theme options class
 		 *
-		 * @param array $sections Panel sections.
-		 * @param array $args     Class constructor arguments.
-		 *
-		 * @throws ReflectionException Exception.
 		 * @since       1.0.0
+		 *
+		 * @param       array $sections Panel sections.
+		 * @param       array $args     Class constructor arguments.
 		 */
 		public function __construct( array $sections = array(), array $args = array() ) {
 			global $pagenow;
@@ -449,7 +426,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 				return;
 			}
 
-			if ( empty( $args ) || ( empty( $args['opt_name'] ) ) ) {
+			if ( empty( $args ) || ! isset( $args['opt_name'] ) || ( isset( $args['opt_name'] ) && empty( $args['opt_name'] ) ) ) {
 				return;
 			}
 
@@ -470,16 +447,14 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 			$this->args_class = $args;
 			$this->args       = $args->get;
 
-			Redux_Core::core_construct( $this );
+			Redux_Core::core_construct( $this, $this->args );
 
 			new Redux_Admin_Notices( $this );
 
 			if ( ! empty( $this->args['opt_name'] ) ) {
 				new Redux_Instances( $this );
 
-				Redux_Core::$filesystem = Redux_Filesystem::get_instance( $this );
-
-				$this->filesystem = $this->deprecated_filesystem( Redux_Core::$filesystem );
+				$this->filesystem = Redux_Filesystem::get_instance( $this );
 
 				/**
 				 * Filter 'redux/options/{opt_name}/sections'
@@ -500,7 +475,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
 				do_action( 'redux/construct', $this );
 
-				// Internationalization.
+				// Internataionalization.
 				new Redux_I18n( $this, __FILE__ );
 
 				$this->required_class  = new Redux_Required( $this );
@@ -524,6 +499,7 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 				new Redux_AJAX_Save( $this );
 				new Redux_AJAX_Typography( $this );
 				new Redux_AJAX_Select2( $this );
+				new Redux_Health( $this );
 			}
 
 			/**
@@ -543,12 +519,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 
 		/**
 		 * SHIM: _register_settings
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _register_settings() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->register()' );
-
 			$this->options_class->register();
 		}
 
@@ -557,12 +529,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 *
 		 * @param array        $field Field array.
 		 * @param string|array $v     Field values.
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _field_input( array $field, $v = null ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'render_class->field_input( $field, $value )' );
-
 			$this->render_class->field_input( $field, $v );
 		}
 
@@ -570,12 +538,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * SHIM: field_default_values
 		 *
 		 * @param array $field Field array.
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function field_default_values( array $field ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_defaults_class->field_default_values( $opt_name, $field )' );
-
 			$this->options_defaults_class->field_default_values( '', $field );
 		}
 
@@ -583,23 +547,15 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * SHIM: set_options
 		 *
 		 * @param string|array $value Option values.
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function set_options( $value ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->set( $value )' );
-
 			$this->options_class->set( $value );
 		}
 
 		/**
 		 * SHIM: get_options
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function get_options() {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->get()' );
-
 			$this->options_class->get();
 		}
 
@@ -607,21 +563,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * SHIM: _default_values
 		 *
 		 * @return array
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _default_values() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->default_values()' );
-
-			return $this->default_values();
-		}
-
-		/**
-		 * Get default values.
-		 *
-		 * @return array
-		 */
-		public function default_values() {
 			if ( ! isset( $this->options_class ) ) {
 				$this->options_defaults_class = new Redux_Options_Defaults();
 				$this->options_class          = new Redux_Options_Constructor( $this );
@@ -634,25 +577,15 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * SHIM: check_dependencies
 		 *
 		 * @param array $field Field array.
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function check_dependencies( array $field ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'required_class->check_dependencies( $field )' );
-
 			$this->required_class->check_dependencies( $field );
 		}
 
 		/**
 		 * SHIM: _enqueue_output
-		 *
-		 * @throws ReflectionException Exception.
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _enqueue_output() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'output_class->enqueue()' );
-
 			if ( empty( $this->output_class ) ) {
 				$obj          = new ReduxFramework( $this->sections, $this->args );
 				$obj->options = $this->options;
@@ -665,21 +598,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 
 		/**
 		 * SHIM: _enqueue
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _enqueue() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'enqueue_class->init()' );
-
-			$this->enqueue_class->init();
-		}
-
-		/**
-		 * _enqueue replacement.
-		 *
-		 * @return void
-		 */
-		public function init_enqueue() {
 			$this->enqueue_class->init();
 		}
 
@@ -689,12 +609,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @since       1.0.0
 		 * @access      public
 		 * @return      void
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function generate_panel() {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'render_class->generate_panel()' );
-
 			$this->render_class->generate_panel();
 		}
 
@@ -705,12 +621,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param bool   $array_key Flag to determine array status.
 		 *
 		 * @return array
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function get_default_values( $key, $array_key = false ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->get_default_value( $key, $array_key )' );
-
 			if ( ! isset( $this->options_class ) ) {
 				$this->options_defaults_class = new Redux_Options_Defaults();
 				$this->options_class          = new Redux_Options_Constructor( $this );
@@ -726,12 +638,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param bool   $array_key Flag to determine array status.
 		 *
 		 * @return array
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function get_default_value( $key, $array_key = false ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'options_class->get_default_value( $key, $array_key )' );
-
 			if ( ! isset( $this->options_class ) ) {
 				$this->options_defaults_class = new Redux_Options_Defaults();
 				$this->options_class          = new Redux_Options_Constructor( $this );
@@ -748,12 +656,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param string|array $current_value Current value.
 		 *
 		 * @return array|mixed|string|void
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function get_wordpress_data( $type = false, $args = array(), $current_value = null ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'wordpress_data->get( $type, $args, $opt_name, $value )' );
-
 			return $this->wordpress_data->get( $type, $args, $this->args['opt_name'], $current_value );
 		}
 
@@ -765,29 +669,20 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param array $sections       Sections array.
 		 *
 		 * @return array
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function _validate_values( $plugin_options, $options, $sections ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-			_deprecated_function( __FUNCTION__, '4.0.0', 'validate_class->validate( $plugin_options, $options, $sections )' );
-
 			if ( ! isset( $this->validate_class ) ) {
 				$this->validate_class = new Redux_Validation( $this );
 			}
-
-			return $this->validate_class->validate( $plugin_options, $options, $sections );
+				return $this->validate_class->validate( $plugin_options, $options, $sections );
 		}
 
 		/**
 		 * SHIM: set_transients
 		 *
 		 * @return void
-		 *
-		 * @deprecated 4.0.0
 		 */
-		public function set_transients() {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'Please update the extension that uses this deprecated function.' );
-		}
+		public function set_transients() {}
 
 		/**
 		 * SHIM: section_menu
@@ -798,12 +693,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param array  $sections Section array.
 		 *
 		 * @return string
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function section_menu( $k, $section, $suffix = '', $sections = array() ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'render_class->section_menu( $index, $section, $suffix, $sections )' );
-
 			return $this->render_class->section_menu( $k, $section, $suffix, $sections );
 		}
 
@@ -813,12 +704,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param array $field Field array.
 		 *
 		 * @return string
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function get_header_html( $field ) {
-			_deprecated_function( __FUNCTION__, '4.0.0', 'render_class->get_header_html( $field )' );
-
 			return $this->render_class->get_header_html( $field );
 		}
 
@@ -828,8 +715,6 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		 * @param string $permission User permission.
 		 *
 		 * @return bool
-		 *
-		 * @deprecated 4.0.0
 		 */
 		public function current_user_can( $permission ) {
 			_deprecated_function( __FUNCTION__, '4.0.0', 'Redux_Helpers::current_user_can' );
@@ -851,22 +736,22 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 		}
 
 		/**
-		 * →get(); This is used to return and option value from the option array
+		 * ->get(); This is used to return and option value from the options array
 		 *
 		 * @since       1.0.0
 		 * @access      public
 		 *
 		 * @param       string $opt_name The option name to return.
-		 * @param       mixed  $defaults (null) The value to return if an option isn't set.
+		 * @param       mixed  $default  (null) The value to return if option not set.
 		 *
 		 * @return      mixed
 		 */
-		public function get( string $opt_name, $defaults = null ) {
-			return ( ! empty( $this->options[ $opt_name ] ) ) ? $this->options[ $opt_name ] : $this->options_class->get_default( $opt_name, $defaults );
+		public function get( string $opt_name, $default = null ) {
+			return ( ! empty( $this->options[ $opt_name ] ) ) ? $this->options[ $opt_name ] : $this->options_class->get_default( $opt_name, $default );
 		}
 
 		/**
-		 * →set(); This is used to set an arbitrary option in the option array
+		 * ->set(); This is used to set an arbitrary option in the options array
 		 *
 		 * @since       1.0.0
 		 * @access      public
@@ -888,6 +773,8 @@ if ( ! class_exists( 'ReduxFramework', false ) ) {
 
 	/**
 	 * Action 'redux/init'
+	 *
+	 * @param null
 	 */
 	do_action( 'redux/init' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
 }

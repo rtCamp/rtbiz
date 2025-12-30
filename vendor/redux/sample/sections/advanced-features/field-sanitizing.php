@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework field sanitizing config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -40,7 +39,7 @@ Redux::set_section(
 				'id'       => 'opt-text-custom-sanitize',
 				'type'     => 'text',
 				'title'    => esc_html__( 'Text Option - Custom Sanitize', 'your-textdomain-here' ),
-				'subtitle' => esc_html__( 'Uses the custom function redux_custom_sanitize to capitalize every other letter.', 'your-textdomain-here' ),
+				'subtitle' => esc_html__( 'Uses the custom function redux_custom_santize to capitalize every other letter.', 'your-textdomain-here' ),
 				'desc'     => esc_html__( 'This is the description field, again good for additional info.', 'your-textdomain-here' ),
 				'sanitize' => array( 'redux_custom_sanitize' ),
 				'default'  => 'Sanitize This Text',
@@ -48,4 +47,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

@@ -1,6 +1,6 @@
 <?php
 /**
- * Redux Full_Package Class
+ * Redux Full_Pakage Class
  *
  * @class Redux_Full_Package
  * @version 3.0.0
@@ -19,7 +19,7 @@ class Redux_Full_Package implements themecheck {
 	 *
 	 * @var array $error Error storage.
 	 */
-	protected array $error = array();
+	protected $error = array();
 
 	/**
 	 * Check files.
@@ -30,7 +30,7 @@ class Redux_Full_Package implements themecheck {
 	 *
 	 * @return bool
 	 */
-	public function check( $php_files, $css_files, $other_files ): bool {
+	public function check( $php_files, $css_files, $other_files ) {
 
 		$ret = true;
 
@@ -40,9 +40,14 @@ class Redux_Full_Package implements themecheck {
 		if ( $redux ) {
 
 			$blacklist = array(
+				'.tx'                              => esc_html__( 'Redux localization utilities', 'redux-framework' ),
+				'bin'                              => esc_html__( 'Redux Resting Diles', 'redux-framework' ),
 				'codestyles'                       => esc_html__( 'Redux Code Styles', 'redux-framework' ),
+				'tests'                            => esc_html__( 'Redux Unit Testing', 'redux-framework' ),
 				'class-redux-framework-plugin.php' => esc_html__( 'Redux Plugin File', 'redux-framework' ),
-				'.travis.yml'                      => esc_html__( 'CI Testing File', 'redux-framework' ),
+				'bootstrap_tests.php'              => esc_html__( 'Redux Boostrap Tests', 'redux-framework' ),
+				'.travis.yml'                      => esc_html__( 'CI Testing FIle', 'redux-framework' ),
+				'phpunit.xml'                      => esc_html__( 'PHP Unit Testing', 'redux-framework' ),
 			);
 
 			$errors = array();
@@ -55,7 +60,7 @@ class Redux_Full_Package implements themecheck {
 			}
 
 			if ( ! empty( $errors ) ) {
-				$error  = '<span class="tc-lead tc-required">REQUIRED</span> ' . esc_html__( 'It appears that you have embedded the full Redux package inside your theme. You need only embed the', 'redux-framework' ) . ' <strong>redux-core</strong> ' . esc_html__( 'folder. Embedding anything else will get your rejected from theme submission. Suspected Redux package file(s):', 'redux-framework' );
+				$error  = '<span class="tc-lead tc-required">REQUIRED</span> ' . esc_html__( 'It appears that you have embedded the full Redux package inside your theme. You need only embed the', 'redux-framework' ) . ' <strong>Redux_Core</strong> ' . esc_html__( 'folder. Embedding anything else will get your rejected from theme submission. Suspected Redux package file(s):', 'redux-framework' );
 				$error .= '<ol>';
 
 				foreach ( $errors as $key => $e ) {
@@ -76,10 +81,9 @@ class Redux_Full_Package implements themecheck {
 	 *
 	 * @return array
 	 */
-	public function getError(): array {
+	public function getError() {
 		return $this->error;
 	}
 }
 
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- WordPress global. Cannot be changed.
 $themechecks[] = new Redux_Full_Package();

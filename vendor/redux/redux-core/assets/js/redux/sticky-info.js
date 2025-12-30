@@ -1,36 +1,33 @@
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.stickyInfo = function () {
-		const sticky      = $( '#redux-sticky' );
-		const infoBar     = $( '#info_bar' );
-		const reduxFooter = $( '#redux-footer' );
-		const stickyWidth = $( '.redux-main' ).innerWidth() - 20;
-		const $width      = sticky.offset().left;
+	$.redux.stickyInfo = function() {
+		var stickyWidth = $( '.redux-main' ).innerWidth() - 20;
+		var $width      = $( '#redux-sticky' ).offset().left;
 
 		$( '.redux-save-warn' ).css( 'left', $width + 'px' );
 
-		if ( ! infoBar.isOnScreen() && ! $( '#redux-footer-sticky' ).isOnScreen() ) {
-			reduxFooter.css(
+		if ( ! $( '#info_bar' ).isOnScreen() && ! $( '#redux-footer-sticky' ).isOnScreen() ) {
+			$( '#redux-footer' ).css(
 				{ position: 'fixed', bottom: '0', width: stickyWidth, right: 21 }
 			);
 
-			reduxFooter.addClass( 'sticky-footer-fixed' );
+			$( '#redux-footer' ).addClass( 'sticky-footer-fixed' );
 			$( '#redux-sticky-padder' ).show();
 		} else {
-			reduxFooter.css(
+			$( '#redux-footer' ).css(
 				{ background: '#eee', position: 'inherit', bottom: 'inherit', width: 'inherit' }
 			);
 
 			$( '#redux-sticky-padder' ).hide();
-			reduxFooter.removeClass( 'sticky-footer-fixed' );
+			$( '#redux-footer' ).removeClass( 'sticky-footer-fixed' );
 		}
-		if ( ! infoBar.isOnScreen() ) {
-			sticky.addClass( 'sticky-save-warn' );
+		if ( ! $( '#info_bar' ).isOnScreen() ) {
+			$( '#redux-sticky' ).addClass( 'sticky-save-warn' );
 		} else {
-			sticky.removeClass( 'sticky-save-warn' );
+			$( '#redux-sticky' ).removeClass( 'sticky-save-warn' );
 		}
 	};
 })( jQuery );

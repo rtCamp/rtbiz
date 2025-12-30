@@ -9,7 +9,7 @@
             input.spinner-input {
                 margin-right: 30px !important;
                 margin-left: 30px !important;
-                margin-top: 0 !important;
+                margin-top: 0px !important;
             }
 
             .redux-container-editor {
@@ -19,13 +19,8 @@
             }
         }
     }
-
     .redux-section.open .redux-group-tab {
         display: block !important;
-
-        &.hide {
-            display:none!important;
-        }
     }
 
     .redux-section {
@@ -54,31 +49,10 @@
         }
     }
 
-    .redux-section,
-    .redux-panel {
-        .accordion-section-title {
-            button.accordion-trigger {
-                all: unset;
-                padding: 10px 0 11px 4px;
-                display: inline-flex;
-                width: calc(100% - 50px);
-            }
-        }
-    }
-
-    .accordion-section-title button.accordion-trigger {
-        height:auto;
-    }
-
     .redux-section .accordion-section-title i,
     .redux-field .accordion-field-title i,
     .redux-panel .accordion-section-title i {
         margin-right: 5px;
-        margin-left: 12px;
-
-        &.legacy {
-            margin-left: 0!important;
-        }
     }
 
     .accordion-section.redux-main {
@@ -92,7 +66,7 @@
     }
 
     .redux_field_th {
-        padding: 13px 0 0 0;
+        padding: 13px 0px 0px 0px;
     }
 
     .redux-main {

@@ -54,7 +54,7 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			$this->field['options'] = isset( $this->field['options'] ) ? wp_parse_args( $this->field['options'], $option_defaults ) : $option_defaults;
 
-			// Convert an empty array to null, if there.
+			// Convert empty array to null, if there.
 			$this->field['options']['palette'] = empty( $this->field['options']['palette'] ) ? null : $this->field['options']['palette'];
 
 			$this->field['output_transparent'] = $this->field['output_transparent'] ?? false;
@@ -161,8 +161,8 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			// Field dependent JS.
 			wp_enqueue_script(
-				'redux-field-color-rgba',
-				Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba' . $min . '.js',
+				'redux-field-color-rgba-js',
+				Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-spectrum-js', 'redux-js' ),
 				$this->timestamp,
 				true
@@ -175,7 +175,7 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-color-rgba',
+					'redux-field-color-rgba-css',
 					Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba.css',
 					array(),
 					$this->timestamp
@@ -185,7 +185,7 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 		/**
 		 * -> getColorVal.  Returns formatted color val in hex or rgba.
-		 * If this field requires any scripts or css, define this function and register/enqueue the scripts/css
+		 * If this field requires any scripts, or css define this function and register/enqueue the scripts/css
 		 *
 		 * @since       1.0.0
 		 * @access      private
@@ -210,6 +210,7 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 					} elseif ( 'color' === $id ) {
 						$color = ! empty( $val ) ? $val : '';
 					} elseif ( 'rgba' === $id ) {
+						$rgba = ! empty( $val ) ? $val : '';
 						$rgba = Redux_Helpers::hex2rgba( $color, $alpha );
 					}
 				}
