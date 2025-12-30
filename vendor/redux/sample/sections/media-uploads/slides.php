@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework slides config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -21,7 +20,7 @@ Redux::set_section(
 				'id'          => 'opt-slides',
 				'type'        => 'slides',
 				'title'       => esc_html__( 'Slides Options', 'your-textdomain-here' ),
-				'subtitle'    => esc_html__( 'Unlimited slides with drag and drop sorting.', 'your-textdomain-here' ),
+				'subtitle'    => esc_html__( 'Unlimited slides with drag and drop sortings.', 'your-textdomain-here' ),
 				'desc'        => esc_html__( 'This field will store all slides values into a multidimensional array to use into a foreach loop.', 'your-textdomain-here' ),
 				'placeholder' => array(
 					'title'       => esc_html__( 'This is a title', 'your-textdomain-here' ),
@@ -32,4 +31,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

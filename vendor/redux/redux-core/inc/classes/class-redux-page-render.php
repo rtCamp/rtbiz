@@ -5,8 +5,6 @@
  * @class Redux_Page_Render
  * @version 3.0.0
  * @package Redux Framework/Classes
- * @noinspection HtmlUnknownAttribute
- * @noinspection PhpConditionCheckedByNextConditionInspection
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,7 +17,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 	class Redux_Page_Render extends Redux_Class {
 
 		/**
-		 * Flag to show or hide hints in a panel.
+		 * Flag to show or hide hints in panel.
 		 *
 		 * @var bool
 		 * @access private
@@ -37,19 +35,19 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		/**
 		 * Redux_Page_Render constructor.
 		 *
-		 * @param object $redux ReduxFramework pointer.
+		 * @param object $parent ReduxFramework pointer.
 		 */
-		public function __construct( $redux ) {
-			parent::__construct( $redux );
+		public function __construct( $parent ) {
+			parent::__construct( $parent );
 
 			// phpcs:ignore Generic.Strings.UnnecessaryStringConcat
-			add_action( 'admin' . '_bar' . '_menu', array( $this, 'add_menu' ), $redux->args['admin_bar_priority'] );
+			add_action( 'admin' . '_bar' . '_menu', array( $this, 'add_menu' ), $parent->args['admin_bar_priority'] );
 
 			// Options page.
 			add_action( 'admin_menu', array( $this, 'options_page' ) );
 
 			// Add a network menu.
-			if ( 'network' === $redux->args['database'] && $redux->args['network_admin'] ) {
+			if ( 'network' === $parent->args['database'] && $parent->args['network_admin'] ) {
 				add_action( 'network_admin_menu', array( $this, 'options_page' ) );
 			}
 		}
@@ -81,7 +79,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 						'generate_panel',
 					),
 					$core->args['menu_icon'],
-					(int) $core->args['page_priority']
+					$core->args['page_priority']
 				);
 
 				if ( true === $core->args['allow_sub_menu'] ) {
@@ -156,8 +154,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 			if ( true === $this->show_hints ) {
 				global $current_user;
 
-				$cur_page = '';
-
 				// Users enable/disable hint choice.
 				$hint_status = get_user_meta( $current_user->ID, 'ignore_hints' ) ? get_user_meta( $current_user->ID, 'ignore_hints', true ) : 'true';
 
@@ -191,7 +187,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				}
 
 				// Construct message.
-				// translators: %1$s: Mouse action.  %2$s: Hint status.
+				// translators: %1$s: Mousr action.  %2$s: Hint status.
 				$msg = sprintf( esc_html__( 'Hints are tooltips that popup when %1$s the hint icon, offering addition information about the field in which they appear.  They can be %2$s by using the link below.', 'redux-framework' ), $event, Redux_Core::strtolower( $s ) ) . '<br/><br/>' . $url;
 
 				// Construct hint tab.
@@ -207,13 +203,14 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 			// Sidebar text.
 			if ( '' !== $core->args['help_sidebar'] ) {
 
-				// Specify user's text from arguments.
+				// Specify users text from arguments.
 				$screen->set_help_sidebar( $core->args['help_sidebar'] );
-			} elseif ( true === $this->show_hints ) {
-				// If a sidebar text is empty and hints are active, display text
+			} else {
+				// If sidebar text is empty and hints are active, display text
 				// about hints.
-
-				$screen->set_help_sidebar( '<p><strong>Redux Framework</strong><br/><br/>' . esc_html__( 'Hint Tooltip Preferences', 'redux-framework' ) . '</p>' );
+				if ( true === $this->show_hints ) {
+					$screen->set_help_sidebar( '<p><strong>Redux Framework</strong><br/><br/>' . esc_html__( 'Hint Tooltip Preferences', 'redux-framework' ) . '</p>' );
+				}
 			}
 
 			/**
@@ -227,9 +224,9 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		}
 
 		/**
-		 * Class Add Sub Menu Function, creates option submenu in WordPress admin area.
+		 * Class Add Sub Menu Function, creates options submenu in WordPress admin area.
 		 *
-		 * @param       object $core ReduxFramework core pointer.
+		 * @param       object $core ReduxFrameword core pointer.
 		 *
 		 * @since       3.1.9
 		 * @access      private
@@ -272,8 +269,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				);
 			} else {
 				// Network settings and Post type menus. These do not have
-				// wrappers and need to be appended to using add_submenu_page.
-				// Okay, since we've left the post-type menu appending
+				// wrappers and need to be appened to using add_submenu_page.
+				// Okay, since we've left the post type menu appending
 				// as default, we need to validate it, so anything that
 				// isn't post_type=<post_type> doesn't get through and mess
 				// things up.
@@ -288,12 +285,12 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					// It's there, so...
 					if ( $needle_pos > 0 ) {
 
-						// Get the post-type.
+						// Get the post type.
 						$post_type = substr( $page_parent, $needle_pos + strlen( $needle ) );
 
 						// Ensure it exists.
 						if ( post_type_exists( $post_type ) ) {
-							// Set the flag to add the menu page.
+							// Set flag to add the menu page.
 							$add_menu = true;
 						}
 						// custom menu.
@@ -302,7 +299,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					} else {
 						global $menu;
 
-						foreach ( $menu as $menuitem ) {
+						foreach ( $menu as $menupriority => $menuitem ) {
 							$needle_menu_slug = isset( $menuitem ) ? $menuitem[2] : false;
 							if ( false !== $needle_menu_slug ) {
 
@@ -316,7 +313,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 						}
 					}
 				} else {
-					// The page_parent was settings.php, so set menu add flag to true.
+					// The page_parent was settings.php, so set menu add
+					// flag to true.
 					$add_menu = true;
 				}
 				// Add the submenu if it's permitted.
@@ -371,7 +369,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 		/**
 		 * Field HTML OUTPUT.
-		 * Gets an option from an option array, then calls the specific field type class - allows extending by other devs
+		 * Gets option from options array, then calls the specific field type class - allows extending by other devs
 		 *
 		 * @param array             $field   Field array.
 		 * @param string|array|null $v       Values.
@@ -469,6 +467,12 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					return;
 				}
 
+				/**
+				 * Filter 'redux/{opt_name}/field/class/{field.type}'
+				 *
+				 * @param       string        field class file path
+				 * @param array $field field data
+				 */
 				$field_type = str_replace( '_', '-', $field['type'] );
 				$core_path  = Redux_Core::$dir . "inc/fields/{$field['type']}/class-redux-$field_type.php";
 
@@ -476,17 +480,21 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				if ( ! file_exists( $core_path ) ) {
 					$core_path = Redux_Core::$dir . "inc/fields/{$field['type']}/field_{$field['type']}.php";
 				}
+				if ( Redux_Core::$pro_loaded ) {
+					$pro_path = '';
 
-				$filter_path = $core_path;
+					if ( class_exists( 'Redux_Pro' ) ) {
+						$pro_path = Redux_Pro::$dir . "core/inc/fields/{$field['type']}/class-redux-pro-$field_type.php";
+					}
 
-				$field_class = '';
-
-				/**
-				 * Filter 'redux/{opt_name}/field/class/{field.type}'
-				 *
-				 * @param string $path Field class file path.
-				 * @param array  $field field data
-				 */
+					if ( file_exists( $pro_path ) ) {
+						$filter_path = $pro_path;
+					} else {
+						$filter_path = $core_path;
+					}
+				} else {
+					$filter_path = $core_path;
+				}
 
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
 				$class_file = apply_filters( "redux/{$core->args['opt_name']}/field/class/{$field['type']}", $filter_path, $field );
@@ -502,7 +510,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 							$field_class = Redux_Functions::class_exists_ex( $field_classes );
 						} else {
 							// translators: %1$s is the field ID, %2$s is the field type.
-							printf( esc_html__( 'Field %1$s could not be displayed. Field type %2$s was not found.', 'redux-framework' ), '<code>' . esc_attr( $field['id'] ) . '</code>', '<code>' . esc_attr( $field['type'] ) . '</code>' );
+							echo sprintf( esc_html__( 'Field %1$s could not be displayed. Field type %2$s was not found.', 'redux-framework' ), '<code>' . esc_attr( $field['id'] ) . '</code>', '<code>' . esc_attr( $field['type'] ) . '</code>' );
 						}
 					}
 				}
@@ -550,21 +558,29 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 						$field['name_suffix'] = '';
 					}
 
+					$data = array(
+						'field' => $field,
+						'value' => $value,
+						'core'  => $core,
+						'mode'  => 'render',
+					);
+
+					$pro_field_loaded = Redux_Functions::load_pro_field( $data );
+
 					$render = new $field_class( $field, $value, $core );
 
 					ob_start();
-
 					try {
 						$render->render();
 					} catch ( Error $e ) {
-						echo 'Field failed to render: ', esc_html( $e->getMessage() ), "\n";
+						echo 'Field failed to render: ',  esc_html( $e->getMessage() ), "\n";
 					}
 
 					/**
 					 * Filter 'redux/field/{opt_name}'
 					 *
-					 * @param string $content Rendered field markup.
-					 * @param array  $field field data
+					 * @param       string        rendered field markup
+					 * @param array $field field data
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -573,8 +589,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					/**
 					 * Filter 'redux/field/{opt_name}/{field.type}/render/after'
 					 *
-					 * @param string $content Rendered field markup.
-					 * @param array  $field Field data
+					 * @param       string        rendered field markup
+					 * @param array $field field data
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -583,8 +599,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					/**
 					 * Filter 'redux/field/{opt_name}/render/after'
 					 *
-					 * @param string $content Rendered field markup.
-					 * @param array  $field Field data
+					 * @param       string        rendered field markup
+					 * @param array $field field data
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -645,6 +661,12 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 					if ( isset( $field['fieldset_class'] ) && ! empty( $field['fieldset_class'] ) ) {
 						$class_string .= ' ' . $field['fieldset_class'];
+					}
+
+					if ( Redux_Core::$pro_loaded ) {
+						if ( $pro_field_loaded ) {
+							$class_string .= ' redux-pro-field-init';
+						}
 					}
 
 					echo '<fieldset id="' . esc_attr( $core->args['opt_name'] . '-' . $field['id'] ) . '" class="' . esc_attr( $hidden . esc_attr( $disabled ) . 'redux-field-container redux-field redux-field-init redux-container-' . $field['type'] . ' ' . $class_string ) . '" data-id="' . esc_attr( $field['id'] ) . '" data-type="' . esc_attr( $field['type'] ) . '">';
@@ -791,7 +813,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		}
 
 		/**
-		 * Do action redux-admin-head for option page
+		 * Do action redux-admin-head for options page
 		 *
 		 * @since       1.0.0
 		 * @access      public
@@ -835,17 +857,17 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 			$core = $this->core();
 
-			// Set to empty string to avoid warnings.
+			// Set to empty string to avoid wanrings.
 			$hint = '';
 			$th   = '';
 
 			if ( isset( $field['title'] ) && isset( $field['type'] ) && 'info' !== $field['type'] && 'section' !== $field['type'] ) {
-				$default_mark = ( ! empty( $field['default'] ) && isset( $core->options[ $field['id'] ] ) && $field['default'] === $core->options[ $field['id'] ] && ! empty( $core->args['default_mark'] ) ) ? $core->args['default_mark'] : '';
+				$default_mark = ( ! empty( $field['default'] ) && isset( $core->options[ $field['id'] ] ) && $field['default'] === $core->options[ $field['id'] ] && ! empty( $core->args['default_mark'] ) && isset( $field['default'] ) ) ? $core->args['default_mark'] : '';
 
 				// If a hint is specified in the field, process it.
 				if ( isset( $field['hint'] ) && ! empty( $field['hint'] ) ) {
 
-					// Set the show_hints flag to true, so the help tab will be displayed.
+					// Set show_hints flag to true, so helptab will be displayed.
 					$this->show_hints = true;
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -853,7 +875,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 					// Get user pref for displaying hints.
 					$meta_val = get_user_meta( $current_user->ID, 'ignore_hints', true );
-
 					if ( 'true' === $meta_val || empty( $meta_val ) && empty( $hint ) ) {
 
 						// Set hand cursor for clickable hints.
@@ -880,9 +901,9 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 				if ( ! empty( $field['title'] ) ) {
 					if ( 'left' === $core->args['hints']['icon_position'] ) {
-						$th = $hint . wp_kses_post( $field['title'] ) . $default_mark . ' ';
+						$th = $hint . wp_kses_post( $field['title'] ) . $default_mark . '';
 					} else {
-						$th = wp_kses_post( $field['title'] ) . $default_mark . ' ' . $hint;
+						$th = wp_kses_post( $field['title'] ) . $default_mark . '' . $hint;
 					}
 				}
 
@@ -901,7 +922,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				'info',
 				'section',
 				'repeater',
-				'tabbed',
 				'color_scheme',
 				'social_profiles',
 				'css_layout',
@@ -915,7 +935,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		}
 
 		/**
-		 * Return default output string for use in a panel
+		 * Return default output string for use in panel
 		 *
 		 * @param array $field Field array.
 		 *
@@ -934,10 +954,12 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				if ( ! empty( $field['options'][ $field['default'] ] ) ) {
 					if ( ! empty( $field['options'][ $field['default'] ]['alt'] ) ) {
 						$default_output .= $field['options'][ $field['default'] ]['alt'] . ', ';
-					} elseif ( ! is_array( $field['options'][ $field['default'] ] ) ) {
-							$default_output .= $field['options'][ $field['default'] ] . ', ';
 					} else {
-						$default_output .= maybe_serialize( $field['options'][ $field['default'] ] ) . ', ';
+						if ( ! is_array( $field['options'][ $field['default'] ] ) ) {
+							$default_output .= $field['options'][ $field['default'] ] . ', ';
+						} else {
+							$default_output .= maybe_serialize( $field['options'][ $field['default'] ] ) . ', ';
+						}
 					}
 				} elseif ( ! empty( $field['options'][ $field['default'] ] ) ) {
 					$default_output .= $field['options'][ $field['default'] ] . ', ';
@@ -950,9 +972,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				}
 			} else {
 				foreach ( $field['default'] as $defaultk => $defaultv ) {
-					$defaultk = is_numeric( $defaultk ) ? (string) $defaultk : $defaultk;
-					$defaultv = is_numeric( $defaultv ) ? (string) $defaultv : $defaultv;
-
 					if ( ! empty( $field['options'][ $defaultv ]['alt'] ) ) {
 						$default_output .= $field['options'][ $defaultv ]['alt'] . ', ';
 					} elseif ( ! empty( $field['options'][ $defaultv ] ) ) {
@@ -960,18 +979,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					} elseif ( ! empty( $field['options'][ $defaultk ] ) ) {
 						$default_output .= $field['options'][ $defaultk ] . ', ';
 					} elseif ( ! empty( $defaultv ) ) {
-						if ( is_array( $defaultv ) ) {
-							foreach ( $defaultv as $k => $v ) {
-								if( is_array( $v ) ) {
-									$defaultv = implode( ', ', $v );
-								}
-							}
-
-							if ( is_array( $defaultv ) ) {
-								$defaultv = implode( ', ', $defaultv );
-							}
-						}
-
 						$default_output .= $defaultv . ', ';
 					}
 				}
@@ -992,7 +999,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		 * Return Section Menu HTML.
 		 *
 		 * @param int|string $k        Section index.
-		 * @param array      $section  Section array.
+		 * @param array      $section  Sectio array.
 		 * @param string     $suffix   Optional suffix.
 		 * @param array      $sections Sections array.
 		 *
@@ -1026,7 +1033,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 			$string = '';
 			if ( ( ( isset( $core->args['icon_type'] ) && 'image' === $core->args['icon_type'] ) || ( isset( $section['icon_type'] ) && 'image' === $section['icon_type'] ) ) || ( isset( $section['icon'] ) && false !== strpos( $section['icon'], '/' ) ) ) {
-				// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- No image/icon to enqueue.
 				$icon = ( ! isset( $section['icon'] ) ) ? '' : '<img class="image_icon_type" src="' . esc_url( $section['icon'] ) . '" /> ';
 			} else {
 				if ( ! empty( $section['icon_class'] ) ) {
@@ -1056,10 +1062,14 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 			if ( isset( $section['type'] ) && 'divide' === $section['type'] ) {
 				$string .= '<li class="divide' . esc_attr( $section['class'] ) . '">&nbsp;</li>';
 			} elseif ( ! isset( $section['subsection'] ) || true !== $section['subsection'] ) {
-				$subsections        = isset( $sections[ ( $k + 1 ) ]['subsection'] ) && true === $sections[ ( $k + 1 ) ]['subsection'];
+				if ( ! isset( $core->args['pro']['flyout_submenus'] ) ) {
+					$core->args['pro']['flyout_submenus'] = false;
+				}
+
+				$subsections        = isset( $sections[ ( $k + 1 ) ] ) && isset( $sections[ ( $k + 1 ) ]['subsection'] ) && true === $sections[ ( $k + 1 ) ]['subsection'];
 				$subsections_class  = $subsections ? ' hasSubSections' : '';
-				$subsections_class .= ( empty( $section['fields'] ) ) ? ' empty_section' : '';
-				$rotate             = true === $core->args['flyout_submenus'] ? ' el-rotate' : '';
+				$subsections_class .= ( ! isset( $section['fields'] ) || empty( $section['fields'] ) ) ? ' empty_section' : '';
+				$rotate             = true === $core->args['pro']['flyout_submenus'] ? ' el-rotate' : '';
 				$extra_icon         = $subsections ? '<span class="extraIconSubsections"><i class="el el-chevron-down' . $rotate . '">&nbsp;</i></span>' : '';
 				$string            .= '<li id="' . esc_attr( $k . $suffix ) . '_section_group_li" class="redux-group-tab-link-li' . esc_attr( $hide_section ) . esc_attr( $section['class'] ) . esc_attr( $subsections_class ) . '">';
 				$string            .= '<a href="javascript:void(0);" id="' . esc_attr( $k . $suffix ) . '_section_group_li_a" class="redux-group-tab-link-a" data-key="' . esc_attr( $k ) . '" data-rel="' . esc_attr( $k . $suffix ) . '">' . $extra_icon . $icon . '<span class="group_title">' . wp_kses_post( $section['title'] ) . '</span></a>';
@@ -1073,8 +1083,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					$do_loop = true;
 
 					while ( $do_loop ) {
-						++$next_k;
-						++$function_count;
+						$next_k ++;
+						$function_count++;
 
 						$display = true;
 
@@ -1097,7 +1107,6 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 							}
 
 							if ( ( isset( $core->args['icon_type'] ) && 'image' === $core->args['icon_type'] ) || ( isset( $sections[ $next_k ]['icon_type'] ) && 'image' === $sections[ $next_k ]['icon_type'] ) ) {
-								// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- No image/icon to enqueue.
 								$icon = ( ! isset( $sections[ $next_k ]['icon'] ) ) ? '' : '<img class="image_icon_type" src="' . esc_url( $sections[ $next_k ]['icon'] ) . '" /> ';
 							} else {
 								if ( ! empty( $sections[ $next_k ]['icon_class'] ) ) {

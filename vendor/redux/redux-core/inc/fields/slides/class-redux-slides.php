@@ -49,7 +49,9 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 
 			$x = 0;
 
-			if ( is_array( $this->value ) && ! empty( $this->value ) ) {
+			$multi = ( isset( $this->field['multi'] ) && $this->field['multi'] ) ? ' multiple="multiple"' : '';
+
+			if ( isset( $this->value ) && is_array( $this->value ) && ! empty( $this->value ) ) {
 				$slides = $this->value;
 
 				foreach ( $slides as $slide ) {
@@ -105,7 +107,7 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 					echo '<span class="button media_upload_button" id="add_' . esc_attr( $x ) . '">' . esc_html__( 'Upload', 'redux-framework' ) . '</span>';
 
 					$hide = '';
-					if ( empty( $slide['image'] ) ) {
+					if ( empty( $slide['image'] ) || '' === $slide['image'] ) {
 						$hide = ' hide';
 					}
 
@@ -220,7 +222,7 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 					echo '</fieldset>';
 					echo '</div>';
 
-					++$x;
+					$x ++;
 				}
 			}
 
@@ -380,10 +382,10 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 			}
 
 			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_style( 'redux-field-media' );
+				wp_enqueue_style( 'redux-field-media-css' );
 
 				wp_enqueue_style(
-					'redux-field-slides',
+					'redux-field-slides-css',
 					Redux_Core::$url . 'inc/fields/slides/redux-slides.css',
 					array(),
 					$this->timestamp
@@ -391,7 +393,7 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 			}
 
 			wp_enqueue_script(
-				'redux-field-media',
+				'redux-field-media-js',
 				Redux_Core::$url . 'assets/js/media/media' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js' ),
 				$this->timestamp,
@@ -399,9 +401,9 @@ if ( ! class_exists( 'Redux_Slides', false ) ) {
 			);
 
 			wp_enqueue_script(
-				'redux-field-slides',
+				'redux-field-slides-js',
 				Redux_Core::$url . 'inc/fields/slides/redux-slides' . Redux_Functions::is_min() . '.js',
-				array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion', 'jquery-ui-sortable', 'redux-field-media' ),
+				array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion', 'jquery-ui-sortable', 'redux-field-media-js' ),
 				$this->timestamp,
 				true
 			);

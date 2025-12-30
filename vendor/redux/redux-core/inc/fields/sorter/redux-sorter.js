@@ -6,7 +6,7 @@
  * Version 1.4.2
  */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	var scrollDir = '';
@@ -14,13 +14,13 @@
 	redux.field_objects        = redux.field_objects || {};
 	redux.field_objects.sorter = redux.field_objects.sorter || {};
 
-	redux.field_objects.sorter.init = function ( selector ) {
+	redux.field_objects.sorter.init = function( selector ) {
 		selector = $.redux.getSelector( selector, 'sorter' );
 
 		$( selector ).each(
-			function () {
-				const el   = $( this );
-				let parent = el;
+			function() {
+				var el     = $( this );
+				var parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -38,9 +38,8 @@
 
 				/**    Sorter (Layout Manager) */
 				el.find( '.redux-sorter' ).each(
-					function () {
-						const id         = $( this ).attr( 'id' );
-						const inRepeater = $( this ).hasClass( 'in-repeater' );
+					function() {
+						var id = $( this ).attr( 'id' );
 
 						el.find( '#' + id ).find( 'ul' ).sortable(
 							{
@@ -49,7 +48,7 @@
 								connectWith: '.sortlist_' + id,
 								opacity: 0.8,
 								scroll: false,
-								out: function ( event, ui ) {
+								out: function( event, ui ) {
 									event = null;
 
 									if ( ! ui.helper ) {
@@ -64,29 +63,22 @@
 
 									redux.field_objects.sorter.scrolling( $( this ).parents( '.redux-field-container:first' ) );
 								},
-								over: function () {
+								over: function() {
 									scrollDir = '';
 								},
-								deactivate: function () {
+								deactivate: function() {
 									scrollDir = '';
 								},
-								stop: function ( event, ui ) {
-									let sorter;
-									let id;
-									let index;
+								stop: function( event, ui ) {
+									var sorter;
+									var id;
 
 									event = null;
 
-									if ( inRepeater ) {
-										index = $( this ).attr( 'data-repeater-id' );
-									} else {
-										index = $( this ).attr( 'data-id' );
-									}
-
-									sorter = redux.optName.sorter[index];
+									sorter = redux.optName.sorter[$( this ).attr( 'data-id' )];
 									id     = $( this ).find( 'h3' ).text();
 
-									if ( undefined !== sorter.limits && sorter.limits && id && sorter.limits[id] ) {
+									if ( sorter.limits && id && sorter.limits[id] ) {
 										if ( $( this ).children( 'li' ).length >= sorter.limits[id] ) {
 											$( this ).addClass( 'filled' );
 											if ( $( this ).children( 'li' ).length > sorter.limits[id] ) {
@@ -97,23 +89,16 @@
 										}
 									}
 								},
-								update: function ( event, ui ) {
-									let sorter;
-									let id;
-									let index;
+								update: function( event, ui ) {
+									var sorter;
+									var id;
 
 									event = null;
 
-									if ( inRepeater ) {
-										index = $( this ).attr( 'data-repeater-id' );
-									} else {
-										index = $( this ).attr( 'data-id' );
-									}
-
-									sorter = redux.optName.sorter[index];
+									sorter = redux.optName.sorter[$( this ).attr( 'data-id' )];
 									id     = $( this ).find( 'h3' ).text();
 
-									if ( undefined !== sorter.limits && sorter.limits && id && sorter.limits[id] ) {
+									if ( sorter.limits && id && sorter.limits[id] ) {
 										if ( $( this ).children( 'li' ).length >= sorter.limits[id] ) {
 											$( this ).addClass( 'filled' );
 											if ( $( this ).children( 'li' ).length > sorter.limits[id] ) {
@@ -125,28 +110,17 @@
 									}
 
 									$( this ).find( '.position' ).each(
-										function () {
-											let optionID;
-											let suffix;
+										function() {
+											var optionID;
 
-											const listID   = $( this ).parent().attr( 'data-id' );
-											const parentID = $( this ).parent().parent().attr( 'data-group-id' );
+											var listID   = $( this ).parent().attr( 'data-id' );
+											var parentID = $( this ).parent().parent().attr( 'data-group-id' );
 
 											redux_change( $( this ) );
 
-											suffix = $( this ).parent().parent().attr( 'data-suffix' );
+											optionID = $( this ).parent().parent().parent().attr( 'id' );
 
-											if ( inRepeater ) {
-												optionID = $( this ).parent().parent().attr( 'data-repeater-id' );
-											} else {
-												optionID = $( this ).parent().parent().attr( 'data-id' );
-											}
-
-											if (undefined === redux.customizer ) {
-												$( this ).prop( 'name', redux.optName.args.opt_name + '[' + optionID + ']' + suffix + '[' + parentID + '][' + listID + ']' );
-											} else {
-												$( this ).prop( 'name', optionID + suffix + '[' + parentID + '][' + listID + ']' );
-											}
+											$( this ).prop( 'name', redux.optName.args.opt_name + '[' + optionID + '][' + parentID + '][' + listID + ']' );
 										}
 									);
 								}
@@ -160,8 +134,8 @@
 		);
 	};
 
-	redux.field_objects.sorter.scrolling = function ( selector ) {
-		let scrollable;
+	redux.field_objects.sorter.scrolling = function( selector ) {
+		var scrollable;
 
 		if ( undefined === selector ) {
 			return;

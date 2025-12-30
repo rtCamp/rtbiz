@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework color gradient config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -23,7 +22,7 @@ Redux::set_section(
 				'title'          => esc_html__( 'Header Gradient Color Option', 'your-textdomain-here' ),
 				'subtitle'       => esc_html__( 'Only color validation can be done on this field type', 'your-textdomain-here' ),
 				'desc'           => esc_html__( 'This is the description field, again good for additional info.', 'your-textdomain-here' ),
-				'output'         => '.site-header, header',
+				'output'         => '.site-header',
 				'gradient-type'  => true,
 				'gradient-reach' => true,
 				'gradient-angle' => true,
@@ -40,4 +39,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

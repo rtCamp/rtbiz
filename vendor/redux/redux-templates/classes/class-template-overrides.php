@@ -9,7 +9,9 @@
 
 namespace ReduxTemplates;
 
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
 
 /**
  * Redux Templates Templates Class
@@ -32,7 +34,7 @@ class Template_Overrides {
 	 * @return bool
 	 * @since 4.0.0
 	 */
-	public static function is_gutenberg(): bool {
+	public static function is_gutenberg() {
 		global $post;
 		if ( function_exists( 'has_blocks' ) && has_blocks( $post->ID ) ) {
 			return true;
@@ -47,10 +49,10 @@ class Template_Overrides {
 	 * @return string
 	 * @since 4.0.0
 	 */
-	public static function get_overrides(): string {
+	public static function get_overrides() {
 
 		if ( ! self::is_gutenberg() ) {
-			return '';
+			return;
 		}
 
 		$template = mb_strtolower( get_template() );
@@ -87,7 +89,9 @@ EOD;
 		// Remove space after opening bracket.
 		$css = str_replace( ' {', '{', $css );
 		// Remove whitespace.
-		return str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
+		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
+
+		return $css;
 	}
 
 	/**
@@ -96,7 +100,7 @@ EOD;
 	 * @return string
 	 * @since 4.0.0
 	 */
-	public static function consulting(): string {
+	public static function consulting() {
 		return <<<'EOD'
 			#content-core {
 				max-width: 100%;
@@ -110,7 +114,7 @@ EOD;
 	 * @return string
 	 * @since 4.0.0
 	 */
-	public static function avada(): string {
+	public static function avada() {
 		return <<<'EOD'
 			#main .fusion-row {
 				max-width: unset;
@@ -124,7 +128,7 @@ EOD;
 	 * @return string
 	 * @since 4.1.24
 	 */
-	public static function generatepress(): string {
+	public static function generatepress() {
 		return <<<'EOD'
 			.site-content {
                             display: block!important;
@@ -138,7 +142,7 @@ EOD;
 	 * @return string
 	 * @since 4.0.0
 	 */
-	public static function twentytwenty(): string {
+	public static function twentytwenty() {
 		return <<<'EOD'
 			[class*="__inner-container"] > *:not(.alignwide):not(.alignfull):not(.alignleft):not(.alignright):not(.is-style-wide) {
 				max-width: unset !important;
@@ -149,4 +153,5 @@ EOD;
 			}
 EOD;
 	}
+
 }

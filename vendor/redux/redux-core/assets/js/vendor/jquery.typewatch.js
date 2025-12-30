@@ -69,7 +69,7 @@
 
 				// Set focus action (highlight)
 				if (options.highlight && elementType !== 'DIV')
-					jQuery(elem).on( 'focus', function() { this.trigger( 'select' ); });
+					jQuery(elem).focus(function() { this.select(); });
 
 				// Key watcher / clear and reset the timer
 				var startWatch = function(evt) {

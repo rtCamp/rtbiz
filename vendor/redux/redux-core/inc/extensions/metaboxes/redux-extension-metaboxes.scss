@@ -1,3 +1,11 @@
+.redux_field_th {
+    padding-bottom: 0px !important;
+}
+
+.redux-group-tab {
+    margin-bottom: 0 !important;
+}
+
 .block-editor-page {
     .postbox{
         &.closed .el {
@@ -15,14 +23,6 @@
 }
 
 .postbox {
-    .redux_field_th {
-        padding-bottom: 0 !important;
-    }
-
-    .redux-group-tab {
-        margin-bottom: 0 !important;
-    }
-
     .redux-container {
         filter: none;
         border: none;
@@ -52,6 +52,7 @@
 
         .redux_main {
             border-left: 1px solid #D8D8D8;
+            moz-box-shadow: none;
             -webkit-box-shadow: none;
             box-shadow: none;
 
@@ -127,7 +128,8 @@
 .redux-box-side {
     .redux-main {
         .redux-field-container {
-            padding: 5px 0 0;
+            padding: 0;
+            padding-top: 5px;
 
             .select2-container,
             select {
@@ -175,7 +177,7 @@
         .form-table > tbody > tr {
             display: block !important;
             width: 100% !important;
-            padding: 0 !important;
+            padding: 0px !important;
 
             &.hide {
                 display: none !important;
@@ -346,13 +348,13 @@
 }
 
 .wp-color-result {
-    margin: 0 6px 0 0 !important;
+    margin: 0 6px 0 0px !important;
 }
 
 .redux-container .ui-button-text-only .ui-button-text {
     padding: 0;
 }
 
-.wpseotab tr {
-    display: table-row !important
+.wpseotab tr { 
+    display: table-row !important 
 }

@@ -45,7 +45,7 @@ if ( ! class_exists( 'Redux_Button_Set', false ) ) {
 					$this->field['args'] = array();
 				}
 
-				$this->field['options'] = $this->parent->wordpress_data->get( $this->field['data'], $this->field['args'], $this->parent->args['opt_name'], $this->value );
+				$this->field['options'] = $this->parent->get_wordpress_data( $this->field['data'], $this->field['args'], $this->value );
 
 				if ( empty( $this->field['options'] ) ) {
 					return;
@@ -130,7 +130,7 @@ if ( ! class_exists( 'Redux_Button_Set', false ) ) {
 		 */
 		public function enqueue() {
 			wp_enqueue_script(
-				'redux-field-button-set',
+				'redux-field-button-set-js',
 				Redux_Core::$url . 'inc/fields/button_set/redux-button-set' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'jquery-ui-core', 'redux-js' ),
 				$this->timestamp,

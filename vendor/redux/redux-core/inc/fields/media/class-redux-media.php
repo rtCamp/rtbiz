@@ -37,7 +37,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				'width'     => '',
 				'height'    => '',
 				'thumbnail' => '',
-				'filter'    => array(
+				'filter' => array(
 					'grayscale'  => array(
 						'checked' => false,
 						'value'   => 0,
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				),
 			);
 
-			// Since value sub-arrays do not get parsed in wp_parse_args!
+			// Since value subarrays do not get parsed in wp_parse_args!
 			$this->value = Redux_Functions::parse_args( $this->value, $defaults );
 
 			$defaults = array(
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				'placeholder'  => esc_html__( 'No media selected', 'redux-framework' ),
 				'readonly'     => true,
 				'class'        => '',
-				'filter'       => array(
+				'filter' => array(
 					'grayscale'  => false,
 					'blur'       => false,
 					'sepia'      => false,
@@ -164,11 +164,12 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 					if ( ! empty( $this->field['default']['url'] ) ) {
 						$this->value['url'] = $this->field['default']['url'];
 					}
-				} elseif ( is_numeric( $this->field['default'] ) ) {
-					// Check if it's an attachment ID.
-					$this->value['id'] = $this->field['default'];
-				} else { // Must be a URL.
-					$this->value['url'] = $this->field['default'];
+				} else {
+					if ( is_numeric( $this->field['default'] ) ) { // Check if it's an attachment ID.
+						$this->value['id'] = $this->field['default'];
+					} else { // Must be a URL.
+						$this->value['url'] = $this->field['default'];
+					}
 				}
 			}
 
@@ -213,7 +214,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				if ( ! empty( $this->value['id'] ) ) {
 					$image = wp_get_attachment_image_src( $this->value['id'], array( 150, 150 ) );
 
-					if ( empty( $image[0] ) ) {
+					if ( empty( $image[0] ) || '' === $image[0] ) {
 						$this->value['thumbnail'] = $this->value['url'];
 					} else {
 						$this->value['thumbnail'] = $image[0];
@@ -222,6 +223,8 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 					$this->value['thumbnail'] = $this->value['url'];
 				}
 			}
+
+			$css = '';
 
 			$css = $this->get_filter_css( $this->value['filter'] );
 
@@ -256,17 +259,8 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 					'mode'   => 'media',
 				);
 
-				echo Redux_Image_Filters::render( $data ); // phpcs:ignore WordPress.Security.EscapeOutput
+				echo Redux_Image_Filters::render( $data );
 			}
-		}
-
-		/**
-		 * Do enqueue for each field instance.
-		 *
-		 * @return void
-		 */
-		public function always_enqueue() {
-			Redux_Image_Filters::enqueue( $this->filters_enabled );
 		}
 
 		/**
@@ -284,8 +278,12 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				wp_enqueue_script( 'media-upload' );
 			}
 
+			if ( $this->filters_enabled ) {
+				Redux_Image_Filters::enqueue( $this->field, $this->filters_enabled );
+			}
+
 			wp_enqueue_script(
-				'redux-field-media',
+				'redux-field-media-js',
 				Redux_Core::$url . 'assets/js/media/media' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js' ),
 				$this->timestamp,
@@ -293,7 +291,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 			);
 
 			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_style( 'redux-field-media' );
+				wp_enqueue_style( 'redux-field-media-css' );
 			}
 		}
 
@@ -305,8 +303,6 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 		 * @return string|null
 		 */
 		public function css_style( $data ): string {
-			$data = (array) $data;
-
 			if ( isset( $data['filter'] ) ) {
 				return $this->get_filter_css( $data['filter'] );
 			}
@@ -344,6 +340,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 
 			return '';
 		}
+
 	}
 }
 

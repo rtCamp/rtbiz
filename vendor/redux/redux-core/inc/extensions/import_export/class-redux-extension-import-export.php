@@ -1,12 +1,10 @@
 <?php
 /**
- * Redux Import/Export Extension Class
+ * Redux Import/Export Extention Class
  *
  * @class   Redux_Extension_Import_Export
  * @version 4.0.0
  * @package Redux Framework
- *
- * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,26 +24,26 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '4.0.0';
+		public static $version = '4.0';
 
 		/**
 		 * Is field bit.
 		 *
 		 * @var bool
 		 */
-		public bool $is_field = false;
+		public $is_field = false;
 
 		/**
-		 * Class Constructor. Defines the args for the extensions class
+		 * Class Constructor. Defines the args for the extions class
 		 *
-		 * @param object $redux ReduxFramework object.
+		 * @param object $parent ReduxFramework object.
 		 *
 		 * @return      void
 		 * @since       1.0.0
 		 * @access      public
 		 */
-		public function __construct( $redux ) {
-			parent::__construct( $redux, __FILE__ );
+		public function __construct( $parent ) {
+			parent::__construct( $parent, __FILE__ );
 
 			$this->add_field( 'import_export' );
 
@@ -55,7 +53,7 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			do_action( 'redux/options/' . $this->parent->args['opt_name'] . '/import', array( $this, 'remove_cookie' ) );
 
-			$this->is_field = Redux_Helpers::is_field_in_use( $redux, 'import_export' );
+			$this->is_field = Redux_Helpers::is_field_in_use( $parent, 'import_export' );
 
 			if ( ! $this->is_field && $this->parent->args['show_import_export'] ) {
 				$this->add_section();
@@ -67,11 +65,11 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		/**
 		 * Adds the appropriate mime types to WordPress
 		 *
-		 * @param array|null $existing_mimes .
+		 * @param array $existing_mimes .
 		 *
 		 * @return array
 		 */
-		public function custom_upload_mimes( ?array $existing_mimes = array() ): array {
+		public function custom_upload_mimes( array $existing_mimes = array() ): array {
 			$existing_mimes['redux'] = 'application/redux';
 
 			return $existing_mimes;
@@ -103,9 +101,10 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		public function download_options() {
 			if ( ! isset( $_GET['secret'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['secret'] ) ), 'redux_io_' . $this->parent->args['opt_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				wp_die( 'Invalid Secret for options use.' );
+				exit;
 			}
 
-			$this->parent->options_class->get();
+			$this->parent->get_options();
 			$backup_options                 = $this->parent->options;
 			$backup_options['redux-backup'] = 1;
 
@@ -146,14 +145,14 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		 */
 		public function remove_cookie() {
 			// Remove the import/export tab cookie.
-			if ( isset( $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) && 'import_export_default' === $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) {
+			if ( isset( $_COOKIE ) && isset( $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) && 'import_export_default' === $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) {
 				setcookie( 'redux_current_tab_' . $this->parent->args['opt_name'], '', 1, '/' );
 				$_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] = 1;
 			}
 		}
 	}
-}
 
-if ( ! class_exists( 'ReduxFramework_extension_import_export' ) ) {
-	class_alias( 'Redux_Extension_Import_Export', 'ReduxFramework_extension_import_export' );
+	if ( ! class_exists( 'ReduxFramework_extension_import_export' ) ) {
+		class_alias( 'Redux_Extension_Import_Export', 'ReduxFramework_extension_import_export' );
+	}
 }

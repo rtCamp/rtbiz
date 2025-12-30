@@ -313,7 +313,7 @@
 			return !( typeof c === 'function' ||
 				c && c.attr ||
 				c.length ||
-				typeof(c) === 'object' && (c.jquery || c.then));
+				$.type(c) === 'object' && (c.jquery || c.then));
 		}
 
 		// Option object sanitizer
@@ -684,10 +684,10 @@
 			.insertBefore(elements.content)
 
 			// Button-specific events
-			.on('.qtip-close', 'mousedown keydown mouseup keyup mouseout', function(event) {
+			.delegate('.qtip-close', 'mousedown keydown mouseup keyup mouseout', function(event) {
 				$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
 			})
-			.on('.qtip-close', 'mouseover mouseout', function(event){
+			.delegate('.qtip-close', 'mouseover mouseout', function(event){
 				$(this).toggleClass('ui-state-hover', event.type === 'mouseover');
 			});
 
@@ -1255,7 +1255,7 @@
 			// Create button and setup attributes
 			elements.button.appendTo(elements.titlebar || tooltip)
 			.attr('role', 'button')
-			.on( 'click', function(event) {
+			.click(function(event) {
 				if(!tooltip.hasClass(CLASS_DISABLED)) { self.hide(event); }
 				return FALSE;
 			});
@@ -1724,7 +1724,7 @@
 
 			// If we don't get an object returned attempt to parse it manualyl without parseJSON
 			/* eslint-disable no-empty */
-			try { html5 = typeof html5 === 'string' ? JSON.parse(html5) : html5; }
+			try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; }
 			catch(e) {}
 			/* eslint-enable no-empty */
 
@@ -2727,13 +2727,8 @@
 					elem = self.elem = $('<div />', {
 						id: 'qtip-overlay',
 						html: '<div></div>',
+						mousedown: function() { return FALSE; }
 					})
-					elem.on(
-						'mousedown',
-						function() {
-							return false;
-						}
-					)
 					.hide();
 
 					// Make sure we can't focus anything outside the tooltip
@@ -3314,7 +3309,7 @@
 
 			var shape = (area.attr('shape') || 'rect').toLowerCase().replace('poly', 'polygon'),
 				image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
-				coordsString = area.attr('coords').trim(),
+				coordsString = $.trim(area.attr('coords')),
 				coordsArray = coordsString.replace(/,$/, '').split(','),
 				imageOffset, coords, i, result, len;
 

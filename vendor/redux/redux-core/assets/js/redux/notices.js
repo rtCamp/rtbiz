@@ -1,19 +1,19 @@
 /* global redux */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	$.redux = $.redux || {};
 
-	$.redux.sanitize = function () {
+	$.redux.sanitize = function() {
 		if ( redux.optName.sanitize && redux.optName.sanitize.sanitize ) {
 			$.each(
 				redux.optName.sanitize.sanitize,
-				function ( sectionID, sectionArray ) {
+				function( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.sanitize,
-						function ( key, value ) {
+						function( key, value ) {
 							$.redux.fixInput( key, value );
 						}
 					);
@@ -22,19 +22,19 @@
 		}
 	};
 
-	$.redux.fixInput = function ( key, value ) {
-		let val;
-		let input;
-		let inputVal;
-		let ul;
-		let li;
+	$.redux.fixInput = function( key, value ) {
+		var val;
+		var input;
+		var inputVal;
+		var ul;
+		var li;
 
 		if ( 'multi_text' === value.type ) {
 			ul = $( '#' + value.id + '-ul' );
 			li = $( ul.find( 'li' ) );
 
 			li.each(
-				function () {
+				function() {
 					input    = $( this ).find( 'input' );
 					inputVal = input.val();
 
@@ -64,25 +64,20 @@
 		}
 	};
 
-	$.redux.notices = function () {
+	$.redux.notices = function() {
 		if ( redux.optName.errors && redux.optName.errors.errors ) {
 			$.each(
 				redux.optName.errors.errors,
-				function ( sectionID, sectionArray ) {
+				function( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.errors,
-						function ( key, value ) {
-							const fieldset = $( '#' + redux.optName.args.opt_name + '-' + value.id );
-
-							if ( '' !== value.msg ) {
-								fieldset.addClass( 'redux-field-error' );
-							}
-
-							if ( 0 === fieldset.parent().find( '.redux-th-error' ).length ) {
-								fieldset.append( '<div class="redux-th-error">' + value.msg + '</div>' );
+						function( key, value ) {
+							$( '#' + redux.optName.args.opt_name + '-' + value.id ).addClass( 'redux-field-error' );
+							if ( 0 === $( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-error' ).length ) {
+								$( '#' + redux.optName.args.opt_name + '-' + value.id ).append( '<div class="redux-th-error">' + value.msg + '</div>' );
 							} else {
-								fieldset.parent().find( '.redux-th-error' ).html( value.msg ).css( 'display', 'block' );
+								$( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-error' ).html( value.msg ).css( 'display', 'block' );
 							}
 
 							$.redux.fixInput( key, value );
@@ -92,9 +87,10 @@
 			);
 
 			$( '.redux-container' ).each(
-				function () {
-					let totalErrors;
-					const container = $( this );
+				function() {
+					var totalErrors;
+
+					var container = $( this );
 
 					// Ajax cleanup.
 					container.find( '.redux-menu-error' ).remove();
@@ -105,12 +101,11 @@
 						container.find( '.redux-field-errors span' ).text( totalErrors );
 						container.find( '.redux-field-errors' ).slideDown();
 						container.find( '.redux-group-tab' ).each(
-							function () {
-								let sectionID;
-								let subParent;
+							function() {
+								var sectionID;
+								var subParent;
 
-								const total = $( this ).find( '.redux-field-error' ).length;
-
+								var total = $( this ).find( '.redux-field-error' ).length;
 								if ( total > 0 ) {
 									sectionID = $( this ).attr( 'id' ).split( '_' );
 
@@ -134,21 +129,17 @@
 		if ( redux.optName.warnings && redux.optName.warnings.warnings ) {
 			$.each(
 				redux.optName.warnings.warnings,
-				function ( sectionID, sectionArray ) {
+				function( sectionID, sectionArray ) {
 					sectionID = null;
 					$.each(
 						sectionArray.warnings,
-						function ( key, value ) {
-							const fieldset = $( '#' + redux.optName.args.opt_name + '-' + value.id );
+						function( key, value ) {
+							$( '#' + redux.optName.args.opt_name + '-' + value.id ).addClass( 'redux-field-warning' );
 
-							if ( '' !== value.msg ) {
-								fieldset.addClass( 'redux-field-warning' );
-							}
-
-							if ( 0 === fieldset.parent().find( '.redux-th-warning' ).length ) {
-								fieldset.append( '<div class="redux-th-warning">' + value.msg + '</div>' );
+							if ( 0 === $( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-warning' ).length ) {
+								$( '#' + redux.optName.args.opt_name + '-' + value.id ).append( '<div class="redux-th-warning">' + value.msg + '</div>' );
 							} else {
-								fieldset.parent().find( '.redux-th-warning' ).html( value.msg ).css( 'display', 'block' );
+								$( '#' + redux.optName.args.opt_name + '-' + value.id ).parent().find( '.redux-th-warning' ).html( value.msg ).css( 'display', 'block' );
 							}
 
 							$.redux.fixInput( key, value );
@@ -158,13 +149,13 @@
 			);
 
 			$( '.redux-container' ).each(
-				function () {
-					let sectionID;
-					let subParent;
-					let total;
-					let totalWarnings;
+				function() {
+					var sectionID;
+					var subParent;
+					var total;
+					var totalWarnings;
 
-					const container = $( this );
+					var container = $( this );
 
 					// Ajax cleanup.
 					container.find( '.redux-menu-warning' ).remove();
@@ -175,7 +166,7 @@
 						container.find( '.redux-field-warnings span' ).text( totalWarnings );
 						container.find( '.redux-field-warnings' ).slideDown();
 						container.find( '.redux-group-tab' ).each(
-							function () {
+							function() {
 								total = $( this ).find( '.redux-field-warning' ).length;
 
 								if ( total > 0 ) {

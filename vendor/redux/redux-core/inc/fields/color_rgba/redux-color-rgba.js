@@ -1,17 +1,17 @@
 /* global redux, redux_change */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	redux.field_objects                    = redux.field_objects || {};
 	redux.field_objects.color_rgba         = redux.field_objects.color_rgba || {};
 	redux.field_objects.color_rgba.fieldID = '';
 
-	redux.field_objects.color_rgba.hexToRGBA = function ( hex, alpha ) {
-		let result;
-		let r;
-		let g;
-		let b;
+	redux.field_objects.color_rgba.hexToRGBA = function( hex, alpha ) {
+		var result;
+		var r;
+		var g;
+		var b;
 
 		if ( null === hex ) {
 			result = '';
@@ -27,13 +27,13 @@
 		return result;
 	};
 
-	redux.field_objects.color_rgba.init = function ( selector ) {
+	redux.field_objects.color_rgba.init = function( selector ) {
 		selector = $.redux.getSelector( selector, 'color_rgba' );
 
 		$( selector ).each(
-			function () {
-				const el   = $( this );
-				let parent = el;
+			function() {
+				var el     = $( this );
+				var parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -55,75 +55,79 @@
 		);
 	};
 
-	redux.field_objects.color_rgba.modInit = function ( el ) {
+	redux.field_objects.color_rgba.modInit = function( el ) {
 		redux.field_objects.color_rgba.fieldID = el.find( '.redux-color_rgba-container' ).data( 'id' );
 	};
 
 	// Initialize colour picker.
-	redux.field_objects.color_rgba.initColorPicker = function ( el ) {
+	redux.field_objects.color_rgba.initColorPicker = function( el ) {
 
 		// Get field ID.
-		const field_id = redux.field_objects.color_rgba.fieldID;
+		var field_id = redux.field_objects.color_rgba.fieldID;
 
 		// Get the color scheme container.
-		const colorpickerInput = el.find( '.redux-color-rgba' );
+		var colorpickerInput = el.find( '.redux-color-rgba' );
+
+		// Get alpha value and sanitize it.
+		var currentAlpha = colorpickerInput.data( 'current-alpha' );
 
 		// Get colour value and sanitize it.
-		let currentColor = colorpickerInput.data( 'current-color' );
+		var currentColor = colorpickerInput.data( 'current-color' );
 
-		let outputTransparent = colorpickerInput.data( 'output-transparent' );
+		var outputTransparent = colorpickerInput.data( 'output-transparent' );
 
 		// Color picker arguments.
-		const container = el.find( '.redux-color-rgba-container' );
+		var container = el.find( '.redux-color-rgba-container' );
 
 		// Get, decode and parse palette.
-		let palette = container.data( 'palette' );
+		var palette = container.data( 'palette' );
 
 		// Get and sanitize show input argument.
-		let showInput = container.data( 'show-input' );
+		var showInput = container.data( 'show-input' );
 
 		// Get and sanitize show initial argument.
-		let showInitial = container.data( 'show-initial' );
+		var showInitial = container.data( 'show-initial' );
 
 		// Get and sanitize show alpha argument.
-		let showAlpha = container.data( 'show-alpha' );
+		var showAlpha = container.data( 'show-alpha' );
 
-		// Get and sanitize to allow empty argument.
-		let allowEmpty = container.data( 'allow-empty' );
+		// Get and sanitize allow empty argument.
+		var allowEmpty = container.data( 'allow-empty' );
 
 		// Get and sanitize show palette argument.
-		let showPalette = container.data( 'show-palette' );
+		var showPalette = container.data( 'show-palette' );
 
 		// Get and sanitize show palette only argument.
-		let showPaletteOnly = container.data( 'show-palette-only' );
+		var showPaletteOnly = container.data( 'show-palette-only' );
 
 		// Get and sanitize show selection palette argument.
-		let showSelectionPalette = container.data( 'show-selection-palette' );
+		var showSelectionPalette = container.data( 'show-selection-palette' );
 
 		// Get max palette size.
-		const maxPaletteSize = Number( container.data( 'max-palette-size' ) );
+		var maxPaletteSize = Number( container.data( 'max-palette-size' ) );
 
 		// Get and sanitize clickout fires change argument.
-		let clickoutFiresChange = container.data( 'clickout-fires-change' );
+		var clickoutFiresChange = container.data( 'clickout-fires-change' );
 
 		// Get choose button text.
-		const chooseText = String( container.data( 'choose-text' ) );
+		var chooseText = String( container.data( 'choose-text' ) );
 
 		// Get cancel button text.
-		const cancelText = String( container.data( 'cancel-text' ) );
+		var cancelText = String( container.data( 'cancel-text' ) );
 
 		// Get cancel button text.
-		const inputText = String( container.data( 'input-text' ) );
+		var inputText = String( container.data( 'input-text' ) );
 
 		// Get and sanitize show buttons argument.
-		let showButtons = container.data( 'show-buttons' );
+		var showButtons = container.data( 'show-buttons' );
 
 		// Get container class.
-		const containerClass = String( container.data( 'container-class' ) );
+		var containerClass = String( container.data( 'container-class' ) );
 
 		// Get replacer class.
-		const replacerClass = String( container.data( 'replacer-class' ) );
+		var replacerClass = String( container.data( 'replacer-class' ) );
 
+		currentAlpha      = Number( ( null === currentAlpha || undefined === currentAlpha ) ? 1 : currentAlpha );
 		currentColor      = ( '' === currentColor || 'transparent' === currentColor ) ? '' : currentColor;
 		outputTransparent = Boolean( ( '' === outputTransparent ) ? false : outputTransparent );
 
@@ -179,11 +183,11 @@
 				inputText: inputText,
 
 				// On change.
-				change: function ( color ) {
-					let blockID;
-					let colorVal;
-					let alphaVal;
-					let rgbaVal;
+				change: function( color ) {
+					var blockID;
+					var colorVal;
+					var alphaVal;
+					var rgbaVal;
 
 					if ( null === color ) {
 						if ( true === outputTransparent ) {

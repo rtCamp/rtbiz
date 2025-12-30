@@ -3,9 +3,9 @@
 function colorValidate( field ) {
 	'use strict';
 
-	const value = jQuery( field ).val();
-	const hex   = colorNameToHex( value );
+	var value = jQuery( field ).val();
 
+	var hex = colorNameToHex( value );
 	if ( hex !== value.replace( '#', '' ) ) {
 		return hex;
 	}
@@ -16,9 +16,9 @@ function colorValidate( field ) {
 function colorNameToHex( colour ) {
 	'use strict';
 
-	const tcolour = colour.replace( /^\s+/, '' ).replace( /\s+$/, '' ).replace( '#', '' );
+	var tcolour = colour.replace( /^\s\s*/, '' ).replace( /\s\s*$/, '' ).replace( '#', '' );
 
-	const colours = {
+	var colours = {
 		'aliceblue': '#f0f8ff',
 		'antiquewhite': '#faebd7',
 		'aqua': '#00ffff',

@@ -142,7 +142,7 @@ if ( ! class_exists( 'Redux_Info', false ) ) {
 		public function enqueue() {
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-info',
+					'redux-field-info-css',
 					Redux_Core::$url . 'inc/fields/info/redux-info.css',
 					array(),
 					$this->timestamp

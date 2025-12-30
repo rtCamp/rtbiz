@@ -1,19 +1,19 @@
 /* global redux_change, redux, ajaxurl, jQuery */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	redux.field_objects        = redux.field_objects || {};
 	redux.field_objects.select = redux.field_objects.select || {};
 
-	redux.field_objects.select.init = function ( selector ) {
+	redux.field_objects.select.init = function( selector ) {
 		selector = $.redux.getSelector( selector, 'select' );
 
 		$( selector ).each(
-			function () {
-				let default_params = {};
-				const el           = $( this );
-				let parent         = el;
+			function() {
+				var default_params = {};
+				var el             = $( this );
+				var parent         = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -30,12 +30,12 @@
 				}
 
 				el.find( 'select.redux-select-item' ).each(
-					function () {
-						let action;
-						let nonce;
-						let wpdata;
-						let min;
-						let data_args;
+					function() {
+						var action;
+						var nonce;
+						var wpdata;
+						var min;
+						var data_args;
 
 						if ( $( this ).hasClass( 'font-icons' ) ) {
 							default_params = $.extend(
@@ -43,21 +43,19 @@
 								{
 									templateResult: redux.field_objects.select.addIcon,
 									templateSelection: redux.field_objects.select.addIcon,
-									escapeMarkup: function ( m ) {
+									escapeMarkup: function( m ) {
 										return m;
 									}
 								},
 								default_params
 							);
 						}
-
 						if ( $( this ).data( 'ajax' ) ) {
-							action    = $( this ).data( 'action' );
-							nonce     = $( this ).data( 'nonce' );
-							wpdata    = $( this ).data( 'wp-data' );
-							min       = $( this ).data( 'min-input-length' );
+							action = $( this ).data( 'action' );
+							nonce = $( this ).data( 'nonce' );
+							wpdata = $( this ).data( 'wp-data' );
+							min = $( this ).data( 'min-input-length' );
 							data_args = {};
-
 							if ( $( this ).data( 'args' ) ) {
 								data_args = JSON.stringify( $( this ).data( 'args' ) );
 							}
@@ -72,7 +70,7 @@
 									url: ajaxurl,
 									dataType: 'json',
 									delay: 250,
-									data: function ( params ) {
+									data: function( params ) {
 										return {
 											nonce: nonce,
 											data: wpdata,
@@ -82,7 +80,7 @@
 											data_args: data_args
 										};
 									},
-									processResults: function ( data, params ) {
+									processResults: function( data, params ) {
 										params.page = params.page || 1;
 
 										if ( true === data.success ) {
@@ -121,7 +119,7 @@
 
 						$( this ).on(
 							'select2:select',
-							function () {
+							function() {
 								redux_change( $( $( this ) ) );
 
 								$( this ).select2SortableOrder();
@@ -133,7 +131,7 @@
 		);
 	};
 
-	redux.field_objects.select.addIcon = function ( icon ) {
+	redux.field_objects.select.addIcon = function( icon ) {
 		if ( icon.hasOwnProperty( 'id' ) ) {
 			return '<span class="elusive"><i class="' + icon.id + '"></i>&nbsp;&nbsp;' + icon.text + '</span>';
 		}

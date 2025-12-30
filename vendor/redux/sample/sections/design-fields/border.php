@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework border config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -22,7 +21,7 @@ Redux::set_section(
 				'type'     => 'border',
 				'title'    => esc_html__( 'Header Border Option', 'your-textdomain-here' ),
 				'subtitle' => esc_html__( 'Only color validation can be done on this field type', 'your-textdomain-here' ),
-				'output'   => array( '.site-header, header' ),
+				'output'   => array( '.site-header' ),
 				'desc'     => esc_html__( 'This is the description field, again good for additional info.', 'your-textdomain-here' ),
 				'default'  => array(
 					'border-color'  => '#1e73be',
@@ -53,4 +52,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

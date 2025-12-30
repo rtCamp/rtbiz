@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework info config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -59,14 +58,14 @@ Redux::set_section(
 				'color' => 'purple',
 				'icon'  => 'el el-info-circle',
 				'title' => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'  => wp_kses_post( __( 'This is field with the <strong>custom</strong> style applied, color arg passed, and an icon.', 'your-textdomain-here' ) ),
+				'desc'  => wp_kses_post( __( 'This is an info field with the <strong>custom</strong> style applied, color arg passed, and an icon.', 'your-textdomain-here' ) ),
 			),
 			array(
 				'id'     => 'opt-info-normal',
 				'type'   => 'info',
 				'notice' => false,
 				'title'  => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'   => wp_kses_post( __( 'This is non-notice field with the <strong>normal</strong> style applied.', 'your-textdomain-here' ) ),
+				'desc'   => wp_kses_post( __( 'This is an info non-notice field with the <strong>normal</strong> style applied.', 'your-textdomain-here' ) ),
 			),
 			array(
 				'id'     => 'opt-notice-info',
@@ -74,7 +73,7 @@ Redux::set_section(
 				'notice' => false,
 				'style'  => 'info',
 				'title'  => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'   => wp_kses_post( __( 'This is non-notice field with the <strong>info</strong> style applied.', 'your-textdomain-here' ) ),
+				'desc'   => wp_kses_post( __( 'This is an info non-notice field with the <strong>info</strong> style applied.', 'your-textdomain-here' ) ),
 			),
 			array(
 				'id'     => 'opt-notice-warning',
@@ -83,7 +82,7 @@ Redux::set_section(
 				'style'  => 'warning',
 				'icon'   => 'el el-info-circle',
 				'title'  => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'   => wp_kses_post( __( 'This is non-notice field with the <strong>warning</strong> style applied and an icon.', 'your-textdomain-here' ) ),
+				'desc'   => wp_kses_post( __( 'This is an info non-notice field with the <strong>warning</strong> style applied and an icon.', 'your-textdomain-here' ) ),
 			),
 			array(
 				'id'     => 'opt-notice-success',
@@ -92,7 +91,7 @@ Redux::set_section(
 				'style'  => 'success',
 				'icon'   => 'el el-info-circle',
 				'title'  => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'   => wp_kses_post( __( 'This is non-notice field with the <strong>success</strong> style applied and an icon.', 'your-textdomain-here' ) ),
+				'desc'   => wp_kses_post( __( 'This is an info non-notice field with the <strong>success</strong> style applied and an icon.', 'your-textdomain-here' ) ),
 			),
 			array(
 				'id'     => 'opt-notice-critical',
@@ -101,9 +100,8 @@ Redux::set_section(
 				'style'  => 'critical',
 				'icon'   => 'el el-info-circle',
 				'title'  => esc_html__( 'This is a title.', 'your-textdomain-here' ),
-				'desc'   => wp_kses_post( __( 'This is a non-notice field with the <strong>critical</strong> style applied and an icon.', 'your-textdomain-here' ) ),
+				'desc'   => wp_kses_post( __( 'This is an non-notice field with the <strong>critical</strong> style applied and an icon.', 'your-textdomain-here' ) ),
 			),
 		),
 	)
 );
-// phpcs:enable

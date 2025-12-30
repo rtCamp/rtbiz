@@ -23,31 +23,31 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 		 * @since   1.0.0
 		 * @var     string
 		 */
-		protected string $version = '1.0.0';
+		protected $version = '1.0.0';
 
 		/**
 		 * Instance of this class.
 		 *
 		 * @since    1.0.0
-		 * @var      Redux_ThemeCheck|null
+		 * @var      object
 		 */
-		protected static ?Redux_ThemeCheck $instance = null;
+		protected static $instance = null;
 
 		/**
 		 * Instance of the Redux class.
 		 *
 		 * @since    1.0.0
-		 * @var      ReduxFramework|null
+		 * @var      object
 		 */
-		protected static ?ReduxFramework $redux;
+		protected static $redux = null;
 
 		/**
 		 * Details of the embedded Redux class.
 		 *
 		 * @since    1.0.0
-		 * @var      mixed|null
+		 * @var      object
 		 */
-		protected static $redux_details = array();
+		protected static $redux_details = null;
 
 		/**
 		 * Slug for various elements.
@@ -55,7 +55,7 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 		 * @since   1.0.0
 		 * @var     string
 		 */
-		protected string $slug = 'redux_themecheck';
+		protected $slug = 'redux_themecheck';
 
 		/**
 		 * Initialize the plugin by setting localization, filters, and administration functions.
@@ -67,7 +67,7 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 				return;
 			}
 
-			// Load the admin stylesheet and JavaScript.
+			// Load admin style sheet and JavaScript.
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
@@ -113,8 +113,8 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 		 *
 		 * @param array $php_files Array of files to check.
 		 *
-		 * @return    array|false|null    A single instance of this class.
-		 * @since     1.0.0
+		 * @return    object    A single instance of this class.
+		 *@since     1.0.0
 		 */
 		public static function get_redux_details( array $php_files = array() ) {
 			if ( null === self::$redux_details ) {
@@ -144,12 +144,9 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 		 * @since    1.0.0
 		 */
 		public function disable_checks() {
-			/**
-			 * Uncomment code to use.
-			 *
-			 * global $themechecks;
-			 *
-			 * $checks_to_disable = array(
+			global $themechecks;
+
+			/** $checks_to_disable = array(
 			 *    'IncludeCheck',
 			 *    'I18NCheck',
 			 *    'AdminMenu',
@@ -177,10 +174,11 @@ if ( ! class_exists( 'Redux_ThemeCheck', false ) ) {
 		 * @since    1.0.0
 		 */
 		public function add_checks() {
+			global $themechecks;
 
 			// load all the checks in the checks directory.
 			$dir = 'checks';
-			foreach ( glob( __DIR__ . '/' . $dir . '/*.php' ) as $file ) {
+			foreach ( glob( dirname( __FILE__ ) . '/' . $dir . '/*.php' ) as $file ) {
 				require_once $file;
 			}
 		}

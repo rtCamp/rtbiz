@@ -1,12 +1,11 @@
 <?php
 /**
  * Redux Framework media config.
- * For full documentation, please visit: https://devs.redux.io/
+ * For full documentation, please visit: http://devs.redux.io/
  *
  * @package Redux Framework
  */
 
-// phpcs:disable
 defined( 'ABSPATH' ) || exit;
 
 Redux::set_section(
@@ -45,7 +44,7 @@ Redux::set_section(
 				'subtitle' => esc_html__( 'Upload any media using the WordPress native uploader', 'your-textdomain-here' ),
 				'hint'     => array(
 					'title'   => esc_html__( 'Test Hint', 'your-textdomain-here' ),
-					'content' => wp_kses_post( 'This is a <b>hint</b> tool-tip for the webFonts field.<br/><br/>Add any HTML-based text you like here.' ),
+					'content' => wp_kses_post( 'This is a <b>hint</b> tool-tip for the webFonts field.<br/><br/>Add any HTML based text you like here.' ),
 				),
 			),
 			array(
@@ -57,15 +56,15 @@ Redux::set_section(
 				// Can be set to false to allow any media type, or can also be set to any mime type.
 				'mode'       => false,
 
-				'desc'       => esc_html__( 'Basic media uploader with disabled URL input field.', 'your-textdomain-here' ),
-				'subtitle'   => esc_html__( 'Upload any media using the WordPress native uploader', 'your-textdomain-here' ),
+				'desc'     => esc_html__( 'Basic media uploader with disabled URL input field.', 'your-textdomain-here' ),
+				'subtitle' => esc_html__( 'Upload any media using the WordPress native uploader', 'your-textdomain-here' ),
 			),
 			array(
 				'id'           => 'opt-media-filter',
 				'type'         => 'media',
 				'url'          => true,
 				'title'        => esc_html__( 'Media w/ URL', 'your-textdomain-here' ),
-				'compiler'     => true,
+				'compiler'     => 'true',
 				'desc'         => esc_html__( 'Basic media uploader with disabled URL input field.', 'your-textdomain-here' ),
 				'subtitle'     => esc_html__( 'Upload any media using the WordPress native uploader', 'your-textdomain-here' ),
 				'preview_size' => 'full',
@@ -78,6 +77,7 @@ Redux::set_section(
 						),
 					),
 				),
+				'preview_size' => 'full',
 				'filter'       => array(
 					'grayscale'  => true,
 					'blur'       => true,
@@ -89,7 +89,7 @@ Redux::set_section(
 					'hue-rotate' => true,
 					'invert'     => true,
 				),
-				'output'       => array( '.header-image img, .site-logo, .wp-block-site-logo' ),
+				'output'       => array( '.header-image img, .site-logo' ),
 			),
 			array(
 				'id'           => 'media-no-url-filter',
@@ -108,4 +108,3 @@ Redux::set_section(
 		),
 	)
 );
-// phpcs:enable

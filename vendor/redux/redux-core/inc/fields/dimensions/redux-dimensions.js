@@ -1,18 +1,18 @@
 /* global jQuery, redux */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	redux.field_objects            = redux.field_objects || {};
 	redux.field_objects.dimensions = redux.field_objects.dimensions || {};
 
-	redux.field_objects.dimensions.init = function ( selector ) {
+	redux.field_objects.dimensions.init = function( selector ) {
 		selector = $.redux.getSelector( selector, 'dimensions' );
 
 		$( selector ).each(
-			function () {
-				const el   = $( this );
-				let parent = el;
+			function() {
+				var el     = $( this );
+				var parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -32,13 +32,11 @@
 
 				el.find( '.redux-dimensions-input' ).on(
 					'change',
-					function () {
-						let units = $( this ).parents( '.redux-field:first' ).find( '.field-units' ).val();
-
+					function() {
+						var units = $( this ).parents( '.redux-field:first' ).find( '.field-units' ).val();
 						if ( 0 !== $( this ).parents( '.redux-field:first' ).find( '.redux-dimensions-units' ).length ) {
 							units = $( this ).parents( '.redux-field:first' ).find( '.redux-dimensions-units option:selected' ).val();
 						}
-
 						if ( 'undefined' !== typeof units ) {
 							el.find( '#' + $( this ).attr( 'rel' ) ).val( $( this ).val() + units );
 						} else {
@@ -49,7 +47,7 @@
 
 				el.find( '.redux-dimensions-units' ).on(
 					'change',
-					function () {
+					function() {
 						$( this ).parents( '.redux-field:first' ).find( '.redux-dimensions-input' ).change();
 					}
 				);

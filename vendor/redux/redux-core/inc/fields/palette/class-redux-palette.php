@@ -18,7 +18,7 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 
 		/**
 		 * Field Render Function.
-		 * Takes the vars and outputs the HTML for the field in the settings.
+		 * Takes the vars and outputs the HTML for the field in the settingss
 		 *
 		 * @since       1.0.0
 		 * @access      public
@@ -68,7 +68,7 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 			$min = Redux_Functions::is_min();
 
 			wp_enqueue_script(
-				'redux-field-palette',
+				'redux-field-palette-js',
 				Redux_Core::$url . 'inc/fields/palette/redux-palette' . $min . '.js',
 				array( 'jquery', 'redux-js', 'jquery-ui-button', 'jquery-ui-core' ),
 				$this->timestamp,
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-palette',
+					'redux-field-palette-css',
 					Redux_Core::$url . 'inc/fields/palette/redux-palette.css',
 					array(),
 					$this->timestamp

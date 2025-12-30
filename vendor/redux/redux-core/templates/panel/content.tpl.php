@@ -23,33 +23,33 @@
 	<!-- Stickybar -->
 	<?php $this->get_template( 'header-stickybar.tpl.php' ); ?>
 	<div id="redux_ajax_overlay">&nbsp;</div>
-	<?php foreach ( $this->parent->sections as $redux_key => $redux_section ) { ?>
-		<?php if ( isset( $redux_section['customizer_only'] ) && true === $redux_section['customizer_only'] ) { ?>
+	<?php foreach ( $this->parent->sections as $k => $section ) { ?>
+		<?php if ( isset( $section['customizer_only'] ) && true === $section['customizer_only'] ) { ?>
 			<?php continue; ?>
 		<?php } // phpcs:ignore Squiz.PHP.NonExecutableCode.Unreachable ?>
 
-		<?php $redux_section['class'] = isset( $redux_section['class'] ) ? ' ' . $redux_section['class'] : ''; ?>
+		<?php $section['class'] = isset( $section['class'] ) ? ' ' . $section['class'] : ''; ?>
 
-		<?php $redux_disabled = ''; ?>
-		<?php if ( isset( $redux_section['disabled'] ) && $redux_section['disabled'] ) { ?>
-			<?php $redux_disabled = 'disabled '; ?>
+		<?php $disabled = ''; ?>
+		<?php if ( isset( $section['disabled'] ) && $section['disabled'] ) { ?>
+			<?php $disabled = 'disabled '; ?>
 		<?php } ?>
 
 		<div
-			id="<?php echo esc_attr( $redux_key ); ?>_section_group"
-			class="redux-group-tab <?php echo esc_attr( $redux_disabled ); ?><?php echo esc_attr( $redux_section['class'] ); ?>"
-			data-rel="<?php echo esc_attr( $redux_key ); ?>">
+			id="<?php echo esc_attr( $k ); ?>_section_group"
+			class="redux-group-tab <?php echo esc_attr( $disabled ); ?><?php echo esc_attr( $section['class'] ); ?>"
+			data-rel="<?php echo esc_attr( $k ); ?>">
 
-			<?php $redux_display = true; ?>
+			<?php $display = true; ?>
 
 			<?php if ( isset( $_GET['page'] ) && $this->parent->args['page_slug'] === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification ?>
-				<?php if ( isset( $redux_section['panel'] ) && false === $redux_section['panel'] ) { ?>
-					<?php $redux_display = false; ?>
+				<?php if ( isset( $section['panel'] ) && false === $section['panel'] ) { ?>
+					<?php $display = false; ?>
 				<?php } ?>
 			<?php } ?>
 
 			<?php
-			if ( $redux_display ) {
+			if ( $display ) {
 				/**
 				 * Action 'redux/page/{opt_name}/section/before'
 				 *
@@ -57,9 +57,9 @@
 				 */
 
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				do_action( "redux/page/{$this->parent->args['opt_name']}/section/before", $redux_section );
+				do_action( "redux/page/{$this->parent->args['opt_name']}/section/before", $section );
 
-				$this->output_section( $redux_key );
+				$this->output_section( $k );
 
 				/**
 				 * Action 'redux/page/{opt_name}/section/after'
@@ -68,7 +68,7 @@
 				 */
 
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				do_action( "redux/page/{$this->parent->args['opt_name']}/section/after", $redux_section );
+				do_action( "redux/page/{$this->parent->args['opt_name']}/section/after", $section );
 			}
 			?>
 		</div> <!-- section group -->

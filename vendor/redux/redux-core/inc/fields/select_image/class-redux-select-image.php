@@ -76,7 +76,7 @@ if ( ! class_exists( 'Redux_Select_Image', false ) ) {
 				echo '<option></option>';
 
 				// Enum through the options array.
-				foreach ( $this->field['options'] as $v ) {
+				foreach ( $this->field['options'] as $k => $v ) {
 
 					// No array?  No problem!
 					if ( ! is_array( $v ) ) {
@@ -109,7 +109,7 @@ if ( ! class_exists( 'Redux_Select_Image', false ) ) {
 					echo '<option value="' . esc_url( $v['img'] ) . '" ' . esc_html( $selected ) . '>' . esc_attr( $v['alt'] ) . '</option>';
 
 					// Add a bean.
-					++$x;
+					$x ++;
 				}
 
 				// Close the <select> tag.
@@ -132,10 +132,8 @@ if ( ! class_exists( 'Redux_Select_Image', false ) ) {
 				// subtract one from the saved array number.  We then pull the url
 				// out of the options array, and there we go.
 				if ( '' === $this->value ) {
-					// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- No image/icon to enqueue.
 					echo '<img src="#" class="redux-preview-image" style="visibility:hidden;" id="image_' . esc_attr( $this->field['id'] ) . '">';
 				} else {
-					// phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- No image/icon to enqueue.
 					echo '<img src=' . esc_url( $this->value ) . ' class="redux-preview-image" id="image_' . esc_attr( $this->field['id'] ) . '">';
 				}
 
@@ -158,7 +156,7 @@ if ( ! class_exists( 'Redux_Select_Image', false ) ) {
 			wp_enqueue_style( 'select2-css' );
 
 			wp_enqueue_script(
-				'redux-field-select-image',
+				'redux-field-select-image-js',
 				Redux_Core::$url . 'inc/fields/select_image/redux-select-image' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'select2-js', 'redux-js' ),
 				$this->timestamp,
@@ -167,7 +165,7 @@ if ( ! class_exists( 'Redux_Select_Image', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-select-image',
+					'redux-field-select-image-css',
 					Redux_Core::$url . 'inc/fields/select_image/redux-select-image.css',
 					array(),
 					$this->timestamp

@@ -158,7 +158,7 @@
 
 			if ( opts.palette ) {
 				palette       = opts.palette.slice( 0 );
-				paletteArray  = Array.isArray( palette[0] ) ? palette : [palette];
+				paletteArray  = $.isArray( palette[0] ) ? palette : [palette];
 				paletteLookup = {};
 				for ( var i = 0; i < paletteArray.length; i ++ ) {
 					for ( var j = 0; j < paletteArray[i].length; j ++ ) {
@@ -775,14 +775,14 @@
 
 		function enable() {
 			disabled = false;
-			boundElement.prop( 'disabled', false );
+			boundElement.attr( 'disabled', false );
 			offsetElement.removeClass( 'sp-disabled' );
 		}
 
 		function disable() {
 			hide();
 			disabled = true;
-			boundElement.prop( 'disabled', true );
+			boundElement.attr( 'disabled', true );
 			offsetElement.addClass( 'sp-disabled' );
 		}
 

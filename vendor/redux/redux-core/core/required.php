@@ -5,5 +5,6 @@
  * @package Redux Framework
  */
 
-_deprecated_file( 'redux-core/core/required.php', '4.3', 'redux-core/inc/classes/class-redux-required.php', 'This file has been renamed and is no longer used in Redux 4.  Please change any references to it as it will be removed in future versions of Redux.' );
+// Shim file for odd theme integrations.
 
+echo null;

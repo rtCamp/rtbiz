@@ -1,24 +1,24 @@
 /* global jQuery, redux_change, redux */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
-	redux.field_objects                  = redux.field_objects || {};
+	redux.field_objects                      = redux.field_objects || {};
 	redux.field_objects.gradient_filters = redux.field_objects.gradient_filters || {};
 
-	redux.field_objects.gradient_filters.sliderInit = function ( el, mode ) {
+	redux.field_objects.gradient_filters.sliderInit = function( el, mode ) {
 		el.find( '.redux-gradient-slider' ).each(
-			function () {
-				let mainID = $( this ).data( 'id' );
-				let minVal = $( this ).data( 'min' );
-				let maxVal = $( this ).data( 'max' );
-				let step   = $( this ).data( 'step' );
-				let def    = $( this ).data( 'default' );
-				let label  = $( this ).data( 'label' );
-				let rtl    = Boolean( $( this ).data( 'rtl' ) );
-				let range  = [minVal, maxVal];
+			function() {
+				var mainID = $( this ).data( 'id' );
+				var minVal = $( this ).data( 'min' );
+				var maxVal = $( this ).data( 'max' );
+				var step   = $( this ).data( 'step' );
+				var def    = $( this ).data( 'default' );
+				var label  = $( this ).data( 'label' );
+				var rtl    = Boolean( $( this ).data( 'rtl' ) );
+				var range  = [minVal, maxVal];
 
-				let slider = $( this ).reduxNoUiSlider(
+				var slider = $( this ).reduxNoUiSlider(
 					{
 						range: range,
 						start: def,
@@ -30,9 +30,9 @@
 						serialization: {
 							resolution: 1
 						},
-						slide: function () {
-							let sliderID = $( this ).data( 'id' );
-							let unit;
+						slide: function() {
+							var sliderID = $( this ).data( 'id' );
+							var unit;
 
 							if ( sliderID.indexOf( 'angle' ) !== -1 ) {
 								unit = '&deg;';
@@ -57,12 +57,12 @@
 		);
 	};
 
-	redux.field_objects.gradient_filters.selectChange = function ( el, mode ) {
+	redux.field_objects.gradient_filters.selectChange = function( el, mode ) {
 		$( el ).find( '.redux-gradient-select' ).on(
 			'change',
-			function () {
-				let type  = $( this ).val();
-				let angle = el.find( '.slider-gradient-angle' );
+			function() {
+				var type  = $( this ).val();
+				var angle = el.find( '.slider-gradient-angle' );
 
 				if ( 'linear' === type ) {
 					angle.fadeIn();
@@ -78,26 +78,28 @@
 
 	};
 
-	redux.field_objects.gradient_filters.changeValue = function ( el, update, mode ) {
-		let parent  = el.parents( '.redux-container-' + mode );
-		let mainID  = parent.data( 'id' );
-		let preview = parent.find( '.redux-gradient-preview' );
+	redux.field_objects.gradient_filters.changeValue = function( el, update, mode ) {
+		var parent  = el.parents( '.redux-container-' + mode );
+		var mainID  = parent.data( 'id' );
+		var preview = parent.find( '.redux-gradient-preview' );
 
-		let hide = preview.css( 'display' );
+		var hide = preview.css( 'display' );
 
-		let colorFrom = parent.find( '#' + mainID + '-from' ).val();
-		let colorTo   = parent.find( '#' + mainID + '-to' ).val();
+		var colorFrom = parent.find( '#' + mainID + '-from' ).val();
+		var colorTo   = parent.find( '#' + mainID + '-to' ).val();
 
-		let type = parent.find( '.redux-gradient-select' ).val();
+		var type = parent.find( '.redux-gradient-select' ).val();
 
-		let result_w3c;
-		let result;
-		let fromReach;
-		let toReach;
-		let colors;
+		var result_w3c = '';
+		var result     = '';
 
-		let angle   = 0;
-		let w3c_deg = Math.abs( angle - 450 ) % 360;
+		var angle     = 0;
+		var fromReach = 0;
+		var toReach   = 100;
+
+		var w3c_deg = Math.abs( angle - 450 ) % 360;
+
+		var colors;
 
 		fromReach = parent.find( '#redux-slider-value-' + mainID + '-from' ).val();
 		toReach   = parent.find( '#redux-slider-value-' + mainID + '-to' ).val();

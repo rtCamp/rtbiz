@@ -1,24 +1,24 @@
 /* global jQuery, redux_change, redux */
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	redux.field_objects               = redux.field_objects || {};
 	redux.field_objects.image_filters = redux.field_objects.image_filters || {};
 
-	redux.field_objects.image_filters.sliderInit = function ( el, mode ) {
+	redux.field_objects.image_filters.sliderInit = function( el, mode ) {
 		el.find( '.redux-' + mode + '-slider' ).each(
-			function () {
-				let mainID = $( this ).data( 'id' );
-				let minVal = $( this ).data( 'min' );
-				let maxVal = $( this ).data( 'max' );
-				let step   = $( this ).data( 'step' );
-				let def    = $( this ).data( 'default' );
-				let unit   = $( this ).data( 'unit' );
-				let rtl    = Boolean( $( this ).data( 'rtl' ) );
-				let range  = [minVal, maxVal];
+			function() {
+				var mainID = $( this ).data( 'id' );
+				var minVal = $( this ).data( 'min' );
+				var maxVal = $( this ).data( 'max' );
+				var step   = $( this ).data( 'step' );
+				var def    = $( this ).data( 'default' );
+				var unit   = $( this ).data( 'unit' );
+				var rtl    = Boolean( $( this ).data( 'rtl' ) );
+				var range  = [minVal, maxVal];
 
-				let slider = $( this ).reduxNoUiSlider(
+				var slider = $( this ).reduxNoUiSlider(
 					{
 						range: range,
 						start: def,
@@ -31,8 +31,8 @@
 						serialization: {
 							resolution: step
 						},
-						slide: function () {
-							let val = slider.val();
+						slide: function() {
+							var val = slider.val();
 
 							if ( '0.00' === val ) {
 								val = 0;
@@ -57,20 +57,20 @@
 		);
 	};
 
-	redux.field_objects.image_filters.changeValue = function ( el, update, mode ) {
-		let parent    = el.parents( '.redux-container-' + mode );
-		let container = parent.find( '.redux-' + mode + '-filter-container' );
+	redux.field_objects.image_filters.changeValue = function( el, update, mode ) {
+		var parent    = el.parents( '.redux-container-' + mode );
+		var container = parent.find( '.redux-' + mode + '-filter-container' );
 
-		let filterCSS = '';
+		var filterCSS = '';
 
-		let isChecked;
-		let mainID;
-		let preview;
-		let img;
-		let filters;
-		let val;
-		let unit;
-		let hide;
+		var isChecked;
+		var mainID;
+		var preview;
+		var img;
+		var filters;
+		var val;
+		var unit;
+		var hide;
 
 		if ( container.length > 0 ) {
 			mainID  = parent.data( 'id' );
@@ -83,7 +83,7 @@
 
 			$.each(
 				filters,
-				function ( idx, filter ) {
+				function( idx, filter ) {
 					isChecked = container.find( '#' + mainID + '-' + filter ).is( ':checked' );
 
 					if ( true === isChecked ) {
@@ -114,22 +114,22 @@
 		}
 	};
 
-	redux.field_objects.image_filters.checkbox = function ( el, mode ) {
+	redux.field_objects.image_filters.checkbox = function( el, mode ) {
 		el.find( '.checkbox' ).on(
 			'click',
-			function () {
-				let val    = 0;
-				let slider = $( this ).parent().next( '.redux-' + mode + '-slider' );
-				let label  = $( this ).parent( 'label' );
+			function() {
+				var val    = 0;
+				var slider = $( this ).parent().next( '.redux-' + mode + '-slider' );
+				var label  = $( this ).parent( 'label' );
 
 				if ( $( this ).is( ':checked' ) ) {
 					val = $( this ).parent().find( '.checkbox-check' ).attr( 'data-val' );
 
 					slider.attr( 'disabled', false );
-					label.removeClass( 'filters-disabled' );
+					label.removeClass( 'pro-disabled' );
 				} else {
 					slider.attr( 'disabled', true );
-					label.addClass( 'filters-disabled' );
+					label.addClass( 'pro-disabled' );
 				}
 
 				$( this ).parent().find( '.checkbox-check' ).val( val );

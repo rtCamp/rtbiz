@@ -53,14 +53,14 @@
 
 	function read( s, converter ) {
 		var value = config.raw ? s : parseCookieValue( s );
-		return 'function' === typeof converter ? converter( value ) : value;
+		return $.isFunction( converter ) ? converter( value ) : value;
 	}
 
 	var config = $.cookie = function( key, value, options ) {
 
 		// Write
 
-		if ( arguments.length > 1 && 'function' !== typeof value ) {
+		if ( arguments.length > 1 && ! $.isFunction( value ) ) {
 			options = $.extend( {}, config.defaults, options );
 
 			if ( typeof options.expires === 'number' ) {

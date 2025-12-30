@@ -542,7 +542,7 @@
 					self.colorAlpha.css( { 'background-color': ui.color.to_s( self.alphaOptions.alphaColorType ) } );
 
 					// fire change callback if we have one
-					if ( 'function' === typeof self.options.change ) {
+					if ( $.isFunction( self.options.change ) ) {
 						self.options.change.call( this, event, ui );
 					}
 				}
@@ -596,7 +596,7 @@
 					self.colorAlpha.css( 'background-color', '' );
 
 					// fire clear callback if we have one
-					if ( 'function' === typeof self.options.clear ) {
+					if ( $.isFunction( self.options.clear ) ) {
 						self.options.clear.call( this, event );
 					}
 				}
@@ -613,7 +613,7 @@
 			 */
 			self.button.on( 'click', function( event ) {
 				if ( $( this ).hasClass( 'wp-picker-default' ) ) {
-					el.val( self.options.defaultColor ).trigger( 'change' );
+					el.val( self.options.defaultColor ).change();
 				} else if ( $( this ).hasClass( 'wp-picker-clear' ) ) {
 					el.val( '' );
 					if ( isDeprecated ) {
@@ -623,7 +623,7 @@
 					self.colorAlpha.css( 'background-color', '' );
 
 					// fire clear callback if we have one
-					if ( 'function' === typeof self.options.clear ) {
+					if ( $.isFunction( self.options.clear ) ) {
 						self.options.clear.call( this, event );
 					}
 

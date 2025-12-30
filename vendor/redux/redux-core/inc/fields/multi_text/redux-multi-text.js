@@ -1,19 +1,19 @@
 /*global redux_change, redux*/
 
-(function ( $ ) {
+(function( $ ) {
 	'use strict';
 
 	redux.field_objects            = redux.field_objects || {};
 	redux.field_objects.multi_text = redux.field_objects.multi_text || {};
 
-	redux.field_objects.multi_text.remove = function ( el ) {
+	redux.field_objects.multi_text.remove = function( el ) {
 		el.find( '.redux-multi-text-remove' ).on(
 			'click',
-			function () {
-				let id;
-				let lis;
-				let add;
-				let name;
+			function() {
+				var id;
+				var lis;
+				var add;
+				var name;
 
 				redux_change( $( this ) );
 
@@ -23,7 +23,7 @@
 
 				$( this ).parent().slideUp(
 					'medium',
-					function () {
+					function() {
 						$( this ).remove();
 
 						lis = el.find( '#' + id + ' li' ).length;
@@ -39,13 +39,13 @@
 		);
 	};
 
-	redux.field_objects.multi_text.init = function ( selector ) {
+	redux.field_objects.multi_text.init = function( selector ) {
 		selector = $.redux.getSelector( selector, 'multi_text' );
 
 		$( selector ).each(
-			function () {
-				const el   = $( this );
-				let parent = el;
+			function() {
+				var el     = $( this );
+				var parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -65,16 +65,16 @@
 
 				el.find( '.redux-multi-text-add' ).on(
 					'click',
-					function () {
-						let i;
-						let lis;
-						let css;
-						let input;
-						let new_input;
+					function() {
+						var i;
+						var lis;
+						var css;
+						var input;
+						var new_input;
 
-						const number = parseInt( $( this ).attr( 'data-add_number' ) );
-						const id     = $( this ).attr( 'data-id' );
-						const name   = $( this ).attr( 'data-name' ) + '[]';
+						var number = parseInt( $( this ).attr( 'data-add_number' ) );
+						var id     = $( this ).attr( 'data-id' );
+						var name   = $( this ).attr( 'data-name' ) + '[]';
 
 						for ( i = 0; i < number; i += 1 ) {
 							new_input = $( '#' + id + ' li:last-child' ).clone();
@@ -89,7 +89,7 @@
 
 						if ( lis > 1 ) {
 							el.find( '#' + id + ' li' ).each(
-								function () {
+								function() {
 									css = $( this ).css( 'display' );
 									if ( 'none' === css ) {
 										input = $( this ).find( 'input[type="text"]' );
