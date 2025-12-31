@@ -113,6 +113,47 @@
 		return opts;
 	}
 
+	function resolveAppendTo( appendTo, boundElement, doc ) {
+		// Normalize the appendTo option into a safe jQuery object.
+		// Allow: jQuery objects, DOM nodes, window/document, "parent", and selector strings.
+
+		// jQuery object
+		if ( appendTo && appendTo.jquery ) {
+			return appendTo;
+		}
+
+		// DOM node, document, or window
+		if ( appendTo && (appendTo.nodeType === 1 || appendTo.nodeType === 9 || appendTo === window) ) {
+			return $( appendTo );
+		}
+
+		// Special value "parent"
+		if ( appendTo === 'parent' ) {
+			return boundElement.parent();
+		}
+
+		// String selectors: reject HTML-like strings to avoid XSS
+		if ( typeof appendTo === 'string' ) {
+			var trimmed = $.trim( appendTo );
+			if ( trimmed.charAt( 0 ) === '<' ) {
+				// Unsafe: fall back to body
+				return $( doc.body );
+			}
+
+			// Treat as selector within the current document
+			var $sel = $( trimmed, doc );
+			if ( $sel.length ) {
+				return $sel;
+			}
+
+			// Selector did not match anything; fall back to body
+			return $( doc.body );
+		}
+
+		// Fallback when appendTo is not provided or of unexpected type
+		return $( doc.body );
+	}
+
 	function spectrum( element, o ) {
 
 		var opts                                                                               = instanceOptions( o, element ), flat                                         = opts.flat,
@@ -201,10 +242,7 @@
 				boundElement.after( container ).hide();
 			} else {
 
-				var appendTo = opts.appendTo === 'parent' ? boundElement.parent() : $( opts.appendTo );
-				if ( appendTo.length !== 1 ) {
-					appendTo = $( 'body' );
-				}
+				var appendTo = resolveAppendTo( opts.appendTo, boundElement, doc );
 
 				appendTo.append( container );
 			}
