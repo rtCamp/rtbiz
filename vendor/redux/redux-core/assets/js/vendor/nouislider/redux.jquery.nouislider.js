@@ -334,7 +334,7 @@
 			// Prevent the change event from flowing upward.
 			if ( typeof item === 'string' ) {
 
-				item = [$( '<input type="hidden" name="' + item + '">' ).appendTo( handle ).addClass( clsList[3] ).on( 'change', function( e ) {
+				item = [$( '<input type="hidden">' ).attr( 'name', item ).appendTo( handle ).addClass( clsList[3] ).on( 'change', function( e ) {
 					e.stopPropagation();
 				} ), 'val'];
 			}
