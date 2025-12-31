@@ -10,22 +10,67 @@
 	 * @returns {boolean}
 	 */
 	function isSafeImageSrc( url ) {
-		if ( ! url ) {
+		// Treat null/undefined as safe "no URL".
+		if ( url === null || url === undefined ) {
 			return true;
 		}
 
+		// Normalize to string and trim whitespace.
 		var trimmed = $.trim( String( url ) );
-		var lower   = trimmed.toLowerCase();
 
-		// Disallow common scriptable schemes.
+		// Empty string is used as "no image" elsewhere and is safe.
+		if ( trimmed === '' ) {
+			return true;
+		}
+
+		var lower = trimmed.toLowerCase();
+
+		// Disallow common scriptable and browser-internal schemes.
 		if ( lower.indexOf( 'javascript:' ) === 0 ||
 			lower.indexOf( 'data:' ) === 0 ||
 			lower.indexOf( 'vbscript:' ) === 0 ||
-			lower.indexOf( 'file:' ) === 0 ) {
+			lower.indexOf( 'file:' ) === 0 ||
+			lower.indexOf( 'about:' ) === 0 ||
+			lower.indexOf( 'chrome:' ) === 0 ) {
 			return false;
 		}
 
-		return true;
+		// Allow http(s) URLs explicitly.
+		if ( lower.indexOf( 'http://' ) === 0 || lower.indexOf( 'https://' ) === 0 ) {
+			return true;
+		}
+
+		// Allow protocol-relative URLs (e.g. //example.com/image.png).
+		if ( lower.indexOf( '//' ) === 0 ) {
+			return true;
+		}
+
+		// For all other cases, allow only relative URLs without a scheme.
+		// If there is a colon before any slash, query, or hash, treat it as a scheme and reject.
+		var firstSlash = lower.indexOf( '/' );
+		var firstQuery = lower.indexOf( '?' );
+		var firstHash  = lower.indexOf( '#' );
+
+		var limit = lower.length;
+		if ( firstSlash !== -1 && firstSlash < limit ) {
+			limit = firstSlash;
+		}
+		if ( firstQuery !== -1 && firstQuery < limit ) {
+			limit = firstQuery;
+		}
+		if ( firstHash !== -1 && firstHash < limit ) {
+			limit = firstHash;
+		}
+
+		var schemeSeparator = lower.indexOf( ':' );
+
+		// No colon before the first special character => no explicit scheme => treat as relative URL.
+		if ( schemeSeparator === -1 || schemeSeparator > limit ) {
+			return true;
+		}
+
+		// Any other explicit scheme is considered unsafe by default.
+		return false;
 	}
 
 	redux.field_objects              = redux.field_objects || {};
