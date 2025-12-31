@@ -36,7 +36,7 @@
 				value   = el.find( 'select.redux-select-images' ).val();
 				preview = el.find( 'select.redux-select-images' ).parents( '.redux-field:first' ).find( '.redux-preview-image' );
 
-				preview.attr( 'src', value );
+				preview.attr( 'src', encodeURI( value ) );
 
 				el.find( '.redux-select-images' ).on(
 					'change',
