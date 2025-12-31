@@ -45,9 +45,10 @@
 								slider.val()
 							);
 
-							$( this ).prev( 'label' ).html(
-								label + ':  <strong>' + slider.val() + unit + '</strong>'
-							);
+							var $labelEl = $( this ).prev( 'label' );
+							$labelEl.empty();
+							$labelEl.text( label + ':  ' );
+							$( '<strong></strong>' ).text( slider.val() + unit ).appendTo( $labelEl );
 
 							redux.field_objects.gradient_filters.changeValue( $( this ), true, mode );
 						}
