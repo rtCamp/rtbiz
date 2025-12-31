@@ -51,7 +51,7 @@
 								}
 							);
 						} else {
-							preview.attr( 'src', $( this ).val() );
+							preview.attr( 'src', encodeURI( $( this ).val() ) );
 							preview.fadeIn().css( 'visibility', 'visible' );
 						}
 					}
