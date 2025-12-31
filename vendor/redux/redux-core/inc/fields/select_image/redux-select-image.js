@@ -3,44 +3,6 @@
 (function( $ ) {
 	'use strict';
 
-	// Simple URL sanitizer for image src attributes.
-	// Allows http(s), protocol-relative URLs, and root / relative paths.
-	function sanitizeImageSrc( src ) {
-		if ( 'string' !== typeof src ) {
-			return '';
-		}
-
-		src = src.trim();
-
-		if ( '' === src ) {
-			return '';
-		}
-
-		// Disallow javascript:, data:, and other dangerous schemes.
-		var lower = src.toLowerCase();
-		if ( lower.indexOf( 'javascript:' ) === 0 || lower.indexOf( 'data:' ) === 0 ) {
-			return '';
-		}
-
-		// Allow absolute http/https URLs.
-		if ( lower.indexOf( 'http://' ) === 0 || lower.indexOf( 'https://' ) === 0 ) {
-			return src;
-		}
-
-		// Allow protocol-relative URLs.
-		if ( src.indexOf( '//' ) === 0 ) {
-			return src;
-		}
-
-		// Allow root-relative and simple relative paths.
-		if ( src.indexOf( '/' ) === 0 || src.indexOf( './' ) === 0 || src.indexOf( '../' ) === 0 ) {
-			return src;
-		}
-
-		// Fallback: treat as relative path segment.
-		return src;
-	}
-
 	redux.field_objects              = redux.field_objects || {};
 	redux.field_objects.select_image = redux.field_objects.select_image || {};
 
@@ -74,7 +36,7 @@
 				value   = el.find( 'select.redux-select-images' ).val();
 				preview = el.find( 'select.redux-select-images' ).parents( '.redux-field:first' ).find( '.redux-preview-image' );
 
-				preview.attr( 'src', sanitizeImageSrc( value ) );
+				preview.attr( 'src', value );
 
 				el.find( '.redux-select-images' ).on(
 					'change',
@@ -89,7 +51,7 @@
 								}
 							);
 						} else {
-							preview.attr( 'src', sanitizeImageSrc( $( this ).val() ) );
+							preview.attr( 'src', $( this ).val() );
 							preview.fadeIn().css( 'visibility', 'visible' );
 						}
 					}
