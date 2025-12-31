@@ -45,8 +45,9 @@
 								val
 							);
 
-							$( this ).prev( 'label' ).find( 'span' ).html(
-								'<strong>' + val + unit + '</strong>'
+							var $span = $( this ).prev( 'label' ).find( 'span' );
+							$span.empty().append(
+								$( '<strong></strong>' ).text( val + unit )
 							);
 
 							redux.field_objects.image_filters.changeValue( $( this ), true, mode );
