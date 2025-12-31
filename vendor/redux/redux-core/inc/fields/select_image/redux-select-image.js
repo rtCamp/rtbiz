@@ -3,74 +3,42 @@
 (function( $ ) {
 	'use strict';
 
-	/**
-	 * Basic safety check for image src values to avoid dangerous URL schemes.
-	 *
-	 * @param {string} url
-	 * @returns {boolean}
-	 */
-	function isSafeImageSrc( url ) {
-		// Treat null/undefined as safe "no URL".
-		if ( url === null || url === undefined ) {
-			return true;
+	// Simple URL sanitizer for image src attributes.
+	// Allows http(s), protocol-relative URLs, and root / relative paths.
+	function sanitizeImageSrc( src ) {
+		if ( 'string' !== typeof src ) {
+			return '';
 		}
 
-		// Normalize to string and trim whitespace.
-		var trimmed = $.trim( String( url ) );
+		src = src.trim();
 
-		// Empty string is used as "no image" elsewhere and is safe.
-		if ( trimmed === '' ) {
-			return true;
+		if ( '' === src ) {
+			return '';
 		}
 
-		var lower = trimmed.toLowerCase();
-
-		// Disallow common scriptable and browser-internal schemes.
-		if ( lower.indexOf( 'javascript:' ) === 0 ||
-			lower.indexOf( 'data:' ) === 0 ||
-			lower.indexOf( 'vbscript:' ) === 0 ||
-			lower.indexOf( 'file:' ) === 0 ||
-			lower.indexOf( 'about:' ) === 0 ||
-			lower.indexOf( 'chrome:' ) === 0 ) {
-			return false;
+		// Disallow javascript:, data:, and other dangerous schemes.
+		var lower = src.toLowerCase();
+		if ( lower.indexOf( 'javascript:' ) === 0 || lower.indexOf( 'data:' ) === 0 ) {
+			return '';
 		}
 
-		// Allow http(s) URLs explicitly.
+		// Allow absolute http/https URLs.
 		if ( lower.indexOf( 'http://' ) === 0 || lower.indexOf( 'https://' ) === 0 ) {
-			return true;
+			return src;
 		}
 
-		// Allow protocol-relative URLs (e.g. //example.com/image.png).
-		if ( lower.indexOf( '//' ) === 0 ) {
-			return true;
+		// Allow protocol-relative URLs.
+		if ( src.indexOf( '//' ) === 0 ) {
+			return src;
 		}
 
-		// For all other cases, allow only relative URLs without a scheme.
-		// If there is a colon before any slash, query, or hash, treat it as a scheme and reject.
-		var firstSlash = lower.indexOf( '/' );
-		var firstQuery = lower.indexOf( '?' );
-		var firstHash  = lower.indexOf( '#' );
-
-		var limit = lower.length;
-		if ( firstSlash !== -1 && firstSlash < limit ) {
-			limit = firstSlash;
-		}
-		if ( firstQuery !== -1 && firstQuery < limit ) {
-			limit = firstQuery;
-		}
-		if ( firstHash !== -1 && firstHash < limit ) {
-			limit = firstHash;
+		// Allow root-relative and simple relative paths.
+		if ( src.indexOf( '/' ) === 0 || src.indexOf( './' ) === 0 || src.indexOf( '../' ) === 0 ) {
+			return src;
 		}
 
-		var schemeSeparator = lower.indexOf( ':' );
-
-		// No colon before the first special character => no explicit scheme => treat as relative URL.
-		if ( schemeSeparator === -1 || schemeSeparator > limit ) {
-			return true;
-		}
-
-		// Any other explicit scheme is considered unsafe by default.
-		return false;
+		// Fallback: treat as relative path segment.
+		return src;
 	}
 
 	redux.field_objects              = redux.field_objects || {};
@@ -106,11 +74,7 @@
 				value   = el.find( 'select.redux-select-images' ).val();
 				preview = el.find( 'select.redux-select-images' ).parents( '.redux-field:first' ).find( '.redux-preview-image' );
 
-				if ( isSafeImageSrc( value ) ) {
-					preview.attr( 'src', value );
-				} else {
-					preview.attr( 'src', '' );
-				}
+				preview.attr( 'src', sanitizeImageSrc( value ) );
 
 				el.find( '.redux-select-images' ).on(
 					'change',
@@ -126,7 +90,7 @@
 								}
 							);
 						} else {
-							preview.attr( 'src', value );
+							preview.attr( 'src', sanitizeImageSrc( $( this ).val() ) );
 							preview.fadeIn().css( 'visibility', 'visible' );
 						}
 					}
