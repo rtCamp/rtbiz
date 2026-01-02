@@ -1240,7 +1240,7 @@ function jsonView( id, target ) {
 		if ( this.debug ) {
 			console.log( 'JSONView: data is wrapped in <pre>...</pre>, stripping HTML...' );
 		}
-		this.data = this.data.replace( /<(?:.|\s)*?>/g, '' ); // Aggressively strip HTML.
+		this.data = this.data.replace( /<[\s\S]*?>/g, '' ); // Aggressively strip HTML.
 	}
 	// Test if what remains is JSON or JSONp.
 	var json_regex   = /^\s*([\[\{].*[\}\]])\s*$/; // Ghetto, but it works.

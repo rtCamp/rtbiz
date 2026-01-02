@@ -350,9 +350,10 @@
 						slide: function() {
 							$( this ).next( '#redux-slider-value-' + mainID ).attr( 'value', slider.val() );
 
-							$( this ).prev( 'label' ).html(
-								label + ':  <strong>' + slider.val() + 'px</strong>'
-							);
+							var $labelEl = $( this ).prev( 'label' );
+							$labelEl.empty()
+								.text( label + ':  ' )
+								.append( $( '<strong>' ).text( slider.val() + 'px' ) );
 
 							redux.field_objects.typography.select( el );
 						}

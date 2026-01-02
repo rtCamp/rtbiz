@@ -180,7 +180,7 @@
 						hide = false;
 
 						data.name = data.name.split( '[background-' );
-						data.name = 'background-' + data.name[1].replace( ']', '' );
+						data.name = 'background-' + data.name[1].replace( /\]/g, '' );
 
 						if ( 'background-image' === data.name ) {
 							css += data.name + ':url("' + data.value + '");';
